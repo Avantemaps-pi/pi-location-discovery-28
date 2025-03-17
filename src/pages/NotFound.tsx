@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { MapOff, Home } from 'lucide-react';
+import { MapPin, Home } from 'lucide-react';
 
 const NotFound = () => {
   return (
@@ -10,7 +10,7 @@ const NotFound = () => {
       <div className="text-center space-y-6 max-w-md">
         <div className="flex justify-center">
           <div className="bg-avante-blue/10 p-6 rounded-full">
-            <MapOff className="h-16 w-16 text-avante-blue" />
+            <MapPin className="h-16 w-16 text-avante-blue" />
           </div>
         </div>
         <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-avante-blue to-avante-purple bg-clip-text text-transparent">

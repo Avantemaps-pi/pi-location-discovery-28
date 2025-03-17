@@ -13,6 +13,11 @@ interface MapProps extends google.maps.MapOptions {
   children?: React.ReactNode;
 }
 
+// Define a proper interface for children components that need the map prop
+interface MapChildProps {
+  map?: google.maps.Map;
+}
+
 const MapComponent = ({ 
   onClick, 
   onIdle, 
@@ -54,8 +59,8 @@ const MapComponent = ({
       <div ref={ref} className="w-full h-full" />
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
-          // Set the map prop on children that need it
-          return React.cloneElement(child, { map });
+          // Type assertion to allow passing the map prop to children
+          return React.cloneElement(child as React.ReactElement<MapChildProps>, { map });
         }
         return child;
       })}
@@ -66,9 +71,10 @@ const MapComponent = ({
 // Marker component
 interface MarkerProps extends google.maps.MarkerOptions {
   onClick?: () => void;
+  map?: google.maps.Map;
 }
 
-const Marker = ({ onClick, ...options }: MarkerProps) => {
+const Marker = ({ onClick, map, ...options }: MarkerProps) => {
   const [marker, setMarker] = useState<google.maps.Marker>();
 
   useEffect(() => {
@@ -88,6 +94,17 @@ const Marker = ({ onClick, ...options }: MarkerProps) => {
       marker.setOptions(options);
     }
   }, [marker, options]);
+
+  useEffect(() => {
+    if (marker && map) {
+      marker.setMap(map);
+    }
+    return () => {
+      if (marker) {
+        marker.setMap(null);
+      }
+    };
+  }, [marker, map]);
 
   useEffect(() => {
     if (marker && onClick) {
