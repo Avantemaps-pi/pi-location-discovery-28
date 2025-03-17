@@ -1,10 +1,9 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
 import { Loader2 } from 'lucide-react';
 
-// Placeholder for Google Maps API key - this should be handled securely in production
-const GOOGLE_MAPS_API_KEY = "YOUR_API_KEY_HERE";
+// Use the provided Google Maps API key
+const GOOGLE_MAPS_API_KEY = "AIzaSyAp6za1pf11Tvq80kIRBpqqunXg4AcYa8s";
 
 // Map component that uses the Google Maps JavaScript API
 interface MapProps extends google.maps.MapOptions {
