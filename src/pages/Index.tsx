@@ -1,13 +1,24 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from 'react';
+import AppLayout from '@/components/layout/AppLayout';
+import GoogleMap from '@/components/map/GoogleMap';
+import SearchBar from '@/components/map/SearchBar';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <AppLayout fullHeight>
+      <div className="relative h-full w-full">
+        {/* Map Container */}
+        <div className="h-full w-full">
+          <GoogleMap />
+        </div>
+        
+        {/* Search Bar overlaid on map */}
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 w-full max-w-md px-4 md:px-0">
+          <SearchBar />
+        </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
