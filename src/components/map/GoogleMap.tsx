@@ -1,7 +1,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { Wrapper, Status } from '@googlemaps/react-wrapper';
-import { Loader2 } from 'lucide-react';
+import { Loader2, MapPin } from 'lucide-react';
 
 // Use the provided Google Maps API key
 const GOOGLE_MAPS_API_KEY = "AIzaSyAp6za1pf11Tvq80kIRBpqqunXg4AcYa8s";
@@ -146,18 +146,6 @@ const exampleLocations = [
   { id: 4, position: { lat: 37.7583, lng: -122.4267 }, title: "Pi Bakery" },
 ];
 
-// Render state based on status
-const render = (status: Status) => {
-  switch (status) {
-    case Status.LOADING:
-      return <LoadingSpinner />;
-    case Status.FAILURE:
-      return <ErrorMessage />;
-    default:
-      return <LoadingSpinner />;
-  }
-};
-
 // Main Google Map component with wrapper
 const GoogleMap: React.FC = () => {
   const [zoom, setZoom] = useState(13);
@@ -175,7 +163,11 @@ const GoogleMap: React.FC = () => {
 
   return (
     <div className="w-full h-full">
-      <Wrapper apiKey={GOOGLE_MAPS_API_KEY} render={render}>
+      <Wrapper 
+        apiKey={GOOGLE_MAPS_API_KEY} 
+        render={render}
+        libraries={['places']}
+      >
         <MapComponent
           center={center}
           zoom={zoom}
