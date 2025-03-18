@@ -33,7 +33,7 @@ const Index = () => {
       </div>
       
       {/* Google Maps component */}
-      <div className="flex-1 h-full">
+      <div className="flex-1 h-full relative">
         <GoogleMap />
       </div>
     </AppLayout>

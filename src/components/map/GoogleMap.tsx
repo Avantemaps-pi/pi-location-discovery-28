@@ -9,7 +9,7 @@ import { GOOGLE_MAPS_API_KEY, exampleLocations, mapStyles, defaultCenter, defaul
 // Main Google Map component with wrapper
 const GoogleMap: React.FC = () => {
   const [zoom, setZoom] = useState(defaultZoom);
-  const [center, setCenter] = useState<google.maps.LatLngLiteral>(defaultCenter);
+  const [center, setCenter] = useState(defaultCenter);
   const [activeMarker, setActiveMarker] = useState<number | null>(null);
 
   const handleMarkerClick = (id: number) => {
@@ -33,7 +33,10 @@ const GoogleMap: React.FC = () => {
           mapId="avante_map_id"
           onIdle={(map) => {
             setZoom(map.getZoom() || defaultZoom);
-            setCenter(map.getCenter()?.toJSON() || center);
+            const mapCenter = map.getCenter();
+            if (mapCenter) {
+              setCenter({ lat: mapCenter.lat(), lng: mapCenter.lng() });
+            }
           }}
           mapTypeControl={false}
           fullscreenControl={false}
@@ -52,10 +55,10 @@ const GoogleMap: React.FC = () => {
                     <circle cx="12" cy="10" r="3"/>
                     <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
                   </svg>`,
-                scaledSize: new google.maps.Size(36, 36),
+                scaledSize: { width: 36, height: 36 },
               }}
               onClick={() => handleMarkerClick(id)}
-              animation={activeMarker === id ? google.maps.Animation.BOUNCE : undefined}
+              animation={activeMarker === id ? 1 : undefined}
             />
           ))}
         </MapComponent>
