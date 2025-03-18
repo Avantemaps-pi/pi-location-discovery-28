@@ -15,6 +15,11 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import CookiePolicy from "./pages/CookiePolicy";
 import Registration from "./pages/Registration";
 import NotFound from "./pages/NotFound";
+import Communicon from "./pages/Communicon";
+import Notifications from "./pages/Notifications";
+import RegisteredBusiness from "./pages/RegisteredBusiness";
+import { Link } from "react-router-dom";
+import { Star } from "lucide-react";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +33,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/recommendations" element={<Recommendations />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
+          <Route path="/communicon" element={<Communicon />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/registered-business" element={<RegisteredBusiness />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/settings" element={<Settings />} />

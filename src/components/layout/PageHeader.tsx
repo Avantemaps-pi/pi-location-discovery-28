@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Menu, LogIn } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Link } from 'react-router-dom';
-import { Home, Compass, Bookmark, Mail, Info, Settings, FileText, PiSquare, Clipboard, UserPlus } from 'lucide-react';
+import { Home, Compass, Bookmark, Mail, Info, Settings, FileText, PiSquare, Clipboard, UserPlus, User, Bell, Building } from 'lucide-react';
 
 interface PageHeaderProps {
   title?: string;
@@ -17,6 +17,9 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
     { to: '/', label: 'Home', icon: Home },
     { to: '/recommendations', label: 'Recommendations', icon: Compass },
     { to: '/bookmarks', label: 'Bookmarks', icon: Bookmark },
+    { to: '/communicon', label: 'Communicon', icon: User },
+    { to: '/notifications', label: 'Notifications', icon: Bell },
+    { to: '/registered-business', label: 'My Businesses', icon: Building },
     { to: '/registration', label: 'Register Business', icon: Clipboard },
     { to: '/contact', label: 'Contact', icon: Mail },
     { to: '/about', label: 'About Us', icon: Info },
@@ -34,7 +37,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
       <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
         <SheetTrigger asChild>
           <Button variant="ghost" size="icon" className="mr-auto">
-            <Menu className="h-7 w-7" />
+            <Menu className="h-9 w-9" />
             <span className="sr-only">Toggle menu</span>
           </Button>
         </SheetTrigger>
