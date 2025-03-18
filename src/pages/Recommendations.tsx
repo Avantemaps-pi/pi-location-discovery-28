@@ -1,3 +1,4 @@
+
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -125,7 +126,7 @@ const PlaceCard = ({ place }) => (
     </div>
     
     <CardContent className="pt-3 px-3">
-      <p className="text-sm text-gray-700 line-clamp-3 mb-2">{place.description}</p>
+      <p className="text-sm text-gray-700 line-clamp-4 mb-2">{place.description}</p>
       <div className="flex justify-between items-end mt-2">
         <div className="flex items-center gap-1">
           <div className="flex">
@@ -153,6 +154,7 @@ const PlaceCard = ({ place }) => (
     </CardContent>
     
     <CardFooter className="pt-0 pb-3 px-3 flex justify-between">
+      <div></div>
       <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 p-0 text-xs h-auto">
         Details...
       </Button>

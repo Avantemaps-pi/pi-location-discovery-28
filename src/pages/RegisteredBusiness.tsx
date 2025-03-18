@@ -105,7 +105,7 @@ const RegisteredBusiness = () => {
                 Register New Business
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="sm:max-w-md">
               <DialogHeader>
                 <DialogTitle>Register New Business</DialogTitle>
                 <DialogDescription>
@@ -144,7 +144,7 @@ const RegisteredBusiness = () => {
           <Card>
             <CardHeader className="flex flex-row items-start justify-between">
               <div>
-                <CardTitle>{editMode ? 'Edit Business' : selectedBusinessData.name}</CardTitle>
+                <CardTitle className="text-xl">{editMode ? 'Edit Business' : selectedBusinessData.name}</CardTitle>
                 <CardDescription>{selectedBusinessData.category}</CardDescription>
               </div>
               
@@ -199,15 +199,15 @@ const RegisteredBusiness = () => {
                         {!editMode && (
                           <div className="mt-4 space-y-3">
                             <div className="flex items-start">
-                              <MapPin className="h-5 w-5 text-muted-foreground mr-2 mt-0.5" />
+                              <MapPin className="h-5 w-5 text-muted-foreground mr-2 mt-0.5 flex-shrink-0" />
                               <p className="text-sm">{selectedBusinessData.address}</p>
                             </div>
                             <div className="flex items-center">
-                              <Phone className="h-5 w-5 text-muted-foreground mr-2" />
+                              <Phone className="h-5 w-5 text-muted-foreground mr-2 flex-shrink-0" />
                               <p className="text-sm">{selectedBusinessData.phone}</p>
                             </div>
                             <div className="flex items-start">
-                              <Clock className="h-5 w-5 text-muted-foreground mr-2 mt-0.5" />
+                              <Clock className="h-5 w-5 text-muted-foreground mr-2 mt-0.5 flex-shrink-0" />
                               <p className="text-sm">{selectedBusinessData.hours}</p>
                             </div>
                           </div>
@@ -298,26 +298,26 @@ const RegisteredBusiness = () => {
                         ) : (
                           <div className="space-y-4">
                             <h3 className="text-lg font-medium">Description</h3>
-                            <p>{selectedBusinessData.description}</p>
+                            <p className="text-sm">{selectedBusinessData.description}</p>
                             
                             <div className="border-t pt-4 mt-6">
                               <h3 className="text-lg font-medium mb-3">Business Status</h3>
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="bg-green-50 p-4 rounded-md border border-green-100">
-                                  <h4 className="font-medium text-green-700 mb-1">Verification Status</h4>
-                                  <p className="text-green-600">Verified</p>
+                                  <h4 className="font-medium text-green-700 mb-1 text-sm">Verification Status</h4>
+                                  <p className="text-green-600 text-sm">Verified</p>
                                 </div>
                                 <div className="bg-blue-50 p-4 rounded-md border border-blue-100">
-                                  <h4 className="font-medium text-blue-700 mb-1">Pi Payments</h4>
-                                  <p className="text-blue-600">Enabled</p>
+                                  <h4 className="font-medium text-blue-700 mb-1 text-sm">Pi Payments</h4>
+                                  <p className="text-blue-600 text-sm">Enabled</p>
                                 </div>
                                 <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-                                  <h4 className="font-medium text-gray-700 mb-1">Visibility</h4>
-                                  <p className="text-gray-600">Public</p>
+                                  <h4 className="font-medium text-gray-700 mb-1 text-sm">Visibility</h4>
+                                  <p className="text-gray-600 text-sm">Public</p>
                                 </div>
                                 <div className="bg-yellow-50 p-4 rounded-md border border-yellow-100">
-                                  <h4 className="font-medium text-yellow-700 mb-1">Listing Status</h4>
-                                  <p className="text-yellow-600">Featured</p>
+                                  <h4 className="font-medium text-yellow-700 mb-1 text-sm">Listing Status</h4>
+                                  <p className="text-yellow-600 text-sm">Featured</p>
                                 </div>
                               </div>
                             </div>
