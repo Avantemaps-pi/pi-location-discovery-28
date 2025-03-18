@@ -34,7 +34,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
       <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
         <SheetTrigger asChild>
           <Button variant="ghost" size="icon" className="mr-auto">
-            <Menu className="h-5 w-5" />
+            <Menu className="h-7 w-7" />
             <span className="sr-only">Toggle menu</span>
           </Button>
         </SheetTrigger>
@@ -95,14 +95,10 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
             </div>
           </div>
           
-          {/* Footer section */}
+          {/* Footer section - removed "Find Pi-enabled businesses near you" text */}
           <div className="mt-auto p-4 border-t text-xs text-muted-foreground">
             <p>© 2023 Avante Maps</p>
             <p>Powered by Pi Network</p>
-            <div className="mt-2 flex items-center">
-              <PiSquare className="h-4 w-4 mr-1 text-avante-purple" />
-              <span>Find Pi-enabled businesses near you</span>
-            </div>
           </div>
         </SheetContent>
       </Sheet>

@@ -1,7 +1,7 @@
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Star, ExternalLink } from 'lucide-react';
+import { MapPin, Star, ExternalLink, Info, Bookmark, CircleCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -96,46 +96,70 @@ const avanteTopChoice = [
   },
 ];
 
-// Reusable place card component
 const PlaceCard = ({ place }) => (
-  <Card key={place.id} className="min-w-[250px] w-72 flex-shrink-0 overflow-hidden">
-    <div className="h-40 overflow-hidden">
-      <img src={place.image} alt={place.name} className="w-full h-full object-cover transition-transform hover:scale-105 duration-300" />
+  <Card key={place.id} className="min-w-[250px] w-72 flex-shrink-0 shadow-md border-gray-200">
+    <CardHeader className="pb-2 px-3 pt-3">
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-2">
+          <div className="flex-shrink-0">
+            <CircleCheck className="h-5 w-5 text-blue-500" />
+          </div>
+          <CardTitle className="text-base font-bold">{place.name}</CardTitle>
+        </div>
+        <Bookmark className="h-5 w-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
+      </div>
+    </CardHeader>
+    
+    <div className="h-40 overflow-hidden px-3">
+      <div className="bg-gray-100 h-full flex items-center justify-center rounded">
+        <img 
+          src={place.image} 
+          alt={place.name} 
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.src = 'public/placeholder.svg';
+            e.currentTarget.alt = 'Business Image';
+          }}
+        />
+      </div>
     </div>
-    <CardHeader className="pb-2">
-      <div className="flex justify-between items-start">
-        <CardTitle className="text-lg">{place.name}</CardTitle>
-        <div className="flex items-center bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">
-          <Star className="h-4 w-4 mr-1 inline fill-yellow-500 text-yellow-500" />
-          {place.rating}
+    
+    <CardContent className="pt-3 px-3">
+      <p className="text-sm text-gray-700 line-clamp-3 mb-2">{place.description}</p>
+      <div className="flex justify-between items-end mt-2">
+        <div className="flex items-center gap-1">
+          <div className="flex">
+            {[...Array(5)].map((_, i) => (
+              <Star 
+                key={i} 
+                className={`h-4 w-4 ${i < Math.floor(place.rating) 
+                  ? 'text-yellow-400 fill-yellow-400' 
+                  : 'text-gray-300'}`} 
+              />
+            ))}
+          </div>
+          <span className="text-sm font-medium">{place.rating.toFixed(1)}</span>
+        </div>
+        <div>
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="bg-green-500 hover:bg-green-600 text-xs font-medium"
+          >
+            Website
+          </Button>
         </div>
       </div>
-      <CardDescription className="flex items-start">
-        <MapPin className="h-4 w-4 mr-1 flex-shrink-0 mt-0.5 text-muted-foreground" />
-        {place.address}
-      </CardDescription>
-    </CardHeader>
-    <CardContent>
-      <p className="text-sm text-muted-foreground line-clamp-2">{place.description}</p>
-      <div className="mt-2">
-        <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800">
-          {place.category}
-        </span>
-      </div>
     </CardContent>
-    <CardFooter className="flex justify-between pt-2">
-      <Button variant="outline" size="sm">
-        View on Map
-      </Button>
-      <Button variant="default" size="sm" className="bg-avante-blue hover:bg-avante-blue/90">
-        <ExternalLink className="h-4 w-4 mr-2" />
-        Directions
+    
+    <CardFooter className="pt-0 pb-3 px-3 flex justify-between">
+      <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 p-0 text-xs h-auto">
+        Details...
       </Button>
     </CardFooter>
   </Card>
 );
 
-// Reusable category section component
 const CategorySection = ({ title, places }) => (
   <div className="mb-10">
     <h2 className="text-xl font-bold mb-4">{title}</h2>
