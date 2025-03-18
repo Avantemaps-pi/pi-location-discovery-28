@@ -146,6 +146,18 @@ const exampleLocations = [
   { id: 4, position: { lat: 37.7583, lng: -122.4267 }, title: "Pi Bakery" },
 ];
 
+// Render state based on status
+const render = (status: Status) => {
+  switch (status) {
+    case Status.LOADING:
+      return <LoadingSpinner />;
+    case Status.FAILURE:
+      return <ErrorMessage />;
+    default:
+      return <LoadingSpinner />;
+  }
+};
+
 // Main Google Map component with wrapper
 const GoogleMap: React.FC = () => {
   const [zoom, setZoom] = useState(13);
