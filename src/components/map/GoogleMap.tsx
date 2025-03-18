@@ -1,170 +1,15 @@
 
-import React, { useRef, useEffect, useState } from 'react';
-import { Wrapper, Status } from '@googlemaps/react-wrapper';
-import { Loader2, MapPin } from 'lucide-react';
-
-// Use the provided Google Maps API key
-const GOOGLE_MAPS_API_KEY = "AIzaSyAp6za1pf11Tvq80kIRBpqqunXg4AcYa8s";
-
-// Map component that uses the Google Maps JavaScript API
-interface MapProps extends google.maps.MapOptions {
-  onClick?: (e: google.maps.MapMouseEvent) => void;
-  onIdle?: (map: google.maps.Map) => void;
-  children?: React.ReactNode;
-}
-
-// Define a proper interface for children components that need the map prop
-interface MapChildProps {
-  map?: google.maps.Map;
-}
-
-const MapComponent = ({ 
-  onClick, 
-  onIdle, 
-  children, 
-  ...options 
-}: MapProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<google.maps.Map>();
-
-  // Initialize the map
-  useEffect(() => {
-    if (ref.current && !map) {
-      const newMap = new window.google.maps.Map(ref.current, {
-        ...options,
-      });
-      setMap(newMap);
-    }
-  }, [ref, map, options]);
-
-  // Set up event listeners
-  useEffect(() => {
-    if (map) {
-      ['click', 'idle'].forEach((eventName) => 
-        google.maps.event.clearListeners(map, eventName)
-      );
-
-      if (onClick) {
-        map.addListener('click', onClick);
-      }
-
-      if (onIdle) {
-        map.addListener('idle', () => onIdle(map));
-      }
-    }
-  }, [map, onClick, onIdle]);
-
-  return (
-    <>
-      <div ref={ref} className="w-full h-full" />
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
-          // Type assertion to allow passing the map prop to children
-          return React.cloneElement(child as React.ReactElement<MapChildProps>, { map });
-        }
-        return child;
-      })}
-    </>
-  );
-};
-
-// Marker component
-interface MarkerProps extends google.maps.MarkerOptions {
-  onClick?: () => void;
-  map?: google.maps.Map;
-}
-
-const Marker = ({ onClick, map, ...options }: MarkerProps) => {
-  const [marker, setMarker] = useState<google.maps.Marker>();
-
-  useEffect(() => {
-    if (!marker) {
-      setMarker(new google.maps.Marker());
-    }
-
-    return () => {
-      if (marker) {
-        marker.setMap(null);
-      }
-    };
-  }, [marker]);
-
-  useEffect(() => {
-    if (marker) {
-      marker.setOptions(options);
-    }
-  }, [marker, options]);
-
-  useEffect(() => {
-    if (marker && map) {
-      marker.setMap(map);
-    }
-    return () => {
-      if (marker) {
-        marker.setMap(null);
-      }
-    };
-  }, [marker, map]);
-
-  useEffect(() => {
-    if (marker && onClick) {
-      marker.addListener('click', onClick);
-    }
-
-    return () => {
-      if (marker && onClick) {
-        google.maps.event.clearListeners(marker, 'click');
-      }
-    };
-  }, [marker, onClick]);
-
-  return null;
-};
-
-// Loading spinner
-const LoadingSpinner = () => (
-  <div className="flex items-center justify-center w-full h-full">
-    <Loader2 className="h-12 w-12 text-avante-blue animate-spin" />
-  </div>
-);
-
-// Error message
-const ErrorMessage = () => (
-  <div className="flex items-center justify-center w-full h-full bg-red-50">
-    <div className="text-center p-4">
-      <p className="text-red-600 text-lg font-semibold">Error loading Google Maps</p>
-      <p className="text-red-500">Please check your connection and try again</p>
-    </div>
-  </div>
-);
-
-// Example for demo data - in a real app, this would come from your MongoDB database
-const exampleLocations = [
-  { id: 1, position: { lat: 37.7749, lng: -122.4194 }, title: "San Francisco Pi Cafe" },
-  { id: 2, position: { lat: 37.7833, lng: -122.4167 }, title: "Pi Tech Store" },
-  { id: 3, position: { lat: 37.7694, lng: -122.4862 }, title: "Pi Gadgets" },
-  { id: 4, position: { lat: 37.7583, lng: -122.4267 }, title: "Pi Bakery" },
-];
-
-// Render state based on status
-const render = (status: Status) => {
-  switch (status) {
-    case Status.LOADING:
-      return <LoadingSpinner />;
-    case Status.FAILURE:
-      return <ErrorMessage />;
-    default:
-      return <LoadingSpinner />;
-  }
-};
+import React, { useState } from 'react';
+import { Wrapper } from '@googlemaps/react-wrapper';
+import MapComponent from './MapComponent';
+import Marker from './Marker';
+import { renderMap } from './MapLoadingStates';
+import { GOOGLE_MAPS_API_KEY, exampleLocations, mapStyles, defaultCenter, defaultZoom } from './mapConfig';
 
 // Main Google Map component with wrapper
 const GoogleMap: React.FC = () => {
-  const [zoom, setZoom] = useState(13);
-  const [center, setCenter] = useState<google.maps.LatLngLiteral>({
-    lat: 37.7749,
-    lng: -122.4194,
-  });
+  const [zoom, setZoom] = useState(defaultZoom);
+  const [center, setCenter] = useState<google.maps.LatLngLiteral>(defaultCenter);
   const [activeMarker, setActiveMarker] = useState<number | null>(null);
 
   const handleMarkerClick = (id: number) => {
@@ -177,7 +22,7 @@ const GoogleMap: React.FC = () => {
     <div className="w-full h-full">
       <Wrapper 
         apiKey={GOOGLE_MAPS_API_KEY} 
-        render={render}
+        render={renderMap}
         libraries={['places']}
       >
         <MapComponent
@@ -187,20 +32,14 @@ const GoogleMap: React.FC = () => {
           maxZoom={18}
           mapId="avante_map_id"
           onIdle={(map) => {
-            setZoom(map.getZoom() || 13);
+            setZoom(map.getZoom() || defaultZoom);
             setCenter(map.getCenter()?.toJSON() || center);
           }}
           mapTypeControl={false}
           fullscreenControl={false}
           streetViewControl={false}
           zoomControl={true}
-          styles={[
-            {
-              featureType: "poi",
-              elementType: "labels",
-              stylers: [{ visibility: "off" }]
-            }
-          ]}
+          styles={mapStyles}
         >
           {exampleLocations.map(({ id, position, title }) => (
             <Marker
