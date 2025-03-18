@@ -2,7 +2,8 @@
 import { useState, useEffect } from 'react';
 import { MapChildProps } from './MapComponent';
 
-interface MarkerProps extends google.maps.MarkerOptions, MapChildProps {
+// We'll separate the MarkerOptions from MapChildProps to avoid the map property conflict
+interface MarkerProps extends Omit<google.maps.MarkerOptions, 'map'>, MapChildProps {
   onClick?: () => void;
 }
 
