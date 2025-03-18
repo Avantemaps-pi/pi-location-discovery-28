@@ -1,11 +1,34 @@
+
 import React, { useState } from 'react';
 import GoogleMap from '@/components/map/GoogleMap';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Input } from '@/components/ui/input';
+import { Link } from 'react-router-dom';
+import { Search } from 'lucide-react';
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const navItems = [
+    { to: '/', label: 'Home' },
+    { to: '/recommendations', label: 'Recommendations' },
+    { to: '/bookmarks', label: 'Bookmarks' },
+    { to: '/contact', label: 'Contact' },
+    { to: '/about', label: 'About Us' },
+    { to: '/settings', label: 'Settings' },
+    { to: '/terms', label: 'Terms of Service' },
+    { to: '/privacy', label: 'Privacy Policy' },
+    { to: '/cookies', label: 'Cookie Policy' },
+  ];
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Search for:', searchTerm);
+    // Implement search functionality here
+  };
 
   return (
     <div className="flex flex-col h-screen">
@@ -25,21 +48,17 @@ const Index = () => {
               </div>
               <nav className="mt-4">
                 <ul className="space-y-2 px-2">
-                  <li>
-                    <a href="/" className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-slate-100">
-                      Home
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/about" className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-slate-100">
-                      About
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/contact" className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-slate-100">
-                      Contact
-                    </a>
-                  </li>
+                  {navItems.map((item) => (
+                    <li key={item.to}>
+                      <Link 
+                        to={item.to} 
+                        className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-slate-100"
+                        onClick={() => setIsSidebarOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </nav>
             </div>
@@ -55,9 +74,25 @@ const Index = () => {
         </div>
       </header>
       
-      {/* Content area - currently empty as per request */}
-      <div className="flex-1">
-        {/* The page is empty except for the header with burger menu */}
+      {/* Search box below header */}
+      <div className="w-full px-4 py-2 border-b bg-white">
+        <form onSubmit={handleSearch} className="max-w-md">
+          <div className="relative">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search..."
+              className="pl-10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </form>
+      </div>
+      
+      {/* Content area */}
+      <div className="flex-1 overflow-auto">
+        {/* The page is empty except for the header with burger menu and search box */}
       </div>
     </div>
   );
