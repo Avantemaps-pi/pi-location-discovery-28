@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
+import { Menu, LogIn } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Link } from 'react-router-dom';
-import { Home, Compass, Bookmark, Mail, Info, Settings, FileText, PiSquare, Clipboard } from 'lucide-react';
+import { Home, Compass, Bookmark, Mail, Info, Settings, FileText, PiSquare, Clipboard, UserPlus } from 'lucide-react';
 
 interface PageHeaderProps {
   title?: string;
@@ -48,6 +48,14 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
                   </div>
                   <h2 className="text-lg font-semibold bg-gradient-to-r from-avante-blue to-avante-purple bg-clip-text text-transparent">Avante Maps</h2>
                 </Link>
+              </div>
+              
+              {/* Login button */}
+              <div className="px-4 py-3 border-b">
+                <Button className="w-full flex items-center gap-2" variant="outline">
+                  <LogIn className="h-4 w-4" />
+                  <span>Login</span>
+                </Button>
               </div>
               
               <nav className="mt-4">

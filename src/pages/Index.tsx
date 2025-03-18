@@ -1,9 +1,13 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import GoogleMap from '@/components/map/GoogleMap';
+import SearchBar from '@/components/map/SearchBar';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,25 +20,31 @@ const Index = () => {
 
   return (
     <AppLayout title="Avante Maps" withHeader={true} fullHeight={true}>
-      {/* Search box */}
-      <div className="w-full p-4">
-        <form onSubmit={handleSearch} className="max-w-md mx-auto">
-          <div className="relative">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search for Pi-enabled businesses..."
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+      {/* Map container with absolute positioning for overlays */}
+      <div className="relative h-full w-full">
+        {/* Google Maps component as background */}
+        <div className="absolute inset-0 z-0">
+          <GoogleMap />
+        </div>
+        
+        {/* Overlaid search box */}
+        <div className="absolute top-4 left-0 right-0 z-10 px-4">
+          <div className="max-w-md mx-auto">
+            <SearchBar />
           </div>
-        </form>
-      </div>
-      
-      {/* Google Maps component */}
-      <div className="flex-1 h-full relative">
-        <GoogleMap />
+        </div>
+        
+        {/* Floating action button for registration */}
+        <div className="absolute bottom-6 right-6 z-10">
+          <Link to="/registration">
+            <Button 
+              className="h-14 w-14 rounded-full bg-avante-blue hover:bg-avante-blue/90 shadow-lg"
+              aria-label="Register a business"
+            >
+              <Plus className="h-6 w-6" />
+            </Button>
+          </Link>
+        </div>
       </div>
     </AppLayout>
   );

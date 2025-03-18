@@ -10,9 +10,11 @@ import {
   Settings,
   FileText,
   PiSquare,
-  Clipboard
+  Clipboard,
+  LogIn
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface NavItemProps {
   to: string;
@@ -90,6 +92,14 @@ const AppSidebar = ({ className, isSheet = false, onClose }: AppSidebarProps) =>
             <span className="text-xs text-muted-foreground">Pi Payment Finder</span>
           </div>
         </Link>
+      </div>
+      
+      {/* Login button */}
+      <div className="p-4 border-b border-sidebar-border">
+        <Button className="w-full flex items-center gap-2" variant="outline">
+          <LogIn className="h-4 w-4" />
+          <span>Login</span>
+        </Button>
       </div>
 
       {/* Navigation items */}
