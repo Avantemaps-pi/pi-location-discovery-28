@@ -2,7 +2,6 @@
 import { ReactNode } from 'react';
 import AppSidebar from './AppSidebar';
 import PageHeader from './PageHeader';
-import { useState } from 'react';
 
 interface AppLayoutProps {
   children: ReactNode;

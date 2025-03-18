@@ -16,6 +16,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
     { to: '/', label: 'Home' },
     { to: '/recommendations', label: 'Recommendations' },
     { to: '/bookmarks', label: 'Bookmarks' },
+    { to: '/registration', label: 'Register Business' },
     { to: '/contact', label: 'Contact' },
     { to: '/about', label: 'About Us' },
     { to: '/settings', label: 'Settings' },
