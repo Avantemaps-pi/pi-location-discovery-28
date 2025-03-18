@@ -1,15 +1,10 @@
-
 import React, { useState } from 'react';
-import AppLayout from '@/components/layout/AppLayout';
 import GoogleMap from '@/components/map/GoogleMap';
-import SearchBar from '@/components/map/SearchBar';
-import BusinessRegistrationForm from '@/components/business/BusinessRegistrationForm';
 import { Button } from '@/components/ui/button';
-import { Plus, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const Index = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -60,32 +55,9 @@ const Index = () => {
         </div>
       </header>
       
-      {/* Main Content */}
-      <div className="flex-1 relative">
-        {/* Search Bar below header */}
-        <div className="absolute top-4 left-4 z-10 w-full max-w-md px-4 md:px-0">
-          <SearchBar />
-        </div>
-        
-        {/* Map */}
-        <div className="h-full w-full">
-          <GoogleMap />
-        </div>
-        
-        {/* Add Business Button */}
-        <div className="absolute bottom-6 right-6 z-10">
-          <Sheet open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <SheetTrigger asChild>
-              <Button size="lg" className="rounded-full shadow-lg bg-avante-blue hover:bg-avante-blue/90">
-                <Plus className="mr-2 h-5 w-5" />
-                Add Business
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-full sm:max-w-xl overflow-y-auto">
-              <BusinessRegistrationForm onSuccess={() => setIsFormOpen(false)} />
-            </SheetContent>
-          </Sheet>
-        </div>
+      {/* Content area - currently empty as per request */}
+      <div className="flex-1">
+        {/* The page is empty except for the header with burger menu */}
       </div>
     </div>
   );
