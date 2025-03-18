@@ -9,7 +9,8 @@ import {
   Info, 
   Settings,
   FileText,
-  PiSquare
+  PiSquare,
+  Clipboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -50,6 +51,7 @@ const AppSidebar = ({ className, isSheet = false, onClose }: AppSidebarProps) =>
     { to: '/', icon: Home, label: 'Home' },
     { to: '/recommendations', icon: Compass, label: 'Recommendations' },
     { to: '/bookmarks', icon: Bookmark, label: 'Bookmarks' },
+    { to: '/registration', icon: Clipboard, label: 'Register Business' },
     { to: '/contact', icon: Mail, label: 'Contact' },
     { to: '/about', icon: Info, label: 'About Us' },
     { to: '/settings', icon: Settings, label: 'Settings' },
@@ -129,6 +131,10 @@ const AppSidebar = ({ className, isSheet = false, onClose }: AppSidebarProps) =>
       <div className="p-4 border-t border-sidebar-border text-xs text-muted-foreground">
         <p>© 2023 Avante Maps</p>
         <p>Powered by Pi Network</p>
+        <div className="mt-2 flex items-center">
+          <PiSquare className="h-4 w-4 mr-1 text-avante-purple" />
+          <span>Find Pi-enabled businesses near you</span>
+        </div>
       </div>
     </aside>
   );

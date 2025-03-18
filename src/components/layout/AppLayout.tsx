@@ -16,8 +16,8 @@ const AppLayout = ({ children, fullHeight = false, withHeader = true, title = "A
       {withHeader && <PageHeader title={title} />}
       <div className="flex flex-1 overflow-hidden">
         <AppSidebar className="hidden md:flex" />
-        <main className={`flex-1 md:ml-64 ${fullHeight ? 'h-[calc(100vh-3.5rem)]' : ''} ${withHeader ? 'overflow-y-auto' : 'h-screen'}`}>
-          <div className={fullHeight ? '' : 'p-6'}>
+        <main className={`flex-1 md:ml-64 ${fullHeight ? 'h-[calc(100vh-4rem)]' : ''} ${withHeader ? 'overflow-y-auto' : 'h-screen'}`}>
+          <div className={fullHeight ? 'h-full' : 'p-6'}>
             {children}
           </div>
         </main>
