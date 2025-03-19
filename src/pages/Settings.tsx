@@ -15,7 +15,8 @@ import {
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
-import { CheckCircle, Globe } from 'lucide-react';
+import { CheckCircle, Globe, Shield, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Settings = () => {
   const [language, setLanguage] = useState('english');
@@ -147,6 +148,23 @@ const Settings = () => {
               <p className="text-xs text-muted-foreground">
                 Default distance to search for businesses, or select worldwide to see all businesses.
               </p>
+            </div>
+
+            <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-md">
+              <div className="flex items-start">
+                <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div>
+                  <h3 className="font-medium text-blue-900">Business Verification</h3>
+                  <p className="text-sm text-blue-700 mt-1 mb-3">
+                    Learn about our verification and certification processes to increase the credibility of your Pi business.
+                  </p>
+                  <Button asChild variant="outline" className="bg-white border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800">
+                    <Link to="/verification-info" className="flex items-center">
+                      View Verification Requirements <ExternalLink className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
             </div>
           </CardContent>
           <CardFooter>

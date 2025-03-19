@@ -76,6 +76,7 @@ const VerificationInfo = () => {
                 <li>Customer reviews (min. 4.0/5.0 rating)</li>
                 <li>Compliance with Pi Network policies</li>
                 <li>Regular business activity updates</li>
+                <li>Small business or Enterprise subscription</li>
               </ul>
 
               <h3 className="text-base font-medium mb-2">Benefits:</h3>
@@ -85,6 +86,7 @@ const VerificationInfo = () => {
                 <li>Eligibility for Pi Network promotions</li>
                 <li>Featured in Pi Network communications</li>
                 <li>Advanced transaction analytics</li>
+                <li>Eligibility for Avante Maps promotions</li>
               </ul>
             </CardContent>
           </Card>

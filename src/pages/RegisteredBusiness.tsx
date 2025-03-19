@@ -1,7 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -15,7 +15,8 @@ import {
   Trash,
   Eye,
   Share,
-  FileText
+  FileText,
+  Info
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -24,6 +25,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link } from 'react-router-dom';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const RegisteredBusiness = () => {
   const businesses = [
@@ -43,6 +52,13 @@ const RegisteredBusiness = () => {
     }
   ];
 
+  const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
+
+  // Filter businesses based on selection
+  const filteredBusinesses = selectedBusinessId 
+    ? businesses.filter(business => business.id.toString() === selectedBusinessId) 
+    : businesses;
+
   return (
     <AppLayout title="My Registered Businesses">
       <div className="max-w-5xl mx-auto">
@@ -53,6 +69,24 @@ const RegisteredBusiness = () => {
           </div>
           <Button onClick={() => window.location.href = '/registration'}>Register New Business</Button>
         </div>
+
+        {businesses.length > 0 && (
+          <div className="mb-6">
+            <Select onValueChange={setSelectedBusinessId}>
+              <SelectTrigger className="w-full md:w-[300px]">
+                <SelectValue placeholder="Select a business to view" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">All Businesses</SelectItem>
+                {businesses.map(business => (
+                  <SelectItem key={business.id} value={business.id.toString()}>
+                    {business.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {businesses.length === 0 ? (
           <Card className="text-center py-12">
@@ -65,7 +99,7 @@ const RegisteredBusiness = () => {
           </Card>
         ) : (
           <div className="space-y-6">
-            {businesses.map((business) => (
+            {filteredBusinesses.map((business) => (
               <Card key={business.id} className="overflow-hidden">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="bg-gray-100 md:col-span-1 aspect-video md:aspect-auto flex items-center justify-center">
@@ -121,6 +155,25 @@ const RegisteredBusiness = () => {
                     <p className="mt-4 text-gray-700">{business.description}</p>
                     
                     <div className="mt-6 space-y-3">
+                      <div className="flex items-center">
+                        <Shield className="h-5 w-5 mr-2 text-gray-500" />
+                        <div>
+                          <span className="text-sm font-medium">Verification Status</span>
+                          <div className="flex items-center mt-1">
+                            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1">
+                              <AlertTriangle className="h-3 w-3" />
+                              Not Verified
+                            </Badge>
+                            <Button variant="link" size="sm" asChild className="ml-2 h-auto p-0 text-blue-600">
+                              <Link to="/verification-info">
+                                <Info className="h-3.5 w-3.5 mr-1" />
+                                <span className="text-xs">View Requirements</span>
+                              </Link>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div className="flex items-center">
                         <Shield className="h-5 w-5 mr-2 text-gray-500" />
                         <div>
