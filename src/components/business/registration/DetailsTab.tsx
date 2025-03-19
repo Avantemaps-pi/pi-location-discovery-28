@@ -33,14 +33,14 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
   const form = useFormContext<FormValues>();
   
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border shadow-sm">
+      <CardHeader className="pb-4">
         <CardTitle className="text-xl">Additional Details</CardTitle>
         <CardDescription>
           Tell customers more about your business.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6">
         <FormField
           control={form.control}
           name="businessTypes"
@@ -85,14 +85,16 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
                                 field.onChange([...current, type]);
                               }
                             }}
-                            className="flex items-center"
+                            className="flex items-center gap-2"
                           >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4 flex-shrink-0",
-                                field.value?.includes(type) ? "opacity-100" : "opacity-0"
+                            <div className={cn(
+                              "flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                              field.value?.includes(type) ? "bg-primary text-primary-foreground" : "opacity-50"
+                            )}>
+                              {field.value?.includes(type) && (
+                                <Check className="h-3 w-3" />
                               )}
-                            />
+                            </div>
                             <span className="truncate">{type}</span>
                           </CommandItem>
                         ))}
@@ -113,6 +115,7 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
               type="file" 
               accept="image/*" 
               onChange={handleImageUpload}
+              className="cursor-pointer"
             />
           </FormControl>
           <FormDescription>
@@ -134,7 +137,7 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
               <FormControl>
                 <Textarea 
                   placeholder="Tell us about your business..." 
-                  className="min-h-[120px]"
+                  className="min-h-[120px] resize-none"
                   {...field} 
                 />
               </FormControl>
@@ -163,7 +166,7 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
           )}
         />
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-between pt-2">
         <Button 
           type="button" 
           variant="outline" 

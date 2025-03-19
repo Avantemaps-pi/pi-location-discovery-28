@@ -6,7 +6,7 @@ import BusinessRegistrationForm from '@/components/business/BusinessRegistration
 const Registration = () => {
   return (
     <AppLayout title="Business Registration">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4 py-6">
         <BusinessRegistrationForm />
       </div>
     </AppLayout>

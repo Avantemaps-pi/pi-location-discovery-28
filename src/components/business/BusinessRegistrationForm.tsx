@@ -90,12 +90,12 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-              <TabsList className="grid grid-cols-5 mb-6">
-                <TabsTrigger value="business-owner">Business Owner</TabsTrigger>
-                <TabsTrigger value="contact">Contact</TabsTrigger>
-                <TabsTrigger value="address">Address</TabsTrigger>
-                <TabsTrigger value="hours">Hours</TabsTrigger>
-                <TabsTrigger value="details">Details</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-5 mb-6">
+                <TabsTrigger value="business-owner" className="text-xs sm:text-sm">Business Owner</TabsTrigger>
+                <TabsTrigger value="contact" className="text-xs sm:text-sm">Contact</TabsTrigger>
+                <TabsTrigger value="address" className="text-xs sm:text-sm">Address</TabsTrigger>
+                <TabsTrigger value="hours" className="text-xs sm:text-sm">Hours</TabsTrigger>
+                <TabsTrigger value="details" className="text-xs sm:text-sm">Details</TabsTrigger>
               </TabsList>
 
               {/* Business Owner Tab */}

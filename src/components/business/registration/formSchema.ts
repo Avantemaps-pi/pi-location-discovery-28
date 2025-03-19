@@ -66,6 +66,13 @@ export const businessTypes = [
   'Entertainment',
   'Education',
   'Accommodation',
+  'Transportation',
+  'Financial Services',
+  'Arts & Crafts',
+  'Agriculture',
+  'Construction',
+  'Manufacturing',
+  'Real Estate',
   'Other',
 ];
 
