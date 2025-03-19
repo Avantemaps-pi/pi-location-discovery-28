@@ -4,7 +4,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, ExternalLink, Star, Bookmark, CircleCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import CategoryBadge from '@/components/business/CategoryBadge';
 
 const bookmarkedPlaces = [
   {
@@ -97,7 +97,7 @@ const PlaceCard = ({ place, onRemove }) => {
               </div>
               <span className="text-sm font-medium">{place.rating.toFixed(1)}</span>
             </div>
-            <Badge className="text-xs px-3 py-0.5 h-6 bg-purple-100 text-purple-800 hover:bg-purple-200 rounded-md border-0">{place.category}</Badge>
+            <CategoryBadge category={place.category} />
           </div>
           <div>
             <Button 

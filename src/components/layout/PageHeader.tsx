@@ -5,6 +5,7 @@ import { Menu, LogIn } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Link } from 'react-router-dom';
 import { Home, Compass, Bookmark, Mail, Info, Settings, FileText, PiSquare, Clipboard, UserPlus, User, Bell, Building } from 'lucide-react';
+import LoginDialog from '@/components/auth/LoginDialog';
 
 interface PageHeaderProps {
   title?: string;
@@ -12,6 +13,7 @@ interface PageHeaderProps {
 
 const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
   const navItems = [
     { to: '/', label: 'Home', icon: Home },
@@ -31,6 +33,11 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
     { to: '/privacy', label: 'Privacy Policy', icon: FileText },
     { to: '/cookies', label: 'Cookie Policy', icon: FileText },
   ];
+
+  const handleLoginClick = () => {
+    setIsSidebarOpen(false);
+    setIsLoginDialogOpen(true);
+  };
 
   return (
     <header className="h-16 border-b flex items-center px-4 bg-white">
@@ -55,7 +62,11 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
               
               {/* Login button */}
               <div className="px-4 py-3 border-b">
-                <Button className="w-full flex items-center gap-2" variant="outline">
+                <Button 
+                  className="w-full flex items-center gap-2" 
+                  variant="outline"
+                  onClick={handleLoginClick}
+                >
                   <LogIn className="h-4 w-4" />
                   <span>Login</span>
                 </Button>
@@ -98,7 +109,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
             </div>
           </div>
           
-          {/* Footer section - removed "Find Pi-enabled businesses near you" text */}
           <div className="mt-auto p-4 border-t text-xs text-muted-foreground">
             <p>© 2023 Avante Maps</p>
             <p>Powered by Pi Network</p>
@@ -113,6 +123,9 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
       <div className="w-10">
         {/* Empty div to balance the header */}
       </div>
+
+      {/* Login Dialog */}
+      <LoginDialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen} />
     </header>
   );
 };

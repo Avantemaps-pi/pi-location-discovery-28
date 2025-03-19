@@ -1,17 +1,14 @@
 
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check } from "lucide-react";
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Communicon = () => {
-  const [activeTab, setActiveTab] = useState("profile");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
     { id: 1, text: "Welcome to Pi Network Community!", sender: "system", timestamp: "10:30 AM" },
@@ -112,24 +109,6 @@ const Communicon = () => {
                 />
                 <Button type="submit">Send</Button>
               </form>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              <div className="flex flex-col items-center p-4 border rounded-md">
-                <Calendar className="h-8 w-8 text-primary mb-2" />
-                <span className="text-xl font-bold">2.5 Years</span>
-                <span className="text-sm text-muted-foreground">Pi Member</span>
-              </div>
-              <div className="flex flex-col items-center p-4 border rounded-md">
-                <MessageSquare className="h-8 w-8 text-primary mb-2" />
-                <span className="text-xl font-bold">127</span>
-                <span className="text-sm text-muted-foreground">Forum Posts</span>
-              </div>
-              <div className="flex flex-col items-center p-4 border rounded-md">
-                <Users className="h-8 w-8 text-primary mb-2" />
-                <span className="text-xl font-bold">3</span>
-                <span className="text-sm text-muted-foreground">Pi Businesses</span>
-              </div>
             </div>
           </CardContent>
         </Card>

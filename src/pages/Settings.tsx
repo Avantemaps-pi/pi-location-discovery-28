@@ -22,7 +22,7 @@ const Settings = () => {
   const [searchRadius, setSearchRadius] = useState('10km');
   const [notifications, setNotifications] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isWorldwideSearch, setIsWorldwideSearch] = useState(false);
+  const [isWorldwideSearch, setIsWorldwideSearch] = useState(true); // Set to true by default
 
   const handleSaveSettings = () => {
     toast.success('Settings saved successfully!');

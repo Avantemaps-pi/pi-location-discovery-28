@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { MapPin, Star, ExternalLink, Info, Bookmark, CircleCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
+import CategoryBadge from '@/components/business/CategoryBadge';
 
 // Mock data for different categories
 const recommendedForYou = [
@@ -149,7 +149,7 @@ const PlaceCard = ({ place }) => {
               </div>
               <span className="text-sm font-medium">{place.rating.toFixed(1)}</span>
             </div>
-            <Badge className="text-xs px-3 py-0.5 h-6 bg-purple-100 text-purple-800 hover:bg-purple-200 rounded-md border-0">{place.category}</Badge>
+            <CategoryBadge category={place.category} />
           </div>
           <div>
             <Button 
