@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,12 +13,16 @@ import { toast } from 'sonner';
 const Review = () => {
   const { businessId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState('');
   
-  // Mock business data - in a real app, this would be fetched from the database
-  const business = {
+  // Use business data from state if available, otherwise use fallback
+  const businessDetails = location.state?.businessDetails;
+  
+  // Fallback business data if not passed through navigation
+  const business = businessDetails || {
     id: businessId || "1",
     name: "Pi Tech Hub",
     image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2020&auto=format&fit=crop",
@@ -78,13 +82,13 @@ const Review = () => {
                       <StarIcon
                         key={i}
                         className={`h-4 w-4 ${
-                          i < Math.floor(business.currentRating)
+                          i < Math.floor(business.rating || business.currentRating)
                             ? 'text-yellow-400 fill-yellow-400'
                             : 'text-gray-300'
                         }`}
                       />
                     ))}
-                    <span className="text-sm ml-1">{business.currentRating.toFixed(1)}</span>
+                    <span className="text-sm ml-1">{(business.rating || business.currentRating).toFixed(1)}</span>
                     <span className="text-sm text-muted-foreground ml-1">
                       ({business.totalReviews} reviews)
                     </span>

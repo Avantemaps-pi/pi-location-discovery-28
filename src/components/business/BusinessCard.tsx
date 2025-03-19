@@ -7,11 +7,8 @@ import {
   Edit, 
   MapPin, 
   Clock, 
-  Shield, 
-  Eye,
-  MoreVertical
+  Shield
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import BusinessVerificationStatus from './BusinessVerificationStatus';
 import BusinessDropdownMenu from './BusinessDropdownMenu';
 import { Business } from '@/types/business';
@@ -71,10 +68,6 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
                 <p className="text-sm text-muted-foreground">July 15, 2023</p>
               </div>
             </div>
-          </div>
-          
-          <div className="mt-6">
-            <Button>View Details</Button>
           </div>
         </div>
       </div>

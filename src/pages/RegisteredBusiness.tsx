@@ -44,7 +44,7 @@ const RegisteredBusiness = () => {
           showButton={false}
         />
 
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
           <Button onClick={() => navigate('/registration')}>Register New Business</Button>
           
           {businesses.length > 0 && (

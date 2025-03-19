@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import MapComponent from './MapComponent';
@@ -37,7 +38,12 @@ const GoogleMap: React.FC = () => {
   };
 
   const handleRatingClick = (businessId: string) => {
-    navigate(`/review/${businessId}`);
+    // Navigate to the review page with the business details
+    navigate(`/review/${businessId}`, { 
+      state: { 
+        businessDetails: locationDetails 
+      }
+    });
   };
 
   const PlaceCardPopup = ({ location }) => (
