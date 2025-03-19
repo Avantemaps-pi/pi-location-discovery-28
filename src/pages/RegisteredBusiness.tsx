@@ -28,7 +28,7 @@ const RegisteredBusiness = () => {
   const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
 
   // Filter businesses based on selection
-  const filteredBusinesses = selectedBusinessId 
+  const filteredBusinesses = selectedBusinessId && selectedBusinessId !== "all"
     ? businesses.filter(business => business.id.toString() === selectedBusinessId) 
     : businesses;
 

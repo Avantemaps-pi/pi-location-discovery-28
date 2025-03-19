@@ -23,7 +23,7 @@ const BusinessSelector = ({ businesses, selectedBusinessId, onSelect }: Business
           <SelectValue placeholder="Select a business to view" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Businesses</SelectItem>
+          <SelectItem value="all">All Businesses</SelectItem>
           {businesses.map(business => (
             <SelectItem key={business.id} value={business.id.toString()}>
               {business.name}
