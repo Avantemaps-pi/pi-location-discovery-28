@@ -1,41 +1,14 @@
 
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Building, 
-  Edit, 
-  MapPin, 
-  Clock, 
-  Shield, 
-  AlertTriangle, 
-  MoreVertical,
-  Trash,
-  Eye,
-  Share,
-  FileText,
-  Info
-} from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Link } from 'react-router-dom';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import BusinessCard from '@/components/business/BusinessCard';
+import BusinessSelector from '@/components/business/BusinessSelector';
+import EmptyBusinessState from '@/components/business/EmptyBusinessState';
+import { Business } from '@/types/business';
 
 const RegisteredBusiness = () => {
-  const businesses = [
+  const businesses: Business[] = [
     {
       id: 1,
       name: "Pi Cafe",
@@ -71,137 +44,19 @@ const RegisteredBusiness = () => {
         </div>
 
         {businesses.length > 0 && (
-          <div className="mb-6">
-            <Select onValueChange={setSelectedBusinessId}>
-              <SelectTrigger className="w-full md:w-[300px]">
-                <SelectValue placeholder="Select a business to view" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">All Businesses</SelectItem>
-                {businesses.map(business => (
-                  <SelectItem key={business.id} value={business.id.toString()}>
-                    {business.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <BusinessSelector 
+            businesses={businesses} 
+            selectedBusinessId={selectedBusinessId} 
+            onSelect={setSelectedBusinessId} 
+          />
         )}
 
         {businesses.length === 0 ? (
-          <Card className="text-center py-12">
-            <CardContent>
-              <Building className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-xl font-medium mb-2">No Businesses Registered</h3>
-              <p className="text-muted-foreground mb-6">You haven't registered any businesses yet.</p>
-              <Button onClick={() => window.location.href = '/registration'}>Register a Business</Button>
-            </CardContent>
-          </Card>
+          <EmptyBusinessState />
         ) : (
           <div className="space-y-6">
             {filteredBusinesses.map((business) => (
-              <Card key={business.id} className="overflow-hidden">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-gray-100 md:col-span-1 aspect-video md:aspect-auto flex items-center justify-center">
-                    <div className="text-center p-4">
-                      <Building className="h-12 w-12 text-gray-400 mx-auto" />
-                      <span className="block mt-2 text-sm text-muted-foreground">Business Image</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6 md:col-span-2">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h2 className="text-xl font-bold">{business.name}</h2>
-                        <div className="flex items-center mt-1 text-muted-foreground">
-                          <MapPin className="h-4 w-4 mr-1" />
-                          <span className="text-sm">{business.address}</span>
-                        </div>
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button variant="outline" size="sm" className="flex items-center gap-1">
-                          <Edit className="h-4 w-4" />
-                          Edit
-                        </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-48">
-                            <DropdownMenuItem className="cursor-pointer">
-                              <Eye className="mr-2 h-4 w-4" />
-                              <span>View Details</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">
-                              <Share className="mr-2 h-4 w-4" />
-                              <span>Share</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">
-                              <FileText className="mr-2 h-4 w-4" />
-                              <span>Generate Report</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="cursor-pointer text-red-600">
-                              <Trash className="mr-2 h-4 w-4" />
-                              <span>Delete</span>
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                    
-                    <p className="mt-4 text-gray-700">{business.description}</p>
-                    
-                    <div className="mt-6 space-y-3">
-                      <div className="flex items-center">
-                        <Shield className="h-5 w-5 mr-2 text-gray-500" />
-                        <div>
-                          <span className="text-sm font-medium">Verification Status</span>
-                          <div className="flex items-center mt-1">
-                            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1">
-                              <AlertTriangle className="h-3 w-3" />
-                              Not Verified
-                            </Badge>
-                            <Button variant="link" size="sm" asChild className="ml-2 h-auto p-0 text-blue-600">
-                              <Link to="/verification-info">
-                                <Info className="h-3.5 w-3.5 mr-1" />
-                                <span className="text-xs">View Requirements</span>
-                              </Link>
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center">
-                        <Shield className="h-5 w-5 mr-2 text-gray-500" />
-                        <div>
-                          <span className="text-sm font-medium">Certification Status</span>
-                          <div className="flex items-center mt-1">
-                            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1">
-                              <AlertTriangle className="h-3 w-3" />
-                              Not Certified
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center">
-                        <Clock className="h-5 w-5 mr-2 text-gray-500" />
-                        <div>
-                          <span className="text-sm font-medium">Registration Date</span>
-                          <p className="text-sm text-muted-foreground">July 15, 2023</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-6">
-                      <Button>View Details</Button>
-                    </div>
-                  </div>
-                </div>
-              </Card>
+              <BusinessCard key={business.id} business={business} />
             ))}
           </div>
         )}
