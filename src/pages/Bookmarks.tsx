@@ -1,12 +1,11 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Trash2, ExternalLink, Star, Bookmark, CircleCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 
-// Mock data for bookmarks - in a real app, this would come from user data
 const bookmarkedPlaces = [
   {
     id: '1',
@@ -40,78 +39,95 @@ const bookmarkedPlaces = [
   },
 ];
 
-const PlaceCard = ({ place, onRemove }) => (
-  <Card key={place.id} className="min-w-[250px] w-full flex-shrink-0 shadow-md border-gray-200">
-    <CardHeader className="pb-2 px-3 pt-3">
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex-shrink-0">
-            <CircleCheck className="h-5 w-5 text-blue-500" />
+const PlaceCard = ({ place, onRemove }) => {
+  const [isBookmarked, setIsBookmarked] = useState(true);
+  
+  const handleBookmarkToggle = () => {
+    setIsBookmarked(!isBookmarked);
+    if (!isBookmarked === false) {
+      onRemove(place.id);
+    }
+  };
+  
+  return (
+    <Card key={place.id} className="min-w-[250px] w-full flex-shrink-0 shadow-md border-gray-200">
+      <CardHeader className="pb-2 px-3 pt-3">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex-shrink-0">
+              <CircleCheck className="h-5 w-5 text-blue-500" />
+            </div>
+            <CardTitle className="text-base font-bold">{place.name}</CardTitle>
           </div>
-          <CardTitle className="text-base font-bold">{place.name}</CardTitle>
+          <Bookmark 
+            className="h-5 w-5 text-blue-500 hover:text-blue-600 cursor-pointer fill-current" 
+            onClick={handleBookmarkToggle}
+          />
         </div>
-        <Bookmark className="h-5 w-5 text-blue-500 hover:text-blue-600 cursor-pointer fill-current" />
+      </CardHeader>
+      
+      <div className="h-40 overflow-hidden px-3">
+        <div className="bg-gray-100 h-full flex items-center justify-center rounded">
+          <img 
+            src={place.image} 
+            alt={place.name} 
+            className="w-full h-full object-cover"
+          />
+        </div>
       </div>
-    </CardHeader>
-    
-    <div className="h-40 overflow-hidden px-3">
-      <div className="bg-gray-100 h-full flex items-center justify-center rounded">
-        <img 
-          src={place.image} 
-          alt={place.name} 
-          className="w-full h-full object-cover"
-        />
-      </div>
-    </div>
-    
-    <CardContent className="pt-3 px-3">
-      <div className="flex items-center mb-1 text-sm text-muted-foreground">
-        <MapPin className="h-4 w-4 mr-1" />
-        {place.address}
-      </div>
-      <p className="text-sm text-gray-700 line-clamp-4 mb-2">{place.description}</p>
-      <div className="flex justify-between items-end mt-2">
-        <div className="flex items-center gap-1">
-          <div className="flex">
-            {[...Array(5)].map((_, i) => (
-              <Star 
-                key={i} 
-                className={`h-4 w-4 ${i < Math.floor(place.rating) 
-                  ? 'text-yellow-400 fill-yellow-400' 
-                  : 'text-gray-300'}`} 
-              />
-            ))}
+      
+      <CardContent className="pt-3 px-3">
+        <div className="flex items-center mb-1 text-sm text-muted-foreground">
+          <MapPin className="h-4 w-4 mr-1" />
+          {place.address}
+        </div>
+        <p className="text-sm text-gray-700 line-clamp-4 h-20 mb-2">{place.description}</p>
+        <div className="flex justify-between items-end mt-2">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1">
+              <div className="flex">
+                {[...Array(5)].map((_, i) => (
+                  <Star 
+                    key={i} 
+                    className={`h-4 w-4 ${i < Math.floor(place.rating) 
+                      ? 'text-yellow-400 fill-yellow-400' 
+                      : 'text-gray-300'}`} 
+                  />
+                ))}
+              </div>
+              <span className="text-sm font-medium">{place.rating.toFixed(1)}</span>
+            </div>
+            <Badge variant="outline" className="text-xs px-2 py-0 h-5 bg-gray-50">{place.category}</Badge>
           </div>
-          <span className="text-sm font-medium">{place.rating.toFixed(1)}</span>
+          <div>
+            <Button 
+              variant="default" 
+              size="sm" 
+              className="bg-green-500 hover:bg-green-600 text-xs font-medium"
+            >
+              Website
+            </Button>
+          </div>
         </div>
-        <div>
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="bg-green-500 hover:bg-green-600 text-xs font-medium"
-          >
-            Website
-          </Button>
-        </div>
-      </div>
-    </CardContent>
-    
-    <CardFooter className="flex justify-between pt-0 pb-3 px-3">
-      <Button 
-        variant="outline" 
-        size="sm" 
-        className="text-red-600 hover:text-red-700 hover:bg-red-50 text-xs"
-        onClick={() => onRemove(place.id)}
-      >
-        <Trash2 className="h-4 w-4 mr-1" />
-        Remove
-      </Button>
-      <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 p-0 text-xs h-auto">
-        Details...
-      </Button>
-    </CardFooter>
-  </Card>
-);
+      </CardContent>
+      
+      <CardFooter className="flex justify-between pt-0 pb-3 px-3">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="text-red-600 hover:text-red-700 hover:bg-red-50 text-xs"
+          onClick={() => onRemove(place.id)}
+        >
+          <Trash2 className="h-4 w-4 mr-1" />
+          Remove
+        </Button>
+        <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 p-0 text-xs h-auto">
+          Details...
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
 
 const Bookmarks = () => {
   const [bookmarks, setBookmarks] = React.useState(bookmarkedPlaces);

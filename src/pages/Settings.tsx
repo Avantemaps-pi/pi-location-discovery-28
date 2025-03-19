@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MapPinned, Bell, ShieldAlert, User, Lock } from 'lucide-react';
+import { MapPinned, Bell, ShieldAlert, User, Lock, Globe, AlertTriangle } from 'lucide-react';
 
 const Settings = () => {
   const [locationPermission, setLocationPermission] = useState(true);
@@ -18,6 +18,7 @@ const Settings = () => {
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
   const [distanceUnit, setDistanceUnit] = useState('miles');
   const [searchRadius, setSearchRadius] = useState('10');
+  const [language, setLanguage] = useState('en');
 
   const handleSavePreferences = () => {
     toast.success('Settings saved successfully!');
@@ -100,6 +101,41 @@ const Settings = () => {
                   </div>
                 </div>
               </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Globe className="h-5 w-5 mr-2 text-avante-purple" />
+                  Language Preferences
+                </CardTitle>
+                <CardDescription>Set your preferred language for the application.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor="language">Display Language</Label>
+                    <p className="text-sm text-muted-foreground">Choose your preferred language for translation.</p>
+                  </div>
+                  <Select value={language} onValueChange={setLanguage}>
+                    <SelectTrigger id="language" className="w-40">
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">English</SelectItem>
+                      <SelectItem value="es">Spanish</SelectItem>
+                      <SelectItem value="fr">French</SelectItem>
+                      <SelectItem value="de">German</SelectItem>
+                      <SelectItem value="zh">Chinese</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button onClick={handleSavePreferences} className="bg-avante-blue hover:bg-avante-blue/90">
+                  Save Language Preference
+                </Button>
+              </CardFooter>
             </Card>
 
             <Card>
@@ -278,16 +314,29 @@ const Settings = () => {
                 <CardDescription>Permanently remove your account and all associated data.</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  This action cannot be undone. Once you delete your account, all your data including bookmarks, preferences, and history will be permanently removed.
-                </p>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+                    <p className="text-sm text-muted-foreground">
+                      <span className="font-medium text-amber-500">Warning:</span> Your account will be immediately inactive and all your information will be permanently deleted after 15 days.
+                    </p>
+                  </div>
+                </div>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="flex flex-col items-start space-y-4">
                 <Button 
                   variant="destructive" 
                   onClick={() => toast.error('Feature disabled in demo')}
+                  className="w-full sm:w-auto"
                 >
                   Delete Account
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => toast.success('Account reinstated!')}
+                  className="w-full sm:w-auto"
+                >
+                  Reinstate Account
                 </Button>
               </CardFooter>
             </Card>

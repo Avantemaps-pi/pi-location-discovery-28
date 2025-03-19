@@ -1,10 +1,10 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Star, ExternalLink, Info, Bookmark, CircleCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
 
 // Mock data for different categories
 const recommendedForYou = [
@@ -97,70 +97,79 @@ const avanteTopChoice = [
   },
 ];
 
-const PlaceCard = ({ place }) => (
-  <Card key={place.id} className="min-w-[250px] w-72 flex-shrink-0 shadow-md border-gray-200">
-    <CardHeader className="pb-2 px-3 pt-3">
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex-shrink-0">
-            <CircleCheck className="h-5 w-5 text-blue-500" />
+const PlaceCard = ({ place }) => {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  
+  return (
+    <Card key={place.id} className="min-w-[250px] w-72 flex-shrink-0 shadow-md border-gray-200">
+      <CardHeader className="pb-2 px-3 pt-3">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex-shrink-0">
+              <CircleCheck className="h-5 w-5 text-blue-500" />
+            </div>
+            <CardTitle className="text-base font-bold">{place.name}</CardTitle>
           </div>
-          <CardTitle className="text-base font-bold">{place.name}</CardTitle>
+          <Bookmark 
+            className={`h-5 w-5 cursor-pointer ${isBookmarked ? 'text-blue-500 fill-blue-500' : 'text-gray-400 hover:text-gray-600'}`} 
+            onClick={() => setIsBookmarked(!isBookmarked)}
+          />
         </div>
-        <Bookmark className="h-5 w-5 text-gray-400 hover:text-gray-600 cursor-pointer" />
+      </CardHeader>
+      
+      <div className="h-40 overflow-hidden px-3">
+        <div className="bg-gray-100 h-full flex items-center justify-center rounded">
+          <img 
+            src={place.image} 
+            alt={place.name} 
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.src = 'public/placeholder.svg';
+              e.currentTarget.alt = 'Business Image';
+            }}
+          />
+        </div>
       </div>
-    </CardHeader>
-    
-    <div className="h-40 overflow-hidden px-3">
-      <div className="bg-gray-100 h-full flex items-center justify-center rounded">
-        <img 
-          src={place.image} 
-          alt={place.name} 
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.currentTarget.src = 'public/placeholder.svg';
-            e.currentTarget.alt = 'Business Image';
-          }}
-        />
-      </div>
-    </div>
-    
-    <CardContent className="pt-3 px-3">
-      <p className="text-sm text-gray-700 line-clamp-4 mb-2">{place.description}</p>
-      <div className="flex justify-between items-end mt-2">
-        <div className="flex items-center gap-1">
-          <div className="flex">
-            {[...Array(5)].map((_, i) => (
-              <Star 
-                key={i} 
-                className={`h-4 w-4 ${i < Math.floor(place.rating) 
-                  ? 'text-yellow-400 fill-yellow-400' 
-                  : 'text-gray-300'}`} 
-              />
-            ))}
+      
+      <CardContent className="pt-3 px-3">
+        <p className="text-sm text-gray-700 line-clamp-4 h-20 mb-2">{place.description}</p>
+        <div className="flex justify-between items-end mt-2">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1">
+              <div className="flex">
+                {[...Array(5)].map((_, i) => (
+                  <Star 
+                    key={i} 
+                    className={`h-4 w-4 ${i < Math.floor(place.rating) 
+                      ? 'text-yellow-400 fill-yellow-400' 
+                      : 'text-gray-300'}`} 
+                  />
+                ))}
+              </div>
+              <span className="text-sm font-medium">{place.rating.toFixed(1)}</span>
+            </div>
+            <Badge variant="outline" className="text-xs px-2 py-0 h-5 bg-gray-50">{place.category}</Badge>
           </div>
-          <span className="text-sm font-medium">{place.rating.toFixed(1)}</span>
+          <div>
+            <Button 
+              variant="default" 
+              size="sm" 
+              className="bg-green-500 hover:bg-green-600 text-xs font-medium"
+            >
+              Website
+            </Button>
+          </div>
         </div>
-        <div>
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="bg-green-500 hover:bg-green-600 text-xs font-medium"
-          >
-            Website
-          </Button>
-        </div>
-      </div>
-    </CardContent>
-    
-    <CardFooter className="pt-0 pb-3 px-3 flex justify-between">
-      <div></div>
-      <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 p-0 text-xs h-auto">
-        Details...
-      </Button>
-    </CardFooter>
-  </Card>
-);
+      </CardContent>
+      
+      <CardFooter className="pt-0 pb-3 px-3 flex justify-end">
+        <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 p-0 text-xs h-auto">
+          Details...
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
 
 const CategorySection = ({ title, places }) => (
   <div className="mb-10">

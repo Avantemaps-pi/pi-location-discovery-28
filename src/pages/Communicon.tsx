@@ -4,12 +4,14 @@ import AppLayout from '@/components/layout/AppLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon } from "lucide-react";
+import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const Communicon = () => {
   const [activeTab, setActiveTab] = useState("profile");
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   return (
     <AppLayout title="Communicon">
@@ -53,24 +55,46 @@ const Communicon = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Activity Summary</CardTitle>
+            <CardTitle>Activity Agreement</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="flex flex-col items-center p-4 border rounded-md">
-                <Calendar className="h-8 w-8 text-primary mb-2" />
-                <span className="text-xl font-bold">2.5 Years</span>
-                <span className="text-sm text-muted-foreground">Pi Member</span>
+            <div className="space-y-6">
+              <div className="flex items-start space-x-3">
+                <Checkbox 
+                  id="terms" 
+                  checked={acceptTerms}
+                  onCheckedChange={setAcceptTerms}
+                  className="mt-1"
+                />
+                <div>
+                  <label
+                    htmlFor="terms"
+                    className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    I accept the terms and conditions
+                  </label>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    By checking this box, I confirm that I have read and agreed to the Pi Network's terms of service and will abide by community guidelines.
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col items-center p-4 border rounded-md">
-                <MessageSquare className="h-8 w-8 text-primary mb-2" />
-                <span className="text-xl font-bold">127</span>
-                <span className="text-sm text-muted-foreground">Forum Posts</span>
-              </div>
-              <div className="flex flex-col items-center p-4 border rounded-md">
-                <Users className="h-8 w-8 text-primary mb-2" />
-                <span className="text-xl font-bold">3</span>
-                <span className="text-sm text-muted-foreground">Pi Businesses</span>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div className="flex flex-col items-center p-4 border rounded-md">
+                  <Calendar className="h-8 w-8 text-primary mb-2" />
+                  <span className="text-xl font-bold">2.5 Years</span>
+                  <span className="text-sm text-muted-foreground">Pi Member</span>
+                </div>
+                <div className="flex flex-col items-center p-4 border rounded-md">
+                  <MessageSquare className="h-8 w-8 text-primary mb-2" />
+                  <span className="text-xl font-bold">127</span>
+                  <span className="text-sm text-muted-foreground">Forum Posts</span>
+                </div>
+                <div className="flex flex-col items-center p-4 border rounded-md">
+                  <Users className="h-8 w-8 text-primary mb-2" />
+                  <span className="text-xl font-bold">3</span>
+                  <span className="text-sm text-muted-foreground">Pi Businesses</span>
+                </div>
               </div>
             </div>
           </CardContent>
