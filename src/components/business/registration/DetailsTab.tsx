@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useFormContext } from 'react-hook-form';
 import { FormValues, businessTypes } from './formSchema';
 
@@ -29,25 +29,44 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
       <CardContent className="space-y-4">
         <FormField
           control={form.control}
-          name="businessType"
-          render={({ field }) => (
+          name="businessTypes"
+          render={() => (
             <FormItem>
-              <FormLabel>Type of Business</FormLabel>
-              <Select 
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a business type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {businessTypes.map((type) => (
-                    <SelectItem key={type} value={type}>{type}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <FormLabel>Types of Business (Select all that apply)</FormLabel>
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                {businessTypes.map((type) => (
+                  <FormField
+                    key={type}
+                    control={form.control}
+                    name="businessTypes"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={type}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(type)}
+                              onCheckedChange={(checked) => {
+                                const current = field.value || [];
+                                return checked
+                                  ? field.onChange([...current, type])
+                                  : field.onChange(
+                                      current.filter((value) => value !== type)
+                                    );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            {type}
+                          </FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+              </div>
               <FormMessage />
             </FormItem>
           )}

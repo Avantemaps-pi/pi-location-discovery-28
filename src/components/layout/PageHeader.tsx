@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, LogIn } from 'lucide-react';
@@ -125,12 +126,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
           
           <div className="mt-auto p-4 border-t text-xs text-muted-foreground">
             <p>© 2023 Avante Maps</p>
-            <p>Powered by Pi Network</p>
             <p className="text-slate-500 mt-1">Architectured by Avante Labs</p>
-            <div className="mt-2 flex items-center">
-              <PiSquare className="h-4 w-4 mr-1 text-avante-purple" />
-              <span>Find Pi-enabled businesses near you</span>
-            </div>
           </div>
         </SheetContent>
       </Sheet>

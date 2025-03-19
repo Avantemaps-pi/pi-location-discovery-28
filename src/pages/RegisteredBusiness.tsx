@@ -98,7 +98,7 @@ const RegisteredBusiness = () => {
                           <DropdownMenuContent align="end" className="w-48">
                             <DropdownMenuItem className="cursor-pointer">
                               <Eye className="mr-2 h-4 w-4" />
-                              <span>Preview</span>
+                              <span>View Details</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem className="cursor-pointer">
                               <Share className="mr-2 h-4 w-4" />
@@ -143,9 +143,8 @@ const RegisteredBusiness = () => {
                       </div>
                     </div>
                     
-                    <div className="mt-6 flex flex-wrap gap-2">
+                    <div className="mt-6">
                       <Button>View Details</Button>
-                      <Button variant="outline">Preview Listing</Button>
                     </div>
                   </div>
                 </div>

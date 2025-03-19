@@ -20,10 +20,9 @@ export const formSchema = z.object({
   zipCode: z.string().min(5, { message: 'Valid zip/postal code is required' }),
   
   // Additional Details
-  businessType: z.string({ required_error: 'Please select a business type' }),
+  businessTypes: z.array(z.string()).min(1, { message: 'Please select at least one business type' }),
   businessDescription: z.string().min(10, { message: 'Please provide a short description' }),
   piWalletAddress: z.string().min(5, { message: 'Pi wallet address is required' }),
-  verificationStatus: z.string().optional(),
   
   // Trading Hours
   mondayOpen: z.string().optional(),
