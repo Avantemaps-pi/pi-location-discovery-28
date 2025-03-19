@@ -4,7 +4,7 @@ import { Wrapper } from '@googlemaps/react-wrapper';
 import MapComponent from './MapComponent';
 import Marker from './Marker';
 import { renderMap } from './MapLoadingStates';
-import { GOOGLE_MAPS_API_KEY, exampleLocations, mapStyles, defaultCenter, defaultZoom } from './mapConfig';
+import { GOOGLE_MAPS_API_KEY, mapStyles, defaultCenter, defaultZoom } from './mapConfig';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Circle, StarIcon } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,28 +20,68 @@ const GoogleMap: React.FC = () => {
   const [activeMarker, setActiveMarker] = useState<number | null>(null);
   const [showPopover, setShowPopover] = useState(false);
 
-  // Sample location data with more details
-  const locationDetails = {
-    id: "1",
-    name: "Pi Tech Hub",
-    description: "Technology store that specializes in gadgets and accepts Pi payments.",
-    rating: 4.8,
-    category: "Technology",
-    image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2020&auto=format&fit=crop"
-  };
+  // Extended location data with more details
+  const multipleLocations = [
+    {
+      id: "1",
+      name: "Pi Tech Hub",
+      description: "Technology store that specializes in gadgets and accepts Pi payments.",
+      rating: 4.8,
+      category: "Technology",
+      position: { lat: 37.775, lng: -122.419 },
+      image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2020&auto=format&fit=crop"
+    },
+    {
+      id: "2",
+      name: "Pi Cafe",
+      description: "Cozy cafe serving artisanal coffee and pastries with Pi payment options.",
+      rating: 4.5,
+      category: "Coffee Shop",
+      position: { lat: 37.785, lng: -122.421 },
+      image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1978&auto=format&fit=crop"
+    },
+    {
+      id: "3",
+      name: "Pi Bookstore",
+      description: "Independent bookstore with a vast collection that accepts Pi cryptocurrency.",
+      rating: 4.3,
+      category: "Retail",
+      position: { lat: 37.770, lng: -122.430 },
+      image: "https://images.unsplash.com/photo-1521056787327-239a23f27ebb?q=80&w=2070&auto=format&fit=crop"
+    },
+    {
+      id: "4",
+      name: "Pi Bakery",
+      description: "Fresh bread and pastries daily, accepting Pi payments.",
+      rating: 4.7,
+      category: "Food",
+      position: { lat: 37.760, lng: -122.415 },
+      image: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2074&auto=format&fit=crop"
+    },
+    {
+      id: "5",
+      name: "Pi Electronics",
+      description: "Electronics repair and sales shop that accepts Pi cryptocurrency.",
+      rating: 4.2,
+      category: "Technology",
+      position: { lat: 37.790, lng: -122.410 },
+      image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop"
+    }
+  ];
 
-  const handleMarkerClick = (id: number) => {
-    setActiveMarker(id);
+  const handleMarkerClick = (id: string) => {
+    setActiveMarker(Number(id));
     setShowPopover(true);
-    // In a real app, you would show details about the location here
-    console.log(`Clicked on marker ${id}`);
   };
 
   const handleRatingClick = (businessId: string) => {
+    // Find business details by ID
+    const businessDetails = multipleLocations.find(loc => loc.id === businessId);
+    
     // Navigate to the review page with the business details
     navigate(`/review/${businessId}`, { 
       state: { 
-        businessDetails: locationDetails 
+        businessDetails: businessDetails 
       }
     });
   };
@@ -86,8 +126,8 @@ const GoogleMap: React.FC = () => {
         </div>
       </CardContent>
       <CardFooter className="pt-0 pb-2 justify-end">
-        <Button variant="link" className="text-blue-600 p-0 h-auto text-xs">
-          More details
+        <Button variant="default" size="sm" className="bg-green-500 hover:bg-green-600 text-xs font-medium">
+          Website
         </Button>
       </CardFooter>
     </Card>
@@ -119,11 +159,11 @@ const GoogleMap: React.FC = () => {
           zoomControl={true}
           styles={mapStyles}
         >
-          {exampleLocations.map(({ id, position, title }) => (
-            <React.Fragment key={id}>
+          {multipleLocations.map((location) => (
+            <React.Fragment key={location.id}>
               <Marker
-                position={position}
-                title={title}
+                position={location.position}
+                title={location.name}
                 icon={{
                   url: `data:image/svg+xml,
                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="%238B5CF6" stroke="%23FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -132,12 +172,12 @@ const GoogleMap: React.FC = () => {
                     </svg>`,
                   scaledSize: { width: 36, height: 36 },
                 }}
-                onClick={() => handleMarkerClick(id)}
-                animation={activeMarker === id ? 1 : undefined}
+                onClick={() => handleMarkerClick(location.id)}
+                animation={activeMarker === Number(location.id) ? 1 : undefined}
               />
-              {activeMarker === id && showPopover && (
-                <div className="place-popup" id={`popup-${id}`}>
-                  <PlaceCardPopup location={locationDetails} />
+              {activeMarker === Number(location.id) && showPopover && (
+                <div className="place-popup" id={`popup-${location.id}`}>
+                  <PlaceCardPopup location={location} />
                 </div>
               )}
             </React.Fragment>

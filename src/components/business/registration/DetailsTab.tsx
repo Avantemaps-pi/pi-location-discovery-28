@@ -21,6 +21,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface DetailsTabProps {
   onPrevious: () => void;
@@ -68,31 +69,34 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
                   <Command>
                     <CommandInput placeholder="Search business types..." />
                     <CommandEmpty>No business type found.</CommandEmpty>
-                    <CommandGroup className="max-h-64 overflow-auto">
-                      {businessTypes.map((type) => (
-                        <CommandItem
-                          value={type}
-                          key={type}
-                          onSelect={() => {
-                            const current = field.value || [];
-                            const isSelected = current.includes(type);
-                            
-                            if (isSelected) {
-                              field.onChange(current.filter(value => value !== type));
-                            } else {
-                              field.onChange([...current, type]);
-                            }
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              field.value?.includes(type) ? "opacity-100" : "opacity-0"
-                            )}
-                          />
-                          {type}
-                        </CommandItem>
-                      ))}
+                    <CommandGroup>
+                      <ScrollArea className="h-60">
+                        {businessTypes.map((type) => (
+                          <CommandItem
+                            value={type}
+                            key={type}
+                            onSelect={() => {
+                              const current = field.value || [];
+                              const isSelected = current.includes(type);
+                              
+                              if (isSelected) {
+                                field.onChange(current.filter(value => value !== type));
+                              } else {
+                                field.onChange([...current, type]);
+                              }
+                            }}
+                            className="flex items-center"
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4 flex-shrink-0",
+                                field.value?.includes(type) ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            <span className="truncate">{type}</span>
+                          </CommandItem>
+                        ))}
+                      </ScrollArea>
                     </CommandGroup>
                   </Command>
                 </PopoverContent>

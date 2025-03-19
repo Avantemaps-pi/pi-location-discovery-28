@@ -11,8 +11,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 const Communicon = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
-    { id: 1, text: "Welcome to Pi Network Community!", sender: "system", timestamp: "10:30 AM" },
-    { id: 2, text: "Hi there! How can I help with Pi Network today?", sender: "support", timestamp: "10:32 AM" },
+    { id: 1, text: "Welcome to Avante Maps!", sender: "system", timestamp: "10:30 AM" },
+    { id: 2, text: "Hi there! How can I help with Avante Maps today?", sender: "support", timestamp: "10:32 AM" },
   ]);
 
   const handleSendMessage = (e) => {
@@ -71,8 +71,8 @@ const Communicon = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Community Chat</CardTitle>
-            <CardDescription>Connect with Pi Network support and community</CardDescription>
+            <CardTitle>Chat</CardTitle>
+            <CardDescription>Connect with Avante Maps support</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col h-[400px]">

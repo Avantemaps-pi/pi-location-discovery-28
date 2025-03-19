@@ -1,29 +1,23 @@
-
 import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Shield, ExternalLink, Globe } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { Shield, AlertTriangle, Info } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface AppPreferencesProps {
   searchRadius: string;
-  setSearchRadius: (value: string) => void;
+  setSearchRadius: (radius: string) => void;
   notifications: boolean;
-  setNotifications: (value: boolean) => void;
+  setNotifications: (enabled: boolean) => void;
   isDarkMode: boolean;
-  setIsDarkMode: (value: boolean) => void;
+  setIsDarkMode: (dark: boolean) => void;
   isWorldwideSearch: boolean;
-  setIsWorldwideSearch: (value: boolean) => void;
+  setIsWorldwideSearch: (search: boolean) => void;
   onSaveSettings: () => void;
 }
 
@@ -36,96 +30,138 @@ const AppPreferences = ({
   setIsDarkMode,
   isWorldwideSearch,
   setIsWorldwideSearch,
-  onSaveSettings,
+  onSaveSettings
 }: AppPreferencesProps) => {
   return (
     <Card>
       <CardHeader>
         <CardTitle>App Preferences</CardTitle>
-        <CardDescription>Customize how the application works for you.</CardDescription>
+        <CardDescription>Customize your Avante Maps experience.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
-            <Label htmlFor="notifications">Push Notifications</Label>
-            <p className="text-xs text-muted-foreground">Receive alerts about new businesses and events</p>
-          </div>
-          <Switch
-            id="notifications"
-            checked={notifications}
-            onCheckedChange={setNotifications}
-          />
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
-            <Label htmlFor="darkMode">Dark Mode</Label>
-            <p className="text-xs text-muted-foreground">Use dark theme for the application</p>
-          </div>
-          <Switch
-            id="darkMode"
-            checked={isDarkMode}
-            onCheckedChange={setIsDarkMode}
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="searchRadius">Default Search Radius</Label>
-          <div className="flex space-x-2 items-center">
-            <Select value={searchRadius} onValueChange={setSearchRadius} disabled={isWorldwideSearch}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select radius" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1km">1 km</SelectItem>
-                <SelectItem value="5km">5 km</SelectItem>
-                <SelectItem value="10km">10 km</SelectItem>
-                <SelectItem value="20km">20 km</SelectItem>
-                <SelectItem value="50km">50 km</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="worldwideSearch"
-                checked={isWorldwideSearch}
-                onCheckedChange={setIsWorldwideSearch}
-              />
-              <div className="space-y-0.5">
-                <Label htmlFor="worldwideSearch" className="flex items-center">
-                  <Globe className="h-4 w-4 mr-1" /> Worldwide
-                </Label>
-              </div>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <div className="space-y-0.5">
+              <Label htmlFor="notifications">Push Notifications</Label>
+              <p className="text-muted-foreground text-sm">Receive notifications about new Pi-accepting businesses.</p>
             </div>
+            <Switch 
+              id="notifications" 
+              checked={notifications}
+              onCheckedChange={setNotifications}
+            />
           </div>
-          <p className="text-xs text-muted-foreground">
-            Default distance to search for businesses, or select worldwide to see all businesses.
+          
+          <div className="flex justify-between items-center">
+            <div className="space-y-0.5">
+              <Label htmlFor="dark-mode">Dark Mode</Label>
+              <p className="text-muted-foreground text-sm">Toggle between light and dark themes.</p>
+            </div>
+            <Switch 
+              id="dark-mode" 
+              checked={isDarkMode}
+              onCheckedChange={setIsDarkMode}
+            />
+          </div>
+          
+          <div className="flex justify-between items-center">
+            <div className="space-y-0.5">
+              <Label htmlFor="worldwide-search">Worldwide Search</Label>
+              <p className="text-muted-foreground text-sm">Search for Pi-accepting businesses worldwide.</p>
+            </div>
+            <Switch 
+              id="worldwide-search" 
+              checked={isWorldwideSearch}
+              onCheckedChange={setIsWorldwideSearch}
+            />
+          </div>
+        </div>
+        
+        <div className="space-y-3">
+          <Label>Search Radius</Label>
+          <RadioGroup defaultValue={searchRadius} onValueChange={setSearchRadius} className="flex flex-col space-y-1">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="5km" id="r1" />
+              <Label htmlFor="r1" className="font-normal">5 kilometers</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="10km" id="r2" />
+              <Label htmlFor="r2" className="font-normal">10 kilometers</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="20km" id="r3" />
+              <Label htmlFor="r3" className="font-normal">20 kilometers</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="50km" id="r4" />
+              <Label htmlFor="r4" className="font-normal">50 kilometers</Label>
+            </div>
+          </RadioGroup>
+        </div>
+        
+        <div className="pt-4">
+          <h3 className="font-medium">Business Verification Requirements</h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            As a Business Owner, you need to complete these steps to get verified:
           </p>
         </div>
 
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-md max-h-48">
-          <div className="flex items-start">
-            <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
-            <div className="w-full">
-              <h3 className="font-medium text-blue-900">Business Verification</h3>
-              <ScrollArea className="h-36 pr-4">
-                <div className="pr-4">
-                  <p className="text-sm text-blue-700 mt-1 mb-3 break-words">
-                    Learn about our verification and certification processes to increase the credibility of your Pi business.
-                  </p>
-                  <Button asChild variant="outline" className="bg-white border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800">
-                    <Link to="/verification-info" className="flex items-center">
-                      View Verification Requirements <ExternalLink className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </ScrollArea>
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-md">
+          <ScrollArea className="h-48 pr-4">
+            <div className="flex items-start">
+              <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+              <div className="w-full">
+                <h4 className="font-medium text-blue-800">Verification Process</h4>
+                <ul className="mt-2 space-y-3 text-sm">
+                  <li className="flex items-start">
+                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">1</Badge>
+                    <div>
+                      <p className="font-medium">Register your business</p>
+                      <p className="text-muted-foreground">Complete all required business information</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 mt-0.5 mr-2">2</Badge>
+                    <div>
+                      <p className="font-medium">Provide Business Documents</p>
+                      <p className="text-muted-foreground">Upload business license, registration certificate, or tax ID</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 mt-0.5 mr-2">3</Badge>
+                    <div>
+                      <p className="font-medium">Proof of Pi Acceptance</p>
+                      <p className="text-muted-foreground">Confirm that your business accepts Pi cryptocurrency</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 mt-0.5 mr-2">4</Badge>
+                    <div>
+                      <p className="font-medium">Verification Review</p>
+                      <p className="text-muted-foreground">Our team will review your documents (takes 2-3 business days)</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">5</Badge>
+                    <div>
+                      <p className="font-medium">Get Verified Badge</p>
+                      <p className="text-muted-foreground">Once approved, your business will show as verified</p>
+                    </div>
+                  </li>
+                </ul>
+                <Button variant="link" size="sm" asChild className="mt-3 h-auto p-0 text-blue-700">
+                  <Link to="/verification-info">
+                    <Info className="h-3.5 w-3.5 mr-1" />
+                    <span>Learn more about verification</span>
+                  </Link>
+                </Button>
+              </div>
             </div>
-          </div>
+          </ScrollArea>
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={onSaveSettings}>Save Settings</Button>
+        <Button onClick={onSaveSettings}>Save Preferences</Button>
       </CardFooter>
     </Card>
   );

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +5,7 @@ import { MapPin, Star, ExternalLink, Info, Bookmark, CircleCheck } from 'lucide-
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import CategoryBadge from '@/components/business/CategoryBadge';
+import { useNavigate } from 'react-router-dom';
 
 // Mock data for different categories
 const recommendedForYou = [
@@ -100,6 +100,15 @@ const avanteTopChoice = [
 
 const PlaceCard = ({ place }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const navigate = useNavigate();
+  
+  const handleRatingClick = () => {
+    navigate(`/review/${place.id}`, { 
+      state: { 
+        businessDetails: place
+      }
+    });
+  };
   
   return (
     <Card key={place.id} className="min-w-[250px] w-72 flex-shrink-0 shadow-md border-gray-200">
@@ -137,7 +146,10 @@ const PlaceCard = ({ place }) => {
         <div className="flex justify-between items-end mt-2">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1">
-              <div className="flex">
+              <button 
+                className="flex items-center hover:opacity-90 transition-opacity"
+                onClick={handleRatingClick}
+              >
                 {[...Array(5)].map((_, i) => (
                   <Star 
                     key={i} 
@@ -146,8 +158,8 @@ const PlaceCard = ({ place }) => {
                       : 'text-gray-300'}`} 
                   />
                 ))}
-              </div>
-              <span className="text-sm font-medium">{place.rating.toFixed(1)}</span>
+                <span className="text-sm font-medium ml-1">{place.rating.toFixed(1)}</span>
+              </button>
             </div>
             <CategoryBadge category={place.category} />
           </div>
@@ -162,12 +174,6 @@ const PlaceCard = ({ place }) => {
           </div>
         </div>
       </CardContent>
-      
-      <CardFooter className="pt-0 pb-3 px-3 flex justify-end">
-        <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 p-0 text-xs h-auto">
-          Details...
-        </Button>
-      </CardFooter>
     </Card>
   );
 };

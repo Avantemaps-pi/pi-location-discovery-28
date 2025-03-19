@@ -30,10 +30,12 @@ const RegisteredBusiness = () => {
 
   const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
 
-  // Filter businesses based on selection
-  const filteredBusinesses = selectedBusinessId && selectedBusinessId !== "all"
-    ? businesses.filter(business => business.id.toString() === selectedBusinessId) 
-    : businesses;
+  // Filter businesses based on selection, but only show them if something is selected
+  const filteredBusinesses = selectedBusinessId 
+    ? (selectedBusinessId === "all" 
+        ? businesses 
+        : businesses.filter(business => business.id.toString() === selectedBusinessId))
+    : [];
 
   return (
     <AppLayout title="My Registered Businesses">
@@ -45,21 +47,27 @@ const RegisteredBusiness = () => {
         />
 
         <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
-          <Button onClick={() => navigate('/registration')}>Register New Business</Button>
-          
-          {businesses.length > 0 && (
-            <div className="w-full md:w-[300px]">
-              <BusinessSelector 
-                businesses={businesses} 
-                selectedBusinessId={selectedBusinessId} 
-                onSelect={setSelectedBusinessId} 
-              />
-            </div>
-          )}
+          <div>
+            <Button onClick={() => navigate('/registration')}>Register New Business</Button>
+            
+            {businesses.length > 0 && (
+              <div className="mt-4">
+                <BusinessSelector 
+                  businesses={businesses} 
+                  selectedBusinessId={selectedBusinessId} 
+                  onSelect={setSelectedBusinessId} 
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         {businesses.length === 0 ? (
           <EmptyBusinessState />
+        ) : filteredBusinesses.length === 0 ? (
+          <div className="p-6 text-center text-gray-500 bg-white rounded-md shadow-sm">
+            <p>Select a business from the dropdown to view its details</p>
+          </div>
         ) : (
           <div className="space-y-6">
             {filteredBusinesses.map((business) => (
