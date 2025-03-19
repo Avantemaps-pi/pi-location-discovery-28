@@ -13,6 +13,12 @@ const Communicon = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [acceptTerms, setAcceptTerms] = useState(false);
 
+  // Fix the type mismatch by creating a handler function that 
+  // properly converts CheckedState to boolean
+  const handleCheckedChange = (checked: boolean | "indeterminate") => {
+    setAcceptTerms(checked === true);
+  };
+
   return (
     <AppLayout title="Communicon">
       <div className="max-w-4xl mx-auto">
@@ -63,7 +69,7 @@ const Communicon = () => {
                 <Checkbox 
                   id="terms" 
                   checked={acceptTerms}
-                  onCheckedChange={setAcceptTerms}
+                  onCheckedChange={handleCheckedChange}
                   className="mt-1"
                 />
                 <div>
