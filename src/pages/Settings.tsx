@@ -8,10 +8,8 @@ import DangerZone from '@/components/settings/DangerZone';
 
 const Settings = () => {
   const [language, setLanguage] = useState('english');
-  const [searchRadius, setSearchRadius] = useState('10km');
   const [notifications, setNotifications] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isWorldwideSearch, setIsWorldwideSearch] = useState(true);
 
   const handleSaveSettings = () => {
     toast.success('Settings saved successfully!');
@@ -43,14 +41,10 @@ const Settings = () => {
         />
 
         <AppPreferences 
-          searchRadius={searchRadius}
-          setSearchRadius={setSearchRadius}
           notifications={notifications}
           setNotifications={setNotifications}
           isDarkMode={isDarkMode}
           setIsDarkMode={setIsDarkMode}
-          isWorldwideSearch={isWorldwideSearch}
-          setIsWorldwideSearch={setIsWorldwideSearch}
           onSaveSettings={handleSaveSettings}
         />
 

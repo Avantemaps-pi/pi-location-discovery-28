@@ -2,35 +2,26 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Shield, AlertTriangle, Info } from 'lucide-react';
+import { Shield, Info } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface AppPreferencesProps {
-  searchRadius: string;
-  setSearchRadius: (radius: string) => void;
   notifications: boolean;
   setNotifications: (enabled: boolean) => void;
   isDarkMode: boolean;
   setIsDarkMode: (dark: boolean) => void;
-  isWorldwideSearch: boolean;
-  setIsWorldwideSearch: (search: boolean) => void;
   onSaveSettings: () => void;
 }
 
 const AppPreferences = ({
-  searchRadius,
-  setSearchRadius,
   notifications,
   setNotifications,
   isDarkMode,
   setIsDarkMode,
-  isWorldwideSearch,
-  setIsWorldwideSearch,
   onSaveSettings
 }: AppPreferencesProps) => {
   return (
@@ -64,40 +55,6 @@ const AppPreferences = ({
               onCheckedChange={setIsDarkMode}
             />
           </div>
-          
-          <div className="flex justify-between items-center">
-            <div className="space-y-0.5">
-              <Label htmlFor="worldwide-search">Worldwide Search</Label>
-              <p className="text-muted-foreground text-sm">Search for Pi-accepting businesses worldwide.</p>
-            </div>
-            <Switch 
-              id="worldwide-search" 
-              checked={isWorldwideSearch}
-              onCheckedChange={setIsWorldwideSearch}
-            />
-          </div>
-        </div>
-        
-        <div className="space-y-3">
-          <Label>Search Radius</Label>
-          <RadioGroup defaultValue={searchRadius} onValueChange={setSearchRadius} className="flex flex-col space-y-1">
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="5km" id="r1" />
-              <Label htmlFor="r1" className="font-normal">5 kilometers</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="10km" id="r2" />
-              <Label htmlFor="r2" className="font-normal">10 kilometers</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="20km" id="r3" />
-              <Label htmlFor="r3" className="font-normal">20 kilometers</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="50km" id="r4" />
-              <Label htmlFor="r4" className="font-normal">50 kilometers</Label>
-            </div>
-          </RadioGroup>
         </div>
         
         <div className="pt-4">
@@ -122,28 +79,14 @@ const AppPreferences = ({
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 mt-0.5 mr-2">2</Badge>
+                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">2</Badge>
                     <div>
-                      <p className="font-medium">Provide Business Documents</p>
-                      <p className="text-muted-foreground">Upload business license, registration certificate, or tax ID</p>
+                      <p className="font-medium">Request Verification via Email</p>
+                      <p className="text-muted-foreground">After registering your business, request a verification via email, but only if you meet the requirements</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 mt-0.5 mr-2">3</Badge>
-                    <div>
-                      <p className="font-medium">Proof of Pi Acceptance</p>
-                      <p className="text-muted-foreground">Confirm that your business accepts Pi cryptocurrency</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 mt-0.5 mr-2">4</Badge>
-                    <div>
-                      <p className="font-medium">Verification Review</p>
-                      <p className="text-muted-foreground">Our team will review your documents (takes 2-3 business days)</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">5</Badge>
+                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">3</Badge>
                     <div>
                       <p className="font-medium">Get Verified Badge</p>
                       <p className="text-muted-foreground">Once approved, your business will show as verified</p>
