@@ -126,7 +126,9 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
           
           <div className="mt-auto p-4 border-t text-xs text-muted-foreground">
             <p>© 2023 Avante Maps</p>
-            <p className="text-slate-500 mt-1">Architectured by Avante Labs</p>
+            <Link to="/about" onClick={() => setIsSidebarOpen(false)} className="text-slate-500 mt-1 hover:text-slate-700 transition-colors">
+              Architectured by Avante Labs
+            </Link>
           </div>
         </SheetContent>
       </Sheet>

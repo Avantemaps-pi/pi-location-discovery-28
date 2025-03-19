@@ -61,7 +61,7 @@ const RegisteredBusiness = () => {
 
   return (
     <AppLayout title="My Registered Businesses">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto bg-background">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold">My Registered Businesses</h1>

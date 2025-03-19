@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +22,7 @@ const Settings = () => {
   const [searchRadius, setSearchRadius] = useState('10km');
   const [notifications, setNotifications] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isWorldwideSearch, setIsWorldwideSearch] = useState(true); // Set to true by default
+  const [isWorldwideSearch, setIsWorldwideSearch] = useState(true);
 
   const handleSaveSettings = () => {
     toast.success('Settings saved successfully!');
@@ -153,9 +152,9 @@ const Settings = () => {
             <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-md">
               <div className="flex items-start">
                 <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
-                <div>
+                <div className="w-full">
                   <h3 className="font-medium text-blue-900">Business Verification</h3>
-                  <p className="text-sm text-blue-700 mt-1 mb-3">
+                  <p className="text-sm text-blue-700 mt-1 mb-3 break-words">
                     Learn about our verification and certification processes to increase the credibility of your Pi business.
                   </p>
                   <Button asChild variant="outline" className="bg-white border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800">

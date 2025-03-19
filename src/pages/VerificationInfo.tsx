@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, CheckCircle, AlertTriangle, Info } from 'lucide-react';
@@ -8,6 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
 const VerificationInfo = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <AppLayout title="Verification & Certification">
       <div className="max-w-4xl mx-auto">
