@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import { Button } from '@/components/ui/button';
 import BusinessCard from '@/components/business/BusinessCard';
 import BusinessSelector from '@/components/business/BusinessSelector';
 import EmptyBusinessState from '@/components/business/EmptyBusinessState';
+import BusinessHeader from '@/components/business/BusinessHeader';
 import { Business } from '@/types/business';
 
 const RegisteredBusiness = () => {
@@ -35,13 +35,10 @@ const RegisteredBusiness = () => {
   return (
     <AppLayout title="My Registered Businesses">
       <div className="max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8 bg-slate-50">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-3xl font-bold">My Registered Businesses</h1>
-            <p className="text-muted-foreground mt-1">Manage your Pi business</p>
-          </div>
-          <Button onClick={() => window.location.href = '/registration'}>Register New Business</Button>
-        </div>
+        <BusinessHeader 
+          title="My Registered Businesses" 
+          subtitle="Manage your Pi business" 
+        />
 
         {businesses.length > 0 && (
           <BusinessSelector 
