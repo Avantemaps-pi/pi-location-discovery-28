@@ -118,11 +118,11 @@ const PlaceCard = ({ place }) => {
       </CardHeader>
       
       <div className="h-40 overflow-hidden px-3">
-        <div className="bg-gray-100 h-full flex items-center justify-center rounded">
+        <div className="bg-gray-100 h-full flex items-center justify-center rounded-md">
           <img 
             src={place.image} 
             alt={place.name} 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-md"
             onError={(e) => {
               e.currentTarget.src = 'public/placeholder.svg';
               e.currentTarget.alt = 'Business Image';
@@ -148,7 +148,7 @@ const PlaceCard = ({ place }) => {
               </div>
               <span className="text-sm font-medium">{place.rating.toFixed(1)}</span>
             </div>
-            <Badge variant="outline" className="text-xs px-2 py-0 h-5 bg-gray-50">{place.category}</Badge>
+            <Badge variant="outline" className="text-xs px-2 py-0.5 h-5 rounded-full bg-blue-50 text-blue-600 border-blue-200">{place.category}</Badge>
           </div>
           <div>
             <Button 

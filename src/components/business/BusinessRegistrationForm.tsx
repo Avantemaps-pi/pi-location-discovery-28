@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -134,7 +133,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
             <TabsContent value="business-owner" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Business Owner Information</CardTitle>
+                  <CardTitle className="text-xl">Business Owner Information</CardTitle>
                   <CardDescription>
                     Enter the details of the business owner or manager.
                   </CardDescription>
@@ -198,7 +197,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
             <TabsContent value="contact" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Contact Details</CardTitle>
+                  <CardTitle className="text-xl">Contact Details</CardTitle>
                   <CardDescription>
                     How customers can reach your business.
                   </CardDescription>
@@ -235,11 +234,10 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                     name="website"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Website URL</FormLabel>
+                        <FormLabel>Website URL (Optional)</FormLabel>
                         <FormControl>
                           <Input placeholder="https://yourbusiness.com" {...field} />
                         </FormControl>
-                        <FormDescription>Optional</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -268,7 +266,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
             <TabsContent value="address" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Physical Address</CardTitle>
+                  <CardTitle className="text-xl">Physical Address</CardTitle>
                   <CardDescription>
                     Where your business is located.
                   </CardDescription>
@@ -296,7 +294,6 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                         <FormControl>
                           <Input placeholder="Suite 101" {...field} />
                         </FormControl>
-                        <FormDescription>Optional</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -353,7 +350,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
             <TabsContent value="details" className="space-y-4">
               <Card>
                 <CardHeader>
-                  <CardTitle>Additional Details</CardTitle>
+                  <CardTitle className="text-xl">Additional Details</CardTitle>
                   <CardDescription>
                     Tell customers more about your business.
                   </CardDescription>
