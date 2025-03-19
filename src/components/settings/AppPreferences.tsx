@@ -64,9 +64,9 @@ const AppPreferences = ({
           </p>
         </div>
 
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-md">
-          <ScrollArea className="h-48 pr-4">
-            <div className="flex items-start">
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-md overflow-x-auto">
+          <ScrollArea className="h-48" orientation="horizontal">
+            <div className="flex items-start min-w-[600px]">
               <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
               <div className="w-full">
                 <h4 className="font-medium text-blue-800">Verification Process</h4>

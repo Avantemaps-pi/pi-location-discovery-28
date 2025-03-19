@@ -26,11 +26,17 @@ const ProfileSettings = ({ language, setLanguage }: ProfileSettingsProps) => {
       <CardContent className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="username">Username</Label>
-          <Input id="username" placeholder="johnsmith" />
+          <Input id="username" placeholder="johnsmith" value="johnsmith" readOnly className="bg-gray-100" />
+          <p className="text-xs text-muted-foreground mt-1">
+            Username cannot be changed.
+          </p>
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="john.smith@example.com" />
+          <Input id="email" type="email" placeholder="john.smith@example.com" value="john.smith@example.com" readOnly className="bg-gray-100" />
+          <p className="text-xs text-muted-foreground mt-1">
+            Email address cannot be changed.
+          </p>
         </div>
         <div className="space-y-2">
           <Label htmlFor="language">Language Preference</Label>
