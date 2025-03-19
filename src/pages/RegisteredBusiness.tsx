@@ -49,7 +49,7 @@ const RegisteredBusiness = () => {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-3xl font-bold">My Registered Businesses</h1>
-            <p className="text-muted-foreground mt-1">Manage your Pi-accepting businesses</p>
+            <p className="text-muted-foreground mt-1">Manage your Pi business</p>
           </div>
           <Button onClick={() => window.location.href = '/registration'}>Register New Business</Button>
         </div>

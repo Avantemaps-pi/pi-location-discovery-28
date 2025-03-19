@@ -28,21 +28,21 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
       <CardContent>
         <div className="max-h-[450px] overflow-y-auto pr-2">
           <div className="space-y-4">
-            <div className="grid grid-cols-[1fr_auto_1fr_1fr] gap-2 items-center mb-2 font-medium">
+            <div className="grid grid-cols-[1fr_60px_1fr_1fr] gap-3 items-center mb-2 font-medium">
               <div>Day</div>
-              <div>Closed</div>
+              <div className="text-center">Closed</div>
               <div>Opening</div>
               <div>Closing</div>
             </div>
             {daysOfWeek.map((day) => (
-              <div key={day.name} className="grid grid-cols-[1fr_auto_1fr_1fr] gap-2 items-center">
+              <div key={day.name} className="grid grid-cols-[1fr_60px_1fr_1fr] gap-3 items-center">
                 <div className="font-medium">{day.name}</div>
                 
                 <FormField
                   control={form.control}
                   name={day.closed}
                   render={({ field }) => (
-                    <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormItem className="flex items-center justify-center space-x-2 space-y-0">
                       <FormControl>
                         <Checkbox
                           checked={field.value}
@@ -65,6 +65,7 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
                           type="time"
                           {...field}
                           disabled={form.watch(day.closed) === true}
+                          className="w-full"
                         />
                       </FormControl>
                     </FormItem>
@@ -81,6 +82,7 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
                           type="time"
                           {...field}
                           disabled={form.watch(day.closed) === true}
+                          className="w-full"
                         />
                       </FormControl>
                     </FormItem>

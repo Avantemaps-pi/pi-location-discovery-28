@@ -5,9 +5,22 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Check, ChevronsUpDown } from "lucide-react";
 import { useFormContext } from 'react-hook-form';
 import { FormValues, businessTypes } from './formSchema';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface DetailsTabProps {
   onPrevious: () => void;
@@ -17,7 +30,7 @@ interface DetailsTabProps {
 
 const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, handleImageUpload }) => {
   const form = useFormContext<FormValues>();
-
+  
   return (
     <Card>
       <CardHeader>
@@ -30,43 +43,60 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
         <FormField
           control={form.control}
           name="businessTypes"
-          render={() => (
-            <FormItem>
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
               <FormLabel>Types of Business (Select all that apply)</FormLabel>
-              <div className="grid grid-cols-2 gap-2 mt-2">
-                {businessTypes.map((type) => (
-                  <FormField
-                    key={type}
-                    control={form.control}
-                    name="businessTypes"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-full justify-between",
+                        !field.value?.length && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value?.length
+                        ? `${field.value.length} type${field.value.length > 1 ? 's' : ''} selected`
+                        : "Select business types"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput placeholder="Search business types..." />
+                    <CommandEmpty>No business type found.</CommandEmpty>
+                    <CommandGroup className="max-h-64 overflow-auto">
+                      {businessTypes.map((type) => (
+                        <CommandItem
+                          value={type}
                           key={type}
-                          className="flex flex-row items-start space-x-3 space-y-0"
+                          onSelect={() => {
+                            const current = field.value || [];
+                            const isSelected = current.includes(type);
+                            
+                            if (isSelected) {
+                              field.onChange(current.filter(value => value !== type));
+                            } else {
+                              field.onChange([...current, type]);
+                            }
+                          }}
                         >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(type)}
-                              onCheckedChange={(checked) => {
-                                const current = field.value || [];
-                                return checked
-                                  ? field.onChange([...current, type])
-                                  : field.onChange(
-                                      current.filter((value) => value !== type)
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            {type}
-                          </FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
-              </div>
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              field.value?.includes(type) ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          {type}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}

@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFound";
 import Communicon from "./pages/Communicon";
 import Notifications from "./pages/Notifications";
 import RegisteredBusiness from "./pages/RegisteredBusiness";
+import VerificationInfo from "./pages/VerificationInfo";
 import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/communicon" element={<Communicon />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/registered-business" element={<RegisteredBusiness />} />
+          <Route path="/verification-info" element={<VerificationInfo />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/settings" element={<Settings />} />
