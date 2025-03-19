@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -160,14 +161,15 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
     if (onSuccess) onSuccess();
   };
 
+  // Define the days of the week with type-safe field names
   const daysOfWeek = [
-    { name: 'Monday', open: 'mondayOpen', close: 'mondayClose', closed: 'mondayClosed' },
-    { name: 'Tuesday', open: 'tuesdayOpen', close: 'tuesdayClose', closed: 'tuesdayClosed' },
-    { name: 'Wednesday', open: 'wednesdayOpen', close: 'wednesdayClose', closed: 'wednesdayClosed' },
-    { name: 'Thursday', open: 'thursdayOpen', close: 'thursdayClose', closed: 'thursdayClosed' },
-    { name: 'Friday', open: 'fridayOpen', close: 'fridayClose', closed: 'fridayClosed' },
-    { name: 'Saturday', open: 'saturdayOpen', close: 'saturdayClose', closed: 'saturdayClosed' },
-    { name: 'Sunday', open: 'sundayOpen', close: 'sundayClose', closed: 'sundayClosed' },
+    { name: 'Monday', open: 'mondayOpen' as const, close: 'mondayClose' as const, closed: 'mondayClosed' as const },
+    { name: 'Tuesday', open: 'tuesdayOpen' as const, close: 'tuesdayClose' as const, closed: 'tuesdayClosed' as const },
+    { name: 'Wednesday', open: 'wednesdayOpen' as const, close: 'wednesdayClose' as const, closed: 'wednesdayClosed' as const },
+    { name: 'Thursday', open: 'thursdayOpen' as const, close: 'thursdayClose' as const, closed: 'thursdayClosed' as const },
+    { name: 'Friday', open: 'fridayOpen' as const, close: 'fridayClose' as const, closed: 'fridayClosed' as const },
+    { name: 'Saturday', open: 'saturdayOpen' as const, close: 'saturdayClose' as const, closed: 'saturdayClosed' as const },
+    { name: 'Sunday', open: 'sundayOpen' as const, close: 'sundayClose' as const, closed: 'sundayClosed' as const },
   ];
 
   return (
@@ -430,7 +432,9 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                               <FormControl>
                                 <Checkbox
                                   checked={field.value}
-                                  onCheckedChange={field.onChange}
+                                  onCheckedChange={(checked) => {
+                                    field.onChange(checked === true);
+                                  }}
                                 />
                               </FormControl>
                               <FormLabel className="text-sm">Closed</FormLabel>
@@ -447,7 +451,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                                 <Input
                                   type="time"
                                   {...field}
-                                  disabled={form.watch(day.closed)}
+                                  disabled={form.watch(day.closed) === true}
                                 />
                               </FormControl>
                             </FormItem>
@@ -463,7 +467,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                                 <Input
                                   type="time"
                                   {...field}
-                                  disabled={form.watch(day.closed)}
+                                  disabled={form.watch(day.closed) === true}
                                 />
                               </FormControl>
                             </FormItem>
