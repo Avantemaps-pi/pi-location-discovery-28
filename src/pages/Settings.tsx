@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { toast } from 'sonner';
@@ -28,7 +27,7 @@ const Settings = () => {
   };
 
   return (
-    <AppLayout title="Settings">
+    <AppLayout title="Avante Maps">
       <div className="space-y-6 max-w-2xl mx-auto">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,7 +29,7 @@ const Communicon = () => {
   };
 
   return (
-    <AppLayout title="Communicon">
+    <AppLayout title="Avante Maps">
       <div className="max-w-4xl mx-auto">
         <Card className="mb-6">
           <CardContent className="pt-6">

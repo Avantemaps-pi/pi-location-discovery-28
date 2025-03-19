@@ -6,8 +6,7 @@ import {
   Building, 
   Edit, 
   MapPin, 
-  Clock, 
-  Shield
+  Clock
 } from 'lucide-react';
 import BusinessVerificationStatus from './BusinessVerificationStatus';
 import BusinessDropdownMenu from './BusinessDropdownMenu';
@@ -48,18 +47,10 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
           
           <p className="mt-4 text-gray-700">{business.description}</p>
           
-          <div className="mt-6 space-y-3">
+          <div className="mt-6 space-y-5">
             <BusinessVerificationStatus />
             
-            <div className="flex items-center">
-              <Shield className="h-5 w-5 mr-2 text-gray-500" />
-              <div>
-                <span className="text-sm font-medium">Certification Status</span>
-                <div className="flex items-center mt-1">
-                  <BusinessVerificationStatus isCertification={true} />
-                </div>
-              </div>
-            </div>
+            <BusinessVerificationStatus isCertification={true} />
             
             <div className="flex items-center">
               <Clock className="h-5 w-5 mr-2 text-gray-500" />

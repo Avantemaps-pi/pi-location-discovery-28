@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent } from "@/components/ui/card";
@@ -104,7 +103,7 @@ const Notifications = () => {
   ];
 
   return (
-    <AppLayout title="Notifications">
+    <AppLayout title="Avante Maps">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Notifications</h1>
@@ -139,3 +138,4 @@ const Notifications = () => {
 };
 
 export default Notifications;
+
