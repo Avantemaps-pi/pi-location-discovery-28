@@ -7,16 +7,29 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Communicon = () => {
   const [activeTab, setActiveTab] = useState("profile");
-  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([
+    { id: 1, text: "Welcome to Pi Network Community!", sender: "system", timestamp: "10:30 AM" },
+    { id: 2, text: "Hi there! How can I help with Pi Network today?", sender: "support", timestamp: "10:32 AM" },
+  ]);
 
-  // Fix the type mismatch by creating a handler function that 
-  // properly converts CheckedState to boolean
-  const handleCheckedChange = (checked: boolean | "indeterminate") => {
-    setAcceptTerms(checked === true);
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (message.trim()) {
+      const newMessage = {
+        id: messages.length + 1,
+        text: message,
+        sender: "user",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages([...messages, newMessage]);
+      setMessage("");
+    }
   };
 
   return (
@@ -61,46 +74,61 @@ const Communicon = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Activity Agreement</CardTitle>
+            <CardTitle>Community Chat</CardTitle>
+            <CardDescription>Connect with Pi Network support and community</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-6">
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="terms" 
-                  checked={acceptTerms}
-                  onCheckedChange={handleCheckedChange}
-                  className="mt-1"
-                />
-                <div>
-                  <label
-                    htmlFor="terms"
-                    className="font-medium text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    I accept the terms and conditions
-                  </label>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    By checking this box, I confirm that I have read and agreed to the Pi Network's terms of service and will abide by community guidelines.
-                  </p>
+            <div className="flex flex-col h-[400px]">
+              <ScrollArea className="flex-1 pr-4 mb-4">
+                <div className="space-y-4">
+                  {messages.map((msg) => (
+                    <div 
+                      key={msg.id} 
+                      className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div 
+                        className={`max-w-[80%] px-4 py-2 rounded-lg ${
+                          msg.sender === 'user' 
+                            ? 'bg-blue-500 text-white' 
+                            : msg.sender === 'system'
+                              ? 'bg-gray-200 text-gray-800'
+                              : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        <p>{msg.text}</p>
+                        <p className="text-xs mt-1 opacity-70">{msg.timestamp}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              </ScrollArea>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                <div className="flex flex-col items-center p-4 border rounded-md">
-                  <Calendar className="h-8 w-8 text-primary mb-2" />
-                  <span className="text-xl font-bold">2.5 Years</span>
-                  <span className="text-sm text-muted-foreground">Pi Member</span>
-                </div>
-                <div className="flex flex-col items-center p-4 border rounded-md">
-                  <MessageSquare className="h-8 w-8 text-primary mb-2" />
-                  <span className="text-xl font-bold">127</span>
-                  <span className="text-sm text-muted-foreground">Forum Posts</span>
-                </div>
-                <div className="flex flex-col items-center p-4 border rounded-md">
-                  <Users className="h-8 w-8 text-primary mb-2" />
-                  <span className="text-xl font-bold">3</span>
-                  <span className="text-sm text-muted-foreground">Pi Businesses</span>
-                </div>
+              <form onSubmit={handleSendMessage} className="flex gap-2">
+                <Input
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Type your message..."
+                  className="flex-1"
+                />
+                <Button type="submit">Send</Button>
+              </form>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <div className="flex flex-col items-center p-4 border rounded-md">
+                <Calendar className="h-8 w-8 text-primary mb-2" />
+                <span className="text-xl font-bold">2.5 Years</span>
+                <span className="text-sm text-muted-foreground">Pi Member</span>
+              </div>
+              <div className="flex flex-col items-center p-4 border rounded-md">
+                <MessageSquare className="h-8 w-8 text-primary mb-2" />
+                <span className="text-xl font-bold">127</span>
+                <span className="text-sm text-muted-foreground">Forum Posts</span>
+              </div>
+              <div className="flex flex-col items-center p-4 border rounded-md">
+                <Users className="h-8 w-8 text-primary mb-2" />
+                <span className="text-xl font-bold">3</span>
+                <span className="text-sm text-muted-foreground">Pi Businesses</span>
               </div>
             </div>
           </CardContent>

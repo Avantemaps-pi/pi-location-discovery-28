@@ -30,6 +30,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 
 const businessTypes = [
@@ -63,9 +64,37 @@ const formSchema = z.object({
   
   // Additional Details
   businessType: z.string({ required_error: 'Please select a business type' }),
-  // Image handling will be done separately
   businessDescription: z.string().min(10, { message: 'Please provide a short description' }),
   piWalletAddress: z.string().min(5, { message: 'Pi wallet address is required' }),
+  
+  // Trading Hours
+  mondayOpen: z.string().optional(),
+  mondayClose: z.string().optional(),
+  mondayClosed: z.boolean().optional(),
+  
+  tuesdayOpen: z.string().optional(),
+  tuesdayClose: z.string().optional(),
+  tuesdayClosed: z.boolean().optional(),
+  
+  wednesdayOpen: z.string().optional(),
+  wednesdayClose: z.string().optional(),
+  wednesdayClosed: z.boolean().optional(),
+  
+  thursdayOpen: z.string().optional(),
+  thursdayClose: z.string().optional(),
+  thursdayClosed: z.boolean().optional(),
+  
+  fridayOpen: z.string().optional(),
+  fridayClose: z.string().optional(),
+  fridayClosed: z.boolean().optional(),
+  
+  saturdayOpen: z.string().optional(),
+  saturdayClose: z.string().optional(),
+  saturdayClosed: z.boolean().optional(),
+  
+  sundayOpen: z.string().optional(),
+  sundayClose: z.string().optional(),
+  sundayClosed: z.boolean().optional(),
 });
 
 interface BusinessRegistrationFormProps {
@@ -89,6 +118,27 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
       businessType: '',
       businessDescription: '',
       piWalletAddress: '',
+      mondayOpen: '09:00',
+      mondayClose: '17:00',
+      mondayClosed: false,
+      tuesdayOpen: '09:00',
+      tuesdayClose: '17:00',
+      tuesdayClosed: false,
+      wednesdayOpen: '09:00',
+      wednesdayClose: '17:00',
+      wednesdayClosed: false,
+      thursdayOpen: '09:00',
+      thursdayClose: '17:00',
+      thursdayClosed: false,
+      fridayOpen: '09:00',
+      fridayClose: '17:00',
+      fridayClosed: false,
+      saturdayOpen: '10:00',
+      saturdayClose: '16:00',
+      saturdayClosed: false,
+      sundayOpen: '10:00',
+      sundayClose: '16:00', 
+      sundayClosed: false,
     },
   });
 
@@ -110,6 +160,16 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
     if (onSuccess) onSuccess();
   };
 
+  const daysOfWeek = [
+    { name: 'Monday', open: 'mondayOpen', close: 'mondayClose', closed: 'mondayClosed' },
+    { name: 'Tuesday', open: 'tuesdayOpen', close: 'tuesdayClose', closed: 'tuesdayClosed' },
+    { name: 'Wednesday', open: 'wednesdayOpen', close: 'wednesdayClose', closed: 'wednesdayClosed' },
+    { name: 'Thursday', open: 'thursdayOpen', close: 'thursdayClose', closed: 'thursdayClosed' },
+    { name: 'Friday', open: 'fridayOpen', close: 'fridayClose', closed: 'fridayClosed' },
+    { name: 'Saturday', open: 'saturdayOpen', close: 'saturdayClose', closed: 'saturdayClosed' },
+    { name: 'Sunday', open: 'sundayOpen', close: 'sundayClose', closed: 'sundayClosed' },
+  ];
+
   return (
     <div className="py-4">
       <div className="mb-6">
@@ -122,10 +182,11 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="grid grid-cols-4 mb-6">
+            <TabsList className="grid grid-cols-5 mb-6">
               <TabsTrigger value="business-owner">Business Owner</TabsTrigger>
               <TabsTrigger value="contact">Contact</TabsTrigger>
               <TabsTrigger value="address">Address</TabsTrigger>
+              <TabsTrigger value="hours">Hours</TabsTrigger>
               <TabsTrigger value="details">Details</TabsTrigger>
             </TabsList>
 
@@ -338,6 +399,91 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                   <Button 
                     type="button" 
                     className="bg-avante-blue hover:bg-avante-blue/90"
+                    onClick={() => setSelectedTab('hours')}
+                  >
+                    Next
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+
+            {/* Trading Hours Tab */}
+            <TabsContent value="hours" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-xl">Trading Hours</CardTitle>
+                  <CardDescription>
+                    Let customers know when your business is open.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {daysOfWeek.map((day) => (
+                      <div key={day.name} className="grid grid-cols-[1fr_auto_1fr_1fr] gap-2 items-center">
+                        <div className="font-medium w-24">{day.name}</div>
+                        
+                        <FormField
+                          control={form.control}
+                          name={day.closed}
+                          render={({ field }) => (
+                            <FormItem className="flex items-center space-x-2 space-y-0">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                              <FormLabel className="text-sm">Closed</FormLabel>
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name={day.open}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="time"
+                                  {...field}
+                                  disabled={form.watch(day.closed)}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        
+                        <FormField
+                          control={form.control}
+                          name={day.close}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="time"
+                                  {...field}
+                                  disabled={form.watch(day.closed)}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => setSelectedTab('address')}
+                  >
+                    Back
+                  </Button>
+                  <Button 
+                    type="button" 
+                    className="bg-avante-blue hover:bg-avante-blue/90"
                     onClick={() => setSelectedTab('details')}
                   >
                     Next
@@ -443,7 +589,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                   <Button 
                     type="button" 
                     variant="outline" 
-                    onClick={() => setSelectedTab('address')}
+                    onClick={() => setSelectedTab('hours')}
                   >
                     Back
                   </Button>

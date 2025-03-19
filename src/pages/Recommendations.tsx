@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -148,7 +149,7 @@ const PlaceCard = ({ place }) => {
               </div>
               <span className="text-sm font-medium">{place.rating.toFixed(1)}</span>
             </div>
-            <Badge variant="outline" className="text-xs px-2 py-0.5 h-5 rounded-full bg-blue-50 text-blue-600 border-blue-200">{place.category}</Badge>
+            <Badge className="text-xs px-3 py-0.5 h-6 bg-purple-100 text-purple-800 hover:bg-purple-200 rounded-md border-0">{place.category}</Badge>
           </div>
           <div>
             <Button 
