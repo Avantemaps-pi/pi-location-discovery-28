@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle, Globe, Shield, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Settings = () => {
   const [language, setLanguage] = useState('english');
@@ -154,14 +155,18 @@ const Settings = () => {
                 <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
                 <div className="w-full">
                   <h3 className="font-medium text-blue-900">Business Verification</h3>
-                  <p className="text-sm text-blue-700 mt-1 mb-3 break-words">
-                    Learn about our verification and certification processes to increase the credibility of your Pi business.
-                  </p>
-                  <Button asChild variant="outline" className="bg-white border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800">
-                    <Link to="/verification-info" className="flex items-center">
-                      View Verification Requirements <ExternalLink className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
+                  <ScrollArea className="h-36 pr-4">
+                    <div className="pr-4">
+                      <p className="text-sm text-blue-700 mt-1 mb-3 break-words">
+                        Learn about our verification and certification processes to increase the credibility of your Pi business.
+                      </p>
+                      <Button asChild variant="outline" className="bg-white border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800">
+                        <Link to="/verification-info" className="flex items-center">
+                          View Verification Requirements <ExternalLink className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </ScrollArea>
                 </div>
               </div>
             </div>

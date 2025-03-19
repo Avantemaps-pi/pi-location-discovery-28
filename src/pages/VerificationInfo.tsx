@@ -51,7 +51,6 @@ const VerificationInfo = () => {
               <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
                 <li>Increased visibility in search results</li>
                 <li>"Verified" badge on your business listing</li>
-                <li>Access to business analytics tools</li>
                 <li>User trust and credibility</li>
               </ul>
             </CardContent>
@@ -87,8 +86,8 @@ const VerificationInfo = () => {
               <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
                 <li>Premium placement in Pi business directory</li>
                 <li>"Certified" badge with enhanced visibility</li>
-                <li>Eligibility for Pi Network promotions</li>
-                <li>Featured in Pi Network communications</li>
+                <li>Access to business analytics tools</li>
+                <li>Featured in Avante Maps communications</li>
                 <li>Advanced transaction analytics</li>
                 <li>Eligibility for Avante Maps promotions</li>
               </ul>
@@ -118,7 +117,7 @@ const VerificationInfo = () => {
             <CheckCircle className="h-4 w-4 text-green-500" />
             <AlertTitle className="text-green-700">Certification Timeline</AlertTitle>
             <AlertDescription className="text-green-600">
-              The certification process typically takes 30-45 days and includes an on-site or virtual inspection.
+              The certification process typically takes 15-30 days and includes an on-site or virtual inspection.
             </AlertDescription>
           </Alert>
         </div>

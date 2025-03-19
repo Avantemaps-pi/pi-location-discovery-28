@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import MapComponent from './MapComponent';
@@ -10,9 +9,11 @@ import { Circle, StarIcon } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import CategoryBadge from '@/components/business/CategoryBadge';
+import { useNavigate } from 'react-router-dom';
 
 // Main Google Map component with wrapper
 const GoogleMap: React.FC = () => {
+  const navigate = useNavigate();
   const [zoom, setZoom] = useState(defaultZoom);
   const [center, setCenter] = useState(defaultCenter);
   const [activeMarker, setActiveMarker] = useState<number | null>(null);
@@ -20,6 +21,7 @@ const GoogleMap: React.FC = () => {
 
   // Sample location data with more details
   const locationDetails = {
+    id: "1",
     name: "Pi Tech Hub",
     description: "Technology store that specializes in gadgets and accepts Pi payments.",
     rating: 4.8,
@@ -32,6 +34,10 @@ const GoogleMap: React.FC = () => {
     setShowPopover(true);
     // In a real app, you would show details about the location here
     console.log(`Clicked on marker ${id}`);
+  };
+
+  const handleRatingClick = (businessId: string) => {
+    navigate(`/review/${businessId}`);
   };
 
   const PlaceCardPopup = ({ location }) => (
@@ -54,15 +60,20 @@ const GoogleMap: React.FC = () => {
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-1">
             <div className="flex items-center">
-              {[...Array(5)].map((_, i) => (
-                <StarIcon 
-                  key={i} 
-                  className={`h-4 w-4 ${i < Math.floor(location.rating) 
-                    ? 'text-yellow-400 fill-yellow-400' 
-                    : 'text-gray-300'}`} 
-                />
-              ))}
-              <span className="text-sm ml-1">{location.rating.toFixed(1)}</span>
+              <button 
+                className="flex items-center hover:opacity-80 transition-opacity"
+                onClick={() => handleRatingClick(location.id)}
+              >
+                {[...Array(5)].map((_, i) => (
+                  <StarIcon 
+                    key={i} 
+                    className={`h-4 w-4 ${i < Math.floor(location.rating) 
+                      ? 'text-yellow-400 fill-yellow-400' 
+                      : 'text-gray-300'}`} 
+                  />
+                ))}
+                <span className="text-sm ml-1">{location.rating.toFixed(1)}</span>
+              </button>
             </div>
             <CategoryBadge category={location.category} />
           </div>
