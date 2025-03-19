@@ -6,9 +6,10 @@ import { useNavigate } from 'react-router-dom';
 interface BusinessHeaderProps {
   title: string;
   subtitle?: string;
+  showButton?: boolean;
 }
 
-const BusinessHeader = ({ title, subtitle }: BusinessHeaderProps) => {
+const BusinessHeader = ({ title, subtitle, showButton = true }: BusinessHeaderProps) => {
   const navigate = useNavigate();
   
   return (
@@ -17,7 +18,7 @@ const BusinessHeader = ({ title, subtitle }: BusinessHeaderProps) => {
         <h1 className="text-3xl font-bold">{title}</h1>
         {subtitle && <p className="text-muted-foreground mt-1">{subtitle}</p>}
       </div>
-      <Button onClick={() => navigate('/registration')}>Register New Business</Button>
+      {showButton && <Button onClick={() => navigate('/registration')}>Register New Business</Button>}
     </div>
   );
 };

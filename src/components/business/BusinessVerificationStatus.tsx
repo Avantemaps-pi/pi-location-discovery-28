@@ -13,22 +13,22 @@ const BusinessVerificationStatus = ({ isCertification = false }: BusinessVerific
   return (
     <>
       {!isCertification ? (
-        <div className="flex items-center">
-          <Shield className="h-5 w-5 mr-2 text-gray-500" />
-          <div>
+        <div className="flex flex-col">
+          <div className="flex items-center">
+            <Shield className="h-5 w-5 mr-2 text-gray-500" />
             <span className="text-sm font-medium">Verification Status</span>
-            <div className="flex items-center mt-1">
-              <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1">
-                <AlertTriangle className="h-3 w-3" />
-                Not Verified
-              </Badge>
-              <Button variant="link" size="sm" asChild className="ml-2 h-auto p-0 text-blue-600">
-                <Link to="/verification-info">
-                  <Info className="h-3.5 w-3.5 mr-1" />
-                  <span className="text-xs">View Requirements</span>
-                </Link>
-              </Button>
-            </div>
+          </div>
+          <div className="mt-1 flex flex-col">
+            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1 self-start">
+              <AlertTriangle className="h-3 w-3" />
+              Not Verified
+            </Badge>
+            <Button variant="link" size="sm" asChild className="pl-0 mt-1 h-auto text-blue-600 self-start">
+              <Link to="/verification-info">
+                <Info className="h-3.5 w-3.5 mr-1" />
+                <span className="text-xs">View Requirements</span>
+              </Link>
+            </Button>
           </div>
         </div>
       ) : (

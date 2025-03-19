@@ -5,9 +5,12 @@ import BusinessCard from '@/components/business/BusinessCard';
 import BusinessSelector from '@/components/business/BusinessSelector';
 import EmptyBusinessState from '@/components/business/EmptyBusinessState';
 import BusinessHeader from '@/components/business/BusinessHeader';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import { Business } from '@/types/business';
 
 const RegisteredBusiness = () => {
+  const navigate = useNavigate();
   const businesses: Business[] = [
     {
       id: 1,
@@ -38,15 +41,22 @@ const RegisteredBusiness = () => {
         <BusinessHeader 
           title="My Registered Businesses" 
           subtitle="Manage your Pi business" 
+          showButton={false}
         />
 
-        {businesses.length > 0 && (
-          <BusinessSelector 
-            businesses={businesses} 
-            selectedBusinessId={selectedBusinessId} 
-            onSelect={setSelectedBusinessId} 
-          />
-        )}
+        <div className="flex justify-between items-center mb-6">
+          <Button onClick={() => navigate('/registration')}>Register New Business</Button>
+          
+          {businesses.length > 0 && (
+            <div className="w-full md:w-[300px]">
+              <BusinessSelector 
+                businesses={businesses} 
+                selectedBusinessId={selectedBusinessId} 
+                onSelect={setSelectedBusinessId} 
+              />
+            </div>
+          )}
+        </div>
 
         {businesses.length === 0 ? (
           <EmptyBusinessState />
