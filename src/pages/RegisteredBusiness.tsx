@@ -4,7 +4,26 @@ import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Building, Edit, MapPin, Clock, Shield, AlertTriangle } from 'lucide-react';
+import { 
+  Building, 
+  Edit, 
+  MapPin, 
+  Clock, 
+  Shield, 
+  AlertTriangle, 
+  MoreVertical,
+  Trash,
+  Eye,
+  Share,
+  FileText
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const RegisteredBusiness = () => {
   const businesses = [
@@ -65,10 +84,38 @@ const RegisteredBusiness = () => {
                           <span className="text-sm">{business.address}</span>
                         </div>
                       </div>
-                      <Button variant="outline" size="sm" className="flex items-center gap-1">
-                        <Edit className="h-4 w-4" />
-                        Edit
-                      </Button>
+                      <div className="flex space-x-2">
+                        <Button variant="outline" size="sm" className="flex items-center gap-1">
+                          <Edit className="h-4 w-4" />
+                          Edit
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuItem className="cursor-pointer">
+                              <Eye className="mr-2 h-4 w-4" />
+                              <span>Preview</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer">
+                              <Share className="mr-2 h-4 w-4" />
+                              <span>Share</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer">
+                              <FileText className="mr-2 h-4 w-4" />
+                              <span>Generate Report</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="cursor-pointer text-red-600">
+                              <Trash className="mr-2 h-4 w-4" />
+                              <span>Delete</span>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </div>
                     
                     <p className="mt-4 text-gray-700">{business.description}</p>

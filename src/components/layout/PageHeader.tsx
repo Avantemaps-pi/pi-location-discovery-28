@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Link } from 'react-router-dom';
 import { Home, Compass, Bookmark, Mail, Info, Settings, FileText, PiSquare, Clipboard, UserPlus, User, Bell, Building } from 'lucide-react';
 import LoginDialog from '@/components/auth/LoginDialog';
+import { Badge } from '@/components/ui/badge';
 
 interface PageHeaderProps {
   title?: string;
@@ -14,13 +15,22 @@ interface PageHeaderProps {
 const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
+  
+  // Mock notification count - in a real app, this would come from a notification service
+  const notificationCount = 3;
 
   const navItems = [
     { to: '/', label: 'Home', icon: Home },
     { to: '/recommendations', label: 'Recommendations', icon: Compass },
     { to: '/bookmarks', label: 'Bookmarks', icon: Bookmark },
     { to: '/communicon', label: 'Communicon', icon: User },
-    { to: '/notifications', label: 'Notifications', icon: Bell },
+    { 
+      to: '/notifications', 
+      label: 'Notifications', 
+      icon: Bell,
+      hasNotifications: notificationCount > 0,
+      notificationCount: notificationCount
+    },
     { to: '/registered-business', label: 'My Businesses', icon: Building },
     { to: '/registration', label: 'Register Business', icon: Clipboard },
     { to: '/contact', label: 'Contact', icon: Mail },
@@ -78,11 +88,18 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
                     <li key={item.to}>
                       <Link 
                         to={item.to} 
-                        className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-slate-100"
+                        className="flex items-center px-4 py-2 text-sm rounded-md hover:bg-slate-100 relative"
                         onClick={() => setIsSidebarOpen(false)}
                       >
                         <item.icon className="h-4 w-4 mr-3" />
                         {item.label}
+                        {item.hasNotifications && (
+                          <Badge 
+                            className="absolute right-2 bg-red-500 text-white ml-auto h-5 w-5 flex items-center justify-center p-0 text-xs rounded-full"
+                          >
+                            {item.notificationCount}
+                          </Badge>
+                        )}
                       </Link>
                     </li>
                   ))}

@@ -85,7 +85,7 @@ const About = () => {
                 <div className="w-24 h-24 rounded-full bg-gradient-to-r from-avante-blue to-avante-purple flex items-center justify-center mb-4">
                   <Users className="h-12 w-12 text-white" />
                 </div>
-                <h3 className="font-bold text-lg">Sarah Johnson</h3>
+                <h3 className="font-bold text-lg">Tapelo Daniel</h3>
                 <p className="text-sm text-muted-foreground">Founder & CEO</p>
                 <p className="mt-2 text-sm">Pi Network enthusiast with a background in geospatial technology and blockchain solutions.</p>
               </div>
@@ -94,7 +94,7 @@ const About = () => {
                 <div className="w-24 h-24 rounded-full bg-gradient-to-r from-avante-blue to-avante-purple flex items-center justify-center mb-4">
                   <Users className="h-12 w-12 text-white" />
                 </div>
-                <h3 className="font-bold text-lg">Michael Chen</h3>
+                <h3 className="font-bold text-lg">Loyiso Xulu</h3>
                 <p className="text-sm text-muted-foreground">CTO</p>
                 <p className="mt-2 text-sm">Software engineer specializing in mapping technologies and cryptocurrency integration.</p>
               </div>
@@ -103,7 +103,7 @@ const About = () => {
                 <div className="w-24 h-24 rounded-full bg-gradient-to-r from-avante-blue to-avante-purple flex items-center justify-center mb-4">
                   <Users className="h-12 w-12 text-white" />
                 </div>
-                <h3 className="font-bold text-lg">Jessica Patel</h3>
+                <h3 className="font-bold text-lg">Neo Memani</h3>
                 <p className="text-sm text-muted-foreground">Head of Business Development</p>
                 <p className="mt-2 text-sm">Working directly with businesses to expand our network of Pi-accepting merchants.</p>
               </div>

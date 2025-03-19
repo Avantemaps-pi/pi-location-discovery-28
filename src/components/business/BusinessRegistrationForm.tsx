@@ -33,6 +33,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
+import { CheckedState } from "@radix-ui/react-checkbox";
 
 const businessTypes = [
   'Restaurant/Cafe',
@@ -67,6 +68,7 @@ const formSchema = z.object({
   businessType: z.string({ required_error: 'Please select a business type' }),
   businessDescription: z.string().min(10, { message: 'Please provide a short description' }),
   piWalletAddress: z.string().min(5, { message: 'Pi wallet address is required' }),
+  verificationStatus: z.string().optional(),
   
   // Trading Hours
   mondayOpen: z.string().optional(),
@@ -119,6 +121,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
       businessType: '',
       businessDescription: '',
       piWalletAddress: '',
+      verificationStatus: 'Not Verified',
       mondayOpen: '09:00',
       mondayClose: '17:00',
       mondayClosed: false,
@@ -239,6 +242,34 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                         <FormControl>
                           <Input placeholder="Pi Tech Store" {...field} />
                         </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="verificationStatus"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Verification Status</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select verification status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Not Verified">Not Verified</SelectItem>
+                            <SelectItem value="Pending Verification">Pending Verification</SelectItem>
+                            <SelectItem value="Verified">Verified</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormDescription>
+                          Your business verification status in the Pi Network
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -432,7 +463,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                               <FormControl>
                                 <Checkbox
                                   checked={field.value}
-                                  onCheckedChange={(checked) => {
+                                  onCheckedChange={(checked: CheckedState) => {
                                     field.onChange(checked === true);
                                   }}
                                 />

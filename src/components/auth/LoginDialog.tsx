@@ -11,6 +11,10 @@ interface LoginDialogProps {
 }
 
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
+  const handleContinueBrowsing = () => {
+    onOpenChange(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md p-0 overflow-hidden rounded-lg">
@@ -21,7 +25,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
           </DialogClose>
           
           <div className="w-16 h-16 rounded-full bg-yellow-300 flex items-center justify-center mb-4">
-            <img src="/lovable-uploads/816179f9-d16d-46a7-9d6e-169846c0d0da.png" alt="Pi Logo" className="w-8 h-8" />
+            <img src="/lovable-uploads/816179f9-d16d-46a7-9d6e-169846c0d0da.png" alt="Pi Logo" className="w-10 h-10" />
           </div>
           
           <DialogTitle className="text-xl mb-1 text-center">
@@ -42,7 +46,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
             Login as John
           </Button>
           
-          <Button variant="outline" className="w-full mt-3 bg-gray-300 hover:bg-gray-400 text-gray-700">
+          <Button variant="outline" className="w-full mt-3 bg-gray-300 hover:bg-gray-400 text-gray-700" onClick={handleContinueBrowsing}>
             Continue Browsing
           </Button>
           
