@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -56,24 +55,29 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
                     <Button
                       variant="outline"
                       role="combobox"
+                      aria-expanded={open}
                       className={cn(
                         "w-full justify-between",
                         !field.value?.length && "text-muted-foreground"
                       )}
-                      onClick={() => setOpen(true)}
                     >
                       {field.value?.length
                         ? `${field.value.length} type${field.value.length > 1 ? 's' : ''} selected`
                         : "Select business types"}
-                      <ChevronsUpDown className="opacity-50" />
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className={cn(
-                  "w-full p-0",
-                  isMobile ? "max-w-[calc(100vw-2rem)]" : ""
-                )} align="start">
-                  <Command>
+                <PopoverContent 
+                  className={cn(
+                    "w-full max-w-[350px] p-0",
+                    isMobile ? "max-w-[calc(100vw-2rem)]" : ""
+                  )} 
+                  align="start"
+                  side="bottom"
+                  sideOffset={5}
+                >
+                  <Command className="bg-popover">
                     <CommandInput placeholder="Search business types..." className="h-11" />
                     <CommandEmpty>No business type found.</CommandEmpty>
                     <CommandGroup>
