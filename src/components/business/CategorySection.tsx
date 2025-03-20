@@ -19,7 +19,8 @@ const CategorySection: React.FC<CategorySectionProps> = ({ title, places, onPlac
           <PlaceCard 
             key={place.id} 
             place={place} 
-            onPlaceClick={onPlaceClick} 
+            onPlaceClick={onPlaceClick}
+            className="min-w-[250px] w-[250px] flex-shrink-0" 
           />
         ))}
       </div>

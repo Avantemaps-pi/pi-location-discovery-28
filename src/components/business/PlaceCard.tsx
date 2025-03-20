@@ -11,9 +11,10 @@ interface PlaceCardProps {
   place: Place;
   onPlaceClick: (placeId: string) => void;
   onRemove?: (placeId: string) => void;
+  className?: string;
 }
 
-const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove }) => {
+const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove, className }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const navigate = useNavigate();
   
@@ -29,7 +30,8 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove }) 
     onPlaceClick(place.id);
   };
   
-  const handleBookmarkToggle = () => {
+  const handleBookmarkToggle = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the card click
     setIsBookmarked(!isBookmarked);
     if (onRemove && !isBookmarked === false) {
       onRemove(place.id);
@@ -37,7 +39,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove }) 
   };
   
   return (
-    <Card key={place.id} className="min-w-[250px] w-full flex-shrink-0 shadow-md border-gray-200">
+    <Card key={place.id} className={`shadow-md border-gray-200 ${className || 'min-w-[250px] w-full flex-shrink-0'}`}>
       <CardHeader className="pb-2 px-3 pt-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">

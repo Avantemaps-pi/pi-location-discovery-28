@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Shield, Info } from 'lucide-react';
+import { Shield, Info, ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -69,7 +69,16 @@ const AppPreferences = ({
             <div className="flex items-start min-w-[600px]">
               <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
               <div className="w-full">
-                <h4 className="font-medium text-blue-800">Verification Process</h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium text-blue-800">Verification Process</h4>
+                  <Link 
+                    to="/verification-info" 
+                    className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                  >
+                    <span>Verification & Certifications</span>
+                    <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                  </Link>
+                </div>
                 <ul className="mt-2 space-y-3 text-sm">
                   <li className="flex items-start">
                     <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">1</Badge>
