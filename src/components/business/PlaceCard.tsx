@@ -10,9 +10,10 @@ import { Place } from '@/data/mockPlaces';
 interface PlaceCardProps {
   place: Place;
   onPlaceClick: (placeId: string) => void;
+  onRemove?: (placeId: string) => void;
 }
 
-const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick }) => {
+const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const navigate = useNavigate();
   
@@ -28,8 +29,15 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick }) => {
     onPlaceClick(place.id);
   };
   
+  const handleBookmarkToggle = () => {
+    setIsBookmarked(!isBookmarked);
+    if (onRemove && !isBookmarked === false) {
+      onRemove(place.id);
+    }
+  };
+  
   return (
-    <Card key={place.id} className="min-w-[250px] w-72 flex-shrink-0 shadow-md border-gray-200">
+    <Card key={place.id} className="min-w-[250px] w-full flex-shrink-0 shadow-md border-gray-200">
       <CardHeader className="pb-2 px-3 pt-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
@@ -44,8 +52,8 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick }) => {
             </CardTitle>
           </div>
           <Bookmark 
-            className={`h-5 w-5 cursor-pointer ${isBookmarked ? 'text-blue-500 fill-blue-500' : 'text-gray-400 hover:text-gray-600'}`} 
-            onClick={() => setIsBookmarked(!isBookmarked)}
+            className={`h-5 w-5 cursor-pointer ${isBookmarked ? 'text-blue-500 fill-blue-500' : 'text-gray-400 hover:text-gray-600'}`}
+            onClick={handleBookmarkToggle}
           />
         </div>
       </CardHeader>
@@ -68,7 +76,6 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick }) => {
       </div>
       
       <CardContent className="pt-3 px-3">
-        <p className="text-sm text-gray-700 line-clamp-4 h-20 mb-2">{place.description}</p>
         <div 
           className="flex items-center gap-1 text-sm text-gray-600 mb-2 cursor-pointer hover:text-blue-500 transition-colors"
           onClick={handlePlaceClick}
@@ -76,6 +83,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick }) => {
           <MapPin className="h-4 w-4" />
           <span className="text-xs">{place.address}</span>
         </div>
+        <p className="text-sm text-gray-700 line-clamp-4 h-20 mb-2">{place.description}</p>
         <div className="flex justify-between items-end mt-2">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1">

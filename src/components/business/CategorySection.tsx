@@ -16,7 +16,11 @@ const CategorySection: React.FC<CategorySectionProps> = ({ title, places, onPlac
     <ScrollArea className="w-full" orientation="horizontal">
       <div className="flex space-x-4 pb-4 px-1">
         {places.map((place) => (
-          <PlaceCard key={place.id} place={place} onPlaceClick={onPlaceClick} />
+          <PlaceCard 
+            key={place.id} 
+            place={place} 
+            onPlaceClick={onPlaceClick} 
+          />
         ))}
       </div>
     </ScrollArea>

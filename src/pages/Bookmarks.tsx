@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, ExternalLink, Star, Bookmark, CircleCheck } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import CategoryBadge from '@/components/business/CategoryBadge';
+import PlaceCard from '@/components/business/PlaceCard';
 import { useNavigate } from 'react-router-dom';
 
 const bookmarkedPlaces = [
@@ -39,98 +38,16 @@ const bookmarkedPlaces = [
   },
 ];
 
-const PlaceCard = ({ place, onRemove }) => {
-  const [isBookmarked, setIsBookmarked] = useState(true);
-  const navigate = useNavigate();
-  
-  const handleBookmarkToggle = () => {
-    setIsBookmarked(!isBookmarked);
-    if (!isBookmarked === false) {
-      onRemove(place.id);
-    }
-  };
-  
-  const handleRatingClick = () => {
-    navigate(`/review/${place.id}`, { 
-      state: { 
-        businessDetails: place
-      }
-    });
-  };
-  
-  return (
-    <Card key={place.id} className="min-w-[250px] w-full flex-shrink-0 shadow-md border-gray-200">
-      <CardHeader className="pb-2 px-3 pt-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex-shrink-0">
-              <CircleCheck className="h-5 w-5 text-blue-500" />
-            </div>
-            <CardTitle className="text-base font-bold">{place.name}</CardTitle>
-          </div>
-          <Bookmark 
-            className={`h-5 w-5 cursor-pointer ${isBookmarked ? 'text-blue-500 fill-blue-500' : 'text-gray-400 hover:text-gray-600'}`}
-            onClick={handleBookmarkToggle}
-          />
-        </div>
-      </CardHeader>
-      
-      <div className="h-40 overflow-hidden px-3">
-        <div className="bg-gray-100 h-full flex items-center justify-center rounded-md">
-          <img 
-            src={place.image} 
-            alt={place.name} 
-            className="w-full h-full object-cover rounded-md"
-          />
-        </div>
-      </div>
-      
-      <CardContent className="pt-3 px-3">
-        <div className="flex items-center mb-1 text-sm text-muted-foreground">
-          <MapPin className="h-4 w-4 mr-1" />
-          {place.address}
-        </div>
-        <p className="text-sm text-gray-700 line-clamp-4 h-20 mb-2">{place.description}</p>
-        <div className="flex justify-between items-end mt-2">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1">
-              <button 
-                className="flex items-center hover:opacity-90 transition-opacity"
-                onClick={handleRatingClick}
-              >
-                {[...Array(5)].map((_, i) => (
-                  <Star 
-                    key={i} 
-                    className={`h-4 w-4 ${i < Math.floor(place.rating) 
-                      ? 'text-yellow-400 fill-yellow-400' 
-                      : 'text-gray-300'}`} 
-                  />
-                ))}
-                <span className="text-sm font-medium ml-1">{place.rating.toFixed(1)}</span>
-              </button>
-            </div>
-            <CategoryBadge category={place.category} />
-          </div>
-          <div>
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="bg-green-500 hover:bg-green-600 text-xs font-medium"
-            >
-              Website
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
 const Bookmarks = () => {
   const [bookmarks, setBookmarks] = React.useState(bookmarkedPlaces);
+  const navigate = useNavigate();
 
   const removeBookmark = (id) => {
     setBookmarks(bookmarks.filter(bookmark => bookmark.id !== id));
+  };
+
+  const handlePlaceClick = (placeId) => {
+    console.log(`Clicked on place: ${placeId}`);
   };
 
   return (
@@ -145,13 +62,23 @@ const Bookmarks = () => {
           <Card className="w-full py-8">
             <CardContent className="text-center">
               <p className="text-muted-foreground">You don't have any bookmarked places yet.</p>
-              <Button className="mt-4">Explore Map</Button>
+              <Button 
+                className="mt-4"
+                onClick={() => navigate('/recommendations')}
+              >
+                Explore Map
+              </Button>
             </CardContent>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {bookmarks.map((place) => (
-              <PlaceCard key={place.id} place={place} onRemove={removeBookmark} />
+              <PlaceCard 
+                key={place.id} 
+                place={place} 
+                onPlaceClick={handlePlaceClick}
+                onRemove={removeBookmark} 
+              />
             ))}
           </div>
         )}
