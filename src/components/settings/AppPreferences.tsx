@@ -71,13 +71,6 @@ const AppPreferences = ({
               <div className="w-full">
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium text-blue-800">Verification Process</h4>
-                  <Link 
-                    to="/verification-info" 
-                    className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors"
-                  >
-                    <span>Verification & Certifications</span>
-                    <ExternalLink className="h-3.5 w-3.5 ml-1" />
-                  </Link>
                 </div>
                 <ul className="mt-2 space-y-3 text-sm">
                   <li className="flex items-start">
@@ -99,17 +92,17 @@ const AppPreferences = ({
                     <div>
                       <p className="font-medium">Get Verified Badge</p>
                       <p className="text-muted-foreground">Once approved, your business will show as verified</p>
+                      <div className="mt-2">
+                        <Button variant="link" size="sm" asChild className="text-blue-700 p-0">
+                          <Link to="/verification-info">
+                            <span>View verification and certification details</span>
+                            <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
                   </li>
                 </ul>
-                <div className="mt-4 flex justify-center">
-                  <Button variant="link" size="sm" asChild className="text-blue-700">
-                    <Link to="/verification-info">
-                      <span>View verification and certification details</span>
-                      <ExternalLink className="h-3.5 w-3.5 ml-1" />
-                    </Link>
-                  </Button>
-                </div>
               </div>
             </div>
           </ScrollArea>
