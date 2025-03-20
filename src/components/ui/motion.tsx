@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Motion = React.forwardRef<
   HTMLDivElement,
@@ -14,6 +15,7 @@ const Motion = React.forwardRef<
     whileTap?: Record<string, any>;
     whileFocus?: Record<string, any>;
     whileInView?: Record<string, any>;
+    skipMobileAnimations?: boolean;
   }
 >(
   (
@@ -26,18 +28,24 @@ const Motion = React.forwardRef<
       whileTap,
       whileFocus,
       whileInView,
+      skipMobileAnimations = false,
       ...props
     },
     ref
   ) => {
     const [isClient, setIsClient] = React.useState(false);
+    const isMobile = useIsMobile();
 
     React.useEffect(() => {
       setIsClient(true);
     }, []);
 
+    const shouldApplyAnimations = React.useMemo(() => {
+      return isClient && (!skipMobileAnimations || !isMobile);
+    }, [isClient, skipMobileAnimations, isMobile]);
+
     const style = React.useMemo(() => {
-      if (!isClient) {
+      if (!shouldApplyAnimations) {
         return {};
       }
 
@@ -53,43 +61,76 @@ const Motion = React.forwardRef<
       }
 
       return styles;
-    }, [isClient, initial, animate, transition]);
+    }, [shouldApplyAnimations, initial, animate, transition]);
 
     const handleMouseEnter = React.useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!isClient) return;
+        if (!shouldApplyAnimations || !whileHover) return;
 
         const target = e.currentTarget;
-        if (whileHover) {
-          Object.entries(whileHover).forEach(([key, value]) => {
-            if (key === "scale" || key === "x" || key === "y") {
-              target.style.transform = `${target.style.transform || ""} ${key}(${value})`.trim();
-            } else {
-              (target.style as any)[key] = value;
-            }
-          });
-        }
+        
+        Object.entries(whileHover).forEach(([key, value]) => {
+          if (key === "scale" || key === "x" || key === "y") {
+            target.style.transform = `${target.style.transform || ""} ${key}(${value})`.trim();
+          } else {
+            (target.style as any)[key] = value;
+          }
+        });
       },
-      [isClient, whileHover]
+      [shouldApplyAnimations, whileHover]
     );
 
     const handleMouseLeave = React.useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!isClient) return;
+        if (!shouldApplyAnimations || !whileHover) return;
 
         const target = e.currentTarget;
-        if (whileHover) {
-          // Reset to animate state
-          Object.keys(whileHover).forEach((key) => {
-            if (key === "scale" || key === "x" || key === "y") {
-              target.style.transform = animate?.transform || "";
-            } else {
-              (target.style as any)[key] = animate?.[key] || "";
-            }
-          });
-        }
+        
+        // Reset to animate state
+        Object.keys(whileHover).forEach((key) => {
+          if (key === "scale" || key === "x" || key === "y") {
+            target.style.transform = animate?.transform || "";
+          } else {
+            (target.style as any)[key] = animate?.[key] || "";
+          }
+        });
       },
-      [isClient, whileHover, animate]
+      [shouldApplyAnimations, whileHover, animate]
+    );
+
+    const handleTouchStart = React.useCallback(
+      (e: React.TouchEvent<HTMLDivElement>) => {
+        if (!shouldApplyAnimations || !whileTap) return;
+
+        const target = e.currentTarget;
+        
+        Object.entries(whileTap).forEach(([key, value]) => {
+          if (key === "scale" || key === "x" || key === "y") {
+            target.style.transform = `${target.style.transform || ""} ${key}(${value})`.trim();
+          } else {
+            (target.style as any)[key] = value;
+          }
+        });
+      },
+      [shouldApplyAnimations, whileTap]
+    );
+
+    const handleTouchEnd = React.useCallback(
+      (e: React.TouchEvent<HTMLDivElement>) => {
+        if (!shouldApplyAnimations || !whileTap) return;
+
+        const target = e.currentTarget;
+        
+        // Reset to animate state
+        Object.keys(whileTap).forEach((key) => {
+          if (key === "scale" || key === "x" || key === "y") {
+            target.style.transform = animate?.transform || "";
+          } else {
+            (target.style as any)[key] = animate?.[key] || "";
+          }
+        });
+      },
+      [shouldApplyAnimations, whileTap, animate]
     );
 
     return (
@@ -99,6 +140,8 @@ const Motion = React.forwardRef<
         style={style}
         onMouseEnter={whileHover ? handleMouseEnter : undefined}
         onMouseLeave={whileHover ? handleMouseLeave : undefined}
+        onTouchStart={whileTap ? handleTouchStart : undefined}
+        onTouchEnd={whileTap ? handleTouchEnd : undefined}
         {...props}
       />
     );

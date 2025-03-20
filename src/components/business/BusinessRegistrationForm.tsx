@@ -5,6 +5,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { Form } from '@/components/ui/form';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Import the form schema and components
 import { formSchema, FormValues } from './registration/formSchema';
@@ -19,6 +20,7 @@ interface BusinessRegistrationFormProps {
 }
 
 const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) => {
+  const isMobile = useIsMobile();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -78,10 +80,10 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
   };
 
   return (
-    <div className="py-4">
+    <div className="py-4 px-2 sm:px-0">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold tracking-tight">Register Your Business</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-3xl sm:text-2xl font-bold tracking-tight">Register Your Business</h2>
+        <p className="text-muted-foreground text-lg sm:text-base mt-2">
           List your business as a Pi-accepting merchant on Avante Maps.
         </p>
       </div>
@@ -90,12 +92,29 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-6">
-                <TabsTrigger value="business-owner" className="text-xs sm:text-sm">Business Owner</TabsTrigger>
-                <TabsTrigger value="contact" className="text-xs sm:text-sm">Contact</TabsTrigger>
-                <TabsTrigger value="address" className="text-xs sm:text-sm">Address</TabsTrigger>
-                <TabsTrigger value="hours" className="text-xs sm:text-sm">Hours</TabsTrigger>
-                <TabsTrigger value="details" className="text-xs sm:text-sm">Details</TabsTrigger>
+              <TabsList className={cn(
+                "grid mb-6 w-full",
+                isMobile ? "grid-cols-3 gap-1" : "grid-cols-5"
+              )}>
+                <TabsTrigger value="business-owner" className="text-sm whitespace-nowrap">
+                  {isMobile ? "Owner" : "Business Owner"}
+                </TabsTrigger>
+                <TabsTrigger value="contact" className="text-sm">Contact</TabsTrigger>
+                <TabsTrigger value="address" className="text-sm">Address</TabsTrigger>
+                {isMobile && (
+                  <div className="col-span-3 mt-1">
+                    <TabsList className="grid grid-cols-2 w-full">
+                      <TabsTrigger value="hours" className="text-sm">Hours</TabsTrigger>
+                      <TabsTrigger value="details" className="text-sm">Details</TabsTrigger>
+                    </TabsList>
+                  </div>
+                )}
+                {!isMobile && (
+                  <>
+                    <TabsTrigger value="hours" className="text-sm">Hours</TabsTrigger>
+                    <TabsTrigger value="details" className="text-sm">Details</TabsTrigger>
+                  </>
+                )}
               </TabsList>
 
               {/* Business Owner Tab */}

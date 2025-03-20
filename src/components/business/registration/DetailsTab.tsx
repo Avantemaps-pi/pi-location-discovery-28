@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useFormContext } from 'react-hook-form';
 import { FormValues, businessTypes } from './formSchema';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Command,
   CommandEmpty,
@@ -32,12 +33,13 @@ interface DetailsTabProps {
 const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, handleImageUpload }) => {
   const form = useFormContext<FormValues>();
   const [open, setOpen] = React.useState(false);
+  const isMobile = useIsMobile();
   
   return (
     <Card className="border shadow-sm">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-xl">Additional Details</CardTitle>
-        <CardDescription>
+      <CardHeader className="pb-4 space-y-2">
+        <CardTitle className="text-2xl sm:text-xl">Additional Details</CardTitle>
+        <CardDescription className="text-base sm:text-sm">
           Tell customers more about your business.
         </CardDescription>
       </CardHeader>
@@ -47,7 +49,7 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
           name="businessTypes"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Types of Business (Select all that apply)</FormLabel>
+              <FormLabel className="text-base mb-1.5">Types of Business (Select all that apply)</FormLabel>
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -58,20 +60,24 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
                         "w-full justify-between",
                         !field.value?.length && "text-muted-foreground"
                       )}
+                      onClick={() => setOpen(true)}
                     >
                       {field.value?.length
                         ? `${field.value.length} type${field.value.length > 1 ? 's' : ''} selected`
                         : "Select business types"}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      <ChevronsUpDown className="opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-full p-0" align="start">
+                <PopoverContent className={cn(
+                  "w-full p-0",
+                  isMobile ? "max-w-[calc(100vw-2rem)]" : ""
+                )} align="start">
                   <Command>
-                    <CommandInput placeholder="Search business types..." />
+                    <CommandInput placeholder="Search business types..." className="h-11" />
                     <CommandEmpty>No business type found.</CommandEmpty>
                     <CommandGroup>
-                      <ScrollArea className="h-60">
+                      <ScrollArea className="h-60 max-h-[50vh]">
                         {businessTypes.map((type) => (
                           <CommandItem
                             key={type}
@@ -80,22 +86,23 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
                               const current = field.value || [];
                               const isSelected = current.includes(type);
                               
-                              if (isSelected) {
-                                field.onChange(current.filter(value => value !== type));
-                              } else {
-                                field.onChange([...current, type]);
-                              }
+                              const newValue = isSelected
+                                ? current.filter(value => value !== type)
+                                : [...current, type];
+                                
+                              field.onChange(newValue);
                             }}
+                            className="flex items-center gap-2 py-3"
                           >
                             <div className={cn(
-                              "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                              "flex h-5 w-5 items-center justify-center rounded-sm border border-primary",
                               field.value?.includes(type) ? "bg-primary text-primary-foreground" : "opacity-50"
                             )}>
                               {field.value?.includes(type) && (
-                                <Check className="h-3 w-3" />
+                                <Check className="h-4 w-4" />
                               )}
                             </div>
-                            <span>{type}</span>
+                            <span className="text-base sm:text-sm">{type}</span>
                           </CommandItem>
                         ))}
                       </ScrollArea>
@@ -109,7 +116,7 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
         />
         
         <FormItem>
-          <FormLabel>Business Image</FormLabel>
+          <FormLabel className="text-base mb-1.5">Business Image</FormLabel>
           <FormControl>
             <Input 
               type="file" 
@@ -118,7 +125,7 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
               className="cursor-pointer"
             />
           </FormControl>
-          <FormDescription>
+          <FormDescription className="text-sm mt-1.5">
             Upload an image of your business or logo
           </FormDescription>
           {selectedImage && (
@@ -133,11 +140,11 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
           name="businessDescription"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Business Description</FormLabel>
+              <FormLabel className="text-base mb-1.5">Business Description</FormLabel>
               <FormControl>
                 <Textarea 
                   placeholder="Tell us about your business..." 
-                  className="min-h-[120px] resize-none"
+                  className="min-h-[120px] resize-none text-base md:text-sm"
                   {...field} 
                 />
               </FormControl>
@@ -151,14 +158,14 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
           name="piWalletAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Pi Wallet Address (Business)</FormLabel>
+              <FormLabel className="text-base mb-1.5">Pi Wallet Address (Business)</FormLabel>
               <FormControl>
                 <Input 
                   placeholder="Your Pi wallet address" 
                   {...field} 
                 />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-sm mt-1.5">
                 This is where customers will send Pi payments
               </FormDescription>
               <FormMessage />
@@ -166,15 +173,19 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
           )}
         />
       </CardContent>
-      <CardFooter className="flex justify-between pt-2">
+      <CardFooter className="flex justify-between pt-2 flex-wrap gap-3">
         <Button 
           type="button" 
           variant="outline" 
           onClick={onPrevious}
+          className="min-w-24"
         >
           Back
         </Button>
-        <Button type="submit" className="bg-avante-blue hover:bg-avante-blue/90">
+        <Button 
+          type="submit" 
+          className="bg-avante-blue hover:bg-avante-blue/90 min-w-40"
+        >
           Submit Registration
         </Button>
       </CardFooter>
