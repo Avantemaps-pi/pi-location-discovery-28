@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, LogIn } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Home, Compass, Bookmark, Mail, Info, Settings, FileText, PiSquare, Clipboard, UserPlus, User, Bell, Building } from 'lucide-react';
 import LoginDialog from '@/components/auth/LoginDialog';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +15,7 @@ interface PageHeaderProps {
 const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
+  const navigate = useNavigate();
   
   const notificationCount = 3;
 
@@ -46,6 +47,10 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
   const handleLoginClick = () => {
     setIsSidebarOpen(false);
     setIsLoginDialogOpen(true);
+  };
+
+  const handleTitleClick = () => {
+    navigate('/');
   };
 
   return (
@@ -134,7 +139,12 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
       </Sheet>
       
       <div className="flex-1 flex justify-center">
-        <h1 className="text-xl font-bold">{title}</h1>
+        <h1 
+          className="text-xl font-bold cursor-pointer hover:text-blue-500 transition-colors"
+          onClick={handleTitleClick}
+        >
+          {title}
+        </h1>
       </div>
       
       <div className="w-10">

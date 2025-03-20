@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check, Bot } from "lucide-react";
+import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check, Bot, Zap, Radio } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Toggle } from '@/components/ui/toggle';
 
 const Communicon = () => {
   const [message, setMessage] = useState("");
@@ -14,6 +16,7 @@ const Communicon = () => {
     { id: 1, text: "Welcome to Avante Maps!", sender: "system", timestamp: "10:30 AM" },
     { id: 2, text: "Hi there! How can I help with Avante Maps today?", sender: "support", timestamp: "10:32 AM" },
   ]);
+  const [chatMode, setChatMode] = useState<"ai" | "live">("ai");
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -71,11 +74,31 @@ const Communicon = () => {
         
         <Card>
           <CardHeader>
-            <div className="flex items-center gap-2">
-              <Bot className="h-5 w-5 text-primary" />
-              <CardTitle>Chat with AI</CardTitle>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Bot className="h-5 w-5 text-primary" />
+                <CardTitle>Chat with AI</CardTitle>
+              </div>
+              
+              {/* AI/LIVE toggle button */}
+              <ToggleGroup 
+                type="single" 
+                variant="outline"
+                value={chatMode}
+                onValueChange={(value) => value && setChatMode(value as "ai" | "live")}
+                className="border rounded-md"
+              >
+                <ToggleGroupItem value="ai" className="px-3 py-1 text-xs">
+                  <Zap className="h-4 w-4 mr-1" />
+                  AI
+                </ToggleGroupItem>
+                <ToggleGroupItem value="live" className="px-3 py-1 text-xs">
+                  <Radio className="h-4 w-4 mr-1" />
+                  LIVE
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
-            <CardDescription>Connect with Avante Maps AI assistant</CardDescription>
+            <CardDescription>Connect with Avante Maps {chatMode === "ai" ? "AI assistant" : "support team"}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col h-[400px]">
@@ -107,7 +130,7 @@ const Communicon = () => {
                 <Input
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Type your message..."
+                  placeholder={`Type your message to ${chatMode === "ai" ? "AI" : "support"}...`}
                   className="flex-1"
                 />
                 <Button type="submit">Send</Button>

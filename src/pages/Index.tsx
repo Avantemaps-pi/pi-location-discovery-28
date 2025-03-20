@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,7 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
   const location = useLocation();
+  const mapRef = useRef<HTMLDivElement>(null);
 
   // Check if we were navigated here with a place ID to select
   useEffect(() => {
@@ -21,6 +22,26 @@ const Index = () => {
       setSelectedPlace(location.state.selectedPlaceId);
     }
   }, [location.state]);
+
+  // Add click handler to detect clicks outside the map component
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      // If we have a selected place and the click is on the map container (but not on a marker or popup)
+      if (selectedPlace && mapRef.current && mapRef.current.contains(e.target as Node)) {
+        // Check if the click is not on a popup (which would have a higher z-index)
+        const clickedElement = e.target as HTMLElement;
+        // Check if we clicked on the map background (not a popup or marker)
+        if (!clickedElement.closest('.place-popup') && !clickedElement.closest('div[role="button"]')) {
+          setSelectedPlace(null);
+        }
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [selectedPlace]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +56,7 @@ const Index = () => {
   return (
     <AppLayout title="Avante Maps" withHeader={true} fullHeight={true}>
       {/* Map container with absolute positioning for overlays */}
-      <div className="relative h-full w-full">
+      <div className="relative h-full w-full" ref={mapRef}>
         {/* Google Maps component as background */}
         <div className="absolute inset-0 z-0">
           <GoogleMap 

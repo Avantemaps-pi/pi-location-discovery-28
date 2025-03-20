@@ -47,6 +47,10 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
           duration: 2000,
         });
       }
+    } else {
+      // Clear the active marker when selectedPlaceId is null
+      setActiveMarker(null);
+      setShowPopover(false);
     }
   }, [selectedPlaceId, displayPlaces]);
 
@@ -113,7 +117,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
       
       {/* Popup card overlay for selected place */}
       {selectedPlace && showPopover && (
-        <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 z-50 place-popup">
           <PlaceCardPopup location={selectedPlace} />
         </div>
       )}
