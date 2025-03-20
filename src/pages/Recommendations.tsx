@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import RecommendationsMap from '@/components/map/RecommendationsMap';
 import CategorySection from '@/components/business/CategorySection';
 import { recommendedForYou, suggestedForYou, avanteTopChoice, allPlaces } from '@/data/mockPlaces';
 
@@ -20,8 +19,8 @@ const Recommendations = () => {
           <p className="text-muted-foreground mt-2">Discover top-rated places that accept Pi cryptocurrency as payment.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 gap-6 mb-6">
+          <div>
             <CategorySection 
               title="Recommended for you" 
               places={recommendedForYou} 
@@ -36,13 +35,6 @@ const Recommendations = () => {
               title="Avante Top Choice" 
               places={avanteTopChoice} 
               onPlaceClick={handlePlaceClick} 
-            />
-          </div>
-          <div className="h-[500px] lg:h-auto rounded-lg overflow-hidden shadow-md">
-            <RecommendationsMap 
-              places={allPlaces} 
-              selectedPlaceId={selectedPlace} 
-              onMarkerClick={handlePlaceClick}
             />
           </div>
         </div>

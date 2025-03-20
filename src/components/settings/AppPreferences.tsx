@@ -102,12 +102,14 @@ const AppPreferences = ({
                     </div>
                   </li>
                 </ul>
-                <Button variant="link" size="sm" asChild className="mt-3 h-auto p-0 text-blue-700">
-                  <Link to="/verification-info">
-                    <Info className="h-3.5 w-3.5 mr-1" />
-                    <span>Learn more about verification</span>
-                  </Link>
-                </Button>
+                <div className="mt-4 flex justify-center">
+                  <Button variant="link" size="sm" asChild className="text-blue-700">
+                    <Link to="/verification-info">
+                      <span>View verification and certification details</span>
+                      <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </ScrollArea>

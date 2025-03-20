@@ -8,14 +8,20 @@ import AppLayout from '@/components/layout/AppLayout';
 import GoogleMap from '@/components/map/GoogleMap';
 import SearchBar from '@/components/map/SearchBar';
 import { Button } from '@/components/ui/button';
+import { allPlaces } from '@/data/mockPlaces';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Search for:', searchTerm);
     // Implement search functionality here
+  };
+  
+  const handlePlaceClick = (placeId: string) => {
+    setSelectedPlace(placeId);
   };
 
   return (
@@ -24,7 +30,11 @@ const Index = () => {
       <div className="relative h-full w-full">
         {/* Google Maps component as background */}
         <div className="absolute inset-0 z-0">
-          <GoogleMap />
+          <GoogleMap 
+            places={allPlaces} 
+            selectedPlaceId={selectedPlace} 
+            onMarkerClick={handlePlaceClick}
+          />
         </div>
         
         {/* Overlaid search box */}

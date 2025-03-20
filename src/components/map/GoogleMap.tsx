@@ -11,17 +11,29 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import CategoryBadge from '@/components/business/CategoryBadge';
 import { useNavigate } from 'react-router-dom';
+import { Place } from '@/data/mockPlaces';
+import { toast } from 'sonner';
+
+interface GoogleMapProps {
+  places?: Place[];
+  selectedPlaceId?: string | null;
+  onMarkerClick?: (placeId: string) => void;
+}
 
 // Main Google Map component with wrapper
-const GoogleMap: React.FC = () => {
+const GoogleMap: React.FC<GoogleMapProps> = ({ 
+  places = [], 
+  selectedPlaceId = null,
+  onMarkerClick
+}) => {
   const navigate = useNavigate();
   const [zoom, setZoom] = useState(defaultZoom);
   const [center, setCenter] = useState(defaultCenter);
-  const [activeMarker, setActiveMarker] = useState<number | null>(null);
+  const [activeMarker, setActiveMarker] = useState<string | null>(null);
   const [showPopover, setShowPopover] = useState(false);
 
-  // Extended location data with more details
-  const multipleLocations = [
+  // Default locations if no places are provided
+  const defaultLocations = [
     {
       id: "1",
       name: "Pi Tech Hub",
@@ -69,14 +81,41 @@ const GoogleMap: React.FC = () => {
     }
   ];
 
+  // Use provided places or default locations
+  const displayPlaces = places.length > 0 ? places : defaultLocations;
+
+  // Find the selected place to center the map if needed
+  React.useEffect(() => {
+    if (selectedPlaceId) {
+      const selectedPlace = displayPlaces.find(place => place.id === selectedPlaceId);
+      if (selectedPlace && selectedPlace.position) {
+        setCenter(selectedPlace.position);
+        setZoom(15); // Zoom in when a place is selected
+        setActiveMarker(selectedPlaceId);
+        setShowPopover(true);
+        
+        // Show a toast notification
+        toast.info(`Viewing: ${selectedPlace.name}`, {
+          description: selectedPlace.category,
+          duration: 2000,
+        });
+      }
+    }
+  }, [selectedPlaceId, displayPlaces]);
+
   const handleMarkerClick = (id: string) => {
-    setActiveMarker(Number(id));
+    setActiveMarker(id);
     setShowPopover(true);
+    
+    // Call the parent component's onMarkerClick if provided
+    if (onMarkerClick) {
+      onMarkerClick(id);
+    }
   };
 
   const handleRatingClick = (businessId: string) => {
     // Find business details by ID
-    const businessDetails = multipleLocations.find(loc => loc.id === businessId);
+    const businessDetails = displayPlaces.find(loc => loc.id === businessId);
     
     // Navigate to the review page with the business details
     navigate(`/review/${businessId}`, { 
@@ -159,25 +198,25 @@ const GoogleMap: React.FC = () => {
           zoomControl={true}
           styles={mapStyles}
         >
-          {multipleLocations.map((location) => (
-            <React.Fragment key={location.id}>
+          {displayPlaces.map((place) => (
+            <React.Fragment key={place.id}>
               <Marker
-                position={location.position}
-                title={location.name}
+                position={place.position}
+                title={place.name}
                 icon={{
                   url: `data:image/svg+xml,
-                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="%238B5CF6" stroke="%23FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="${place.id === activeMarker ? '%23047857' : '%238B5CF6'}" stroke="%23FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <circle cx="12" cy="10" r="3"/>
                       <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
                     </svg>`,
                   scaledSize: { width: 36, height: 36 },
                 }}
-                onClick={() => handleMarkerClick(location.id)}
-                animation={activeMarker === Number(location.id) ? 1 : undefined}
+                onClick={() => handleMarkerClick(place.id)}
+                animation={place.id === activeMarker ? 1 : undefined}
               />
-              {activeMarker === Number(location.id) && showPopover && (
-                <div className="place-popup" id={`popup-${location.id}`}>
-                  <PlaceCardPopup location={location} />
+              {activeMarker === place.id && showPopover && (
+                <div className="place-popup" id={`popup-${place.id}`}>
+                  <PlaceCardPopup location={place} />
                 </div>
               )}
             </React.Fragment>
