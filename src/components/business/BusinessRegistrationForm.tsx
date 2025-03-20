@@ -81,17 +81,17 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
   };
 
   return (
-    <div className="py-4 px-2 sm:px-0">
-      <div className="mb-6">
-        <h2 className="text-3xl sm:text-2xl font-bold tracking-tight">Register Your Business</h2>
-        <p className="text-muted-foreground text-lg sm:text-base mt-2">
+    <div className="w-full py-2">
+      <div className="mb-6 md:mb-8">
+        <h2 className="text-3xl font-bold tracking-tight">Register Your Business</h2>
+        <p className="text-muted-foreground text-lg mt-2">
           List your business as a Pi-accepting merchant on Avante Maps.
         </p>
       </div>
 
       <FormProvider {...form}>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
             <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
               <TabsList className={cn(
                 "grid mb-6 w-full",
@@ -118,43 +118,45 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                 )}
               </TabsList>
 
-              {/* Business Owner Tab */}
-              <TabsContent value="business-owner" className="space-y-4">
-                <BusinessOwnerTab onNext={() => setSelectedTab('contact')} />
-              </TabsContent>
+              <div className="w-full">
+                {/* Business Owner Tab */}
+                <TabsContent value="business-owner" className="space-y-4 w-full">
+                  <BusinessOwnerTab onNext={() => setSelectedTab('contact')} />
+                </TabsContent>
 
-              {/* Contact Tab */}
-              <TabsContent value="contact" className="space-y-4">
-                <ContactTab 
-                  onNext={() => setSelectedTab('address')} 
-                  onPrevious={() => setSelectedTab('business-owner')} 
-                />
-              </TabsContent>
+                {/* Contact Tab */}
+                <TabsContent value="contact" className="space-y-4 w-full">
+                  <ContactTab 
+                    onNext={() => setSelectedTab('address')} 
+                    onPrevious={() => setSelectedTab('business-owner')} 
+                  />
+                </TabsContent>
 
-              {/* Address Tab */}
-              <TabsContent value="address" className="space-y-4">
-                <AddressTab 
-                  onNext={() => setSelectedTab('hours')} 
-                  onPrevious={() => setSelectedTab('contact')} 
-                />
-              </TabsContent>
+                {/* Address Tab */}
+                <TabsContent value="address" className="space-y-4 w-full">
+                  <AddressTab 
+                    onNext={() => setSelectedTab('hours')} 
+                    onPrevious={() => setSelectedTab('contact')} 
+                  />
+                </TabsContent>
 
-              {/* Trading Hours Tab */}
-              <TabsContent value="hours" className="space-y-4">
-                <HoursTab 
-                  onNext={() => setSelectedTab('details')} 
-                  onPrevious={() => setSelectedTab('address')} 
-                />
-              </TabsContent>
+                {/* Trading Hours Tab */}
+                <TabsContent value="hours" className="space-y-4 w-full">
+                  <HoursTab 
+                    onNext={() => setSelectedTab('details')} 
+                    onPrevious={() => setSelectedTab('address')} 
+                  />
+                </TabsContent>
 
-              {/* Details Tab */}
-              <TabsContent value="details" className="space-y-4">
-                <DetailsTab 
-                  onPrevious={() => setSelectedTab('hours')} 
-                  selectedImage={selectedImage}
-                  handleImageUpload={handleImageUpload}
-                />
-              </TabsContent>
+                {/* Details Tab */}
+                <TabsContent value="details" className="space-y-4 w-full">
+                  <DetailsTab 
+                    onPrevious={() => setSelectedTab('hours')} 
+                    selectedImage={selectedImage}
+                    handleImageUpload={handleImageUpload}
+                  />
+                </TabsContent>
+              </div>
             </Tabs>
           </form>
         </Form>
