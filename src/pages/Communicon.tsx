@@ -77,7 +77,7 @@ const Communicon = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Bot className="h-5 w-5 text-primary" />
-                <CardTitle>Chat with AI</CardTitle>
+                <CardTitle>Chat</CardTitle>
               </div>
               
               {/* AI/LIVE toggle button */}

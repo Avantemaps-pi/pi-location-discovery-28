@@ -87,7 +87,6 @@ const About = () => {
                 </div>
                 <h3 className="font-bold text-lg">Tapelo Daniel</h3>
                 <p className="text-sm text-muted-foreground">IT Support Specialist & Software Developer (In Training)</p>
-                <p className="mt-2 text-sm">Pi Network enthusiast with a background in geospatial technology and blockchain solutions.</p>
                 <p className="mt-2 text-sm text-avante-purple">Tapelo bridges IT support with software development, ensuring smooth operations.</p>
               </div>
               
@@ -97,7 +96,6 @@ const About = () => {
                 </div>
                 <h3 className="font-bold text-lg">Loyiso Xulu</h3>
                 <p className="text-sm text-muted-foreground">Software Engineer & System Architect</p>
-                <p className="mt-2 text-sm">Software engineer specializing in mapping technologies and cryptocurrency integration.</p>
                 <p className="mt-2 text-sm text-avante-purple">Loyiso builds and optimizes the platform's architecture to handle growth.</p>
               </div>
               
@@ -107,7 +105,6 @@ const About = () => {
                 </div>
                 <h3 className="font-bold text-lg">Neo Memani</h3>
                 <p className="text-sm text-muted-foreground">Financial Analyst & Market Strategist</p>
-                <p className="mt-2 text-sm">Working directly with businesses to expand our network of Pi-accepting merchants.</p>
                 <p className="mt-2 text-sm text-avante-purple">Neo ensures the platform aligns with business strategy and financial sustainability.</p>
               </div>
             </div>

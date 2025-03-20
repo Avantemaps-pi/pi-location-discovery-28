@@ -24,7 +24,7 @@ const PlaceCardPopup: React.FC<PlaceCardPopupProps> = ({ location }) => {
   };
 
   return (
-    <Card className="w-[300px] shadow-md">
+    <Card className="w-[300px] shadow-md place-popup z-50">
       <div className="h-32 overflow-hidden">
         <img 
           src={location.image} 
