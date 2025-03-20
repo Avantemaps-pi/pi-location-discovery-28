@@ -65,39 +65,41 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-full p-0">
+                <PopoverContent className="w-full p-0" align="start">
                   <Command>
                     <CommandInput placeholder="Search business types..." />
                     <CommandEmpty>No business type found.</CommandEmpty>
                     <CommandGroup>
                       <ScrollArea className="h-60">
-                        {businessTypes.map((type) => (
-                          <CommandItem
-                            value={type}
-                            key={type}
-                            onSelect={() => {
-                              const current = field.value || [];
-                              const isSelected = current.includes(type);
-                              
-                              if (isSelected) {
-                                field.onChange(current.filter(value => value !== type));
-                              } else {
-                                field.onChange([...current, type]);
-                              }
-                            }}
-                            className="flex items-center gap-2"
-                          >
-                            <div className={cn(
-                              "flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                              field.value?.includes(type) ? "bg-primary text-primary-foreground" : "opacity-50"
-                            )}>
-                              {field.value?.includes(type) && (
-                                <Check className="h-3 w-3" />
-                              )}
-                            </div>
-                            <span className="truncate">{type}</span>
-                          </CommandItem>
-                        ))}
+                        <div>
+                          {businessTypes.map((type) => (
+                            <CommandItem
+                              value={type}
+                              key={type}
+                              onSelect={() => {
+                                const current = field.value || [];
+                                const isSelected = current.includes(type);
+                                
+                                if (isSelected) {
+                                  field.onChange(current.filter(value => value !== type));
+                                } else {
+                                  field.onChange([...current, type]);
+                                }
+                              }}
+                              className="flex items-center gap-2"
+                            >
+                              <div className={cn(
+                                "flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                                field.value?.includes(type) ? "bg-primary text-primary-foreground" : "opacity-50"
+                              )}>
+                                {field.value?.includes(type) && (
+                                  <Check className="h-3 w-3" />
+                                )}
+                              </div>
+                              <span>{type}</span>
+                            </CommandItem>
+                          ))}
+                        </div>
                       </ScrollArea>
                     </CommandGroup>
                   </Command>

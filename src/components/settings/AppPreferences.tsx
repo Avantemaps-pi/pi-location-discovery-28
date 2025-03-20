@@ -64,45 +64,47 @@ const AppPreferences = ({
           </p>
         </div>
 
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-md overflow-x-auto">
-          <ScrollArea className="h-48" orientation="horizontal">
-            <div className="flex items-start min-w-[600px]">
-              <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
-              <div className="w-full">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-blue-800">Verification Process</h4>
-                </div>
-                <ul className="mt-2 space-y-3 text-sm">
-                  <li className="flex items-start">
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">1</Badge>
-                    <div>
-                      <p className="font-medium">Register your business</p>
-                      <p className="text-muted-foreground">Complete all required business information</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">2</Badge>
-                    <div>
-                      <p className="font-medium">Request Verification via Email</p>
-                      <p className="text-muted-foreground">After registering your business, request a verification via email, but only if you meet the requirements</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">3</Badge>
-                    <div>
-                      <p className="font-medium">Get Verified Badge</p>
-                      <p className="text-muted-foreground">Once approved, your business will show as verified</p>
-                      <div className="mt-2">
-                        <Button variant="link" size="sm" asChild className="text-blue-700 p-0">
-                          <Link to="/verification-info">
-                            <span>View verification and certification details</span>
-                            <ExternalLink className="h-3.5 w-3.5 ml-1" />
-                          </Link>
-                        </Button>
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-md">
+          <ScrollArea className="h-60 w-full" type="always">
+            <div className="pr-4">
+              <div className="flex items-start">
+                <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div className="w-full">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium text-blue-800">Verification Process</h4>
+                  </div>
+                  <ul className="mt-2 space-y-3 text-sm">
+                    <li className="flex items-start">
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">1</Badge>
+                      <div>
+                        <p className="font-medium">Register your business</p>
+                        <p className="text-muted-foreground">Complete all required business information</p>
                       </div>
-                    </div>
-                  </li>
-                </ul>
+                    </li>
+                    <li className="flex items-start">
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">2</Badge>
+                      <div>
+                        <p className="font-medium">Request Verification via Email</p>
+                        <p className="text-muted-foreground">After registering your business, request a verification via email, but only if you meet the requirements</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 mt-0.5 mr-2">3</Badge>
+                      <div>
+                        <p className="font-medium">Get Verified Badge</p>
+                        <p className="text-muted-foreground">Once approved, your business will show as verified</p>
+                        <div className="mt-2">
+                          <Button variant="link" size="sm" asChild className="text-blue-700 p-0">
+                            <Link to="/verification-info">
+                              <span>View verification and certification details</span>
+                              <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </ScrollArea>
