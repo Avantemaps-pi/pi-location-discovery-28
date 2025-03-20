@@ -20,6 +20,7 @@ import Notifications from "./pages/Notifications";
 import RegisteredBusiness from "./pages/RegisteredBusiness";
 import VerificationInfo from "./pages/VerificationInfo";
 import Review from "./pages/Review";
+import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/cookies" element={<CookiePolicy />} />
           <Route path="/registration" element={<Registration />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

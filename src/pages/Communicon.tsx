@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Toggle } from '@/components/ui/toggle';
 
 const Communicon = () => {
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
     { id: 1, text: "Welcome to Avante Maps!", sender: "system", timestamp: "10:30 AM" },
@@ -29,6 +31,17 @@ const Communicon = () => {
       };
       setMessages([...messages, newMessage]);
       setMessage("");
+    }
+  };
+
+  const handleChatModeChange = (value) => {
+    if (value && value !== chatMode) {
+      if (value === "live") {
+        // Redirect to pricing page when switching to LIVE chat
+        navigate("/pricing");
+      } else {
+        setChatMode(value as "ai" | "live");
+      }
     }
   };
 
@@ -85,7 +98,7 @@ const Communicon = () => {
                 type="single" 
                 variant="outline"
                 value={chatMode}
-                onValueChange={(value) => value && setChatMode(value as "ai" | "live")}
+                onValueChange={handleChatModeChange}
                 className="border rounded-md"
               >
                 <ToggleGroupItem value="ai" className="px-3 py-1 text-xs">
