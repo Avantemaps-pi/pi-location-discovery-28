@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
@@ -12,7 +12,15 @@ import { allPlaces } from '@/data/mockPlaces';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
+  const location = useLocation();
+
+  // Check if we were navigated here with a place ID to select
+  useEffect(() => {
+    if (location.state && location.state.selectedPlaceId) {
+      setSelectedPlace(location.state.selectedPlaceId);
+    }
+  }, [location.state]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

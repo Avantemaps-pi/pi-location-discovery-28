@@ -1,14 +1,17 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import CategorySection from '@/components/business/CategorySection';
 import { recommendedForYou, suggestedForYou, avanteTopChoice, allPlaces } from '@/data/mockPlaces';
 
 const Recommendations = () => {
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const navigate = useNavigate();
   
   const handlePlaceClick = (placeId) => {
-    setSelectedPlace(placeId);
+    // Navigate to the index page with the selected place ID
+    navigate('/', { state: { selectedPlaceId: placeId } });
   };
 
   return (

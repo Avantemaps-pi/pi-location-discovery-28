@@ -27,7 +27,13 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove, cl
   };
 
   const handlePlaceClick = () => {
-    onPlaceClick(place.id);
+    // If we're already on the index page, just select the marker
+    if (window.location.pathname === '/') {
+      onPlaceClick(place.id);
+    } else {
+      // Navigate to the index page with the place ID as a parameter
+      navigate('/', { state: { selectedPlaceId: place.id } });
+    }
   };
   
   const handleBookmarkToggle = (e: React.MouseEvent) => {
