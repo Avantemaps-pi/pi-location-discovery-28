@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check } from "lucide-react";
+import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check, Bot } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -70,8 +71,11 @@ const Communicon = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Chat</CardTitle>
-            <CardDescription>Connect with Avante Maps support</CardDescription>
+            <div className="flex items-center gap-2">
+              <Bot className="h-5 w-5 text-primary" />
+              <CardTitle>Chat with AI</CardTitle>
+            </div>
+            <CardDescription>Connect with Avante Maps AI assistant</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col h-[400px]">
