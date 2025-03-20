@@ -24,7 +24,7 @@ const BusinessVerificationStatus = ({ isCertification = false }: BusinessVerific
             </Button>
           </div>
           <div className="mt-1 flex flex-col pl-7">
-            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1 self-start mb-1">
+            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1 self-start mb-1 w-32 justify-center">
               <AlertTriangle className="h-3 w-3" />
               Not Verified
             </Badge>
@@ -39,13 +39,16 @@ const BusinessVerificationStatus = ({ isCertification = false }: BusinessVerific
       ) : (
         <div className="flex flex-col">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Certification Status</span>
+            <div className="flex items-center">
+              <Shield className="h-5 w-5 mr-2 text-gray-500 opacity-70" />
+              <span className="text-sm font-medium">Certification Status</span>
+            </div>
             <Button variant="outline" size="sm" className="text-xs ml-2">
               Request
             </Button>
           </div>
-          <div className="mt-1 pl-0">
-            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1 self-start mb-1">
+          <div className="mt-1 pl-7">
+            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 flex items-center gap-1 self-start mb-1 w-32 justify-center">
               <AlertTriangle className="h-3 w-3" />
               Not Certified
             </Badge>

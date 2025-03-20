@@ -66,7 +66,7 @@ const AppPreferences = ({
 
         <div className="mt-6 p-4 bg-blue-50 border border-blue-100 rounded-md">
           <ScrollArea className="h-60 w-full pr-4" type="always">
-            <div className="pr-8">
+            <div className="pr-12">
               <div className="flex items-start">
                 <Shield className="h-5 w-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
                 <div className="w-full">
