@@ -1,11 +1,13 @@
+
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import PlaceCard from '@/components/business/PlaceCard';
 import { useNavigate } from 'react-router-dom';
+import { Place } from '@/data/mockPlaces';
 
-const bookmarkedPlaces = [
+const bookmarkedPlaces: Place[] = [
   {
     id: '1',
     name: 'Pi Cafe Downtown',
@@ -15,6 +17,7 @@ const bookmarkedPlaces = [
     description: 'A cozy cafe that accepts Pi payments for coffee, pastries and light meals. Great atmosphere for working or meeting friends.',
     image: '/placeholder.svg',
     rating: 4.5,
+    position: { lat: 37.773, lng: -122.413 }
   },
   {
     id: '2',
@@ -25,6 +28,7 @@ const bookmarkedPlaces = [
     description: 'Electronics and gadgets store that accepts Pi cryptocurrency. Offers repairs and accessories for all major brands.',
     image: '/placeholder.svg',
     rating: 4.2,
+    position: { lat: 37.789, lng: -122.401 }
   },
   {
     id: '3',
@@ -35,6 +39,7 @@ const bookmarkedPlaces = [
     description: 'Artisanal bakery with fresh bread, pastries and cakes. Uses local ingredients and accepts Pi for all purchases.',
     image: '/placeholder.svg',
     rating: 4.7,
+    position: { lat: 37.785, lng: -122.405 }
   },
 ];
 
@@ -42,12 +47,13 @@ const Bookmarks = () => {
   const [bookmarks, setBookmarks] = React.useState(bookmarkedPlaces);
   const navigate = useNavigate();
 
-  const removeBookmark = (id) => {
+  const removeBookmark = (id: string) => {
     setBookmarks(bookmarks.filter(bookmark => bookmark.id !== id));
   };
 
-  const handlePlaceClick = (placeId) => {
+  const handlePlaceClick = (placeId: string) => {
     console.log(`Clicked on place: ${placeId}`);
+    navigate('/recommendations', { state: { selectedPlaceId: placeId } });
   };
 
   return (
