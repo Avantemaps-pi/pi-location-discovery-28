@@ -7,6 +7,7 @@ export interface Place {
   rating: number;
   category: string;
   image: string;
+  dateAdded?: string; // Added this property as optional
   position: {
     lat: number;
     lng: number;
