@@ -86,7 +86,7 @@ const About = () => {
                   <Users className="h-12 w-12 text-white" />
                 </div>
                 <h3 className="font-bold text-lg">Tapelo Daniel</h3>
-                <p className="text-sm text-muted-foreground">Founder & CEO</p>
+                <p className="text-sm text-muted-foreground">IT Support Specialist & Software Developer (In Training)</p>
                 <p className="mt-2 text-sm">Pi Network enthusiast with a background in geospatial technology and blockchain solutions.</p>
               </div>
               
@@ -95,7 +95,7 @@ const About = () => {
                   <Users className="h-12 w-12 text-white" />
                 </div>
                 <h3 className="font-bold text-lg">Loyiso Xulu</h3>
-                <p className="text-sm text-muted-foreground">CTO</p>
+                <p className="text-sm text-muted-foreground">Software Engineer & System Architect</p>
                 <p className="mt-2 text-sm">Software engineer specializing in mapping technologies and cryptocurrency integration.</p>
               </div>
               
@@ -104,7 +104,7 @@ const About = () => {
                   <Users className="h-12 w-12 text-white" />
                 </div>
                 <h3 className="font-bold text-lg">Neo Memani</h3>
-                <p className="text-sm text-muted-foreground">Head of Business Development</p>
+                <p className="text-sm text-muted-foreground">Financial Analyst & Market Strategist</p>
                 <p className="mt-2 text-sm">Working directly with businesses to expand our network of Pi-accepting merchants.</p>
               </div>
             </div>

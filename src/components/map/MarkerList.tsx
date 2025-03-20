@@ -3,7 +3,6 @@ import React from 'react';
 import Marker from './Marker';
 import { createMarkerIcon } from './markerUtils';
 import { Place } from '@/data/mockPlaces';
-import PlaceCardPopup from './PlaceCardPopup';
 
 interface MarkerListProps {
   places: Place[];
@@ -32,11 +31,6 @@ const MarkerList: React.FC<MarkerListProps> = ({
             animation={place.id === activeMarker ? 1 : undefined}
             map={map}
           />
-          {activeMarker === place.id && showPopover && (
-            <div className="place-popup" id={`popup-${place.id}`}>
-              <PlaceCardPopup location={place} />
-            </div>
-          )}
         </React.Fragment>
       ))}
     </>

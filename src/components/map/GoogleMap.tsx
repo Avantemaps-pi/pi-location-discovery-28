@@ -9,6 +9,7 @@ import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
 import MarkerList from './MarkerList';
+import PlaceCardPopup from './PlaceCardPopup';
 
 interface GoogleMapProps {
   places?: Place[];
@@ -71,8 +72,11 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
     });
   };
 
+  // Get the selected place data
+  const selectedPlace = activeMarker ? displayPlaces.find(place => place.id === activeMarker) : null;
+
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
       <Wrapper 
         apiKey={GOOGLE_MAPS_API_KEY} 
         render={renderMap}
@@ -102,9 +106,17 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
             activeMarker={activeMarker}
             showPopover={showPopover}
             onMarkerClick={handleMarkerClick}
+            map={undefined}
           />
         </MapComponent>
       </Wrapper>
+      
+      {/* Popup card overlay for selected place */}
+      {selectedPlace && showPopover && (
+        <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 z-50">
+          <PlaceCardPopup location={selectedPlace} />
+        </div>
+      )}
     </div>
   );
 };
