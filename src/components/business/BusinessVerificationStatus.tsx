@@ -2,7 +2,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, Info, Shield } from 'lucide-react';
+import { AlertTriangle, Info, Shield, CheckCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 interface BusinessVerificationStatusProps {
@@ -31,7 +31,7 @@ const BusinessVerificationStatus = ({ isCertification = false }: BusinessVerific
         <div className="flex flex-col">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <Shield className="h-5 w-5 mr-2 text-gray-500" />
+              <CheckCircle className="h-5 w-5 mr-2 text-green-500" />
               <span className="text-sm font-medium">Verification Status</span>
             </div>
             <Button 
@@ -60,7 +60,7 @@ const BusinessVerificationStatus = ({ isCertification = false }: BusinessVerific
         <div className="flex flex-col">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <Shield className="h-5 w-5 mr-2 text-gray-500 opacity-70" />
+              <Shield className="h-5 w-5 mr-2 text-blue-500" />
               <span className="text-sm font-medium">Certification Status</span>
             </div>
             <Button 

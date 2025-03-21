@@ -42,7 +42,7 @@ const VerificationInfo = () => {
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle className="h-6 w-6 text-blue-500" />
+                  <CheckCircle className="h-6 w-6 text-green-500" />
                   <CardTitle className="text-xl">Verification</CardTitle>
                 </div>
                 <CardDescription>
@@ -75,7 +75,7 @@ const VerificationInfo = () => {
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <Shield className="h-6 w-6 text-green-500" />
+                  <Shield className="h-6 w-6 text-blue-500" />
                   <CardTitle className="text-xl">Certification</CardTitle>
                 </div>
                 <CardDescription>
@@ -116,7 +116,7 @@ const VerificationInfo = () => {
               <Info className="h-4 w-4" />
               <AlertTitle>Application Process</AlertTitle>
               <AlertDescription>
-                Once you've registered your business, navigate to the "My Business" page, select the business you wish to verify, and click the "Request" button to start the verification process. Certification is available to businesses that successfully complete the verification and fulfill the additional requirements.
+                Once you've registered your business, navigate to the "<strong>My Business</strong>" page, select the business you wish to verify, and click the "<strong>Request</strong>" button to start the verification process. Certification is available to businesses that successfully complete the verification and fulfill the additional requirements.
               </AlertDescription>
             </Alert>
 

@@ -3,7 +3,7 @@ import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { PiSquare, Globe, Search, Map, Shield, Users } from 'lucide-react';
+import { PiSquare, Globe, Search, Map, Shield, Users, CheckCircle } from 'lucide-react';
 
 const About = () => {
   return (
@@ -63,7 +63,7 @@ const About = () => {
             
             <Card>
               <CardHeader className="pb-2">
-                <Shield className="h-6 w-6 mb-2 text-avante-teal" />
+                <CheckCircle className="h-6 w-6 mb-2 text-green-500" />
                 <CardTitle className="text-xl">Verified Listings</CardTitle>
               </CardHeader>
               <CardContent>

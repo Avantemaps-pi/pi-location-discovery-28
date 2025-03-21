@@ -66,33 +66,15 @@ const Notifications = () => {
   const notifications: NotificationProps[] = [
     {
       type: 'business',
-      content: 'Your business "Coffee Pi" has been approved and is now listed on Avante Maps',
+      content: 'Your business "Business-name" has been listed',
       time: '2 hours ago',
       read: false,
     },
     {
       type: 'review',
-      content: 'Alex left a 5-star review on your business "Coffee Pi"',
+      content: 'User-name left a 5-star review on your business "Coffee Pi"',
       time: '5 hours ago',
       read: false,
-    },
-    {
-      type: 'message',
-      content: 'You have a new message from Sarah about your business hours',
-      time: 'Yesterday',
-      read: true,
-    },
-    {
-      type: 'follower',
-      content: 'John started following your profile',
-      time: '2 days ago',
-      read: true,
-    },
-    {
-      type: 'like',
-      content: 'Maria liked your forum post about Pi adoption',
-      time: '3 days ago',
-      read: true,
     },
     {
       type: 'business',
@@ -138,4 +120,3 @@ const Notifications = () => {
 };
 
 export default Notifications;
-
