@@ -14,6 +14,7 @@ const Recommendations = () => {
     navigate('/', { state: { selectedPlaceId: placeId } });
   };
 
+  // Pass showDetails={false} to the CategorySection components
   return (
     <AppLayout>
       <div className="space-y-6">
@@ -27,17 +28,20 @@ const Recommendations = () => {
             <CategorySection 
               title="Avante Top Choice" 
               places={avanteTopChoice} 
-              onPlaceClick={handlePlaceClick} 
+              onPlaceClick={handlePlaceClick}
+              showDetails={false}
             />
             <CategorySection 
               title="Suggested for you" 
               places={suggestedForYou} 
-              onPlaceClick={handlePlaceClick} 
+              onPlaceClick={handlePlaceClick}
+              showDetails={false}
             />
             <CategorySection 
               title="Recommended for you" 
               places={recommendedForYou} 
-              onPlaceClick={handlePlaceClick} 
+              onPlaceClick={handlePlaceClick}
+              showDetails={false}
             />
           </div>
         </div>

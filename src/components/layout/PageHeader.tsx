@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, LogIn } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Home, Compass, Bookmark, Mail, Info, Settings, FileText, PiSquare, Clipboard, UserPlus, User, Bell, Building } from 'lucide-react';
 import LoginDialog from '@/components/auth/LoginDialog';
 import { Badge } from '@/components/ui/badge';
+import { getUnreadNotificationsCount, notificationUpdateEvent } from '@/pages/Notifications'; 
 
 interface PageHeaderProps {
   title?: string;
@@ -15,10 +16,22 @@ interface PageHeaderProps {
 const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
+  const [unreadNotifications, setUnreadNotifications] = useState(getUnreadNotificationsCount());
   const navigate = useNavigate();
   
-  // Count of unread notifications
-  const unreadNotifications = 2; // Based on the two unread notifications in the Notifications page
+  // Update the unread count when notifications change
+  useEffect(() => {
+    const handleNotificationUpdate = () => {
+      setUnreadNotifications(getUnreadNotificationsCount());
+    };
+
+    // Listen for notification updates
+    window.addEventListener('notificationUpdate', handleNotificationUpdate);
+
+    return () => {
+      window.removeEventListener('notificationUpdate', handleNotificationUpdate);
+    };
+  }, []);
 
   const navItems = [
     { to: '/', label: 'Home', icon: Home },

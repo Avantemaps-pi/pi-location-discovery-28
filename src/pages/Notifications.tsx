@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,51 @@ interface NotificationProps {
   time: string;
   read: boolean;
 }
+
+// Create a global state for notifications that can be accessed across components
+let globalNotifications: NotificationProps[] = [
+  {
+    id: '1',
+    type: 'business',
+    content: 'Your business "Business-name" has been listed',
+    time: '2 hours ago',
+    read: false,
+  },
+  {
+    id: '2',
+    type: 'review',
+    content: 'User-name left a 5-star review on your business "Coffee Pi"',
+    time: '5 hours ago',
+    read: false,
+  },
+  {
+    id: '3',
+    type: 'business',
+    content: 'Your business profile for "Tech Pi" has been viewed 24 times this week',
+    time: '5 days ago',
+    read: true,
+  },
+];
+
+// Helper function to get unread notification count
+export const getUnreadNotificationsCount = (): number => {
+  return globalNotifications.filter(notification => !notification.read).length;
+};
+
+// Helper function to update a notification's read status
+export const markNotificationAsRead = (id: string): void => {
+  globalNotifications = globalNotifications.map(notification => 
+    notification.id === id ? { ...notification, read: true } : notification
+  );
+};
+
+// Helper function to mark all notifications as read
+export const markAllNotificationsAsRead = (): void => {
+  globalNotifications = globalNotifications.map(notification => ({ ...notification, read: true }));
+};
+
+// Custom event for notification updates
+export const notificationUpdateEvent = new CustomEvent('notificationUpdate');
 
 const NotificationItem: React.FC<{
   notification: NotificationProps;
@@ -55,8 +100,8 @@ const NotificationItem: React.FC<{
   };
 
   const handleClick = () => {
-    if (!read) {
-      onReadNotification(id);
+    if (!notification.read) {
+      onReadNotification(notification.id);
     }
   };
 
@@ -80,43 +125,35 @@ const NotificationItem: React.FC<{
 };
 
 const Notifications = () => {
-  const [notifications, setNotifications] = useState<NotificationProps[]>([
-    {
-      id: '1',
-      type: 'business',
-      content: 'Your business "Business-name" has been listed',
-      time: '2 hours ago',
-      read: false,
-    },
-    {
-      id: '2',
-      type: 'review',
-      content: 'User-name left a 5-star review on your business "Coffee Pi"',
-      time: '5 hours ago',
-      read: false,
-    },
-    {
-      id: '3',
-      type: 'business',
-      content: 'Your business profile for "Tech Pi" has been viewed 24 times this week',
-      time: '5 days ago',
-      read: true,
-    },
-  ]);
+  const [notifications, setNotifications] = useState<NotificationProps[]>(globalNotifications);
+
+  // Update local state when global state changes
+  useEffect(() => {
+    const updateNotifications = () => {
+      setNotifications([...globalNotifications]);
+    };
+
+    // Listen for notification updates
+    window.addEventListener('notificationUpdate', updateNotifications);
+
+    return () => {
+      window.removeEventListener('notificationUpdate', updateNotifications);
+    };
+  }, []);
 
   const markAsRead = (id: string) => {
-    setNotifications(prev => 
-      prev.map(notification => 
-        notification.id === id ? { ...notification, read: true } : notification
-      )
-    );
+    markNotificationAsRead(id);
+    setNotifications(globalNotifications);
+    // Dispatch event to notify other components
+    window.dispatchEvent(notificationUpdateEvent);
   };
 
   const markAllAsRead = () => {
-    setNotifications(prev => 
-      prev.map(notification => ({ ...notification, read: true }))
-    );
+    markAllNotificationsAsRead();
+    setNotifications(globalNotifications);
     toast.success('All notifications marked as read');
+    // Dispatch event to notify other components
+    window.dispatchEvent(notificationUpdateEvent);
   };
 
   const unreadCount = notifications.filter(notification => !notification.read).length;

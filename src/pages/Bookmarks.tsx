@@ -83,7 +83,8 @@ const Bookmarks = () => {
                 key={place.id} 
                 place={place} 
                 onPlaceClick={handlePlaceClick}
-                onRemove={removeBookmark} 
+                onRemove={removeBookmark}
+                showDetails={false}  
               />
             ))}
           </div>

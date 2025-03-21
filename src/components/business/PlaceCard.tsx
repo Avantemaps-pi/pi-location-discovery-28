@@ -14,9 +14,16 @@ interface PlaceCardProps {
   onPlaceClick: (placeId: string) => void;
   onRemove?: (placeId: string) => void;
   className?: string;
+  showDetails?: boolean;
 }
 
-const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove, className }) => {
+const PlaceCard: React.FC<PlaceCardProps> = ({ 
+  place, 
+  onPlaceClick, 
+  onRemove, 
+  className,
+  showDetails = false // Default to not showing details
+}) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const navigate = useNavigate();
   
@@ -115,17 +122,19 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove, cl
               Website
               <ExternalLink className="h-3 w-3" />
             </Button>
-            <Popover>
-              <PopoverTrigger asChild>
-                <div className="text-blue-500 font-medium text-sm cursor-pointer flex items-center">
-                  <Info className="h-3 w-3 mr-1" />
-                  Details
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="p-0 w-[420px]" align="end">
-                <DetailsCard place={place} />
-              </PopoverContent>
-            </Popover>
+            {showDetails && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <div className="text-blue-500 font-medium text-sm cursor-pointer flex items-center">
+                    <Info className="h-3 w-3 mr-1" />
+                    Details
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className="p-0 w-[420px]" align="end">
+                  <DetailsCard place={place} />
+                </PopoverContent>
+              </Popover>
+            )}
           </div>
         </div>
       </CardContent>
