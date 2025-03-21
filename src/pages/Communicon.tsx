@@ -66,6 +66,31 @@ const Communicon = () => {
     // Implement actual attachment handling logic here
   };
 
+  const sendVerificationRequest = (type: 'verification' | 'certification') => {
+    const requestMessage = {
+      id: messages.length + 1,
+      text: type === 'verification' ? "Requesting Verification" : "Requesting Certification",
+      sender: "user",
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    
+    setMessages([...messages, requestMessage]);
+    
+    // Add a response
+    setTimeout(() => {
+      const responseMessage = {
+        id: messages.length + 2,
+        text: `Your ${type} request has been received. Our team will review your application and get back to you shortly.`,
+        sender: "support",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages(prev => [...prev, responseMessage]);
+    }, 1000);
+  };
+
+  // Export the function so it can be used from other components
+  window.sendVerificationRequest = sendVerificationRequest;
+
   return (
     <AppLayout title="Avante Maps">
       <div className="max-w-4xl mx-auto">
@@ -126,7 +151,10 @@ const Communicon = () => {
                   <Zap className="h-4 w-4 mr-1" />
                   AI
                 </ToggleGroupItem>
-                <ToggleGroupItem value="live" className={`px-3 py-1 text-xs ${chatMode === "live" ? "bg-red-500 text-white hover:bg-red-600" : ""}`}>
+                <ToggleGroupItem 
+                  value="live" 
+                  className={`px-3 py-1 text-xs ${chatMode === "live" ? "bg-red-500 text-white hover:bg-red-600" : ""}`}
+                >
                   <Radio className="h-4 w-4 mr-1" />
                   LIVE
                 </ToggleGroupItem>
@@ -162,12 +190,12 @@ const Communicon = () => {
                 </div>
               </ScrollArea>
               
-              <form onSubmit={handleSendMessage} className="relative flex items-center">
+              <form onSubmit={handleSendMessage} className="relative">
                 <Input
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder={`Type your message to ${chatMode === "ai" ? "AI" : "support"}...`}
-                  className="flex-1 pr-16 pl-12 py-3 bg-gray-50 border-gray-200"
+                  className="flex-1 pr-10 pl-10 py-4 h-14 bg-gray-50 border-gray-200"
                 />
                 
                 <Popover>
@@ -176,19 +204,19 @@ const Communicon = () => {
                       type="button" 
                       variant="ghost" 
                       size="icon" 
-                      className="absolute left-2 h-8 w-8 opacity-70 hover:opacity-100"
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 h-8 w-8 opacity-70 hover:opacity-100"
                     >
                       <Paperclip className="h-5 w-5 text-gray-500" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-24 p-0" align="start">
+                  <PopoverContent className="w-20 p-0" align="start">
                     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                       <div 
-                        className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
+                        className="flex items-center gap-2 p-3 hover:bg-gray-100 cursor-pointer"
                         onClick={() => handleAttachmentOption('photos')}
                       >
                         <Image className="h-5 w-5 text-gray-600" />
-                        <span className="text-gray-800 font-medium">Photos</span>
+                        <span className="text-gray-800 text-sm">Photos</span>
                       </div>
                     </div>
                   </PopoverContent>
@@ -198,7 +226,7 @@ const Communicon = () => {
                   type="submit" 
                   variant="ghost" 
                   size="icon" 
-                  className="absolute right-2 h-8 w-8 opacity-70 hover:opacity-100"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 opacity-70 hover:opacity-100"
                 >
                   <SendHorizontal className="h-5 w-5 text-primary" />
                 </Button>

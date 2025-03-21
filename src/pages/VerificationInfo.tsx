@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, CheckCircle, AlertTriangle, Info, ArrowLeft } from 'lucide-react';
+import { CheckCircle, AlertTriangle, Info, ArrowLeft, Shield } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
@@ -42,7 +42,7 @@ const VerificationInfo = () => {
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <Shield className="h-6 w-6 text-blue-500" />
+                  <CheckCircle className="h-6 w-6 text-blue-500" />
                   <CardTitle className="text-xl">Verification</CardTitle>
                 </div>
                 <CardDescription>
@@ -56,9 +56,9 @@ const VerificationInfo = () => {
                 
                 <h3 className="text-base font-medium mb-2">Requirements:</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4">
-                  <li>Valid business registration document</li>
-                  <li>Proof of business address</li>
-                  <li>Business owner ID verification</li>
+                  <li>Minimum rating of (4.0/5)</li>
+                  <li>A minimum of 100+ Pi transactions</li>
+                  <li>A minimum of 10+ wallets transacted with</li>
                   <li>Contact information verification</li>
                   <li>Active business operations</li>
                 </ul>
@@ -75,7 +75,7 @@ const VerificationInfo = () => {
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle className="h-6 w-6 text-green-500" />
+                  <Shield className="h-6 w-6 text-green-500" />
                   <CardTitle className="text-xl">Certification</CardTitle>
                 </div>
                 <CardDescription>
@@ -90,12 +90,12 @@ const VerificationInfo = () => {
                 <h3 className="text-base font-medium mb-2">Requirements:</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4">
                   <li>Completed verification process</li>
-                  <li>Minimum 6 months of active Pi transactions</li>
-                  <li>Quality assessment inspection</li>
-                  <li>Customer reviews (min. 4.0/5.0 rating)</li>
+                  <li>Minimum 3 months of active Pi transactions</li>
+                  <li>Video of business operations</li>
+                  <li>Images of services / products offered</li>
                   <li>Compliance with Pi Network policies</li>
                   <li>Regular business activity updates</li>
-                  <li>Small business or Enterprise subscription</li>
+                  <li>Subscription member</li>
                 </ul>
 
                 <h3 className="text-base font-medium mb-2">Benefits:</h3>
@@ -122,7 +122,7 @@ const VerificationInfo = () => {
             </Alert>
 
             <Alert variant="default" className="bg-blue-50 border-blue-200">
-              <Shield className="h-4 w-4 text-blue-500" />
+              <CheckCircle className="h-4 w-4 text-blue-500" />
               <AlertTitle className="text-blue-700">Verification Timeline</AlertTitle>
               <AlertDescription className="text-blue-600">
                 The verification process typically takes 7-14 business days from submission of all required documents.
@@ -130,7 +130,7 @@ const VerificationInfo = () => {
             </Alert>
 
             <Alert variant="default" className="bg-green-50 border-green-200">
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <Shield className="h-4 w-4 text-green-500" />
               <AlertTitle className="text-green-700">Certification Timeline</AlertTitle>
               <AlertDescription className="text-green-600">
                 The certification process typically takes 15-30 days and includes an on-site or virtual inspection.

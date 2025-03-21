@@ -43,7 +43,7 @@ const PlaceCardPopup: React.FC<PlaceCardPopupProps> = ({ location }) => {
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-1">
             <div 
-              className="inline-flex items-center px-2 py-1 rounded bg-[#FEF7CD] cursor-pointer"
+              className="inline-flex items-center px-2 py-1 w-16 justify-center rounded bg-[#FEF7CD] cursor-pointer"
               onClick={() => handleRatingClick(location.id)}
             >
               <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />

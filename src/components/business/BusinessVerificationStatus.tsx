@@ -3,13 +3,28 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, Info, Shield } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface BusinessVerificationStatusProps {
   isCertification?: boolean;
 }
 
 const BusinessVerificationStatus = ({ isCertification = false }: BusinessVerificationStatusProps) => {
+  const navigate = useNavigate();
+
+  const handleRequestClick = () => {
+    // Navigate to Communicon page
+    navigate('/communicon');
+    
+    // Use setTimeout to ensure the page has loaded before trying to call the function
+    setTimeout(() => {
+      // Access the global function we added to the window object
+      if (window.sendVerificationRequest) {
+        window.sendVerificationRequest(isCertification ? 'certification' : 'verification');
+      }
+    }, 500);
+  };
+
   return (
     <>
       {!isCertification ? (
@@ -19,7 +34,12 @@ const BusinessVerificationStatus = ({ isCertification = false }: BusinessVerific
               <Shield className="h-5 w-5 mr-2 text-gray-500" />
               <span className="text-sm font-medium">Verification Status</span>
             </div>
-            <Button variant="outline" size="sm" className="text-xs ml-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="text-xs ml-2"
+              onClick={handleRequestClick}
+            >
               Request
             </Button>
           </div>
@@ -43,7 +63,12 @@ const BusinessVerificationStatus = ({ isCertification = false }: BusinessVerific
               <Shield className="h-5 w-5 mr-2 text-gray-500 opacity-70" />
               <span className="text-sm font-medium">Certification Status</span>
             </div>
-            <Button variant="outline" size="sm" className="text-xs ml-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="text-xs ml-2"
+              onClick={handleRequestClick}
+            >
               Request
             </Button>
           </div>
