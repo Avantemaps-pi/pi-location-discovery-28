@@ -48,7 +48,7 @@ const UpdateRegistration = () => {
   };
   
   return (
-    <AppLayout title="Avante Maps" fullHeight>
+    <AppLayout title="Avante Maps" fullHeight backButton onBackClick={handleGoBack}>
       <motion.div 
         className="w-full max-w-5xl mx-auto px-4 py-6 md:py-8"
         initial={{ opacity: 0, y: 20 }}
@@ -56,19 +56,6 @@ const UpdateRegistration = () => {
         transition={{ duration: 0.4 }}
         skipMobileAnimations={isMobile}
       >
-        <div className="flex items-center mb-6">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="mr-4" 
-            onClick={handleGoBack}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back
-          </Button>
-          <h1 className="text-2xl font-bold">Update Business</h1>
-        </div>
-        
         {isLoading ? (
           <div className="flex justify-center items-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
