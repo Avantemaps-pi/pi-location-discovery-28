@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Home, Compass, Bookmark, Mail, Info, Settings, FileText, PiSquare, Clipboard, UserPlus, User, Bell, Building } from 'lucide-react';
 import LoginDialog from '@/components/auth/LoginDialog';
 import { Badge } from '@/components/ui/badge';
-import { getUnreadNotificationsCount, notificationUpdateEvent } from '@/pages/Notifications'; 
+import { getUnreadNotificationsCount, notificationUpdateEvent } from '@/utils/notificationUtils'; 
 
 interface PageHeaderProps {
   title?: string;
