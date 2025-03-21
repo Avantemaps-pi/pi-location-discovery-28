@@ -9,7 +9,7 @@ const Registration = () => {
   const isMobile = useIsMobile();
   
   return (
-    <AppLayout title="Register Your Business" fullHeight>
+    <AppLayout title="Avante Maps" fullHeight>
       <motion.div 
         className="w-full max-w-5xl mx-auto px-4 py-6 md:py-8"
         initial={{ opacity: 0, y: 20 }}

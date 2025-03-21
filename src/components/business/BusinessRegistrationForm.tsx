@@ -83,7 +83,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
   return (
     <div className="w-full py-2">
       <div className="mb-6 md:mb-8">
-        <h2 className="text-3xl font-bold tracking-tight">Register Your Business</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Register Business</h2>
         <p className="text-muted-foreground text-lg mt-2">
           List your business as a Pi-accepting merchant on Avante Maps.
         </p>

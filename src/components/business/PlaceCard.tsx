@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Star, Bookmark, CircleCheck } from 'lucide-react';
+import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CategoryBadge from '@/components/business/CategoryBadge';
 import { useNavigate } from 'react-router-dom';
@@ -91,8 +91,9 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove, cl
           <MapPin className="h-4 w-4" />
           <span className="text-xs">{place.address}</span>
         </div>
-        <p className="text-sm text-gray-700 line-clamp-4 h-20 mb-2">{place.description}</p>
-        <div className="flex justify-between items-end mt-2">
+        <p className="text-sm text-gray-700 line-clamp-3 h-16 mb-2">{place.description}</p>
+        
+        <div className="flex justify-between items-end mt-4">
           <div className="flex flex-col gap-1">
             <div 
               className="inline-flex items-center px-2 py-1 w-16 justify-center rounded bg-[#FEF7CD] cursor-pointer"
@@ -103,14 +104,19 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove, cl
             </div>
             <CategoryBadge category={place.category} />
           </div>
-          <div>
+          <div className="flex flex-col gap-2 items-end">
             <Button 
               variant="default" 
               size="sm" 
-              className="bg-green-500 hover:bg-green-600 text-xs font-medium"
+              className="bg-green-500 hover:bg-green-600 text-xs font-medium flex items-center gap-1"
             >
               Website
+              <ExternalLink className="h-3 w-3" />
             </Button>
+            <div className="text-blue-500 font-medium text-sm cursor-pointer flex items-center">
+              <Info className="h-3 w-3 mr-1" />
+              Details
+            </div>
           </div>
         </div>
       </CardContent>
