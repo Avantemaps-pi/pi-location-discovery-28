@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { PricingSection } from '@/components/ui/pricing-section';
@@ -17,10 +16,7 @@ const TIERS = [
     description: "Basic features for all users",
     features: [
       "AI chat support",
-      "Basic place recommendations",
-      "Pi Map navigation",
-      "Community forum access",
-      "Save favorite locations",
+      "1 business listing",
     ],
     cta: "Current Plan",
   },
@@ -33,11 +29,11 @@ const TIERS = [
     },
     description: "Great for active Pi users",
     features: [
-      "Live chat support",
-      "Priority recommendations",
-      "Advanced Pi Map features",
-      "Business verification priority",
-      "Ad-free experience",
+      "AI chat support",
+      "LIVE chat support",
+      "3 business listings",
+      "Certificate eligible",
+      "Media coverage",
     ],
     cta: "Upgrade Now",
     popular: true,
@@ -51,11 +47,13 @@ const TIERS = [
     },
     description: "For serious Pi enthusiasts",
     features: [
-      "24/7 Live support",
-      "Personalized recommendations",
-      "Early access to new features",
-      "Priority business listing",
-      "Custom maps and routes",
+      "AI chat support",
+      "LIVE chat support",
+      "5 business listings",
+      "Certificate eligible",
+      "Frequent media coverage",
+      "Personalized media coverage",
+      "Access to analytical business data",
     ],
     cta: "Upgrade Now",
   },
