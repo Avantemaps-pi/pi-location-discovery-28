@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,6 +17,12 @@ interface ProfileSettingsProps {
 }
 
 const ProfileSettings = ({ language, setLanguage }: ProfileSettingsProps) => {
+  // Apply language change effect (in a real app, this would change the UI language)
+  useEffect(() => {
+    console.log(`Language changed to: ${language}`);
+    // In a real app, this would involve i18n library integration
+  }, [language]);
+
   return (
     <Card>
       <CardHeader>

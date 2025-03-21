@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Shield, Info, ExternalLink, Monitor, Sun, Moon } from 'lucide-react';
+import { Shield, ExternalLink, Monitor, Sun, Moon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -14,29 +13,19 @@ interface AppPreferencesProps {
   notifications: boolean;
   setNotifications: (enabled: boolean) => void;
   isDarkMode: boolean;
-  setIsDarkMode: (dark: boolean) => void;
+  colorScheme: 'system' | 'light' | 'dark';
+  onColorSchemeChange: (scheme: 'system' | 'light' | 'dark') => void;
   onSaveSettings: () => void;
 }
-
-type ColorScheme = 'system' | 'light' | 'dark';
 
 const AppPreferences = ({
   notifications,
   setNotifications,
   isDarkMode,
-  setIsDarkMode,
+  colorScheme,
+  onColorSchemeChange,
   onSaveSettings
 }: AppPreferencesProps) => {
-  const [colorScheme, setColorScheme] = React.useState<ColorScheme>(
-    isDarkMode ? 'dark' : 'light'
-  );
-
-  const handleColorSchemeChange = (value: string) => {
-    const scheme = value as ColorScheme;
-    setColorScheme(scheme);
-    setIsDarkMode(scheme === 'dark');
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -62,7 +51,7 @@ const AppPreferences = ({
               <Label htmlFor="color-scheme">Color Scheme</Label>
               <p className="text-muted-foreground text-sm">Choose between light, dark, or system theme.</p>
             </div>
-            <Select value={colorScheme} onValueChange={handleColorSchemeChange}>
+            <Select value={colorScheme} onValueChange={onColorSchemeChange}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select color scheme" />
               </SelectTrigger>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import BusinessCard from '@/components/business/BusinessCard';
@@ -29,7 +28,6 @@ const RegisteredBusiness = () => {
   ];
 
   const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
-  const [editingBusinessId, setEditingBusinessId] = useState<number | null>(null);
 
   // Filter businesses based on selection, but only show them if something is selected
   const filteredBusinesses = selectedBusinessId 
@@ -39,7 +37,6 @@ const RegisteredBusiness = () => {
     : [];
 
   const handleEditBusiness = (businessId: number) => {
-    setEditingBusinessId(businessId);
     const business = businesses.find(b => b.id === businessId);
     if (business) {
       navigate(`/update-registration/${businessId}`, { 

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent } from "@/components/ui/card";
@@ -127,13 +126,11 @@ const NotificationItem: React.FC<{
 const Notifications = () => {
   const [notifications, setNotifications] = useState<NotificationProps[]>(globalNotifications);
 
-  // Update local state when global state changes
   useEffect(() => {
     const updateNotifications = () => {
       setNotifications([...globalNotifications]);
     };
 
-    // Listen for notification updates
     window.addEventListener('notificationUpdate', updateNotifications);
 
     return () => {
@@ -144,7 +141,6 @@ const Notifications = () => {
   const markAsRead = (id: string) => {
     markNotificationAsRead(id);
     setNotifications(globalNotifications);
-    // Dispatch event to notify other components
     window.dispatchEvent(notificationUpdateEvent);
   };
 
@@ -152,7 +148,6 @@ const Notifications = () => {
     markAllNotificationsAsRead();
     setNotifications(globalNotifications);
     toast.success('All notifications marked as read');
-    // Dispatch event to notify other components
     window.dispatchEvent(notificationUpdateEvent);
   };
 
@@ -162,11 +157,7 @@ const Notifications = () => {
     <AppLayout title="Avante Maps">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Notifications {unreadCount > 0 && 
-            <span className="ml-2 text-sm bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
-              {unreadCount}
-            </span>}
-          </h1>
+          <h1 className="text-2xl font-bold">Notifications</h1>
           <Button 
             variant="outline" 
             size="sm" 

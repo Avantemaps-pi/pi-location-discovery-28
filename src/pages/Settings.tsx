@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { toast } from 'sonner';
 import ProfileSettings from '@/components/settings/ProfileSettings';
@@ -7,11 +7,71 @@ import AppPreferences from '@/components/settings/AppPreferences';
 import DangerZone from '@/components/settings/DangerZone';
 
 const Settings = () => {
-  const [language, setLanguage] = useState('english');
-  const [notifications, setNotifications] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem('language') || 'english';
+  });
+  
+  const [notifications, setNotifications] = useState(() => {
+    return localStorage.getItem('notifications') === 'false' ? false : true;
+  });
+  
+  const [colorScheme, setColorScheme] = useState<'system' | 'light' | 'dark'>(() => {
+    return (localStorage.getItem('colorScheme') as 'system' | 'light' | 'dark') || 'system';
+  });
+  
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedScheme = localStorage.getItem('colorScheme');
+    if (savedScheme === 'dark') return true;
+    if (savedScheme === 'light') return false;
+    
+    // If 'system', check system preference
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  // Apply dark mode class to document
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  // Listen for system color scheme changes when in 'system' mode
+  useEffect(() => {
+    if (colorScheme === 'system') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      
+      const handleChange = (e: MediaQueryListEvent) => {
+        setIsDarkMode(e.matches);
+      };
+      
+      mediaQuery.addEventListener('change', handleChange);
+      
+      return () => {
+        mediaQuery.removeEventListener('change', handleChange);
+      };
+    }
+  }, [colorScheme]);
+
+  const handleColorSchemeChange = (scheme: 'system' | 'light' | 'dark') => {
+    setColorScheme(scheme);
+    localStorage.setItem('colorScheme', scheme);
+    
+    if (scheme === 'dark') {
+      setIsDarkMode(true);
+    } else if (scheme === 'light') {
+      setIsDarkMode(false);
+    } else {
+      // System preference
+      setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+  };
 
   const handleSaveSettings = () => {
+    localStorage.setItem('language', language);
+    localStorage.setItem('notifications', String(notifications));
+    
     toast.success('Settings saved successfully!');
   };
 
@@ -44,7 +104,8 @@ const Settings = () => {
           notifications={notifications}
           setNotifications={setNotifications}
           isDarkMode={isDarkMode}
-          setIsDarkMode={setIsDarkMode}
+          colorScheme={colorScheme}
+          onColorSchemeChange={handleColorSchemeChange}
           onSaveSettings={handleSaveSettings}
         />
 

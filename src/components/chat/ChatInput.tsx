@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Paperclip, SendHorizontal, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,13 +22,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
 }) => {
   return (
     <form onSubmit={onSendMessage} className="relative">
-      <Input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder={`Type your message to ${chatMode === "ai" ? "AI" : "support"}...`}
-        className="flex-1 pr-10 pl-10 py-4 h-14 bg-gray-50 border-gray-200"
-      />
-      
       <Popover>
         <PopoverTrigger asChild>
           <Button 
@@ -40,7 +33,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             <Paperclip className="h-5 w-5 text-gray-500" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-20 p-0" align="start">
+        <PopoverContent className="w-20 p-0" align="start" side="top">
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div 
               className="flex items-center gap-2 p-3 hover:bg-gray-100 cursor-pointer"
@@ -52,6 +45,13 @@ const ChatInput: React.FC<ChatInputProps> = ({
           </div>
         </PopoverContent>
       </Popover>
+      
+      <Input
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        placeholder={`Type your message to ${chatMode === "ai" ? "AI" : "support"}...`}
+        className="flex-1 pr-10 pl-10 py-4 h-14 bg-gray-50 border-gray-200"
+      />
       
       <Button 
         type="submit" 
