@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Bot, Radio } from 'lucide-react';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -26,6 +26,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   handleSendMessage,
   handleAttachmentOption
 }) => {
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  
+  // Scroll to bottom whenever messages change
+  useEffect(() => {
+    if (scrollAreaRef.current) {
+      const scrollContainer = scrollAreaRef.current;
+      scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    }
+  }, [messages]);
+
   return (
     <Card>
       <CardHeader>
@@ -41,7 +51,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       </CardHeader>
       <CardContent>
         <div className="flex flex-col h-[400px]">
-          <ScrollArea className="flex-1 pr-4 mb-4">
+          <ScrollArea 
+            className="flex-1 pr-4 mb-4" 
+            viewportRef={scrollAreaRef}
+          >
             <div className="space-y-4">
               {messages.map((msg) => (
                 <ChatMessage 
