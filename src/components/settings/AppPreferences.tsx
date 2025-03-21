@@ -4,10 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { Shield, Info, ExternalLink } from 'lucide-react';
+import { Shield, Info, ExternalLink, Monitor, Sun, Moon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface AppPreferencesProps {
   notifications: boolean;
@@ -17,6 +18,8 @@ interface AppPreferencesProps {
   onSaveSettings: () => void;
 }
 
+type ColorScheme = 'system' | 'light' | 'dark';
+
 const AppPreferences = ({
   notifications,
   setNotifications,
@@ -24,6 +27,16 @@ const AppPreferences = ({
   setIsDarkMode,
   onSaveSettings
 }: AppPreferencesProps) => {
+  const [colorScheme, setColorScheme] = React.useState<ColorScheme>(
+    isDarkMode ? 'dark' : 'light'
+  );
+
+  const handleColorSchemeChange = (value: string) => {
+    const scheme = value as ColorScheme;
+    setColorScheme(scheme);
+    setIsDarkMode(scheme === 'dark');
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -46,14 +59,34 @@ const AppPreferences = ({
           
           <div className="flex justify-between items-center">
             <div className="space-y-0.5">
-              <Label htmlFor="dark-mode">Dark Mode</Label>
-              <p className="text-muted-foreground text-sm">Toggle between light and dark themes.</p>
+              <Label htmlFor="color-scheme">Color Scheme</Label>
+              <p className="text-muted-foreground text-sm">Choose between light, dark, or system theme.</p>
             </div>
-            <Switch 
-              id="dark-mode" 
-              checked={isDarkMode}
-              onCheckedChange={setIsDarkMode}
-            />
+            <Select value={colorScheme} onValueChange={handleColorSchemeChange}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select color scheme" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="system">
+                  <div className="flex items-center">
+                    <Monitor className="mr-2 h-4 w-4" />
+                    <span>System (Default)</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="light">
+                  <div className="flex items-center">
+                    <Sun className="mr-2 h-4 w-4" />
+                    <span>Light</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="dark">
+                  <div className="flex items-center">
+                    <Moon className="mr-2 h-4 w-4" />
+                    <span>Dark</span>
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         

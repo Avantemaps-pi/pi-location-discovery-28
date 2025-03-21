@@ -1,17 +1,25 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
 import { Bell, MessageSquare, Star, Store, Users, ThumbsUp } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface NotificationProps {
+  id: string;
   type: 'message' | 'review' | 'business' | 'follower' | 'like';
   content: string;
   time: string;
   read: boolean;
 }
 
-const NotificationItem: React.FC<NotificationProps> = ({ type, content, time, read }) => {
+const NotificationItem: React.FC<{
+  notification: NotificationProps;
+  onReadNotification: (id: string) => void;
+}> = ({ notification, onReadNotification }) => {
+  const { type, content, time, read, id } = notification;
+  
   const getIcon = () => {
     switch (type) {
       case 'message':
@@ -46,8 +54,17 @@ const NotificationItem: React.FC<NotificationProps> = ({ type, content, time, re
     }
   };
 
+  const handleClick = () => {
+    if (!read) {
+      onReadNotification(id);
+    }
+  };
+
   return (
-    <div className={`p-4 border-b flex items-start ${read ? 'bg-white' : 'bg-blue-50'}`}>
+    <div 
+      className={`p-4 border-b flex items-start ${read ? 'bg-white' : 'bg-blue-50'} cursor-pointer`}
+      onClick={handleClick}
+    >
       <div className={`p-2 rounded-full mr-4 ${getIconColor()}`}>
         {getIcon()}
       </div>
@@ -63,46 +80,75 @@ const NotificationItem: React.FC<NotificationProps> = ({ type, content, time, re
 };
 
 const Notifications = () => {
-  const notifications: NotificationProps[] = [
+  const [notifications, setNotifications] = useState<NotificationProps[]>([
     {
+      id: '1',
       type: 'business',
       content: 'Your business "Business-name" has been listed',
       time: '2 hours ago',
       read: false,
     },
     {
+      id: '2',
       type: 'review',
       content: 'User-name left a 5-star review on your business "Coffee Pi"',
       time: '5 hours ago',
       read: false,
     },
     {
+      id: '3',
       type: 'business',
       content: 'Your business profile for "Tech Pi" has been viewed 24 times this week',
       time: '5 days ago',
       read: true,
     },
-  ];
+  ]);
+
+  const markAsRead = (id: string) => {
+    setNotifications(prev => 
+      prev.map(notification => 
+        notification.id === id ? { ...notification, read: true } : notification
+      )
+    );
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prev => 
+      prev.map(notification => ({ ...notification, read: true }))
+    );
+    toast.success('All notifications marked as read');
+  };
+
+  const unreadCount = notifications.filter(notification => !notification.read).length;
 
   return (
     <AppLayout title="Avante Maps">
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Notifications</h1>
-          <Button variant="outline" size="sm">Mark all as read</Button>
+          <h1 className="text-2xl font-bold">Notifications {unreadCount > 0 && 
+            <span className="ml-2 text-sm bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
+              {unreadCount}
+            </span>}
+          </h1>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={markAllAsRead}
+            disabled={unreadCount === 0}
+          >
+            Mark all as read
+          </Button>
         </div>
         
         <Card>
           <CardContent className="p-0">
             <div className="divide-y">
               {notifications.length > 0 ? (
-                notifications.map((notification, index) => (
+                notifications.map((notification) => (
                   <NotificationItem 
-                    key={index}
-                    type={notification.type}
-                    content={notification.content}
-                    time={notification.time}
-                    read={notification.read}
+                    key={notification.id}
+                    notification={notification}
+                    onReadNotification={markAsRead}
                   />
                 ))
               ) : (
