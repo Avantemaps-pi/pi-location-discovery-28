@@ -24,8 +24,8 @@ const Settings = () => {
     if (savedScheme === 'dark') return true;
     if (savedScheme === 'light') return false;
     
-    // If 'system', check system preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // If 'system', default to light instead of checking system preference
+    return false;
   });
 
   // Apply dark mode class to document
@@ -37,7 +37,7 @@ const Settings = () => {
     }
   }, [isDarkMode]);
 
-  // Listen for system color scheme changes when in 'system' mode
+  // For system mode, we'll still listen for system changes, but default to light
   useEffect(() => {
     if (colorScheme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -63,8 +63,8 @@ const Settings = () => {
     } else if (scheme === 'light') {
       setIsDarkMode(false);
     } else {
-      // System preference
-      setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
+      // System preference - default to light
+      setIsDarkMode(false);
     }
   };
 
