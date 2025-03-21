@@ -40,14 +40,10 @@ const App = () => {
       document.documentElement.classList.remove('dark');
       setIsDarkMode(false);
     } else {
-      // System preference
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.classList.add('dark');
-        setIsDarkMode(true);
-      } else {
-        document.documentElement.classList.remove('dark');
-        setIsDarkMode(false);
-      }
+      // Default to light mode instead of system preference
+      document.documentElement.classList.remove('dark');
+      setIsDarkMode(false);
+      localStorage.setItem('colorScheme', 'light');
     }
   }, []);
 
