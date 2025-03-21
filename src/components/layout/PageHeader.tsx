@@ -17,7 +17,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const navigate = useNavigate();
   
-  const notificationCount = 3;
+  // Count of unread notifications
+  const unreadNotifications = 2; // Based on the two unread notifications in the Notifications page
 
   const navItems = [
     { to: '/', label: 'Home', icon: Home },
@@ -28,8 +29,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
       to: '/notifications', 
       label: 'Notifications', 
       icon: Bell,
-      hasNotifications: notificationCount > 0,
-      notificationCount: notificationCount
+      hasNotifications: unreadNotifications > 0,
+      notificationCount: unreadNotifications
     },
     { to: '/registered-business', label: 'My Businesses', icon: Building },
     { to: '/registration', label: 'Register Business', icon: Clipboard },
