@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check, Bot, Zap, Radio, Paperclip, Image, Camera, File } from "lucide-react";
+import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check, Bot, Zap, Radio, Paperclip, Image, SendHorizontal } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -30,7 +30,22 @@ const Communicon = () => {
         sender: "user",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
+      
       setMessages([...messages, newMessage]);
+      
+      // Add a response based on chat mode
+      setTimeout(() => {
+        const responseMessage = {
+          id: messages.length + 2,
+          text: chatMode === "ai" 
+            ? "This is an AI-generated response. How can I assist you further?"
+            : "A live agent has received your message. We'll respond as soon as possible.",
+          sender: chatMode === "ai" ? "support" : "live-support",
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessages(prev => [...prev, responseMessage]);
+      }, 1000);
+      
       setMessage("");
     }
   };
@@ -111,7 +126,7 @@ const Communicon = () => {
                   <Zap className="h-4 w-4 mr-1" />
                   AI
                 </ToggleGroupItem>
-                <ToggleGroupItem value="live" className="px-3 py-1 text-xs">
+                <ToggleGroupItem value="live" className={`px-3 py-1 text-xs ${chatMode === "live" ? "bg-red-500 text-white hover:bg-red-600" : ""}`}>
                   <Radio className="h-4 w-4 mr-1" />
                   LIVE
                 </ToggleGroupItem>
@@ -134,7 +149,9 @@ const Communicon = () => {
                             ? 'bg-blue-500 text-white' 
                             : msg.sender === 'system'
                               ? 'bg-gray-200 text-gray-800'
-                              : 'bg-gray-100 text-gray-800'
+                              : msg.sender === 'live-support'
+                                ? 'bg-red-100 border border-red-300 text-gray-800'
+                                : 'bg-gray-100 text-gray-800'
                         }`}
                       >
                         <p>{msg.text}</p>
@@ -157,7 +174,7 @@ const Communicon = () => {
                       <Paperclip className="h-5 w-5 text-gray-500" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-64 p-0" align="start">
+                  <PopoverContent className="w-48 p-0" align="start">
                     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                       <div 
                         className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
@@ -165,20 +182,6 @@ const Communicon = () => {
                       >
                         <Image className="h-5 w-5 text-gray-600" />
                         <span className="text-gray-800 font-medium">Photos</span>
-                      </div>
-                      <div 
-                        className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
-                        onClick={() => handleAttachmentOption('camera')}
-                      >
-                        <Camera className="h-5 w-5 text-gray-600" />
-                        <span className="text-gray-800 font-medium">Camera</span>
-                      </div>
-                      <div 
-                        className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
-                        onClick={() => handleAttachmentOption('files')}
-                      >
-                        <File className="h-5 w-5 text-gray-600" />
-                        <span className="text-gray-800 font-medium">Files</span>
                       </div>
                     </div>
                   </PopoverContent>
@@ -189,7 +192,9 @@ const Communicon = () => {
                   placeholder={`Type your message to ${chatMode === "ai" ? "AI" : "support"}...`}
                   className="flex-1"
                 />
-                <Button type="submit">Send</Button>
+                <Button type="submit" variant="ghost" size="icon" className="h-10 w-10 rounded-full">
+                  <SendHorizontal className="h-5 w-5 text-primary" />
+                </Button>
               </form>
             </div>
           </CardContent>
