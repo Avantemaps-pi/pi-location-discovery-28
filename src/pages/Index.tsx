@@ -69,7 +69,7 @@ const Index = () => {
         {/* Overlaid search box */}
         <div className="absolute top-4 left-0 right-0 z-10 px-4">
           <div className="max-w-md mx-auto">
-            <SearchBar />
+            <SearchBar placeholder="Search for Keyword..." />
           </div>
         </div>
         

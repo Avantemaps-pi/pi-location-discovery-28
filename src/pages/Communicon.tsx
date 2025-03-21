@@ -162,19 +162,26 @@ const Communicon = () => {
                 </div>
               </ScrollArea>
               
-              <form onSubmit={handleSendMessage} className="flex gap-2">
+              <form onSubmit={handleSendMessage} className="relative flex items-center">
+                <Input
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder={`Type your message to ${chatMode === "ai" ? "AI" : "support"}...`}
+                  className="flex-1 pr-16 pl-12 py-3 bg-gray-50 border-gray-200"
+                />
+                
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button 
                       type="button" 
                       variant="ghost" 
                       size="icon" 
-                      className="h-10 w-10 rounded-full"
+                      className="absolute left-2 h-8 w-8 opacity-70 hover:opacity-100"
                     >
                       <Paperclip className="h-5 w-5 text-gray-500" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-48 p-0" align="start">
+                  <PopoverContent className="w-24 p-0" align="start">
                     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
                       <div 
                         className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
@@ -186,13 +193,13 @@ const Communicon = () => {
                     </div>
                   </PopoverContent>
                 </Popover>
-                <Input
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder={`Type your message to ${chatMode === "ai" ? "AI" : "support"}...`}
-                  className="flex-1"
-                />
-                <Button type="submit" variant="ghost" size="icon" className="h-10 w-10 rounded-full">
+                
+                <Button 
+                  type="submit" 
+                  variant="ghost" 
+                  size="icon" 
+                  className="absolute right-2 h-8 w-8 opacity-70 hover:opacity-100"
+                >
                   <SendHorizontal className="h-5 w-5 text-primary" />
                 </Button>
               </form>
