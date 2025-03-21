@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Star, CircleCheck, ExternalLink, Info } from 'lucide-react';
@@ -11,9 +11,13 @@ import DetailsCard from '@/components/business/DetailsCard';
 
 interface PlaceCardPopupProps {
   location: Place;
+  detailCardRef?: React.RefObject<HTMLDivElement>;
 }
 
-const PlaceCardPopup: React.FC<PlaceCardPopupProps> = ({ location }) => {
+const PlaceCardPopup = forwardRef<HTMLDivElement, PlaceCardPopupProps>(({ 
+  location,
+  detailCardRef
+}, ref) => {
   const navigate = useNavigate();
   
   const handleRatingClick = (businessId: string) => {
@@ -26,7 +30,7 @@ const PlaceCardPopup: React.FC<PlaceCardPopupProps> = ({ location }) => {
   };
 
   return (
-    <Card className="w-[300px] shadow-md place-popup z-50">
+    <Card className="w-[300px] shadow-md place-popup z-50" ref={ref}>
       <div className="h-32 overflow-hidden">
         <img 
           src={location.image} 
@@ -70,7 +74,11 @@ const PlaceCardPopup: React.FC<PlaceCardPopupProps> = ({ location }) => {
                   Details
                 </div>
               </PopoverTrigger>
-              <PopoverContent className="p-0 w-[420px]" align="end">
+              <PopoverContent 
+                className="p-0 w-[420px]" 
+                align="end"
+                ref={detailCardRef}
+              >
                 <DetailsCard place={location} />
               </PopoverContent>
             </Popover>
@@ -79,6 +87,8 @@ const PlaceCardPopup: React.FC<PlaceCardPopupProps> = ({ location }) => {
       </CardFooter>
     </Card>
   );
-};
+});
+
+PlaceCardPopup.displayName = "PlaceCardPopup";
 
 export default PlaceCardPopup;

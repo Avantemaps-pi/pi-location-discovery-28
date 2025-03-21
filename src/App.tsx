@@ -14,6 +14,7 @@ import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import CookiePolicy from "./pages/CookiePolicy";
 import Registration from "./pages/Registration";
+import UpdateRegistration from "./pages/UpdateRegistration";
 import NotFound from "./pages/NotFound";
 import Communicon from "./pages/Communicon";
 import Notifications from "./pages/Notifications";
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/cookies" element={<CookiePolicy />} />
           <Route path="/registration" element={<Registration />} />
+          <Route path="/update-registration/:businessId?" element={<UpdateRegistration />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -15,6 +15,7 @@ const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
   const location = useLocation();
   const mapRef = useRef<HTMLDivElement>(null);
+  const detailCardRef = useRef<HTMLDivElement>(null);
 
   // Check if we were navigated here with a place ID to select
   useEffect(() => {
@@ -30,8 +31,19 @@ const Index = () => {
       if (selectedPlace && mapRef.current && mapRef.current.contains(e.target as Node)) {
         // Check if the click is not on a popup (which would have a higher z-index)
         const clickedElement = e.target as HTMLElement;
+        
         // Check if we clicked on the map background (not a popup or marker)
-        if (!clickedElement.closest('.place-popup') && !clickedElement.closest('div[role="button"]')) {
+        // We consider a click outside if:
+        // 1. It's not inside a popup (place-popup class)
+        // 2. It's not on a marker element (role="button")
+        // 3. It's not inside the detail card
+        const isClickInsidePopup = !!clickedElement.closest('.place-popup');
+        const isClickOnMarker = !!clickedElement.closest('div[role="button"]');
+        const isClickInsideDetailCard = detailCardRef.current && 
+          (detailCardRef.current.contains(e.target as Node) || 
+           detailCardRef.current === e.target);
+        
+        if (!isClickInsidePopup && !isClickOnMarker && !isClickInsideDetailCard) {
           setSelectedPlace(null);
         }
       }
@@ -63,6 +75,7 @@ const Index = () => {
             places={allPlaces} 
             selectedPlaceId={selectedPlace} 
             onMarkerClick={handlePlaceClick}
+            detailCardRef={detailCardRef}
           />
         </div>
         

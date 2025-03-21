@@ -40,9 +40,12 @@ const RegisteredBusiness = () => {
 
   const handleEditBusiness = (businessId: number) => {
     setEditingBusinessId(businessId);
-    // In a real app, you would redirect to an edit page or open a modal
-    // For now, let's simulate this with a navigation
-    navigate(`/registration?edit=${businessId}`);
+    const business = businesses.find(b => b.id === businessId);
+    if (business) {
+      navigate(`/update-registration/${businessId}`, { 
+        state: { business }
+      });
+    }
   };
 
   return (
