@@ -94,21 +94,12 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove, cl
         <p className="text-sm text-gray-700 line-clamp-4 h-20 mb-2">{place.description}</p>
         <div className="flex justify-between items-end mt-2">
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1">
-              <button 
-                className="flex items-center hover:opacity-90 transition-opacity"
-                onClick={handleRatingClick}
-              >
-                {[...Array(5)].map((_, i) => (
-                  <Star 
-                    key={i} 
-                    className={`h-4 w-4 ${i < Math.floor(place.rating) 
-                      ? 'text-yellow-400 fill-yellow-400' 
-                      : 'text-gray-300'}`} 
-                  />
-                ))}
-                <span className="text-sm font-medium ml-1">{place.rating.toFixed(1)}</span>
-              </button>
+            <div 
+              className="inline-flex items-center px-2 py-1 rounded bg-[#FEF7CD] cursor-pointer"
+              onClick={handleRatingClick}
+            >
+              <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
+              <span className="text-sm font-medium text-amber-800">{place.rating.toFixed(1)}</span>
             </div>
             <CategoryBadge category={place.category} />
           </div>

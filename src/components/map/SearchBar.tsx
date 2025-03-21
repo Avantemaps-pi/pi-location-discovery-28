@@ -66,7 +66,7 @@ const SearchBar: React.FC = () => {
           <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search for Pi-accepting businesses..."
+            placeholder="Keywords..."
             className="pl-10 pr-10 py-6 bg-white shadow-md"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { StarIcon } from 'lucide-react';
+import { Star } from 'lucide-react';
 import CategoryBadge from '@/components/business/CategoryBadge';
 import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
@@ -42,21 +42,12 @@ const PlaceCardPopup: React.FC<PlaceCardPopupProps> = ({ location }) => {
         <p className="text-sm text-gray-700 line-clamp-3 mb-2">{location.description}</p>
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-1">
-            <div className="flex items-center">
-              <button 
-                className="flex items-center hover:opacity-80 transition-opacity"
-                onClick={() => handleRatingClick(location.id)}
-              >
-                {[...Array(5)].map((_, i) => (
-                  <StarIcon 
-                    key={i} 
-                    className={`h-4 w-4 ${i < Math.floor(location.rating) 
-                      ? 'text-yellow-400 fill-yellow-400' 
-                      : 'text-gray-300'}`} 
-                  />
-                ))}
-                <span className="text-sm ml-1">{location.rating.toFixed(1)}</span>
-              </button>
+            <div 
+              className="inline-flex items-center px-2 py-1 rounded bg-[#FEF7CD] cursor-pointer"
+              onClick={() => handleRatingClick(location.id)}
+            >
+              <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
+              <span className="text-sm font-medium text-amber-800">{location.rating.toFixed(1)}</span>
             </div>
             <CategoryBadge category={location.category} />
           </div>
