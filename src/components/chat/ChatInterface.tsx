@@ -53,7 +53,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         <div className="flex flex-col h-[400px]">
           <ScrollArea 
             className="flex-1 pr-4 mb-4" 
-            viewportRef={scrollAreaRef}
+            ref={scrollAreaRef}
           >
             <div className="space-y-4">
               {messages.map((msg) => (
