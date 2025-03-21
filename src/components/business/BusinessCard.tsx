@@ -14,9 +14,10 @@ import { Business } from '@/types/business';
 
 interface BusinessCardProps {
   business: Business;
+  onEdit?: (id: number) => void;
 }
 
-const BusinessCard = ({ business }: BusinessCardProps) => {
+const BusinessCard = ({ business, onEdit }: BusinessCardProps) => {
   return (
     <Card key={business.id} className="overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -37,7 +38,12 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
               </div>
             </div>
             <div className="flex space-x-2">
-              <Button variant="outline" size="sm" className="flex items-center gap-1">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-1"
+                onClick={() => onEdit && onEdit(business.id)}
+              >
                 <Edit className="h-4 w-4" />
                 Edit
               </Button>

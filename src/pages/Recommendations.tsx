@@ -25,8 +25,8 @@ const Recommendations = () => {
         <div className="grid grid-cols-1 gap-6 mb-6">
           <div>
             <CategorySection 
-              title="Recommended for you" 
-              places={recommendedForYou} 
+              title="Avante Top Choice" 
+              places={avanteTopChoice} 
               onPlaceClick={handlePlaceClick} 
             />
             <CategorySection 
@@ -35,8 +35,8 @@ const Recommendations = () => {
               onPlaceClick={handlePlaceClick} 
             />
             <CategorySection 
-              title="Avante Top Choice" 
-              places={avanteTopChoice} 
+              title="Recommended for you" 
+              places={recommendedForYou} 
               onPlaceClick={handlePlaceClick} 
             />
           </div>

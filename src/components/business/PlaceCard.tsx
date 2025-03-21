@@ -50,7 +50,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({ place, onPlaceClick, onRemove, cl
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
             <div className="flex-shrink-0">
-              <CircleCheck className="h-5 w-5 text-blue-500" />
+              <CircleCheck className="h-5 w-5 text-green-500" />
             </div>
             <CardTitle 
               className="text-base font-bold cursor-pointer hover:text-blue-500 transition-colors"

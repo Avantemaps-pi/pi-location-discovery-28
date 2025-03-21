@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Star } from 'lucide-react';
+import { Star, CircleCheck } from 'lucide-react';
 import CategoryBadge from '@/components/business/CategoryBadge';
 import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
@@ -36,7 +36,10 @@ const PlaceCardPopup: React.FC<PlaceCardPopupProps> = ({ location }) => {
         />
       </div>
       <CardHeader className="pb-2 pt-3">
-        <CardTitle className="text-base font-bold">{location.name}</CardTitle>
+        <div className="flex items-center gap-2">
+          <CircleCheck className="h-5 w-5 text-green-500" />
+          <CardTitle className="text-base font-bold">{location.name}</CardTitle>
+        </div>
       </CardHeader>
       <CardContent className="py-2">
         <p className="text-sm text-gray-700 line-clamp-3 mb-2">{location.description}</p>

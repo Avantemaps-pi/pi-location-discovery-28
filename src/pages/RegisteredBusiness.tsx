@@ -29,6 +29,7 @@ const RegisteredBusiness = () => {
   ];
 
   const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
+  const [editingBusinessId, setEditingBusinessId] = useState<number | null>(null);
 
   // Filter businesses based on selection, but only show them if something is selected
   const filteredBusinesses = selectedBusinessId 
@@ -37,11 +38,18 @@ const RegisteredBusiness = () => {
         : businesses.filter(business => business.id.toString() === selectedBusinessId))
     : [];
 
+  const handleEditBusiness = (businessId: number) => {
+    setEditingBusinessId(businessId);
+    // In a real app, you would redirect to an edit page or open a modal
+    // For now, let's simulate this with a navigation
+    navigate(`/registration?edit=${businessId}`);
+  };
+
   return (
     <AppLayout title="Avante Maps">
       <div className="max-w-5xl mx-auto py-6 px-4 sm:px-6 lg:px-8 bg-slate-50">
         <BusinessHeader 
-          title="My Registered Businesses" 
+          title="My Businesses" 
           subtitle="Manage your Pi business" 
           showButton={false}
         />
@@ -71,7 +79,11 @@ const RegisteredBusiness = () => {
         ) : (
           <div className="space-y-6">
             {filteredBusinesses.map((business) => (
-              <BusinessCard key={business.id} business={business} />
+              <BusinessCard 
+                key={business.id} 
+                business={business}
+                onEdit={() => handleEditBusiness(business.id)}
+              />
             ))}
           </div>
         )}

@@ -11,9 +11,7 @@ import { Button } from '@/components/ui/button';
 import { 
   MoreVertical,
   Trash,
-  Eye,
-  Share,
-  FileText
+  Share
 } from 'lucide-react';
 
 const BusinessDropdownMenu = () => {
@@ -26,16 +24,8 @@ const BusinessDropdownMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuItem className="cursor-pointer">
-          <Eye className="mr-2 h-4 w-4" />
-          <span>View Details</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
           <Share className="mr-2 h-4 w-4" />
           <span>Share</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
-          <FileText className="mr-2 h-4 w-4" />
-          <span>Generate Report</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer text-red-600">
