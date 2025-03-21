@@ -18,12 +18,14 @@ interface RecommendationsMapProps {
   places: Place[];
   selectedPlaceId: string | null;
   onMarkerClick: (placeId: string) => void;
+  detailCardRef?: React.RefObject<HTMLDivElement>;
 }
 
 const RecommendationsMap: React.FC<RecommendationsMapProps> = ({ 
   places, 
   selectedPlaceId,
-  onMarkerClick
+  onMarkerClick,
+  detailCardRef
 }) => {
   const [center, setCenter] = useState<google.maps.LatLngLiteral>({ lat: 37.7749, lng: -122.4194 });
   const [zoom, setZoom] = useState(13);

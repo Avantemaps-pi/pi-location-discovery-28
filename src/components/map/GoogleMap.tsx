@@ -15,12 +15,14 @@ interface GoogleMapProps {
   places?: Place[];
   selectedPlaceId?: string | null;
   onMarkerClick?: (placeId: string) => void;
+  detailCardRef?: React.RefObject<HTMLDivElement>;
 }
 
 const GoogleMap: React.FC<GoogleMapProps> = ({ 
   places = [], 
   selectedPlaceId = null,
-  onMarkerClick
+  onMarkerClick,
+  detailCardRef
 }) => {
   const navigate = useNavigate();
   const [zoom, setZoom] = useState(defaultZoom);
@@ -118,7 +120,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
       {/* Popup card overlay for selected place - now with higher z-index to overlap FAB */}
       {selectedPlace && showPopover && (
         <div className="fixed top-1/4 left-1/2 transform -translate-x-1/2 z-[9999] place-popup">
-          <PlaceCardPopup location={selectedPlace} />
+          <PlaceCardPopup location={selectedPlace} detailCardRef={detailCardRef} />
         </div>
       )}
     </div>
