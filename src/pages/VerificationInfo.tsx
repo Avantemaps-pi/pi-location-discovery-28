@@ -116,8 +116,7 @@ const VerificationInfo = () => {
               <Info className="h-4 w-4" />
               <AlertTitle>Application Process</AlertTitle>
               <AlertDescription>
-                After registering your business, our team will reach out to begin the verification process. 
-                Certification is available to businesses that have completed verification and met the additional requirements.
+                Once you've registered your business, navigate to the "My Business" page, select the business you wish to verify, and click the "Request" button to start the verification process. Certification is available to businesses that successfully complete the verification and fulfill the additional requirements.
               </AlertDescription>
             </Alert>
 
