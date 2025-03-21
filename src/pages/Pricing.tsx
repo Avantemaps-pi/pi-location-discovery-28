@@ -8,8 +8,8 @@ const PAYMENT_FREQUENCIES = ["monthly", "yearly"];
 
 const TIERS = [
   {
-    id: "free",
-    name: "Free",
+    id: "individual",
+    name: "Individual",
     price: {
       monthly: "Free",
       yearly: "Free",
@@ -25,8 +25,8 @@ const TIERS = [
     cta: "Current Plan",
   },
   {
-    id: "standard",
-    name: "Standard",
+    id: "small-business",
+    name: "Small Business",
     price: {
       monthly: 5,
       yearly: 4,
@@ -43,8 +43,8 @@ const TIERS = [
     popular: true,
   },
   {
-    id: "premium",
-    name: "Premium",
+    id: "organization",
+    name: "Organization",
     price: {
       monthly: 10,
       yearly: 8,
@@ -60,8 +60,8 @@ const TIERS = [
     cta: "Upgrade Now",
   },
   {
-    id: "business",
-    name: "Business",
+    id: "enterprise",
+    name: "Enterprise",
     price: {
       monthly: 20,
       yearly: 16,
