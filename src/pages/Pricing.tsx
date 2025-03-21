@@ -1,3 +1,4 @@
+
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { PricingSection } from '@/components/ui/pricing-section';
@@ -56,23 +57,6 @@ const TIERS = [
       "Access to analytical business data",
     ],
     cta: "Upgrade Now",
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    price: {
-      monthly: 20,
-      yearly: 16,
-    },
-    description: "For Pi-accepting merchants",
-    features: [
-      "Dedicated account manager",
-      "Premium business profile",
-      "Marketing toolkit",
-      "Pi payment analytics",
-      "Verified business badge",
-    ],
-    cta: "Contact Us",
     highlighted: true,
   },
 ];

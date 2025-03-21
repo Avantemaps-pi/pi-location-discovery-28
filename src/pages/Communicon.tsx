@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check, Bot, Zap, Radio } from "lucide-react";
+import { MessageSquare, Users, User, Calendar, Settings, Share2, Flag, Mail, Link as LinkIcon, Check, Bot, Zap, Radio, Paperclip, Image, Camera, File } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Toggle } from '@/components/ui/toggle';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const Communicon = () => {
   const navigate = useNavigate();
@@ -43,6 +44,11 @@ const Communicon = () => {
         setChatMode(value as "ai" | "live");
       }
     }
+  };
+
+  const handleAttachmentOption = (type: string) => {
+    console.log(`Attachment type selected: ${type}`);
+    // Implement actual attachment handling logic here
   };
 
   return (
@@ -140,6 +146,43 @@ const Communicon = () => {
               </ScrollArea>
               
               <form onSubmit={handleSendMessage} className="flex gap-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-10 w-10 rounded-full"
+                    >
+                      <Paperclip className="h-5 w-5 text-gray-500" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-64 p-0" align="start">
+                    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                      <div 
+                        className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => handleAttachmentOption('photos')}
+                      >
+                        <Image className="h-5 w-5 text-gray-600" />
+                        <span className="text-gray-800 font-medium">Photos</span>
+                      </div>
+                      <div 
+                        className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => handleAttachmentOption('camera')}
+                      >
+                        <Camera className="h-5 w-5 text-gray-600" />
+                        <span className="text-gray-800 font-medium">Camera</span>
+                      </div>
+                      <div 
+                        className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => handleAttachmentOption('files')}
+                      >
+                        <File className="h-5 w-5 text-gray-600" />
+                        <span className="text-gray-800 font-medium">Files</span>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
                 <Input
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
