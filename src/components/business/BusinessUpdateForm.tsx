@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -159,47 +160,6 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
           </form>
         </Form>
       </FormProvider>
-    </div>
-  );
-};
-
-const UpdateDetailsTab = ({ 
-  onPrevious, 
-  selectedImage, 
-  handleImageUpload 
-}: { 
-  onPrevious: () => void;
-  selectedImage: File | null;
-  handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}) => {
-  const form = useForm();
-  
-  return (
-    <div className="border shadow-sm rounded-lg">
-      <div className="p-6 pb-4 space-y-2">
-        <h3 className="text-2xl sm:text-xl font-semibold">Additional Details</h3>
-        <p className="text-base sm:text-sm text-muted-foreground">
-          Tell customers more about your business.
-        </p>
-      </div>
-      <div className="p-6 pt-0 space-y-6">
-        <p className="text-sm text-muted-foreground">Business details fields go here...</p>
-      </div>
-      <div className="p-6 pt-2 flex justify-between flex-wrap gap-3 border-t">
-        <button
-          type="button" 
-          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base sm:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-12 sm:h-10 px-5 sm:px-4 py-3 sm:py-2 min-w-24"
-          onClick={onPrevious}
-        >
-          Back
-        </button>
-        <button 
-          type="submit" 
-          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-base sm:text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-avante-blue hover:bg-avante-blue/90 text-primary-foreground h-12 sm:h-10 px-5 sm:px-4 py-3 sm:py-2 min-w-40"
-        >
-          Update Business Information
-        </button>
-      </div>
     </div>
   );
 };
