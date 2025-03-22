@@ -1,21 +1,16 @@
 
 import React, { useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, FormProvider } from 'react-hook-form';
+import { FormProvider } from 'react-hook-form';
 import { Form } from '@/components/ui/form';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
 import { Business } from '@/types/business';
-
-// Import the form schema and components
-import { formSchema, FormValues } from './registration/formSchema';
-import BusinessOwnerTab from './registration/BusinessOwnerTab';
-import ContactTab from './registration/ContactTab';
-import AddressTab from './registration/AddressTab';
-import HoursTab from './registration/HoursTab';
-import UpdateDetailsTab from './registration/UpdateDetailsTab';
+import { FormValues } from './registration/formSchema';
+import { useBusinessFormInit } from '@/hooks/useBusinessFormInit';
+import FormHeader from './registration/components/FormHeader';
+import TabNavigation from './registration/components/TabNavigation';
+import TabContent from './registration/components/TabContent';
 
 interface BusinessUpdateFormProps {
   business: Business;
@@ -26,48 +21,7 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
   const isMobile = useIsMobile();
   const [selectedTab, setSelectedTab] = useState('business-owner');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-
-  // Create default values based on the business data
-  // In a real application, we would fetch complete data from an API
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstName: 'John', // Mock data
-      lastName: 'Doe', // Mock data
-      businessName: business.name,
-      phone: '(123) 456-7890', // Mock data
-      email: 'contact@example.com', // Mock data
-      website: 'https://example.com', // Mock data
-      streetAddress: business.address.split(',')[0] || '',
-      apartment: '',
-      state: business.address.split(',')[1]?.trim() || '',
-      zipCode: business.address.split(',')[2]?.trim() || '',
-      businessTypes: ['Restaurant/Cafe'], // Mock data
-      businessDescription: business.description,
-      piWalletAddress: 'pi1abcdefghijklmnopqrstuvwxyz', // Mock data
-      mondayOpen: '09:00',
-      mondayClose: '17:00',
-      mondayClosed: false,
-      tuesdayOpen: '09:00',
-      tuesdayClose: '17:00',
-      tuesdayClosed: false,
-      wednesdayOpen: '09:00',
-      wednesdayClose: '17:00',
-      wednesdayClosed: false,
-      thursdayOpen: '09:00',
-      thursdayClose: '17:00',
-      thursdayClosed: false,
-      fridayOpen: '09:00',
-      fridayClose: '17:00',
-      fridayClosed: false,
-      saturdayOpen: '10:00',
-      saturdayClose: '16:00',
-      saturdayClosed: false,
-      sundayOpen: '10:00',
-      sundayClose: '16:00', 
-      sundayClosed: false,
-    },
-  });
+  const form = useBusinessFormInit(business);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -86,76 +40,21 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
 
   return (
     <div className="w-full py-2">
-      <div className="mb-6 md:mb-8">
-        <h2 className="text-3xl font-bold tracking-tight">Update Business Information</h2>
-        <p className="text-muted-foreground text-lg mt-2">
-          Make changes to your business listing on Avante Maps.
-        </p>
-      </div>
+      <FormHeader 
+        title="Update Business Information"
+        description="Make changes to your business listing on Avante Maps."
+      />
 
       <FormProvider {...form}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
             <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-              <TabsList className={cn(
-                "grid mb-6 w-full",
-                isMobile ? "grid-cols-3 gap-1" : "grid-cols-5"
-              )}>
-                <TabsTrigger value="business-owner" className="text-sm whitespace-nowrap">
-                  {isMobile ? "Owner" : "Business Owner"}
-                </TabsTrigger>
-                <TabsTrigger value="contact" className="text-sm">Contact</TabsTrigger>
-                <TabsTrigger value="address" className="text-sm">Address</TabsTrigger>
-                {isMobile && (
-                  <div className="col-span-3 mt-1">
-                    <TabsList className="grid grid-cols-2 w-full">
-                      <TabsTrigger value="hours" className="text-sm">Hours</TabsTrigger>
-                      <TabsTrigger value="details" className="text-sm">Details</TabsTrigger>
-                    </TabsList>
-                  </div>
-                )}
-                {!isMobile && (
-                  <>
-                    <TabsTrigger value="hours" className="text-sm">Hours</TabsTrigger>
-                    <TabsTrigger value="details" className="text-sm">Details</TabsTrigger>
-                  </>
-                )}
-              </TabsList>
-
-              <div className="w-full">
-                <TabsContent value="business-owner" className="space-y-4 w-full">
-                  <BusinessOwnerTab onNext={() => setSelectedTab('contact')} />
-                </TabsContent>
-
-                <TabsContent value="contact" className="space-y-4 w-full">
-                  <ContactTab 
-                    onNext={() => setSelectedTab('address')} 
-                    onPrevious={() => setSelectedTab('business-owner')} 
-                  />
-                </TabsContent>
-
-                <TabsContent value="address" className="space-y-4 w-full">
-                  <AddressTab 
-                    onNext={() => setSelectedTab('hours')} 
-                    onPrevious={() => setSelectedTab('contact')} 
-                  />
-                </TabsContent>
-
-                <TabsContent value="hours" className="space-y-4 w-full">
-                  <HoursTab 
-                    onNext={() => setSelectedTab('details')} 
-                    onPrevious={() => setSelectedTab('address')} 
-                  />
-                </TabsContent>
-
-                <TabsContent value="details" className="space-y-4 w-full">
-                  <UpdateDetailsTab 
-                    onPrevious={() => setSelectedTab('hours')} 
-                    selectedImage={selectedImage}
-                    handleImageUpload={handleImageUpload}
-                  />
-                </TabsContent>
-              </div>
+              <TabNavigation isMobile={isMobile} />
+              <TabContent 
+                selectedImage={selectedImage}
+                handleImageUpload={handleImageUpload}
+                setSelectedTab={setSelectedTab}
+              />
             </Tabs>
           </form>
         </Form>
