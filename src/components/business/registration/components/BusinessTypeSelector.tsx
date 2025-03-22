@@ -45,8 +45,8 @@ const BusinessTypeSelector = () => {
                     !field.value?.length && "text-muted-foreground"
                   )}
                 >
-                  {(field.value || []).length
-                    ? `${(field.value || []).length} type${(field.value || []).length > 1 ? 's' : ''} selected`
+                  {(field.value && field.value.length)
+                    ? `${field.value.length} type${field.value.length > 1 ? 's' : ''} selected`
                     : "Select business types"}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -71,7 +71,7 @@ const BusinessTypeSelector = () => {
                         key={type}
                         value={type}
                         onSelect={() => {
-                          const current = field.value || [];
+                          const current = Array.isArray(field.value) ? field.value : [];
                           const isSelected = current.includes(type);
                           
                           const newValue = isSelected
@@ -84,9 +84,11 @@ const BusinessTypeSelector = () => {
                       >
                         <div className={cn(
                           "flex h-5 w-5 items-center justify-center rounded-sm border border-primary",
-                          (field.value || []).includes(type) ? "bg-primary text-primary-foreground" : "opacity-50"
+                          Array.isArray(field.value) && field.value.includes(type) 
+                            ? "bg-primary text-primary-foreground" 
+                            : "opacity-50"
                         )}>
-                          {(field.value || []).includes(type) && (
+                          {Array.isArray(field.value) && field.value.includes(type) && (
                             <Check className="h-4 w-4" />
                           )}
                         </div>
