@@ -33,7 +33,7 @@ const UpdateDetailsTab: React.FC<UpdateDetailsTabProps> = ({ onPrevious, selecte
         <BusinessDescriptionField />
         <WalletAddressField />
       </CardContent>
-      <CardFooter className="flex justify-between pt-2 flex-wrap gap-3">
+      <CardFooter className="flex justify-between pt-2">
         <Button 
           type="button" 
           variant="outline" 
