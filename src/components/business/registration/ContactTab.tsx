@@ -61,7 +61,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
                   value={countryCode}
                   onValueChange={setCountryCode}
                 >
-                  <SelectTrigger className="w-[110px] flex-shrink-0">
+                  <SelectTrigger className="w-[80px] flex-shrink-0">
                     <SelectValue placeholder="+1" />
                   </SelectTrigger>
                   <SelectContent>
