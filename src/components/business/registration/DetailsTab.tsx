@@ -61,8 +61,8 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
                         !field.value?.length && "text-muted-foreground"
                       )}
                     >
-                      {field.value?.length
-                        ? `${field.value.length} type${field.value.length > 1 ? 's' : ''} selected`
+                      {(field.value || []).length
+                        ? `${(field.value || []).length} type${(field.value || []).length > 1 ? 's' : ''} selected`
                         : "Select business types"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -100,9 +100,9 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
                           >
                             <div className={cn(
                               "flex h-5 w-5 items-center justify-center rounded-sm border border-primary",
-                              field.value?.includes(type) ? "bg-primary text-primary-foreground" : "opacity-50"
+                              (field.value || []).includes(type) ? "bg-primary text-primary-foreground" : "opacity-50"
                             )}>
-                              {field.value?.includes(type) && (
+                              {(field.value || []).includes(type) && (
                                 <Check className="h-4 w-4" />
                               )}
                             </div>

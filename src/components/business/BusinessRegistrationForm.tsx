@@ -35,7 +35,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
       apartment: '',
       state: '',
       zipCode: '',
-      businessTypes: [],
+      businessTypes: [], // Ensure this is initialized as an empty array
       businessDescription: '',
       piWalletAddress: '',
       mondayOpen: '09:00',
@@ -72,8 +72,14 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
   };
 
   const onSubmit = (values: FormValues) => {
+    // Ensure businessTypes is always an array
+    const safeValues = {
+      ...values,
+      businessTypes: values.businessTypes || []
+    };
+    
     // In a real app, this would send the form data along with the image to a backend service
-    console.log('Form values:', values);
+    console.log('Form values:', safeValues);
     console.log('Selected image:', selectedImage);
     
     toast.success('Business registration submitted successfully!');
