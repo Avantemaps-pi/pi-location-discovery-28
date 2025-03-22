@@ -87,7 +87,7 @@ const Index = () => {
         </div>
         
         {/* Floating action button for registration */}
-        <div className="absolute bottom-6 right-6 z-10">
+        <div className="absolute bottom-6 right-6 z-20">
           <Link to="/registration">
             <Button 
               className="h-14 w-14 rounded-full bg-avante-blue hover:bg-avante-blue/90 shadow-lg"

@@ -9,6 +9,7 @@ import { Place } from '@/data/mockPlaces';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import DetailsCard from '@/components/business/DetailsCard';
 import { useState } from 'react';
+import ExpandableDescription from '@/components/business/ExpandableDescription';
 
 interface PlaceCardPopupProps {
   location: Place;
@@ -93,7 +94,11 @@ const PlaceCardPopup = forwardRef<HTMLDivElement, PlaceCardPopupProps>(({
           <MapPin className="h-4 w-4" />
           <span className="text-xs">{location.address}</span>
         </div>
-        <p className="text-sm text-gray-700 line-clamp-3 h-16 mb-2">{location.description}</p>
+        
+        {/* Replaced the paragraph with our new ExpandableDescription component */}
+        <div className="h-16 mb-2">
+          <ExpandableDescription text={location.description} maxLines={4} />
+        </div>
         
         <div className="flex justify-between items-end mt-4">
           <div className="flex flex-col gap-1">

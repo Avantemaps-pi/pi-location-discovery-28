@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import DetailsCard from './DetailsCard';
+import ExpandableDescription from './ExpandableDescription';
 
 interface PlaceCardProps {
   place: Place;
@@ -100,7 +101,11 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
           <MapPin className="h-4 w-4" />
           <span className="text-xs">{place.address}</span>
         </div>
-        <p className="text-sm text-gray-700 line-clamp-3 h-16 mb-2">{place.description}</p>
+        
+        {/* Replaced the paragraph with our new ExpandableDescription component */}
+        <div className="h-16 mb-2">
+          <ExpandableDescription text={place.description} maxLines={4} />
+        </div>
         
         <div className="flex justify-between items-end mt-4">
           <div className="flex flex-col gap-1">
