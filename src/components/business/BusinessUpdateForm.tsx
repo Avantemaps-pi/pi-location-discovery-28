@@ -41,7 +41,7 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
   return (
     <div className="w-full py-2">
       <FormHeader 
-        title="Update Business Information"
+        title="Update Information"
         description="Make changes to your business listing on Avante Maps."
       />
 

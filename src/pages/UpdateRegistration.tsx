@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { motion } from '@/components/ui/motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { BusinessUpdateForm } from '@/components/business/BusinessUpdateForm';
@@ -56,7 +56,7 @@ const UpdateRegistration = () => {
             className="mb-4" 
             onClick={handleGoBack}
           >
-            <Loader2 className="mr-2 h-4 w-4 animate-spin text-muted-foreground" />
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
           

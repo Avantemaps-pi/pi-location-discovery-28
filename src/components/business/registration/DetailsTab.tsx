@@ -48,7 +48,7 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
           type="submit" 
           className="bg-avante-blue hover:bg-avante-blue/90 min-w-40"
         >
-          Submit Registration
+          Submit
         </Button>
       </CardFooter>
     </Card>
