@@ -30,79 +30,83 @@ const BusinessTypeSelector = () => {
     <FormField
       control={form.control}
       name="businessTypes"
-      render={({ field }) => (
-        <FormItem className="flex flex-col">
-          <FormLabel className="text-base mb-1.5">Types of Business (Select all that apply)</FormLabel>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <FormControl>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={open}
-                  className={cn(
-                    "w-full justify-between",
-                    !field.value?.length && "text-muted-foreground"
-                  )}
-                >
-                  {(field.value && field.value.length)
-                    ? `${field.value.length} type${field.value.length > 1 ? 's' : ''} selected`
-                    : "Select business types"}
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-              </FormControl>
-            </PopoverTrigger>
-            <PopoverContent 
-              className={cn(
-                "w-full max-w-[350px] p-0",
-                isMobile ? "max-w-[calc(100vw-2rem)]" : ""
-              )} 
-              align="start"
-              side="bottom"
-              sideOffset={5}
-            >
-              <Command className="bg-popover">
-                <CommandInput placeholder="Search business types..." className="h-11" />
-                <CommandEmpty>No business type found.</CommandEmpty>
-                <CommandGroup className="overflow-hidden">
-                  <ScrollArea className="h-60 max-h-[50vh]">
-                    {businessTypes.map((type) => (
-                      <CommandItem
-                        key={type}
-                        value={type}
-                        onSelect={() => {
-                          const current = Array.isArray(field.value) ? field.value : [];
-                          const isSelected = current.includes(type);
-                          
-                          const newValue = isSelected
-                            ? current.filter(value => value !== type)
-                            : [...current, type];
+      render={({ field }) => {
+        // Ensure field.value is always an array
+        const values = Array.isArray(field.value) ? field.value : [];
+        
+        return (
+          <FormItem className="flex flex-col">
+            <FormLabel className="text-base mb-1.5">Types of Business (Select all that apply)</FormLabel>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className={cn(
+                      "w-full justify-between",
+                      !values.length && "text-muted-foreground"
+                    )}
+                  >
+                    {values.length
+                      ? `${values.length} type${values.length > 1 ? 's' : ''} selected`
+                      : "Select business types"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent 
+                className={cn(
+                  "w-full max-w-[350px] p-0",
+                  isMobile ? "max-w-[calc(100vw-2rem)]" : ""
+                )} 
+                align="start"
+                side="bottom"
+                sideOffset={5}
+              >
+                <Command className="bg-popover">
+                  <CommandInput placeholder="Search business types..." className="h-11" />
+                  <CommandEmpty>No business type found.</CommandEmpty>
+                  <CommandGroup className="overflow-hidden">
+                    <ScrollArea className="h-60 max-h-[50vh]">
+                      {businessTypes.map((type) => (
+                        <CommandItem
+                          key={type}
+                          value={type}
+                          onSelect={() => {
+                            const isSelected = values.includes(type);
                             
-                          field.onChange(newValue);
-                        }}
-                        className="flex items-center gap-2 py-3"
-                      >
-                        <div className={cn(
-                          "flex h-5 w-5 items-center justify-center rounded-sm border border-primary",
-                          Array.isArray(field.value) && field.value.includes(type) 
-                            ? "bg-primary text-primary-foreground" 
-                            : "opacity-50"
-                        )}>
-                          {Array.isArray(field.value) && field.value.includes(type) && (
-                            <Check className="h-4 w-4" />
-                          )}
-                        </div>
-                        <span className="text-base sm:text-sm">{type}</span>
-                      </CommandItem>
-                    ))}
-                  </ScrollArea>
-                </CommandGroup>
-              </Command>
-            </PopoverContent>
-          </Popover>
-          <FormMessage />
-        </FormItem>
-      )}
+                            const newValue = isSelected
+                              ? values.filter(value => value !== type)
+                              : [...values, type];
+                              
+                            field.onChange(newValue);
+                          }}
+                          className="flex items-center gap-2 py-3"
+                        >
+                          <div className={cn(
+                            "flex h-5 w-5 items-center justify-center rounded-sm border border-primary",
+                            values.includes(type) 
+                              ? "bg-primary text-primary-foreground" 
+                              : "opacity-50"
+                          )}>
+                            {values.includes(type) && (
+                              <Check className="h-4 w-4" />
+                            )}
+                          </div>
+                          <span className="text-base sm:text-sm">{type}</span>
+                        </CommandItem>
+                      ))}
+                    </ScrollArea>
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
+            </Popover>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
     />
   );
 };
