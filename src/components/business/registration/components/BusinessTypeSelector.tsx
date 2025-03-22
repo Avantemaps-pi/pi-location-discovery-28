@@ -48,10 +48,11 @@ const BusinessTypeSelector = () => {
                       "w-full justify-between",
                       !values.length && "text-muted-foreground"
                     )}
+                    type="button" // Explicitly set button type to prevent form submission
                     onClick={(e) => {
-                      // Prevent default behavior and manually toggle the popover
-                      e.preventDefault();
-                      setOpen(!open);
+                      e.preventDefault(); // Prevent default behavior
+                      e.stopPropagation(); // Stop event propagation
+                      setOpen(!open); // Manually toggle the popover
                     }}
                   >
                     {values.length > 0
