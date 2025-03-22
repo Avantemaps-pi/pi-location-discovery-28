@@ -82,6 +82,7 @@ const Analytics = () => {
       title="Business Analytics"
       backButton={true}
       onBackClick={() => navigate('/registered-business')}
+      withHeader={true}
     >
       <div className="container mx-auto p-4 max-w-7xl">
         <AnalyticsHeader 
