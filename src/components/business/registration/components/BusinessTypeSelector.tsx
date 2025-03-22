@@ -29,7 +29,7 @@ const BusinessTypeSelector = () => {
         // Sync internal state with form values when component mounts or field.value changes
         React.useEffect(() => {
           setSelectedTypes(values);
-        }, []);
+        }, [values]);
         
         const handleSelectType = (type: string) => {
           // Don't add if already selected
@@ -85,7 +85,12 @@ const BusinessTypeSelector = () => {
                   >
                     <SelectValue placeholder="Select business type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent
+                    position="popper"
+                    align="start"
+                    className="max-h-[300px] overflow-y-auto z-50"
+                    sideOffset={4}
+                  >
                     {businessTypes
                       .filter(type => !selectedTypes.includes(type))
                       .map((type) => (
