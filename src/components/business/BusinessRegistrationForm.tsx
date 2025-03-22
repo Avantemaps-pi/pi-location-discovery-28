@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -34,7 +35,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
       apartment: '',
       state: '',
       zipCode: '',
-      businessTypes: undefined,
+      businessTypes: [], // Initialize as an empty array
       businessDescription: '',
       piWalletAddress: '',
       mondayOpen: '09:00',
@@ -71,12 +72,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
   };
 
   const onSubmit = (values: FormValues) => {
-    const safeValues = {
-      ...values,
-      businessTypes: values.businessTypes || undefined
-    };
-    
-    console.log('Form values:', safeValues);
+    console.log('Form values:', values);
     console.log('Selected image:', selectedImage);
     
     toast.success('Business registration submitted successfully!');

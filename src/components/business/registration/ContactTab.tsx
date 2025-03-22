@@ -55,7 +55,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
           name="website"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Website URL (Optional)</FormLabel>
+              <FormLabel>Pi Website URL (Optional)</FormLabel>
               <FormControl>
                 <Input placeholder="https://yourbusiness.com" {...field} />
               </FormControl>

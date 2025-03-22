@@ -7,6 +7,7 @@ import { FormValues } from './formSchema';
 import BusinessImageUpload from './components/BusinessImageUpload';
 import BusinessDescriptionField from './components/BusinessDescriptionField';
 import WalletAddressField from './components/WalletAddressField';
+import BusinessTypeSelector from './components/BusinessTypeSelector';
 
 interface DetailsTabProps {
   onPrevious: () => void;
@@ -26,6 +27,7 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        <BusinessTypeSelector />
         <BusinessImageUpload 
           selectedImage={selectedImage}
           handleImageUpload={handleImageUpload}

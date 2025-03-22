@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from '@/components/ui/form';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useFormContext } from 'react-hook-form';
 import { FormValues } from '../formSchema';
@@ -21,9 +21,6 @@ const WalletAddressField = () => {
               {...field} 
             />
           </FormControl>
-          <FormDescription className="text-sm mt-1.5">
-            This is where customers will send Pi payments
-          </FormDescription>
           <FormMessage />
         </FormItem>
       )}

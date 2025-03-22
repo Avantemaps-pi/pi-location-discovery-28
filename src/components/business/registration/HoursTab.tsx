@@ -30,9 +30,9 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
           <div className="space-y-4">
             <div className="grid grid-cols-[1fr_60px_1fr_1fr] gap-3 items-center mb-2 font-medium">
               <div>Day</div>
-              <div className="text-center">Closed</div>
-              <div>Opening</div>
-              <div>Closing</div>
+              <div className="text-center flex justify-center">Closed</div>
+              <div className="flex justify-center">Opening</div>
+              <div className="flex justify-center">Closing</div>
             </div>
             {daysOfWeek.map((day) => (
               <div key={day.name} className="grid grid-cols-[1fr_60px_1fr_1fr] gap-3 items-center">
