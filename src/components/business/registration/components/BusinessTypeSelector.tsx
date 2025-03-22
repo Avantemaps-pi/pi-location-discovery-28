@@ -32,7 +32,7 @@ const BusinessTypeSelector = () => {
       name="businessTypes"
       render={({ field }) => {
         // Ensure field.value is always an array, even if it's undefined or null
-        const values = field.value || [];
+        const values = Array.isArray(field.value) ? field.value : [];
         
         return (
           <FormItem className="flex flex-col">
@@ -49,7 +49,7 @@ const BusinessTypeSelector = () => {
                       !values.length && "text-muted-foreground"
                     )}
                   >
-                    {values.length
+                    {values.length > 0
                       ? `${values.length} type${values.length > 1 ? 's' : ''} selected`
                       : "Select business types"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
