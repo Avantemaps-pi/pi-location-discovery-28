@@ -11,10 +11,22 @@ import { Button } from '@/components/ui/button';
 import { 
   MoreVertical,
   Trash,
-  Share
+  Share,
+  BarChart
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const BusinessDropdownMenu = () => {
+interface BusinessDropdownMenuProps {
+  businessId?: number;
+}
+
+const BusinessDropdownMenu = ({ businessId }: BusinessDropdownMenuProps) => {
+  const navigate = useNavigate();
+
+  const handleNavigateToAnalytics = () => {
+    navigate('/analytics', { state: { businessId } });
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,6 +35,10 @@ const BusinessDropdownMenu = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuItem className="cursor-pointer" onClick={handleNavigateToAnalytics}>
+          <BarChart className="mr-2 h-4 w-4" />
+          <span>Analytics</span>
+        </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer">
           <Share className="mr-2 h-4 w-4" />
           <span>Share</span>

@@ -47,7 +47,7 @@ const BusinessCard = ({ business, onEdit }: BusinessCardProps) => {
                 <Edit className="h-4 w-4" />
                 Edit
               </Button>
-              <BusinessDropdownMenu />
+              <BusinessDropdownMenu businessId={business.id} />
             </div>
           </div>
           
