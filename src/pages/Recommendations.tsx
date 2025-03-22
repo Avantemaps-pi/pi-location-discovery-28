@@ -19,7 +19,7 @@ const Recommendations = () => {
     <AppLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Recommended Businesses</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Recommendations</h1>
           <p className="text-muted-foreground mt-2">Discover top-rated places that accept Pi cryptocurrency as payment.</p>
         </div>
 

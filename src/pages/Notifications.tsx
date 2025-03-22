@@ -46,13 +46,14 @@ const Notifications = () => {
   return (
     <AppLayout title="Avante Maps">
       <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Notifications</h1>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold mb-3">Notifications</h1>
           <Button 
             variant="outline" 
             size="sm" 
             onClick={markAllAsRead}
             disabled={unreadCount === 0}
+            className="mb-3"
           >
             Mark all as read
           </Button>
