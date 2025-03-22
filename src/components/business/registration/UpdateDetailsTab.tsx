@@ -4,7 +4,6 @@ import { useFormContext } from 'react-hook-form';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormValues } from './formSchema';
-import BusinessTypeSelector from './components/BusinessTypeSelector';
 import BusinessImageUpload from './components/BusinessImageUpload';
 import BusinessDescriptionField from './components/BusinessDescriptionField';
 import WalletAddressField from './components/WalletAddressField';
@@ -27,7 +26,6 @@ const UpdateDetailsTab: React.FC<UpdateDetailsTabProps> = ({ onPrevious, selecte
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <BusinessTypeSelector />
         <BusinessImageUpload 
           selectedImage={selectedImage}
           handleImageUpload={handleImageUpload}

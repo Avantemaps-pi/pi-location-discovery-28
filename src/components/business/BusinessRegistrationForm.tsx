@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -35,7 +34,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
       apartment: '',
       state: '',
       zipCode: '',
-      businessTypes: [], // Ensure this is initialized as an empty array
+      businessTypes: undefined,
       businessDescription: '',
       piWalletAddress: '',
       mondayOpen: '09:00',
@@ -72,13 +71,11 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
   };
 
   const onSubmit = (values: FormValues) => {
-    // Ensure businessTypes is always an array
     const safeValues = {
       ...values,
-      businessTypes: values.businessTypes || []
+      businessTypes: values.businessTypes || undefined
     };
     
-    // In a real app, this would send the form data along with the image to a backend service
     console.log('Form values:', safeValues);
     console.log('Selected image:', selectedImage);
     
@@ -125,12 +122,10 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
               </TabsList>
 
               <div className="w-full">
-                {/* Business Owner Tab */}
                 <TabsContent value="business-owner" className="space-y-4 w-full">
                   <BusinessOwnerTab onNext={() => setSelectedTab('contact')} />
                 </TabsContent>
 
-                {/* Contact Tab */}
                 <TabsContent value="contact" className="space-y-4 w-full">
                   <ContactTab 
                     onNext={() => setSelectedTab('address')} 
@@ -138,7 +133,6 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                   />
                 </TabsContent>
 
-                {/* Address Tab */}
                 <TabsContent value="address" className="space-y-4 w-full">
                   <AddressTab 
                     onNext={() => setSelectedTab('hours')} 
@@ -146,7 +140,6 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                   />
                 </TabsContent>
 
-                {/* Trading Hours Tab */}
                 <TabsContent value="hours" className="space-y-4 w-full">
                   <HoursTab 
                     onNext={() => setSelectedTab('details')} 
@@ -154,7 +147,6 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
                   />
                 </TabsContent>
 
-                {/* Details Tab */}
                 <TabsContent value="details" className="space-y-4 w-full">
                   <DetailsTab 
                     onPrevious={() => setSelectedTab('hours')} 
