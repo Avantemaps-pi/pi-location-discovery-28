@@ -1,114 +1,106 @@
 
 import React from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { Check, ChevronsUpDown } from "lucide-react";
 import { useFormContext } from 'react-hook-form';
 import { FormValues, businessTypes } from '../formSchema';
-import { useIsMobile } from '@/hooks/use-mobile';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue 
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 const BusinessTypeSelector = () => {
   const form = useFormContext<FormValues>();
-  const [open, setOpen] = React.useState(false);
-  const isMobile = useIsMobile();
+  const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
   
   return (
     <FormField
       control={form.control}
       name="businessTypes"
       render={({ field }) => {
-        // Ensure field.value is always an array to avoid "undefined is not iterable" error
+        // Ensure field.value is always an array
         const values = Array.isArray(field.value) ? field.value : [];
+        
+        // Sync internal state with form values when component mounts or field.value changes
+        React.useEffect(() => {
+          setSelectedTypes(values);
+        }, []);
+        
+        const handleSelectType = (type: string) => {
+          // Don't add if already selected
+          if (selectedTypes.includes(type)) return;
+          
+          const newSelectedTypes = [...selectedTypes, type];
+          setSelectedTypes(newSelectedTypes);
+          field.onChange(newSelectedTypes);
+        };
+        
+        const handleRemoveType = (typeToRemove: string) => {
+          const newSelectedTypes = selectedTypes.filter(
+            (type) => type !== typeToRemove
+          );
+          setSelectedTypes(newSelectedTypes);
+          field.onChange(newSelectedTypes);
+        };
         
         return (
           <FormItem className="flex flex-col">
             <FormLabel className="text-base mb-1.5">Types of Business (Select all that apply)</FormLabel>
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
+            <div className="space-y-4">
+              {/* Selected types badges */}
+              {selectedTypes.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {selectedTypes.map((type) => (
+                    <Badge
+                      key={type}
+                      variant="secondary"
+                      className="px-2 py-1.5 gap-1 text-sm"
+                    >
+                      {type}
+                      <button
+                        type="button"
+                        className="ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary"
+                        onClick={() => handleRemoveType(type)}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              
+              {/* Type selector dropdown */}
+              <FormControl>
+                <Select onValueChange={handleSelectType}>
+                  <SelectTrigger 
                     className={cn(
-                      "w-full justify-between",
-                      !values.length && "text-muted-foreground"
+                      "w-full",
+                      !selectedTypes.length && "text-muted-foreground"
                     )}
-                    type="button" // Prevent form submission
-                    onClick={(e) => {
-                      e.preventDefault(); // Prevent default form behavior
-                      e.stopPropagation(); // Stop event propagation
-                      setOpen(!open);
-                    }}
                   >
-                    {values.length > 0
-                      ? `${values.length} type${values.length > 1 ? 's' : ''} selected`
-                      : "Select business types"}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent 
-                className={cn(
-                  "w-full max-w-[350px] p-0",
-                  isMobile ? "max-w-[calc(100vw-2rem)]" : ""
-                )} 
-                align="start"
-                side="bottom"
-                sideOffset={5}
-              >
-                <Command className="bg-popover">
-                  <CommandInput placeholder="Search business types..." className="h-11" />
-                  <CommandEmpty>No business type found.</CommandEmpty>
-                  <CommandGroup className="overflow-hidden">
-                    <ScrollArea className="h-60 max-h-[50vh]">
-                      {businessTypes.map((type) => (
-                        <CommandItem
+                    <SelectValue placeholder="Select business type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {businessTypes
+                      .filter(type => !selectedTypes.includes(type))
+                      .map((type) => (
+                        <SelectItem
                           key={type}
                           value={type}
-                          onSelect={() => {
-                            const isSelected = values.includes(type);
-                            
-                            const newValue = isSelected
-                              ? values.filter(value => value !== type)
-                              : [...values, type];
-                              
-                            field.onChange(newValue);
-                          }}
-                          className="flex items-center gap-2 py-3"
+                          disabled={selectedTypes.includes(type)}
                         >
-                          <div className={cn(
-                            "flex h-5 w-5 items-center justify-center rounded-sm border border-primary",
-                            values.includes(type) 
-                              ? "bg-primary text-primary-foreground" 
-                              : "opacity-50"
-                          )}>
-                            {values.includes(type) && (
-                              <Check className="h-4 w-4" />
-                            )}
-                          </div>
-                          <span className="text-base sm:text-sm">{type}</span>
-                        </CommandItem>
+                          {type}
+                        </SelectItem>
                       ))}
-                    </ScrollArea>
-                  </CommandGroup>
-                </Command>
-              </PopoverContent>
-            </Popover>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+            </div>
             <FormMessage />
           </FormItem>
         );
