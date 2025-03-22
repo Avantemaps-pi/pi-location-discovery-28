@@ -31,7 +31,7 @@ const AnalyticsHeader: React.FC<AnalyticsHeaderProps> = ({
       
       <div className="flex items-center space-x-2 self-end sm:self-auto">
         <Select value={dateRange} onValueChange={onDateRangeChange}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[140px]">
             <CalendarIcon className="mr-2 h-4 w-4" />
             <SelectValue placeholder="Select period" />
           </SelectTrigger>
@@ -45,7 +45,7 @@ const AnalyticsHeader: React.FC<AnalyticsHeaderProps> = ({
         </Select>
         
         <Select onValueChange={(value) => onExport(value as 'csv' | 'pdf')}>
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-[120px]">
             <Download className="mr-2 h-4 w-4" />
             <SelectValue placeholder="Export" />
           </SelectTrigger>

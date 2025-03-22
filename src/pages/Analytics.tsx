@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -130,7 +129,7 @@ const Analytics = () => {
           />
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
+        <div className="mb-8">
           <EngagementChart 
             data={engagementData}
             title="Engagement Overview"
@@ -138,7 +137,7 @@ const Analytics = () => {
           />
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           <div className="lg:col-span-2">
             <RankingChart 
               data={rankingData}
@@ -147,17 +146,19 @@ const Analytics = () => {
             />
           </div>
           
-          <DistributionChart 
-            data={sourceDistribution}
-            title="Traffic Sources"
-            description="How users find your business"
-          />
-          
-          <DistributionChart 
-            data={deviceDistribution}
-            title="Device Usage"
-            description="Devices used to access your listing"
-          />
+          <div className="space-y-8">
+            <DistributionChart 
+              data={sourceDistribution}
+              title="Traffic Sources"
+              description="How users find your business"
+            />
+            
+            <DistributionChart 
+              data={deviceDistribution}
+              title="Device Usage"
+              description="Devices used to access your listing"
+            />
+          </div>
         </div>
       </div>
     </AppLayout>

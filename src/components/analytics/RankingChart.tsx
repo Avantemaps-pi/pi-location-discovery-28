@@ -19,7 +19,7 @@ interface RankingChartProps {
 
 const RankingChart: React.FC<RankingChartProps> = ({ data, title, description }) => {
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
@@ -41,7 +41,7 @@ const RankingChart: React.FC<RankingChartProps> = ({ data, title, description })
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{item.position}</span>
-                    <Progress value={Math.max(0, 100 - (item.position * 10))} className="h-2 w-20" />
+                    <Progress value={Math.max(0, 100 - (item.position * 10))} className="h-2 w-24" />
                   </div>
                 </TableCell>
                 <TableCell>{item.searches}</TableCell>
