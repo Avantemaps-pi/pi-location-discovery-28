@@ -31,8 +31,8 @@ const BusinessTypeSelector = () => {
       control={form.control}
       name="businessTypes"
       render={({ field }) => {
-        // Ensure field.value is always an array
-        const values = field.value ? [...field.value] : [];
+        // Ensure field.value is always an array to avoid "undefined is not iterable" error
+        const values = Array.isArray(field.value) ? field.value : [];
         
         return (
           <FormItem className="flex flex-col">
@@ -49,6 +49,7 @@ const BusinessTypeSelector = () => {
                       !values.length && "text-muted-foreground"
                     )}
                     onClick={(e) => {
+                      // Prevent default behavior and manually toggle the popover
                       e.preventDefault();
                       setOpen(!open);
                     }}

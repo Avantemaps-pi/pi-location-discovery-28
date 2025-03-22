@@ -35,7 +35,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
       apartment: '',
       state: '',
       zipCode: '',
-      businessTypes: [],
+      businessTypes: [], // Initialize as empty array, not undefined
       businessDescription: '',
       piWalletAddress: '',
       mondayOpen: '09:00',
