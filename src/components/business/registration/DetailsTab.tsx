@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -80,7 +81,7 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
                   <Command className="bg-popover">
                     <CommandInput placeholder="Search business types..." className="h-11" />
                     <CommandEmpty>No business type found.</CommandEmpty>
-                    <CommandGroup>
+                    <CommandGroup className="overflow-hidden">
                       <ScrollArea className="h-60 max-h-[50vh]">
                         {businessTypes.map((type) => (
                           <CommandItem
