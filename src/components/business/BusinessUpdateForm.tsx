@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -15,7 +14,7 @@ import BusinessOwnerTab from './registration/BusinessOwnerTab';
 import ContactTab from './registration/ContactTab';
 import AddressTab from './registration/AddressTab';
 import HoursTab from './registration/HoursTab';
-import DetailsTab from './registration/DetailsTab';
+import UpdateDetailsTab from './registration/UpdateDetailsTab';
 
 interface BusinessUpdateFormProps {
   business: Business;
@@ -123,12 +122,10 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
               </TabsList>
 
               <div className="w-full">
-                {/* Business Owner Tab */}
                 <TabsContent value="business-owner" className="space-y-4 w-full">
                   <BusinessOwnerTab onNext={() => setSelectedTab('contact')} />
                 </TabsContent>
 
-                {/* Contact Tab */}
                 <TabsContent value="contact" className="space-y-4 w-full">
                   <ContactTab 
                     onNext={() => setSelectedTab('address')} 
@@ -136,7 +133,6 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
                   />
                 </TabsContent>
 
-                {/* Address Tab */}
                 <TabsContent value="address" className="space-y-4 w-full">
                   <AddressTab 
                     onNext={() => setSelectedTab('hours')} 
@@ -144,7 +140,6 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
                   />
                 </TabsContent>
 
-                {/* Trading Hours Tab */}
                 <TabsContent value="hours" className="space-y-4 w-full">
                   <HoursTab 
                     onNext={() => setSelectedTab('details')} 
@@ -152,7 +147,6 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
                   />
                 </TabsContent>
 
-                {/* Details Tab */}
                 <TabsContent value="details" className="space-y-4 w-full">
                   <UpdateDetailsTab 
                     onPrevious={() => setSelectedTab('hours')} 
@@ -169,7 +163,6 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
   );
 };
 
-// Custom update details tab with Update button instead of Submit
 const UpdateDetailsTab = ({ 
   onPrevious, 
   selectedImage, 
@@ -190,8 +183,6 @@ const UpdateDetailsTab = ({
         </p>
       </div>
       <div className="p-6 pt-0 space-y-6">
-        {/* Same content as the original DetailsTab component */}
-        {/* We're using a simplified version here to avoid making the file too large */}
         <p className="text-sm text-muted-foreground">Business details fields go here...</p>
       </div>
       <div className="p-6 pt-2 flex justify-between flex-wrap gap-3 border-t">
