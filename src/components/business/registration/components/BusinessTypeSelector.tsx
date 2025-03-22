@@ -31,7 +31,7 @@ const BusinessTypeSelector = () => {
       control={form.control}
       name="businessTypes"
       render={({ field }) => {
-        // Ensure field.value is always an array, even if it's undefined or null
+        // Ensure field.value is always an array to avoid "undefined is not iterable" error
         const values = Array.isArray(field.value) ? field.value : [];
         
         return (
@@ -48,6 +48,11 @@ const BusinessTypeSelector = () => {
                       "w-full justify-between",
                       !values.length && "text-muted-foreground"
                     )}
+                    onClick={(e) => {
+                      // Prevent default behavior and manually toggle the popover
+                      e.preventDefault();
+                      setOpen(!open);
+                    }}
                   >
                     {values.length > 0
                       ? `${values.length} type${values.length > 1 ? 's' : ''} selected`
