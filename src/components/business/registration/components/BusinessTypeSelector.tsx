@@ -31,8 +31,8 @@ const BusinessTypeSelector = () => {
       control={form.control}
       name="businessTypes"
       render={({ field }) => {
-        // Ensure field.value is always an array
-        const values = Array.isArray(field.value) ? field.value : [];
+        // Ensure field.value is always an array, even if it's undefined or null
+        const values = field.value || [];
         
         return (
           <FormItem className="flex flex-col">
