@@ -23,6 +23,7 @@ import RegisteredBusiness from "./pages/RegisteredBusiness";
 import VerificationInfo from "./pages/VerificationInfo";
 import Review from "./pages/Review";
 import Pricing from "./pages/Pricing";
+import Analytics from "./pages/Analytics";
 
 const queryClient = new QueryClient();
 
@@ -71,6 +72,7 @@ const App = () => {
             <Route path="/registration" element={<Registration />} />
             <Route path="/update-registration/:businessId?" element={<UpdateRegistration />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/analytics" element={<Analytics />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

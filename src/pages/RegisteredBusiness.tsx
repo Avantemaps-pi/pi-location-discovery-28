@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import BusinessCard from '@/components/business/BusinessCard';
@@ -7,6 +8,7 @@ import BusinessHeader from '@/components/business/BusinessHeader';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Business } from '@/types/business';
+import { BarChart } from 'lucide-react';
 
 const RegisteredBusiness = () => {
   const navigate = useNavigate();
@@ -56,7 +58,17 @@ const RegisteredBusiness = () => {
 
         <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
           <div>
-            <Button onClick={() => navigate('/registration')}>Register New Business</Button>
+            <div className="flex gap-2">
+              <Button onClick={() => navigate('/registration')}>Register New Business</Button>
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/analytics')}
+                className="flex items-center gap-2"
+              >
+                <BarChart className="h-4 w-4" />
+                Analytics Dashboard
+              </Button>
+            </div>
             
             {businesses.length > 0 && (
               <div className="mt-4">
