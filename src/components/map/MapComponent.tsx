@@ -11,7 +11,9 @@ interface MapOptions {
   fullscreenControl?: boolean;
   streetViewControl?: boolean;
   zoomControl?: boolean;
-  styles?: google.maps.MapTypeStyle[];
+  styles?: any[];
+  myLocationEnabled?: boolean;
+  myLocationButtonEnabled?: boolean;
 }
 
 // Map component that uses the Google Maps JavaScript API
@@ -19,8 +21,6 @@ interface MapProps extends MapOptions {
   onClick?: (e: google.maps.MapMouseEvent) => void;
   onIdle?: (map: google.maps.Map) => void;
   children?: React.ReactNode | ((map: google.maps.Map | undefined) => React.ReactNode);
-  myLocationEnabled?: boolean;
-  myLocationButtonEnabled?: boolean;
 }
 
 // Define a proper interface for children components that need the map prop
@@ -44,17 +44,10 @@ const MapComponent = ({
   // Initialize the map
   useEffect(() => {
     if (ref.current && !map && window.google) {
-      // Remove mapId from options if we're using styles
-      // This prevents the conflict between mapId and styles
-      const mapOptions = { ...options };
-      if (mapOptions.styles && mapOptions.styles.length > 0) {
-        delete mapOptions.mapId;
-      }
-
       const newMap = new window.google.maps.Map(ref.current, {
         center,
         zoom,
-        ...mapOptions,
+        ...options,
       });
       setMap(newMap);
     }
@@ -68,19 +61,13 @@ const MapComponent = ({
     }
   }, [map, center, zoom]);
 
-  // Handle location settings - we'll implement this with proper type checking
+  // Update geolocation settings
   useEffect(() => {
     if (map) {
-      try {
-        // Using setOptions with location properties
-        // @ts-ignore - Google Maps types don't include these properties but they work at runtime
-        map.setOptions({
-          myLocationEnabled,
-          myLocationButtonEnabled
-        });
-      } catch (error) {
-        console.warn('Could not set location options:', error);
-      }
+      map.setOptions({
+        myLocationEnabled,
+        myLocationButtonEnabled
+      });
     }
   }, [map, myLocationEnabled, myLocationButtonEnabled]);
 
@@ -108,7 +95,7 @@ const MapComponent = ({
       <div ref={ref} className="w-full h-full" />
       {map && typeof children === 'function' 
         ? children(map)
-        : React.Children.map(children as React.ReactNode, (child) => {
+        : React.Children.map(children, (child) => {
             if (React.isValidElement(child)) {
               // Type assertion to allow passing the map prop to children
               return React.cloneElement(child as React.ReactElement<MapChildProps>, { map });
