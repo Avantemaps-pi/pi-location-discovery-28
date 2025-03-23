@@ -1,4 +1,3 @@
-
 import { MAPS_CONFIG } from '@/config/environment';
 
 // Use the provided Google Maps API key from environment config
@@ -10,10 +9,16 @@ export const exampleLocations = [
   { id: 2, position: { lat: 37.7833, lng: -122.4167 }, title: "Pi Tech Store" },
   { id: 3, position: { lat: 37.7694, lng: -122.4862 }, title: "Pi Gadgets" },
   { id: 4, position: { lat: 37.7583, lng: -122.4267 }, title: "Pi Bakery" },
+  { id: 5, position: { lat: 37.790, lng: -122.410 }, title: "Pi Electronics" },
 ];
 
-// Enhanced map styling to hide all default markers
+// Enhanced map styling to hide all default markers, more comprehensive
 export const mapStyles = [
+  {
+    featureType: "all",
+    elementType: "labels.icon",
+    stylers: [{ visibility: "off" }]
+  },
   {
     featureType: "poi",
     elementType: "all",
@@ -33,6 +38,21 @@ export const mapStyles = [
     featureType: "administrative",
     elementType: "labels.icon",
     stylers: [{ visibility: "off" }]
+  },
+  {
+    featureType: "road",
+    elementType: "labels.icon",
+    stylers: [{ visibility: "off" }]
+  },
+  {
+    featureType: "landscape.man_made",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }]
+  },
+  {
+    featureType: "all",
+    elementType: "labels.text",
+    stylers: [{ visibility: "on" }]
   }
 ];
 

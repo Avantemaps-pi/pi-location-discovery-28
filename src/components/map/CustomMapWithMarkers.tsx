@@ -123,7 +123,8 @@ const CustomMapWithMarkers: React.FC<CustomMapWithMarkersProps> = ({
           zoom={zoom}
           minZoom={3}
           maxZoom={18}
-          mapId="custom_map_id"
+          // Important: Don't use mapId if you're using styles
+          // mapId="custom_map_id"
           onIdle={handleMapIdle}
           mapTypeControl={false}
           fullscreenControl={false}

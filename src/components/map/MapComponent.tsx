@@ -11,7 +11,7 @@ interface MapOptions {
   fullscreenControl?: boolean;
   streetViewControl?: boolean;
   zoomControl?: boolean;
-  styles?: any[];
+  styles?: google.maps.MapTypeStyle[];
 }
 
 // Map component that uses the Google Maps JavaScript API
@@ -44,10 +44,17 @@ const MapComponent = ({
   // Initialize the map
   useEffect(() => {
     if (ref.current && !map && window.google) {
+      // Remove mapId from options if we're using styles
+      // This prevents the conflict between mapId and styles
+      const mapOptions = { ...options };
+      if (mapOptions.styles && mapOptions.styles.length > 0) {
+        delete mapOptions.mapId;
+      }
+
       const newMap = new window.google.maps.Map(ref.current, {
         center,
         zoom,
-        ...options,
+        ...mapOptions,
       });
       setMap(newMap);
     }
@@ -65,6 +72,7 @@ const MapComponent = ({
   useEffect(() => {
     if (map) {
       try {
+        // Using setOptions with location properties
         // @ts-ignore - Google Maps types don't include these properties but they work at runtime
         map.setOptions({
           myLocationEnabled,
