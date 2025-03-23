@@ -2,8 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import GoogleMap from '@/components/map/GoogleMap';
 import SearchBar from '@/components/map/SearchBar';
@@ -11,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { allPlaces } from '@/data/mockPlaces';
 
 const Index = () => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
   const location = useLocation();
   const mapRef = useRef<HTMLDivElement>(null);
@@ -55,8 +52,7 @@ const Index = () => {
     };
   }, [selectedPlace]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = (searchTerm: string) => {
     console.log('Search for:', searchTerm);
     // Implement search functionality here
   };
@@ -82,7 +78,11 @@ const Index = () => {
         {/* Overlaid search box */}
         <div className="absolute top-4 left-0 right-0 z-10 px-4">
           <div className="max-w-md mx-auto">
-            <SearchBar placeholder="Search for Keyword..." />
+            <SearchBar 
+              onSearch={handleSearch}
+              placeholders={["Search for Address", "Search for Business name"]}
+              cycleInterval={3000}
+            />
           </div>
         </div>
         
