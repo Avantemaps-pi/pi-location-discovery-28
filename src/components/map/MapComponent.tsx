@@ -1,21 +1,21 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 
-interface MapOptions {
-  center: google.maps.LatLngLiteral;
-  zoom: number;
-  minZoom?: number;
-  maxZoom?: number;
+// Extend the standard MapOptions interface to include our custom properties
+interface ExtendedMapOptions extends google.maps.MapOptions {
   mapId?: string;
   mapTypeControl?: boolean;
   fullscreenControl?: boolean;
   streetViewControl?: boolean;
   zoomControl?: boolean;
   styles?: any[];
+  myLocationEnabled?: boolean; // Add this custom property
 }
 
 // Map component that uses the Google Maps JavaScript API
-interface MapProps extends MapOptions {
+interface MapProps extends ExtendedMapOptions {
+  center: google.maps.LatLngLiteral;
+  zoom: number;
   onClick?: (e: google.maps.MapMouseEvent) => void;
   onIdle?: (map: google.maps.Map) => void;
   children?: React.ReactNode;

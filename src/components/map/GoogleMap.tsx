@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
 import MarkerList from './MarkerList';
 import PlaceCardPopup from './PlaceCardPopup';
+import { Button } from '@/components/ui/button';
+import { Trash2 } from 'lucide-react';
 
 interface GoogleMapProps {
   places?: Place[];
@@ -29,9 +31,15 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
   const [center, setCenter] = useState(defaultCenter);
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
   const [showPopover, setShowPopover] = useState(false);
+  const [visibleMarkers, setVisibleMarkers] = useState<Place[]>([]);
 
   // Use provided places or default locations
   const displayPlaces = places.length > 0 ? places : defaultLocations;
+
+  // Initialize visible markers with all available places
+  useEffect(() => {
+    setVisibleMarkers(displayPlaces);
+  }, [displayPlaces]);
 
   // Find the selected place to center the map if needed
   useEffect(() => {
@@ -78,6 +86,27 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
     });
   };
 
+  // Function to remove all custom markers
+  const removeAllMarkers = () => {
+    setVisibleMarkers([]);
+    setActiveMarker(null);
+    setShowPopover(false);
+    
+    toast.success('All markers removed', {
+      description: 'The map has been cleared of all markers',
+      duration: 2000,
+    });
+  };
+
+  // Function to restore all markers
+  const restoreAllMarkers = () => {
+    setVisibleMarkers(displayPlaces);
+    toast.success('Markers restored', {
+      description: 'All markers have been restored to the map',
+      duration: 2000,
+    });
+  };
+
   // Get the selected place data
   const selectedPlace = activeMarker ? displayPlaces.find(place => place.id === activeMarker) : null;
 
@@ -108,7 +137,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
           styles={mapStyles}
         >
           <MarkerList
-            places={displayPlaces}
+            places={visibleMarkers}
             activeMarker={activeMarker}
             showPopover={showPopover}
             onMarkerClick={handleMarkerClick}
@@ -116,6 +145,29 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
           />
         </MapComponent>
       </Wrapper>
+      
+      {/* Marker control buttons */}
+      <div className="absolute top-20 right-4 z-10 flex flex-col gap-2">
+        {visibleMarkers.length > 0 ? (
+          <Button 
+            onClick={removeAllMarkers} 
+            variant="destructive" 
+            size="sm" 
+            className="flex items-center gap-2"
+          >
+            <Trash2 size={16} />
+            Remove All Markers
+          </Button>
+        ) : (
+          <Button 
+            onClick={restoreAllMarkers} 
+            variant="default" 
+            size="sm"
+          >
+            Restore Markers
+          </Button>
+        )}
+      </div>
       
       {/* Popup card overlay for selected place - now with higher z-index to overlap FAB */}
       {selectedPlace && showPopover && (

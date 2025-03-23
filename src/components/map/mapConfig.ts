@@ -12,12 +12,34 @@ export const exampleLocations = [
   { id: 4, position: { lat: 37.7583, lng: -122.4267 }, title: "Pi Bakery" },
 ];
 
-// Map styling and configuration options
+// Enhanced map styling to hide all default markers (POIs, businesses, transit, etc.)
 export const mapStyles = [
   {
     featureType: "poi",
-    elementType: "labels",
+    elementType: "all",
     stylers: [{ visibility: "off" }]
+  },
+  {
+    featureType: "poi.business",
+    stylers: [{ visibility: "off" }]
+  },
+  {
+    featureType: "transit",
+    elementType: "all",
+    stylers: [{ visibility: "off" }]
+  },
+  {
+    featureType: "landscape.business",
+    stylers: [{ visibility: "off" }]
+  },
+  {
+    featureType: "administrative.business",
+    stylers: [{ visibility: "off" }]
+  },
+  {
+    featureType: "road",
+    elementType: "labels.icon",
+    stylers: [{ visibility: "on" }]
   }
 ];
 
