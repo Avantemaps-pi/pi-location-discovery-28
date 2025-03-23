@@ -22,7 +22,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
   const isMobile = useIsMobile();
   
   return (
-    <Card className="col-span-4">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
@@ -36,7 +36,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
             </TabsList>
           </div>
           
-          <TabsContent value="line" className="space-y-4">
+          <TabsContent value="line" className="space-y-4 w-full">
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -72,7 +72,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
             </ResponsiveContainer>
           </TabsContent>
           
-          <TabsContent value="bar" className="space-y-4">
+          <TabsContent value="bar" className="space-y-4 w-full">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />

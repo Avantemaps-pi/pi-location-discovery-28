@@ -17,13 +17,13 @@ interface DistributionChartProps {
 
 const DistributionChart: React.FC<DistributionChartProps> = ({ data, title, description }) => {
   return (
-    <Card className="col-span-2">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+    <Card className="w-full">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xl">{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] flex justify-center items-center">
+        <div className="h-[220px] flex justify-center items-center">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -31,7 +31,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({ data, title, desc
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                outerRadius={80}
+                outerRadius={70}
                 fill="#8884d8"
                 dataKey="value"
                 label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
@@ -40,8 +40,8 @@ const DistributionChart: React.FC<DistributionChartProps> = ({ data, title, desc
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value) => [`${value}`, 'Value']} />
-              <Legend />
+              <Tooltip formatter={(value) => [`${value}%`, 'Value']} />
+              <Legend layout="horizontal" verticalAlign="bottom" align="center" />
             </PieChart>
           </ResponsiveContainer>
         </div>
