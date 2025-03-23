@@ -3,15 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import MapComponent from './MapComponent';
 import { renderMap } from './MapLoadingStates';
-import { GOOGLE_MAPS_API_KEY, mapStylesWithoutMarkers, mapStylesWithMarkers, defaultCenter, defaultZoom } from './mapConfig';
+import { GOOGLE_MAPS_API_KEY, mapStylesWithoutMarkers, defaultCenter, defaultZoom } from './mapConfig';
 import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
 import MarkerList from './MarkerList';
 import PlaceCardPopup from './PlaceCardPopup';
-import { Button } from '@/components/ui/button';
-import { Eye, EyeOff } from 'lucide-react';
 
 interface GoogleMapProps {
   places?: Place[];
@@ -31,7 +29,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
   const [center, setCenter] = useState(defaultCenter);
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
   const [showPopover, setShowPopover] = useState(false);
-  const [showDefaultMarkers, setShowDefaultMarkers] = useState(false);
 
   // Use provided places or default locations
   const displayPlaces = places.length > 0 ? places : defaultLocations;
@@ -81,18 +78,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
     });
   };
 
-  // Toggle default markers visibility
-  const toggleDefaultMarkers = () => {
-    setShowDefaultMarkers(prev => !prev);
-    
-    // Show a toast notification
-    toast.info(showDefaultMarkers ? 
-      "Hidden business and park markers" : 
-      "Showing business and park markers", {
-      duration: 2000,
-    });
-  };
-
   // Get the selected place data
   const selectedPlace = activeMarker ? displayPlaces.find(place => place.id === activeMarker) : null;
 
@@ -120,7 +105,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
           fullscreenControl={false}
           streetViewControl={false}
           zoomControl={true}
-          styles={showDefaultMarkers ? mapStylesWithMarkers : mapStylesWithoutMarkers}
+          styles={mapStylesWithoutMarkers}
         >
           <MarkerList
             places={displayPlaces}
@@ -131,28 +116,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
           />
         </MapComponent>
       </Wrapper>
-      
-      {/* Toggle button for default markers */}
-      <div className="absolute top-20 right-4 z-40">
-        <Button 
-          variant="secondary" 
-          size="sm" 
-          onClick={toggleDefaultMarkers}
-          className="flex items-center gap-2 bg-white/90 shadow-md hover:bg-white"
-        >
-          {showDefaultMarkers ? (
-            <>
-              <EyeOff size={16} />
-              <span className="hidden sm:inline">Hide POI Markers</span>
-            </>
-          ) : (
-            <>
-              <Eye size={16} />
-              <span className="hidden sm:inline">Show POI Markers</span>
-            </>
-          )}
-        </Button>
-      </div>
       
       {/* Popup card overlay for selected place */}
       {selectedPlace && showPopover && (

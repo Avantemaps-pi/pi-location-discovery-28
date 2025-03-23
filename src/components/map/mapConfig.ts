@@ -20,15 +20,22 @@ export const mapStylesWithoutMarkers = [
     elementType: "labels",
     stylers: [{ visibility: "off" }]
   },
+  // Hide business points of interest specifically
+  {
+    featureType: "poi.business",
+    stylers: [{ visibility: "off" }]
+  },
   // Hide parks specifically
   {
     featureType: "poi.park",
     stylers: [{ visibility: "off" }]
+  },
+  // Hide attractions
+  {
+    featureType: "poi.attraction",
+    stylers: [{ visibility: "off" }]
   }
 ];
-
-// Default map styles (without hiding markers)
-export const mapStylesWithMarkers = [];
 
 // Default map configuration
 export const defaultCenter = MAPS_CONFIG.defaultCenter;
