@@ -3,7 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import MapComponent from './MapComponent';
 import { renderMap } from './MapLoadingStates';
-import { GOOGLE_MAPS_API_KEY, mapStyles, defaultCenter, defaultZoom } from './mapConfig';
+import { 
+  GOOGLE_MAPS_API_KEY, 
+  mapStylesWithoutMarkers, 
+  mapStylesWithMarkers,
+  defaultCenter, 
+  defaultZoom 
+} from './mapConfig';
 import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
@@ -11,7 +17,7 @@ import { defaultLocations } from './defaultLocations';
 import MarkerList from './MarkerList';
 import PlaceCardPopup from './PlaceCardPopup';
 import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Eye, EyeOff } from 'lucide-react';
 
 interface GoogleMapProps {
   places?: Place[];
@@ -32,6 +38,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
   const [showPopover, setShowPopover] = useState(false);
   const [visibleMarkers, setVisibleMarkers] = useState<Place[]>([]);
+  const [showDefaultMarkers, setShowDefaultMarkers] = useState(false);
 
   // Use provided places or default locations
   const displayPlaces = places.length > 0 ? places : defaultLocations;
@@ -107,6 +114,18 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
     });
   };
 
+  // Toggle default Google Maps markers
+  const toggleDefaultMarkers = () => {
+    setShowDefaultMarkers(prev => !prev);
+    
+    toast.info(showDefaultMarkers ? 'Default markers hidden' : 'Default markers shown', {
+      description: showDefaultMarkers 
+        ? 'Google Maps default markers have been hidden' 
+        : 'Google Maps default markers are now visible',
+      duration: 2000,
+    });
+  };
+
   // Get the selected place data
   const selectedPlace = activeMarker ? displayPlaces.find(place => place.id === activeMarker) : null;
 
@@ -134,7 +153,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
           fullscreenControl={false}
           streetViewControl={false}
           zoomControl={true}
-          styles={mapStyles}
+          styles={showDefaultMarkers ? mapStylesWithMarkers : mapStylesWithoutMarkers}
         >
           <MarkerList
             places={visibleMarkers}
@@ -146,8 +165,29 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
         </MapComponent>
       </Wrapper>
       
-      {/* Marker control buttons */}
+      {/* Map control buttons */}
       <div className="absolute top-20 right-4 z-10 flex flex-col gap-2">
+        {/* Toggle default markers button */}
+        <Button 
+          onClick={toggleDefaultMarkers} 
+          variant="default" 
+          size="sm"
+          className="flex items-center gap-2"
+        >
+          {showDefaultMarkers ? (
+            <>
+              <EyeOff size={16} />
+              Hide Default Markers
+            </>
+          ) : (
+            <>
+              <Eye size={16} />
+              Show Default Markers
+            </>
+          )}
+        </Button>
+
+        {/* Custom markers control button */}
         {visibleMarkers.length > 0 ? (
           <Button 
             onClick={removeAllMarkers} 

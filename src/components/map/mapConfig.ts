@@ -1,4 +1,3 @@
-
 import { MAPS_CONFIG } from '@/config/environment';
 
 // Use the provided Google Maps API key from environment config
@@ -12,8 +11,8 @@ export const exampleLocations = [
   { id: 4, position: { lat: 37.7583, lng: -122.4267 }, title: "Pi Bakery" },
 ];
 
-// Enhanced map styling to hide all default markers (POIs, businesses, transit, etc.)
-export const mapStyles = [
+// Map style that hides default markers but keeps roads and labels
+export const mapStylesWithoutMarkers = [
   {
     featureType: "poi",
     elementType: "all",
@@ -43,5 +42,9 @@ export const mapStyles = [
   }
 ];
 
+// Map style with default markers visible
+export const mapStylesWithMarkers = [];
+
+// Default center and zoom from environment config
 export const defaultCenter = MAPS_CONFIG.defaultCenter;
 export const defaultZoom = MAPS_CONFIG.defaultZoom;
