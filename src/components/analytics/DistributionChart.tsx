@@ -15,6 +15,29 @@ interface DistributionChartProps {
   description?: string;
 }
 
+const RADIAN = Math.PI / 180;
+
+// Custom label rendering function for better visibility
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }) => {
+  const radius = outerRadius * 0.8;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text 
+      x={x} 
+      y={y} 
+      fill="white" 
+      textAnchor={x > cx ? 'start' : 'end'} 
+      dominantBaseline="central"
+      fontSize="12"
+      fontWeight="bold"
+    >
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
+
 const DistributionChart: React.FC<DistributionChartProps> = ({ data, title, description }) => {
   return (
     <Card className="w-full h-full">
@@ -34,7 +57,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({ data, title, desc
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="value"
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                label={renderCustomizedLabel}
               >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
