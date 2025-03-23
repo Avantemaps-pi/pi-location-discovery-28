@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
-import CustomMapWithMarkers from '@/components/map/CustomMapWithMarkers';
+import GoogleMap from '@/components/map/GoogleMap';
 import SearchBar from '@/components/map/SearchBar';
 import { Button } from '@/components/ui/button';
 import { allPlaces } from '@/data/mockPlaces';
@@ -20,15 +19,46 @@ const Index = () => {
     }
   }, [location.state]);
 
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (selectedPlace && mapRef.current && mapRef.current.contains(e.target as Node)) {
+        const clickedElement = e.target as HTMLElement;
+        const isClickInsidePopup = !!clickedElement.closest('.place-popup');
+        const isClickOnMarker = !!clickedElement.closest('div[role="button"]');
+        const isClickInsideDetailCard = detailCardRef.current && 
+          (detailCardRef.current.contains(e.target as Node) || 
+           detailCardRef.current === e.target);
+        
+        if (!isClickInsidePopup && !isClickOnMarker && !isClickInsideDetailCard) {
+          setSelectedPlace(null);
+        }
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [selectedPlace]);
+
   const handleSearch = (searchTerm: string) => {
     console.log('Search for:', searchTerm);
+  };
+  
+  const handlePlaceClick = (placeId: string) => {
+    setSelectedPlace(placeId);
   };
 
   return (
     <AppLayout title="Avante Maps" withHeader={true} fullHeight={true}>
       <div className="relative h-full w-full" ref={mapRef}>
         <div className="absolute inset-0 z-0">
-          <CustomMapWithMarkers />
+          <GoogleMap 
+            places={allPlaces} 
+            selectedPlaceId={selectedPlace} 
+            onMarkerClick={handlePlaceClick}
+            detailCardRef={detailCardRef}
+          />
         </div>
         
         <div className="absolute top-4 left-0 right-0 z-10 px-4">

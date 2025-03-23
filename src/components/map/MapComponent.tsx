@@ -12,15 +12,13 @@ interface MapOptions {
   streetViewControl?: boolean;
   zoomControl?: boolean;
   styles?: any[];
-  myLocationEnabled?: boolean;
-  myLocationButtonEnabled?: boolean;
 }
 
 // Map component that uses the Google Maps JavaScript API
 interface MapProps extends MapOptions {
   onClick?: (e: google.maps.MapMouseEvent) => void;
   onIdle?: (map: google.maps.Map) => void;
-  children?: React.ReactNode | ((map: google.maps.Map | undefined) => React.ReactNode);
+  children?: React.ReactNode;
 }
 
 // Define a proper interface for children components that need the map prop
@@ -34,8 +32,6 @@ const MapComponent = ({
   children, 
   center,
   zoom,
-  myLocationEnabled = true,
-  myLocationButtonEnabled = true,
   ...options 
 }: MapProps) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -61,16 +57,6 @@ const MapComponent = ({
     }
   }, [map, center, zoom]);
 
-  // Update geolocation settings
-  useEffect(() => {
-    if (map) {
-      map.setOptions({
-        myLocationEnabled,
-        myLocationButtonEnabled
-      });
-    }
-  }, [map, myLocationEnabled, myLocationButtonEnabled]);
-
   // Set up event listeners
   useEffect(() => {
     if (map) {
@@ -93,16 +79,13 @@ const MapComponent = ({
   return (
     <>
       <div ref={ref} className="w-full h-full" />
-      {map && typeof children === 'function' 
-        ? children(map)
-        : React.Children.map(children, (child) => {
-            if (React.isValidElement(child)) {
-              // Type assertion to allow passing the map prop to children
-              return React.cloneElement(child as React.ReactElement<MapChildProps>, { map });
-            }
-            return child;
-          })
-      }
+      {React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+          // Type assertion to allow passing the map prop to children
+          return React.cloneElement(child as React.ReactElement<MapChildProps>, { map });
+        }
+        return child;
+      })}
     </>
   );
 };
