@@ -4,7 +4,7 @@ import { Wrapper } from '@googlemaps/react-wrapper';
 import MapComponent from './MapComponent';
 import Marker from './Marker';
 import { renderMap } from './MapLoadingStates';
-import { GOOGLE_MAPS_API_KEY, mapStyles } from './mapConfig';
+import { GOOGLE_MAPS_API_KEY, mapStylesWithoutMarkers, mapStylesWithMarkers } from './mapConfig';
 import { toast } from 'sonner';
 
 interface Place {
@@ -29,6 +29,7 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
 }) => {
   const [center, setCenter] = useState<google.maps.LatLngLiteral>({ lat: 37.7749, lng: -122.4194 });
   const [zoom, setZoom] = useState(13);
+  const [showDefaultMarkers, setShowDefaultMarkers] = useState(false);
 
   // Find the selected place to center the map if needed
   useEffect(() => {
@@ -55,6 +56,17 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
     }
   };
 
+  const toggleDefaultMarkers = () => {
+    setShowDefaultMarkers(prev => !prev);
+    
+    toast.info(showDefaultMarkers ? 'Default markers hidden' : 'Default markers shown', {
+      description: showDefaultMarkers 
+        ? 'Google Maps default markers have been hidden' 
+        : 'Google Maps default markers are now visible',
+      duration: 2000,
+    });
+  };
+
   return (
     <div className="w-full h-full">
       <Wrapper
@@ -73,7 +85,7 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
           fullscreenControl={false}
           streetViewControl={false}
           zoomControl={true}
-          styles={mapStyles}
+          styles={showDefaultMarkers ? mapStylesWithMarkers : mapStylesWithoutMarkers}
         >
           {places.map((place) => (
             <Marker
