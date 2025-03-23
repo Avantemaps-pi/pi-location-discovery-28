@@ -6,7 +6,6 @@ import { renderMap } from './MapLoadingStates';
 import { GOOGLE_MAPS_API_KEY, mapStyles, defaultCenter, defaultZoom } from './mapConfig';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Toggle } from '@/components/ui/toggle';
 import { PlusCircle, Trash2, MapPin, X } from 'lucide-react';
 
 interface CustomMarker {
@@ -110,12 +109,6 @@ const CustomMapWithMarkers: React.FC<CustomMapWithMarkersProps> = ({
 
   const toggleLocationDot = () => {
     setShowLocationDot(prev => !prev);
-    if (mapRef.current) {
-      mapRef.current.setOptions({
-        myLocationEnabled: !showLocationDot,
-        myLocationButtonEnabled: !showLocationDot
-      });
-    }
   };
 
   return (
@@ -140,7 +133,7 @@ const CustomMapWithMarkers: React.FC<CustomMapWithMarkersProps> = ({
           myLocationEnabled={showLocationDot}
           myLocationButtonEnabled={showLocationDot}
         >
-          {renderMarkers}
+          {(map) => renderMarkers(map)}
         </MapComponent>
       </Wrapper>
 
