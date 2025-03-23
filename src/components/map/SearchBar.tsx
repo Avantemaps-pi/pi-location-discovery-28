@@ -11,7 +11,7 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
-  placeholders = ["Search for Address", "Search for Business name"],
+  placeholders = ["Search for Address", "Search for Business name", "Search for Keywords"],
   cycleInterval = 3000,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
