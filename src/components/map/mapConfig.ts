@@ -1,6 +1,8 @@
 
-// Use the provided Google Maps API key
-export const GOOGLE_MAPS_API_KEY = "AIzaSyAp6za1pf11Tvq80kIRBpqqunXg4AcYa8s";
+import { MAPS_CONFIG } from '@/config/environment';
+
+// Use the provided Google Maps API key from environment config
+export const GOOGLE_MAPS_API_KEY = MAPS_CONFIG.apiKey;
 
 // Example for demo data - in a real app, this would come from your MongoDB database
 export const exampleLocations = [
@@ -19,9 +21,5 @@ export const mapStyles = [
   }
 ];
 
-export const defaultCenter = {
-  lat: 37.7749,
-  lng: -122.4194,
-};
-
-export const defaultZoom = 13;
+export const defaultCenter = MAPS_CONFIG.defaultCenter;
+export const defaultZoom = MAPS_CONFIG.defaultZoom;
