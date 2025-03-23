@@ -27,7 +27,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
         <CardTitle>{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
       </CardHeader>
-      <CardContent>
+      <CardContent className="pl-0">
         <Tabs defaultValue="line">
           <div className="flex items-center justify-between mb-4">
             <TabsList>
@@ -38,7 +38,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
           
           <TabsContent value="line" className="space-y-4 w-full">
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
@@ -74,7 +74,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
           
           <TabsContent value="bar" className="space-y-4 w-full">
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <BarChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="name" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />

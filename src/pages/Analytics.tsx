@@ -130,7 +130,7 @@ const Analytics = () => {
           />
         </div>
         
-        <div className="w-full mb-8">
+        <div className="w-full mb-8 pl-0">
           <EngagementChart 
             data={engagementData}
             title="Engagement Overview"
@@ -138,7 +138,7 @@ const Analytics = () => {
           />
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-2">
             <RankingChart 
               data={rankingData}
@@ -147,7 +147,7 @@ const Analytics = () => {
             />
           </div>
           
-          <div className="lg:col-span-1 space-y-8">
+          <div className="lg:col-span-1 grid grid-cols-1 gap-6">
             <DistributionChart 
               data={sourceDistribution}
               title="Traffic Sources"
