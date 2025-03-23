@@ -8,7 +8,7 @@ import { useFormContext } from 'react-hook-form';
 import { FormValues } from './formSchema';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-// Common country codes
+// Extended country codes list
 const countryCodes = [
   { code: '+1', country: 'US/Canada' },
   { code: '+44', country: 'UK' },
@@ -22,6 +22,24 @@ const countryCodes = [
   { code: '+27', country: 'South Africa' },
   { code: '+52', country: 'Mexico' },
   { code: '+55', country: 'Brazil' },
+  { code: '+34', country: 'Spain' },
+  { code: '+39', country: 'Italy' },
+  { code: '+7', country: 'Russia' },
+  { code: '+82', country: 'South Korea' },
+  { code: '+65', country: 'Singapore' },
+  { code: '+60', country: 'Malaysia' },
+  { code: '+31', country: 'Netherlands' },
+  { code: '+47', country: 'Norway' },
+  { code: '+46', country: 'Sweden' },
+  { code: '+45', country: 'Denmark' },
+  { code: '+971', country: 'UAE' },
+  { code: '+966', country: 'Saudi Arabia' },
+  { code: '+351', country: 'Portugal' },
+  { code: '+48', country: 'Poland' },
+  { code: '+66', country: 'Thailand' },
+  { code: '+84', country: 'Vietnam' },
+  { code: '+62', country: 'Indonesia' },
+  { code: '+254', country: 'Kenya' },
 ];
 
 interface ContactTabProps {
@@ -64,7 +82,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
                   <SelectTrigger className="w-[80px] flex-shrink-0">
                     <SelectValue placeholder="+1" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-60 overflow-y-auto">
                     {countryCodes.map((country) => (
                       <SelectItem key={country.code} value={country.code}>
                         {country.code} {country.country}
