@@ -4,8 +4,10 @@ import { Wrapper } from '@googlemaps/react-wrapper';
 import MapComponent from './MapComponent';
 import Marker from './Marker';
 import { renderMap } from './MapLoadingStates';
-import { GOOGLE_MAPS_API_KEY, mapStyles } from './mapConfig';
+import { GOOGLE_MAPS_API_KEY, mapStylesWithoutMarkers, mapStylesWithMarkers } from './mapConfig';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Eye, EyeOff } from 'lucide-react';
 
 interface Place {
   id: string;
@@ -29,6 +31,7 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
 }) => {
   const [center, setCenter] = useState<google.maps.LatLngLiteral>({ lat: 37.7749, lng: -122.4194 });
   const [zoom, setZoom] = useState(13);
+  const [showDefaultMarkers, setShowDefaultMarkers] = useState(false);
 
   // Find the selected place to center the map if needed
   useEffect(() => {
@@ -55,8 +58,20 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
     }
   };
 
+  // Toggle default markers visibility
+  const toggleDefaultMarkers = () => {
+    setShowDefaultMarkers(prev => !prev);
+    
+    // Show a toast notification
+    toast.info(showDefaultMarkers ? 
+      "Hidden business and park markers" : 
+      "Showing business and park markers", {
+      duration: 2000,
+    });
+  };
+
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
       <Wrapper
         apiKey={GOOGLE_MAPS_API_KEY}
         render={renderMap}
@@ -73,7 +88,7 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
           fullscreenControl={false}
           streetViewControl={false}
           zoomControl={true}
-          styles={mapStyles}
+          styles={showDefaultMarkers ? mapStylesWithMarkers : mapStylesWithoutMarkers}
         >
           {places.map((place) => (
             <Marker
@@ -94,6 +109,28 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
           ))}
         </MapComponent>
       </Wrapper>
+      
+      {/* Toggle button for default markers */}
+      <div className="absolute top-20 right-4 z-40">
+        <Button 
+          variant="secondary" 
+          size="sm" 
+          onClick={toggleDefaultMarkers}
+          className="flex items-center gap-2 bg-white/90 shadow-md hover:bg-white"
+        >
+          {showDefaultMarkers ? (
+            <>
+              <EyeOff size={16} />
+              <span className="hidden sm:inline">Hide POI Markers</span>
+            </>
+          ) : (
+            <>
+              <Eye size={16} />
+              <span className="hidden sm:inline">Show POI Markers</span>
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   );
 };

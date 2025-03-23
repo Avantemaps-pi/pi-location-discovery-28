@@ -12,14 +12,24 @@ export const exampleLocations = [
   { id: 4, position: { lat: 37.7583, lng: -122.4267 }, title: "Pi Bakery" },
 ];
 
-// Map styling and configuration options
-export const mapStyles = [
+// Map styling to hide blue (business) and green (park) markers
+export const mapStylesWithoutMarkers = [
+  // Hide all points of interest (businesses, attractions)
   {
     featureType: "poi",
     elementType: "labels",
     stylers: [{ visibility: "off" }]
+  },
+  // Hide parks specifically
+  {
+    featureType: "poi.park",
+    stylers: [{ visibility: "off" }]
   }
 ];
 
+// Default map styles (without hiding markers)
+export const mapStylesWithMarkers = [];
+
+// Default map configuration
 export const defaultCenter = MAPS_CONFIG.defaultCenter;
 export const defaultZoom = MAPS_CONFIG.defaultZoom;
