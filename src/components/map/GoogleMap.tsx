@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Wrapper } from '@googlemaps/react-wrapper';
 import MapComponent from './MapComponent';
 import { renderMap } from './MapLoadingStates';
-import { GOOGLE_MAPS_API_KEY, mapStylesWithoutMarkers, defaultCenter, defaultZoom } from './mapConfig';
+import { GOOGLE_MAPS_API_KEY, defaultCenter, defaultZoom } from './mapConfig';
 import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
@@ -105,7 +105,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
           fullscreenControl={false}
           streetViewControl={false}
           zoomControl={true}
-          styles={mapStylesWithoutMarkers}
         >
           <MarkerList
             places={displayPlaces}

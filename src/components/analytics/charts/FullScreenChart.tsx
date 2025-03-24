@@ -1,7 +1,7 @@
 
 import React, { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Minimize } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -79,7 +79,7 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
   
   // Handle zoom instructions
   const zoomInstructions = (
-    <div className="text-xs text-muted-foreground mb-4 mt-2 italic">
+    <div className="text-xs text-muted-foreground mb-2 italic">
       Use Ctrl + Mouse Wheel to zoom in/out on the chart
     </div>
   );
@@ -117,21 +117,24 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
   
   return (
     <Dialog open={isFullScreen} onOpenChange={setIsFullScreen}>
-      <DialogContent className="max-w-[95vw] h-[90vh] w-[95vw] md:max-w-[90vw] md:h-[85vh] flex flex-col p-6" hideCloseButton>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">{title}</h2>
+      <DialogContent className="max-w-[95vw] w-[95vw] md:max-w-[90vw] flex flex-col p-4" hideCloseButton>
+        <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            {description && <p className="text-sm text-gray-500">{description}</p>}
+          </div>
           <Button 
             variant="outline" 
             size="icon" 
             onClick={() => setIsFullScreen(false)}
             title="Exit Full Screen"
+            className="ml-2"
           >
             <Minimize className="h-4 w-4" />
           </Button>
         </div>
-        {description && <p className="text-sm text-gray-500 mb-4">{description}</p>}
         
-        <div className="mb-4">
+        <div className="mt-4 mb-2">
           <ToggleGroup 
             type="single" 
             value={timelineFilter} 
@@ -154,14 +157,14 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
         {zoomInstructions}
         
         <Tabs defaultValue={activeTab} value={activeTab} onValueChange={handleTabChange} className="w-full flex-1 flex flex-col">
-          <div className="flex items-center mb-4">
+          <div className="flex items-center mb-2">
             <TabsList>
               <TabsTrigger value="line">Line</TabsTrigger>
               <TabsTrigger value="bar">Bar</TabsTrigger>
             </TabsList>
           </div>
           
-          <div className="flex-1 w-full">
+          <div className="flex-1 w-full overflow-hidden">
             {chartComponent}
           </div>
         </Tabs>

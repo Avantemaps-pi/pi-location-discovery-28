@@ -43,6 +43,7 @@ const MapComponent = ({
       const newMap = new window.google.maps.Map(ref.current, {
         center,
         zoom,
+        gestureHandling: 'greedy', // Enable single finger panning on mobile
         ...options,
       });
       setMap(newMap);

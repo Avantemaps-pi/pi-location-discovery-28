@@ -4,7 +4,7 @@ import { Wrapper } from '@googlemaps/react-wrapper';
 import MapComponent from './MapComponent';
 import Marker from './Marker';
 import { renderMap } from './MapLoadingStates';
-import { GOOGLE_MAPS_API_KEY, mapStylesWithoutMarkers } from './mapConfig';
+import { GOOGLE_MAPS_API_KEY } from './mapConfig';
 import { toast } from 'sonner';
 
 interface Place {
@@ -73,7 +73,6 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
           fullscreenControl={false}
           streetViewControl={false}
           zoomControl={true}
-          styles={mapStylesWithoutMarkers}
         >
           {places.map((place) => (
             <Marker
