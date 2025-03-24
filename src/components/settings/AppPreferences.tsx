@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -82,9 +81,7 @@ const AppPreferences = ({
         
         <div className="pt-4">
           <h3 className="font-medium">Business Verification Requirements</h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            As a Business Owner, you need to complete these steps to get verified:
-          </p>
+          <p className="text-sm text-muted-foreground mt-1">As a Business Owner, you need to complete these steps to get verified:</p>
         </div>
 
         <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 rounded-md">
