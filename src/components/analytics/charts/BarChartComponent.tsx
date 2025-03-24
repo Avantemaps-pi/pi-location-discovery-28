@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface ChartData {
@@ -23,7 +23,7 @@ interface BarChartComponentProps {
   onYScaleChange?: (scale: number) => void;
 }
 
-const BarChartComponent: React.FC<BarChartComponentProps> = ({ 
+const BarChartComponent: React.FC<BarChartComponentProps> = React.memo(({ 
   data, 
   chartWidth, 
   chartHeight, 
@@ -36,14 +36,19 @@ const BarChartComponent: React.FC<BarChartComponentProps> = ({
   const [localXScale, setLocalXScale] = useState(xScale);
   const [localYScale, setLocalYScale] = useState(yScale);
 
-  // Calculate scale factors
-  const xScaleFactor = localXScale / 100;
-  const yScaleFactor = localYScale / 100;
-  
-  // Find the maximum values for the Y axis
-  const maxValue = Math.max(
-    ...data.map(item => Math.max(item.views, item.clicks, item.bookmarks))
-  );
+  // Calculate scale factors - memoized to prevent recalculation on each render
+  const { xScaleFactor, yScaleFactor, maxValue } = useMemo(() => {
+    // Calculate scale factors
+    const xScaleFactor = localXScale / 100;
+    const yScaleFactor = localYScale / 100;
+    
+    // Find the maximum values for the Y axis
+    const maxValue = Math.max(
+      ...data.map(item => Math.max(item.views, item.clicks, item.bookmarks))
+    );
+
+    return { xScaleFactor, yScaleFactor, maxValue };
+  }, [localXScale, localYScale, data]);
   
   const handleWheel = (e: React.WheelEvent) => {
     // Ctrl key for zooming
@@ -92,7 +97,8 @@ const BarChartComponent: React.FC<BarChartComponentProps> = ({
       </ResponsiveContainer>
     </div>
   );
-};
+});
+
+BarChartComponent.displayName = 'BarChartComponent';
 
 export default BarChartComponent;
-

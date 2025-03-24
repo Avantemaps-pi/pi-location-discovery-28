@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, ZAxis } from 'recharts';
+import React, { useState, useMemo } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface ChartData {
   name: string;
@@ -23,7 +23,7 @@ interface LineChartComponentProps {
   onYScaleChange?: (scale: number) => void;
 }
 
-const LineChartComponent: React.FC<LineChartComponentProps> = ({ 
+const LineChartComponent: React.FC<LineChartComponentProps> = React.memo(({ 
   data, 
   chartWidth, 
   chartHeight, 
@@ -36,14 +36,19 @@ const LineChartComponent: React.FC<LineChartComponentProps> = ({
   const [localXScale, setLocalXScale] = useState(xScale);
   const [localYScale, setLocalYScale] = useState(yScale);
 
-  // Calculate scale factors
-  const xScaleFactor = localXScale / 100;
-  const yScaleFactor = localYScale / 100;
-  
-  // Find the maximum values for the Y axis
-  const maxValue = Math.max(
-    ...data.map(item => Math.max(item.views, item.clicks, item.bookmarks))
-  );
+  // Calculate scale factors - memoized to prevent recalculation on each render
+  const { xScaleFactor, yScaleFactor, maxValue } = useMemo(() => {
+    // Calculate scale factors
+    const xScaleFactor = localXScale / 100;
+    const yScaleFactor = localYScale / 100;
+    
+    // Find the maximum values for the Y axis
+    const maxValue = Math.max(
+      ...data.map(item => Math.max(item.views, item.clicks, item.bookmarks))
+    );
+
+    return { xScaleFactor, yScaleFactor, maxValue };
+  }, [localXScale, localYScale, data]);
   
   const handleWheel = (e: React.WheelEvent) => {
     // Ctrl key for zooming
@@ -113,7 +118,8 @@ const LineChartComponent: React.FC<LineChartComponentProps> = ({
       </ResponsiveContainer>
     </div>
   );
-};
+});
+
+LineChartComponent.displayName = 'LineChartComponent';
 
 export default LineChartComponent;
-

@@ -8,11 +8,11 @@ interface ChartSettingsProps {
   setXScale: (value: number) => void;
   yScale: number;
   setYScale: (value: number) => void;
-  timelineFilter: string;
-  setTimelineFilter: (value: string) => void;
+  timelineFilter?: string;
+  setTimelineFilter?: (value: string) => void;
 }
 
-const ChartSettings: React.FC<ChartSettingsProps> = ({
+const ChartSettings: React.FC<ChartSettingsProps> = React.memo(({
   xScale,
   setXScale,
   yScale,
@@ -59,6 +59,8 @@ const ChartSettings: React.FC<ChartSettingsProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ChartSettings.displayName = 'ChartSettings';
 
 export default ChartSettings;

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -32,7 +32,18 @@ interface FullScreenChartProps {
   setTimelineFilter: (value: string) => void;
 }
 
-const FullScreenChart: React.FC<FullScreenChartProps> = ({
+// Define timelineOptions outside the component to prevent recreation on each render
+const timelineOptions = [
+  { value: "1h", label: "1h" },
+  { value: "24h", label: "24h" },
+  { value: "7d", label: "7d" },
+  { value: "30d", label: "30d" },
+  { value: "90d", label: "90d" },
+  { value: "1y", label: "1y" },
+  { value: "all", label: "All" }
+];
+
+const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
   isFullScreen,
   setIsFullScreen,
   activeTab,
@@ -49,30 +60,55 @@ const FullScreenChart: React.FC<FullScreenChartProps> = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Calculate scale factors
-  const xScaleFactor = xScale / 100;
-  const yScaleFactor = yScale / 100;
+  // Use useMemo to calculate chart dimensions to avoid recalculations
+  const { chartWidth, chartHeight, containerStyle } = useMemo(() => {
+    // Calculate scale factors
+    const xScaleFactor = xScale / 100;
+    const yScaleFactor = yScale / 100;
+    
+    // Apply scale to chart dimensions
+    const chartWidth = `${100 * xScaleFactor}%`;
+    const chartHeight = (isMobile ? 300 : 600) * yScaleFactor;
+    
+    // Fixed style prop with valid CSS properties
+    const containerStyle = {
+      overflowX: "auto" as const,
+      overflowY: "hidden" as const
+    };
+
+    return { chartWidth, chartHeight, containerStyle };
+  }, [xScale, yScale, isMobile]);
   
-  // Apply scale to chart dimensions
-  const chartWidth = `${100 * xScaleFactor}%`;
-  const chartHeight = (isMobile ? 300 : 600) * yScaleFactor;
-  
-  // Fixed style prop with valid CSS properties
-  const containerStyle = {
-    overflowX: "auto" as const,
-    overflowY: "hidden" as const
-  };
-  
-  // Timeline options mapping
-  const timelineOptions = [
-    { value: "1h", label: "1h" },
-    { value: "24h", label: "24h" },
-    { value: "7d", label: "7d" },
-    { value: "30d", label: "30d" },
-    { value: "90d", label: "90d" },
-    { value: "1y", label: "1y" },
-    { value: "all", label: "All" }
-  ];
+  // Memoize the chart component to prevent unnecessary re-renders
+  const chartComponent = useMemo(() => {
+    if (activeTab === 'line') {
+      return (
+        <LineChartComponent 
+          data={data} 
+          chartWidth={chartWidth} 
+          chartHeight={chartHeight} 
+          containerStyle={containerStyle} 
+          xScale={xScale}
+          yScale={yScale}
+          onXScaleChange={setXScale}
+          onYScaleChange={setYScale}
+        />
+      );
+    } else {
+      return (
+        <BarChartComponent 
+          data={data} 
+          chartWidth={chartWidth} 
+          chartHeight={chartHeight} 
+          containerStyle={containerStyle} 
+          xScale={xScale}
+          yScale={yScale}
+          onXScaleChange={setXScale}
+          onYScaleChange={setYScale}
+        />
+      );
+    }
+  }, [activeTab, data, chartWidth, chartHeight, containerStyle, xScale, yScale, setXScale, setYScale]);
   
   return (
     <Dialog open={isFullScreen} onOpenChange={setIsFullScreen}>
@@ -119,35 +155,14 @@ const FullScreenChart: React.FC<FullScreenChartProps> = ({
           </div>
           
           <div className="flex-1 w-full">
-            {activeTab === 'line' ? (
-              <LineChartComponent 
-                data={data} 
-                chartWidth={chartWidth} 
-                chartHeight={chartHeight} 
-                containerStyle={containerStyle} 
-                xScale={xScale}
-                yScale={yScale}
-                onXScaleChange={setXScale}
-                onYScaleChange={setYScale}
-              />
-            ) : (
-              <BarChartComponent 
-                data={data} 
-                chartWidth={chartWidth} 
-                chartHeight={chartHeight} 
-                containerStyle={containerStyle} 
-                xScale={xScale}
-                yScale={yScale}
-                onXScaleChange={setXScale}
-                onYScaleChange={setYScale}
-              />
-            )}
+            {chartComponent}
           </div>
         </Tabs>
       </DialogContent>
     </Dialog>
   );
-};
+});
+
+FullScreenChart.displayName = 'FullScreenChart';
 
 export default FullScreenChart;
-

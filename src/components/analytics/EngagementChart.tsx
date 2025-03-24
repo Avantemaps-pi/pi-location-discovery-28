@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Maximize } from 'lucide-react';
@@ -21,7 +21,7 @@ interface EngagementChartProps {
   description?: string;
 }
 
-const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, description }) => {
+const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, title, description }) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [activeTab, setActiveTab] = useState<'line' | 'bar'>('line');
   const [xScale, setXScale] = useState(100);
@@ -36,15 +36,47 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
     setActiveTab(value as 'line' | 'bar');
   };
   
-  // Fixed style prop with valid CSS properties
-  const containerStyle = {
-    overflowX: "auto" as const,
-    overflowY: "hidden" as const
-  };
+  // Memoize these values to prevent recalculation on each render
+  const { containerStyle, chartWidth, chartHeight } = useMemo(() => {
+    // Fixed style prop with valid CSS properties
+    const containerStyle = {
+      overflowX: "auto" as const,
+      overflowY: "hidden" as const
+    };
+    
+    // Calculate scale factors for normal view (not fullscreen)
+    const chartWidth = '100%';
+    const chartHeight = 300;
+
+    return { containerStyle, chartWidth, chartHeight };
+  }, []);
   
-  // Calculate scale factors for normal view (not fullscreen)
-  const chartWidth = '100%';
-  const chartHeight = 300;
+  // Memoize chart components to prevent unnecessary re-renders
+  const lineChartComponent = useMemo(() => (
+    <LineChartComponent 
+      data={data}
+      chartWidth={chartWidth}
+      chartHeight={chartHeight}
+      containerStyle={containerStyle}
+      xScale={xScale}
+      yScale={yScale}
+      onXScaleChange={setXScale}
+      onYScaleChange={setYScale}
+    />
+  ), [data, chartWidth, chartHeight, containerStyle, xScale, yScale]);
+
+  const barChartComponent = useMemo(() => (
+    <BarChartComponent 
+      data={data}
+      chartWidth={chartWidth}
+      chartHeight={chartHeight}
+      containerStyle={containerStyle}
+      xScale={xScale}
+      yScale={yScale}
+      onXScaleChange={setXScale}
+      onYScaleChange={setYScale}
+    />
+  ), [data, chartWidth, chartHeight, containerStyle, xScale, yScale]);
   
   return (
     <>
@@ -72,29 +104,11 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
             </div>
             
             <TabsContent value="line" className="space-y-4 w-full">
-              <LineChartComponent 
-                data={data}
-                chartWidth={chartWidth}
-                chartHeight={chartHeight}
-                containerStyle={containerStyle}
-                xScale={xScale}
-                yScale={yScale}
-                onXScaleChange={setXScale}
-                onYScaleChange={setYScale}
-              />
+              {lineChartComponent}
             </TabsContent>
             
             <TabsContent value="bar" className="space-y-4 w-full">
-              <BarChartComponent 
-                data={data}
-                chartWidth={chartWidth}
-                chartHeight={chartHeight}
-                containerStyle={containerStyle}
-                xScale={xScale}
-                yScale={yScale}
-                onXScaleChange={setXScale}
-                onYScaleChange={setYScale}
-              />
+              {barChartComponent}
             </TabsContent>
           </Tabs>
         </CardContent>
@@ -117,7 +131,8 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
       />
     </>
   );
-};
+});
+
+EngagementChart.displayName = 'EngagementChart';
 
 export default EngagementChart;
-
