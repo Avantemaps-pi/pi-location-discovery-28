@@ -9,6 +9,7 @@ import CommentSorter from './CommentSorter';
 import LoginDialog from '@/components/auth/LoginDialog';
 import { toast } from 'sonner';
 import { filterInappropriateContent } from '@/utils/contentFilter';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Comment sorting types
 export type SortOption = 'useful' | 'recent' | 'controversial';
@@ -20,6 +21,7 @@ const CommentSection: React.FC<{ businessId?: string }> = ({ businessId }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [sortOption, setSortOption] = useState<SortOption>('useful');
+  const isMobile = useIsMobile();
   
   // In a real app, this would come from authentication state
   const currentUser = {
@@ -84,7 +86,7 @@ const CommentSection: React.FC<{ businessId?: string }> = ({ businessId }) => {
   };
 
   return (
-    <Card className="mt-8">
+    <Card className={`${isMobile ? 'mt-4' : 'mt-8'} w-full`}>
       <CardHeader>
         <CardTitle className="text-xl">Comments & Reviews</CardTitle>
       </CardHeader>

@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import CommentItem from './CommentItem';
 import { SortOption } from './CommentSection';
 import { toast } from 'sonner';
@@ -163,18 +162,16 @@ const CommentList: React.FC<CommentListProps> = ({ businessId, sortOption }) => 
   }
 
   return (
-    <ScrollArea className="h-[400px] pr-4">
-      <div className="space-y-4">
-        {sortedComments.map(comment => (
-          <CommentItem
-            key={comment.id}
-            comment={comment}
-            onVote={handleVote}
-            onReport={handleReport}
-          />
-        ))}
-      </div>
-    </ScrollArea>
+    <div className="space-y-4 max-w-full">
+      {sortedComments.map(comment => (
+        <CommentItem
+          key={comment.id}
+          comment={comment}
+          onVote={handleVote}
+          onReport={handleReport}
+        />
+      ))}
+    </div>
   );
 };
 

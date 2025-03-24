@@ -11,6 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
 import CommentSection from '@/components/comments/CommentSection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Review = () => {
   const { businessId } = useParams();
@@ -19,6 +20,7 @@ const Review = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState('');
+  const isMobile = useIsMobile();
   
   // Use business data from state if available, otherwise use fallback
   const businessDetails = location.state?.businessDetails;
@@ -54,7 +56,7 @@ const Review = () => {
 
   return (
     <AppLayout title={`Review ${business.name}`}>
-      <div className="max-w-3xl mx-auto pb-8">
+      <div className={`${isMobile ? 'max-w-full' : 'max-w-4xl'} mx-auto pb-8`}>
         <Button 
           variant="ghost" 
           className="mb-4" 
@@ -63,7 +65,7 @@ const Review = () => {
           <ChevronLeft className="h-4 w-4 mr-2" /> Back
         </Button>
         
-        <Tabs defaultValue="review">
+        <Tabs defaultValue="review" className="w-full">
           <TabsList className="w-full mb-4">
             <TabsTrigger value="review" className="flex-1">Write Review</TabsTrigger>
             <TabsTrigger value="comments" className="flex-1">View Comments</TabsTrigger>
@@ -166,18 +168,8 @@ const Review = () => {
             </Card>
           </TabsContent>
           
-          <TabsContent value="comments">
-            <Card>
-              <CardHeader>
-                <CardTitle>{business.name} - Comments & Reviews</CardTitle>
-                <CardDescription>
-                  Join the conversation about this business
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <CommentSection businessId={business.id} />
-              </CardContent>
-            </Card>
+          <TabsContent value="comments" className="w-full">
+            <CommentSection businessId={business.id} />
           </TabsContent>
         </Tabs>
       </div>
