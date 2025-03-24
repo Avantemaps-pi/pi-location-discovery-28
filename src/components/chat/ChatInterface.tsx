@@ -47,7 +47,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           
           <ChatModeToggle chatMode={chatMode} onChatModeChange={onChatModeChange} />
         </div>
-        <CardDescription>Connect with Avante Maps {chatMode === "ai" ? "AI assistant" : "support team"}</CardDescription>
+        <CardDescription className="whitespace-nowrap">Connect with Avante Maps {chatMode === "ai" ? "AI assistant" : "support team"}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col h-[400px]">
