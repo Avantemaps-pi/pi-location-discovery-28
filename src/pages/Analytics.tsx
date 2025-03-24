@@ -82,6 +82,7 @@ const Analytics = () => {
       backButton={true}
       onBackClick={() => navigate('/registered-business')}
       withHeader={true}
+      fullHeight={false} // Set to false to enable scrolling
     >
       <div className="container mx-auto p-4 max-w-7xl">
         <AnalyticsHeader 
