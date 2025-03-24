@@ -118,7 +118,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
       
       {/* Popup card overlay for selected place */}
       {selectedPlace && showPopover && (
-        <div className="fixed top-1/3 left-1/2 transform -translate-x-1/2 z-50 place-popup">
+        <div className="fixed top-28 left-1/2 transform -translate-x-1/2 z-50 place-popup">
           <PlaceCardPopup location={selectedPlace} detailCardRef={detailCardRef} />
         </div>
       )}

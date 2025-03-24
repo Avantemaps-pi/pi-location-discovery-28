@@ -72,7 +72,7 @@ const Index = () => {
           </div>
         </div>
         
-        <div className={`absolute bottom-6 right-6 z-20 ${selectedPlace ? 'md:right-[calc(50%+170px)]' : ''} transition-all duration-300`}>
+        <div className={`absolute bottom-6 ${selectedPlace ? 'right-16 md:right-[calc(50%+200px)]' : 'right-6'} z-20 transition-all duration-300`}>
           <Link to="/registration">
             <Button 
               className="h-14 w-14 rounded-full bg-avante-blue hover:bg-avante-blue/90 shadow-lg"

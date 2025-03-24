@@ -1,7 +1,7 @@
 
 import React, { forwardRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CircleCheck } from 'lucide-react';
+import { CircleCheck, Info } from 'lucide-react';
 import CategoryBadge from '@/components/business/CategoryBadge';
 import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
@@ -11,6 +11,8 @@ import WebsiteButton from './buttons/WebsiteButton';
 import PlaceImage from './place/PlaceImage';
 import PlaceRating from './place/PlaceRating';
 import PlaceAddress from './place/PlaceAddress';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import DetailsCard from '@/components/business/DetailsCard';
 
 interface PlaceCardPopupProps {
   location: Place;
@@ -96,6 +98,17 @@ const PlaceCardPopup = forwardRef<HTMLDivElement, PlaceCardPopupProps>(({
           </div>
           <div className="flex flex-col gap-2 items-end">
             <WebsiteButton />
+            <Popover>
+              <PopoverTrigger asChild>
+                <div className="text-blue-500 font-medium text-sm cursor-pointer flex items-center">
+                  <Info className="h-3 w-3 mr-1" />
+                  Details
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="p-0 w-[420px]" align="end">
+                <DetailsCard place={location} />
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </CardContent>
