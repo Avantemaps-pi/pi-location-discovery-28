@@ -43,7 +43,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
             <XAxis dataKey="name" tick={{ fontSize: 12 }} />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip />
-            <Legend />
+            <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: 15 }} />
             <Line 
               type="monotone" 
               dataKey="views" 
@@ -79,7 +79,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
             <XAxis dataKey="name" tick={{ fontSize: 12 }} />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip />
-            <Legend />
+            <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: 15 }} />
             <Bar dataKey="views" fill="#3b82f6" radius={[4, 4, 0, 0]} />
             <Bar dataKey="clicks" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
             <Bar dataKey="bookmarks" fill="#10b981" radius={[4, 4, 0, 0]} />
@@ -126,7 +126,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
       </Card>
 
       <Dialog open={isFullScreen} onOpenChange={setIsFullScreen}>
-        <DialogContent className="max-w-[95vw] h-[90vh] w-[95vw] md:max-w-[90vw] md:h-[85vh] flex flex-col p-6">
+        <DialogContent className="max-w-[95vw] h-[90vh] w-[95vw] md:max-w-[90vw] md:h-[85vh] flex flex-col p-6" hideCloseButton>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">{title}</h2>
             <Button 
@@ -139,9 +139,19 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
             </Button>
           </div>
           {description && <p className="text-sm text-gray-500 mb-4">{description}</p>}
-          <div className="flex-1 w-full">
-            {renderChart(activeTab, isMobile ? 300 : 600)}
-          </div>
+          
+          <Tabs defaultValue={activeTab} value={activeTab} onValueChange={handleTabChange} className="w-full">
+            <div className="flex items-center mb-4">
+              <TabsList>
+                <TabsTrigger value="line">Line</TabsTrigger>
+                <TabsTrigger value="bar">Bar</TabsTrigger>
+              </TabsList>
+            </div>
+            
+            <div className="flex-1 w-full">
+              {renderChart(activeTab, isMobile ? 300 : 600)}
+            </div>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </>
