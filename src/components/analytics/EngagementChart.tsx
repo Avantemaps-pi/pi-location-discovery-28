@@ -46,7 +46,7 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
     
     // Calculate scale factors for normal view (not fullscreen)
     const chartWidth = '100%';
-    const chartHeight = 450; // Increased height for better visibility
+    const chartHeight = 360; // Adjusted height to fit container better
     
     return { containerStyle, chartWidth, chartHeight };
   }, []);

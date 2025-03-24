@@ -130,8 +130,8 @@ const Analytics = () => {
           />
         </div>
         
-        {/* Increased height for the chart container */}
-        <div className="w-full mb-8 pl-0 h-[500px]">
+        {/* Adjust chart container height back to normal */}
+        <div className="w-full mb-8 pl-0 h-[400px]">
           <EngagementChart 
             data={engagementData}
             title="Engagement Overview"
