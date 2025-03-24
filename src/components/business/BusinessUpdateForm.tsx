@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Form } from '@/components/ui/form';
-import { Tabs } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Business } from '@/types/business';
@@ -48,14 +47,16 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
       <FormProvider {...form}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
-            <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-              <TabNavigation isMobile={isMobile} />
-              <TabContent 
-                selectedImage={selectedImage}
-                handleImageUpload={handleImageUpload}
-                setSelectedTab={setSelectedTab}
-              />
-            </Tabs>
+            <TabNavigation 
+              isMobile={isMobile} 
+              value={selectedTab} 
+              onValueChange={setSelectedTab} 
+            />
+            <TabContent 
+              selectedImage={selectedImage}
+              handleImageUpload={handleImageUpload}
+              setSelectedTab={setSelectedTab}
+            />
           </form>
         </Form>
       </FormProvider>
