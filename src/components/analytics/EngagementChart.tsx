@@ -46,36 +46,40 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
     
     // Adjust chart dimensions to fit properly within container
     const chartWidth = '100%';
-    const chartHeight = 300; // Reduced height to ensure it fits within container
+    const chartHeight = 250; // Further reduced height to ensure it fits within container
     
     return { containerStyle, chartWidth, chartHeight };
   }, []);
   
   // Memoize chart components to prevent unnecessary re-renders
   const lineChartComponent = useMemo(() => (
-    <LineChartComponent 
-      data={data}
-      chartWidth={chartWidth}
-      chartHeight={chartHeight}
-      containerStyle={containerStyle}
-      xScale={xScale}
-      yScale={yScale}
-      onXScaleChange={setXScale}
-      onYScaleChange={setYScale}
-    />
+    <div className="h-full w-full">
+      <LineChartComponent 
+        data={data}
+        chartWidth={chartWidth}
+        chartHeight={chartHeight}
+        containerStyle={containerStyle}
+        xScale={xScale}
+        yScale={yScale}
+        onXScaleChange={setXScale}
+        onYScaleChange={setYScale}
+      />
+    </div>
   ), [data, chartWidth, chartHeight, containerStyle, xScale, yScale]);
 
   const barChartComponent = useMemo(() => (
-    <BarChartComponent 
-      data={data}
-      chartWidth={chartWidth}
-      chartHeight={chartHeight}
-      containerStyle={containerStyle}
-      xScale={xScale}
-      yScale={yScale}
-      onXScaleChange={setXScale}
-      onYScaleChange={setYScale}
-    />
+    <div className="h-full w-full">
+      <BarChartComponent 
+        data={data}
+        chartWidth={chartWidth}
+        chartHeight={chartHeight}
+        containerStyle={containerStyle}
+        xScale={xScale}
+        yScale={yScale}
+        onXScaleChange={setXScale}
+        onYScaleChange={setYScale}
+      />
+    </div>
   ), [data, chartWidth, chartHeight, containerStyle, xScale, yScale]);
   
   return (
@@ -85,8 +89,8 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
           <CardTitle>{title}</CardTitle>
           {description && <CardDescription>{description}</CardDescription>}
         </CardHeader>
-        <CardContent className="pl-0 pt-2 h-[320px]">
-          <Tabs defaultValue="line" onValueChange={handleTabChange} className="h-full">
+        <CardContent className="pl-0 pt-2 h-[300px]">
+          <Tabs defaultValue="line" onValueChange={handleTabChange} className="h-full flex flex-col">
             <div className="flex items-center justify-between mb-2">
               <TabsList>
                 <TabsTrigger value="line">Line</TabsTrigger>
@@ -103,11 +107,11 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
               </Button>
             </div>
             
-            <TabsContent value="line" className="h-full">
+            <TabsContent value="line" className="flex-1 h-full">
               {lineChartComponent}
             </TabsContent>
             
-            <TabsContent value="bar" className="h-full">
+            <TabsContent value="bar" className="flex-1 h-full">
               {barChartComponent}
             </TabsContent>
           </Tabs>
