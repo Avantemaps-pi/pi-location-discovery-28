@@ -55,7 +55,7 @@ const Review = () => {
   };
 
   return (
-    <AppLayout title={`Review ${business.name}`} withHeader={false}>
+    <AppLayout title={`Review ${business.name}`} withHeader={false} fullHeight={false}>
       <div className={`${isMobile ? 'max-w-full' : 'max-w-4xl'} mx-auto pb-8 px-4 pt-4`}>
         <Button 
           variant="ghost" 
