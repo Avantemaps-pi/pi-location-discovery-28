@@ -10,6 +10,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import DetailsCard from '@/components/business/DetailsCard';
 import { useState } from 'react';
 import ExpandableDescription from '@/components/business/ExpandableDescription';
+import CommentSection from '@/components/comments/CommentSection';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface PlaceCardPopupProps {
   location: Place;
@@ -69,75 +71,89 @@ const PlaceCardPopup = forwardRef<HTMLDivElement, PlaceCardPopupProps>(({
         </div>
       </CardHeader>
       
-      <div 
-        className="h-40 overflow-hidden px-3 cursor-pointer"
-        onClick={handlePlaceClick}
-      >
-        <div className="bg-gray-100 h-full flex items-center justify-center rounded-md">
-          <img 
-            src={location.image} 
-            alt={location.name} 
-            className="w-full h-full object-cover rounded-md hover:opacity-90 transition-opacity"
-            onError={(e) => {
-              e.currentTarget.src = 'public/placeholder.svg';
-              e.currentTarget.alt = 'Business Image';
-            }}
-          />
-        </div>
-      </div>
-      
-      <CardContent className="pt-3 px-3">
-        <div 
-          className="flex items-center gap-1 text-sm text-gray-600 mb-2 cursor-pointer hover:text-blue-500 transition-colors"
-          onClick={handlePlaceClick}
-        >
-          <MapPin className="h-4 w-4" />
-          <span className="text-xs">{location.address}</span>
-        </div>
+      <Tabs defaultValue="info">
+        <TabsList className="mx-3 w-[calc(100%-24px)]">
+          <TabsTrigger value="info" className="flex-1">Info</TabsTrigger>
+          <TabsTrigger value="comments" className="flex-1">Comments</TabsTrigger>
+        </TabsList>
         
-        {/* Replaced the paragraph with our new ExpandableDescription component */}
-        <div className="h-16 mb-2">
-          <ExpandableDescription text={location.description} maxLines={4} />
-        </div>
-        
-        <div className="flex justify-between items-end mt-4">
-          <div className="flex flex-col gap-1">
-            <div 
-              className="inline-flex items-center px-2 py-1 w-16 justify-center rounded bg-[#FEF7CD] cursor-pointer"
-              onClick={handleRatingClick}
-            >
-              <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
-              <span className="text-sm font-medium text-amber-800">{location.rating.toFixed(1)}</span>
+        <TabsContent value="info">
+          <div 
+            className="h-40 overflow-hidden px-3 cursor-pointer"
+            onClick={handlePlaceClick}
+          >
+            <div className="bg-gray-100 h-full flex items-center justify-center rounded-md">
+              <img 
+                src={location.image} 
+                alt={location.name} 
+                className="w-full h-full object-cover rounded-md hover:opacity-90 transition-opacity"
+                onError={(e) => {
+                  e.currentTarget.src = 'public/placeholder.svg';
+                  e.currentTarget.alt = 'Business Image';
+                }}
+              />
             </div>
-            <CategoryBadge category={location.category} />
           </div>
-          <div className="flex flex-col gap-2 items-end">
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="bg-green-500 hover:bg-green-600 text-xs font-medium flex items-center gap-1"
+          
+          <CardContent className="pt-3 px-3">
+            <div 
+              className="flex items-center gap-1 text-sm text-gray-600 mb-2 cursor-pointer hover:text-blue-500 transition-colors"
+              onClick={handlePlaceClick}
             >
-              Website
-              <ExternalLink className="h-3 w-3" />
-            </Button>
-            <Popover>
-              <PopoverTrigger asChild>
-                <div className="text-blue-500 font-medium text-sm cursor-pointer flex items-center">
-                  <Info className="h-3 w-3 mr-1" />
-                  Details
+              <MapPin className="h-4 w-4" />
+              <span className="text-xs">{location.address}</span>
+            </div>
+            
+            <div className="h-16 mb-2">
+              <ExpandableDescription text={location.description} maxLines={4} />
+            </div>
+            
+            <div className="flex justify-between items-end mt-4">
+              <div className="flex flex-col gap-1">
+                <div 
+                  className="inline-flex items-center px-2 py-1 w-16 justify-center rounded bg-[#FEF7CD] cursor-pointer"
+                  onClick={handleRatingClick}
+                >
+                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
+                  <span className="text-sm font-medium text-amber-800">{location.rating.toFixed(1)}</span>
                 </div>
-              </PopoverTrigger>
-              <PopoverContent 
-                className="p-0 w-[420px]" 
-                align="end"
-                ref={detailCardRef}
-              >
-                <DetailsCard place={location} />
-              </PopoverContent>
-            </Popover>
+                <CategoryBadge category={location.category} />
+              </div>
+              <div className="flex flex-col gap-2 items-end">
+                <Button 
+                  variant="default" 
+                  size="sm" 
+                  className="bg-green-500 hover:bg-green-600 text-xs font-medium flex items-center gap-1"
+                >
+                  Website
+                  <ExternalLink className="h-3 w-3" />
+                </Button>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <div className="text-blue-500 font-medium text-sm cursor-pointer flex items-center">
+                      <Info className="h-3 w-3 mr-1" />
+                      Details
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent 
+                    className="p-0 w-[420px]" 
+                    align="end"
+                    ref={detailCardRef}
+                  >
+                    <DetailsCard place={location} />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+          </CardContent>
+        </TabsContent>
+        
+        <TabsContent value="comments">
+          <div className="px-3 pb-3">
+            <CommentSection businessId={location.id} />
           </div>
-        </div>
-      </CardContent>
+        </TabsContent>
+      </Tabs>
     </Card>
   );
 });

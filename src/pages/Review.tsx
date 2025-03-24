@@ -9,6 +9,8 @@ import { StarIcon, ChevronLeft } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
+import CommentSection from '@/components/comments/CommentSection';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Review = () => {
   const { businessId } = useParams();
@@ -61,100 +63,123 @@ const Review = () => {
           <ChevronLeft className="h-4 w-4 mr-2" /> Back
         </Button>
         
-        <Card>
-          <CardHeader className="pb-4">
-            <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-md overflow-hidden">
-                <img 
-                  src={business.image} 
-                  alt={business.name} 
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = 'public/placeholder.svg';
-                  }}
-                />
-              </div>
-              <div>
-                <CardTitle className="text-xl">{business.name}</CardTitle>
-                <CardDescription className="flex items-center mt-1">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <StarIcon
-                        key={i}
-                        className={`h-4 w-4 ${
-                          i < Math.floor(business.rating || business.currentRating)
-                            ? 'text-yellow-400 fill-yellow-400'
-                            : 'text-gray-300'
-                        }`}
-                      />
-                    ))}
-                    <span className="text-sm ml-1">{(business.rating || business.currentRating).toFixed(1)}</span>
-                    <span className="text-sm text-muted-foreground ml-1">
-                      ({business.totalReviews} reviews)
-                    </span>
-                  </div>
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
+        <Tabs defaultValue="review">
+          <TabsList className="w-full mb-4">
+            <TabsTrigger value="review" className="flex-1">Write Review</TabsTrigger>
+            <TabsTrigger value="comments" className="flex-1">View Comments</TabsTrigger>
+          </TabsList>
           
-          <Separator />
-          
-          <CardContent className="pt-6">
-            <div className="mb-6">
-              <h3 className="text-lg font-medium mb-3">Your Rating</h3>
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setRating(star)}
-                    onMouseEnter={() => setHoverRating(star)}
-                    onMouseLeave={() => setHoverRating(0)}
-                    className="p-1 rounded-full hover:bg-gray-100 transition-colors"
-                  >
-                    <StarIcon
-                      className={`h-8 w-8 ${
-                        star <= (hoverRating || rating)
-                          ? 'text-yellow-400 fill-yellow-400'
-                          : 'text-gray-300'
-                      }`}
+          <TabsContent value="review">
+            <Card>
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-4">
+                  <div className="h-16 w-16 rounded-md overflow-hidden">
+                    <img 
+                      src={business.image} 
+                      alt={business.name} 
+                      className="h-full w-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = 'public/placeholder.svg';
+                      }}
                     />
-                  </button>
-                ))}
-              </div>
-              <p className="text-sm text-muted-foreground mt-2">
-                {rating > 0 ? (
-                  <span className="font-medium">
-                    {rating === 5 ? "Excellent! " : rating === 4 ? "Great! " : rating === 3 ? "Good. " : rating === 2 ? "Fair. " : "Poor. "}
-                    {rating === 1 
-                      ? "We're sorry to hear about your experience." 
-                      : rating <= 3 
-                      ? "Thank you for your feedback."
-                      : "We're glad you enjoyed your experience!"}
-                  </span>
-                ) : (
-                  "Tap a star to rate"
-                )}
-              </p>
-            </div>
-            
-            <div className="mb-2">
-              <h3 className="text-lg font-medium mb-3">Your Review (optional)</h3>
-              <Textarea
-                placeholder="Share your experience with this business..."
-                className="min-h-32"
-                value={review}
-                onChange={(e) => setReview(e.target.value)}
-              />
-            </div>
-          </CardContent>
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl">{business.name}</CardTitle>
+                    <CardDescription className="flex items-center mt-1">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <StarIcon
+                            key={i}
+                            className={`h-4 w-4 ${
+                              i < Math.floor(business.rating || business.currentRating)
+                                ? 'text-yellow-400 fill-yellow-400'
+                                : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                        <span className="text-sm ml-1">{(business.rating || business.currentRating).toFixed(1)}</span>
+                        <span className="text-sm text-muted-foreground ml-1">
+                          ({business.totalReviews} reviews)
+                        </span>
+                      </div>
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              
+              <Separator />
+              
+              <CardContent className="pt-6">
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium mb-3">Your Rating</h3>
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                      >
+                        <StarIcon
+                          className={`h-8 w-8 ${
+                            star <= (hoverRating || rating)
+                              ? 'text-yellow-400 fill-yellow-400'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {rating > 0 ? (
+                      <span className="font-medium">
+                        {rating === 5 ? "Excellent! " : rating === 4 ? "Great! " : rating === 3 ? "Good. " : rating === 2 ? "Fair. " : "Poor. "}
+                        {rating === 1 
+                          ? "We're sorry to hear about your experience." 
+                          : rating <= 3 
+                          ? "Thank you for your feedback."
+                          : "We're glad you enjoyed your experience!"}
+                      </span>
+                    ) : (
+                      "Tap a star to rate"
+                    )}
+                  </p>
+                </div>
+                
+                <div className="mb-2">
+                  <h3 className="text-lg font-medium mb-3">Your Review (optional)</h3>
+                  <Textarea
+                    placeholder="Share your experience with this business..."
+                    className="min-h-32"
+                    value={review}
+                    onChange={(e) => setReview(e.target.value)}
+                  />
+                </div>
+              </CardContent>
+              
+              <CardFooter className="flex justify-end space-x-2 pt-0">
+                <Button variant="outline" onClick={() => navigate(-1)}>Cancel</Button>
+                <Button onClick={handleSubmitReview}>Submit Review</Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
           
-          <CardFooter className="flex justify-end space-x-2 pt-0">
-            <Button variant="outline" onClick={() => navigate(-1)}>Cancel</Button>
-            <Button onClick={handleSubmitReview}>Submit Review</Button>
-          </CardFooter>
-        </Card>
+          <TabsContent value="comments">
+            <Card>
+              <CardHeader>
+                <CardTitle>{business.name} - Comments & Reviews</CardTitle>
+                <CardDescription>
+                  Join the conversation about this business
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CommentSection businessId={business.id} />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </AppLayout>
   );
