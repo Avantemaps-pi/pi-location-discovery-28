@@ -32,15 +32,13 @@ interface FullScreenChartProps {
   setTimelineFilter: (value: string) => void;
 }
 
-// Define timelineOptions outside the component to prevent recreation on each render
+// Updated timeline options to match the new requirements
 const timelineOptions = [
-  { value: "1h", label: "1h" },
-  { value: "24h", label: "24h" },
-  { value: "7d", label: "7d" },
-  { value: "30d", label: "30d" },
-  { value: "90d", label: "90d" },
-  { value: "1y", label: "1y" },
-  { value: "all", label: "All" }
+  { value: "day", label: "Day" },
+  { value: "week", label: "Week" },
+  { value: "month", label: "Month" },
+  { value: "quarter", label: "Quarter" },
+  { value: "year", label: "Year" }
 ];
 
 const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({

@@ -69,13 +69,13 @@ const LineChartComponent: React.FC<LineChartComponentProps> = React.memo(({
   
   return (
     <div 
-      className="w-full overflow-auto" 
+      className="w-full h-full overflow-auto" 
       onWheel={handleWheel}
     >
-      <ResponsiveContainer width={chartWidth} height={chartHeight} style={containerStyle}>
+      <ResponsiveContainer width={chartWidth} height={chartHeight || 400} style={containerStyle}>
         <LineChart 
           data={data} 
-          margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+          margin={{ top: 15, right: 30, left: 0, bottom: 15 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
@@ -83,10 +83,12 @@ const LineChartComponent: React.FC<LineChartComponentProps> = React.memo(({
             tick={{ fontSize: 12 }} 
             scale={xScaleFactor > 1 ? 'band' : 'auto'}
             interval={xScaleFactor < 1 ? Math.round(1 / xScaleFactor) - 1 : 0}
+            padding={{ left: 10, right: 10 }}
           />
           <YAxis 
             tick={{ fontSize: 12 }} 
             domain={[0, maxValue * (1 / yScaleFactor)]}
+            padding={{ top: 20, bottom: 20 }}
           />
           <Tooltip />
           <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: 15 }} />

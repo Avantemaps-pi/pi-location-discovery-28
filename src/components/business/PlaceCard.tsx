@@ -16,6 +16,7 @@ interface PlaceCardProps {
   onRemove?: (placeId: string) => void;
   className?: string;
   showDetails?: boolean;
+  isBookmarked?: boolean;
 }
 
 const PlaceCard: React.FC<PlaceCardProps> = ({ 
@@ -23,9 +24,10 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
   onPlaceClick, 
   onRemove, 
   className,
-  showDetails = false // Default to not showing details
+  showDetails = false, // Default to not showing details
+  isBookmarked: initialIsBookmarked = false // Default to not bookmarked
 }) => {
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
   const navigate = useNavigate();
   
   const handleRatingClick = () => {

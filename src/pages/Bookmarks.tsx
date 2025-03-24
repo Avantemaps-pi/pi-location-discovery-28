@@ -84,7 +84,8 @@ const Bookmarks = () => {
                 place={place} 
                 onPlaceClick={handlePlaceClick}
                 onRemove={removeBookmark}
-                showDetails={false}  
+                showDetails={false}
+                isBookmarked={true} // Set all bookmarked places to have blue bookmark icon
               />
             ))}
           </div>

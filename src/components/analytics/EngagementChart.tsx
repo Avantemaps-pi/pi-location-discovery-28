@@ -26,7 +26,7 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
   const [activeTab, setActiveTab] = useState<'line' | 'bar'>('line');
   const [xScale, setXScale] = useState(100);
   const [yScale, setYScale] = useState(100);
-  const [timelineFilter, setTimelineFilter] = useState('7d'); // Default to 7d
+  const [timelineFilter, setTimelineFilter] = useState('week'); // Default to week
   
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
@@ -46,8 +46,8 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
     
     // Calculate scale factors for normal view (not fullscreen)
     const chartWidth = '100%';
-    const chartHeight = 300;
-
+    const chartHeight = 350; // Increased height for better visibility
+    
     return { containerStyle, chartWidth, chartHeight };
   }, []);
   
@@ -80,12 +80,12 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
   
   return (
     <>
-      <Card className="w-full">
+      <Card className="w-full h-full">
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           {description && <CardDescription>{description}</CardDescription>}
         </CardHeader>
-        <CardContent className="pl-0">
+        <CardContent className="pl-0 pt-2">
           <Tabs defaultValue="line" onValueChange={handleTabChange}>
             <div className="flex items-center justify-between mb-4">
               <TabsList>
@@ -103,11 +103,11 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
               </Button>
             </div>
             
-            <TabsContent value="line" className="space-y-4 w-full">
+            <TabsContent value="line" className="space-y-4 w-full h-full">
               {lineChartComponent}
             </TabsContent>
             
-            <TabsContent value="bar" className="space-y-4 w-full">
+            <TabsContent value="bar" className="space-y-4 w-full h-full">
               {barChartComponent}
             </TabsContent>
           </Tabs>
