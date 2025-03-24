@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { PricingSection } from '@/components/ui/pricing-section';
@@ -37,7 +36,7 @@ const TIERS = [
       "LIVE chat support",
       "3 business listings",
       "Certificate eligible",
-      "Media coverage",
+      "Potential Media Coverage",
     ],
     cta: "Upgrade Now",
     popular: true,
@@ -55,9 +54,10 @@ const TIERS = [
       "LIVE chat support",
       "5 business listings",
       "Certificate eligible",
-      "Frequent media coverage",
+      "Media coverage",
       "Personalized media coverage",
       "Access to analytical business data",
+      "No ads",
     ],
     cta: "Upgrade Now",
     highlighted: true,
