@@ -30,16 +30,12 @@ const CategoryBadge: React.FC<CategoryBadgeProps> = ({ category }) => {
     return sum % badgeColors.length;
   };
 
-  // Or get a random color if we want it to change on each render
-  const getRandomColorIndex = () => {
-    return Math.floor(Math.random() * badgeColors.length);
-  };
-
-  const colorIndex = getRandomColorIndex();
+  // Get a consistent color for the category
+  const colorIndex = getColorIndex(category);
   const badgeColor = badgeColors[colorIndex];
 
   return (
-    <Badge className={`text-xs px-3 py-0.5 h-6 rounded-md border-0 ${badgeColor}`}>
+    <Badge className={`text-xs px-3 py-0.5 h-6 rounded-md border-0 inline-flex w-auto ${badgeColor}`}>
       {category}
     </Badge>
   );
