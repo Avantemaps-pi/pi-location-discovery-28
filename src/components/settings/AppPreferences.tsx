@@ -99,15 +99,15 @@ const AppPreferences = ({
                       <li className="flex items-start">
                         <Badge variant="outline" className="bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800 mt-0.5 mr-2">1</Badge>
                         <div>
-                          <p className="font-medium">Register your business</p>
-                          <p className="text-muted-foreground">Complete all required business information</p>
+                          <p className="font-medium">Submit all required business information</p>
+                          <p className="text-muted-foreground">Complete all required business details</p>
                         </div>
                       </li>
                       <li className="flex items-start">
                         <Badge variant="outline" className="bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800 mt-0.5 mr-2">2</Badge>
                         <div>
-                          <p className="font-medium">Request Verification via Email</p>
-                          <p className="text-muted-foreground">After registering your business, request a verification via email, but only if you meet the requirements</p>
+                          <p className="font-medium">Request Verification</p>
+                          <p className="text-muted-foreground">Navigate to the "My Business" page, and click the "Request" button to begin the verification process, but only if you meet the requirements</p>
                         </div>
                       </li>
                       <li className="flex items-start">
