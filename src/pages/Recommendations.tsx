@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { recommendedForYou, suggestedForYou, avanteTopChoice, allPlaces } from '@/data/mockPlaces';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import PlaceCard from '@/components/business/PlaceCard';
 
 const Recommendations = () => {
