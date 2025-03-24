@@ -44,9 +44,9 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
       overflowY: "hidden" as const
     };
     
-    // Calculate scale factors for normal view (not fullscreen)
+    // Adjust chart dimensions to fit properly within container
     const chartWidth = '100%';
-    const chartHeight = 360; // Adjusted height to fit container better
+    const chartHeight = 300; // Reduced height to ensure it fits within container
     
     return { containerStyle, chartWidth, chartHeight };
   }, []);
@@ -81,13 +81,13 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
   return (
     <>
       <Card className="w-full h-full">
-        <CardHeader>
+        <CardHeader className="pb-0">
           <CardTitle>{title}</CardTitle>
           {description && <CardDescription>{description}</CardDescription>}
         </CardHeader>
-        <CardContent className="pl-0 pt-2">
-          <Tabs defaultValue="line" onValueChange={handleTabChange}>
-            <div className="flex items-center justify-between mb-4">
+        <CardContent className="pl-0 pt-2 h-[320px]">
+          <Tabs defaultValue="line" onValueChange={handleTabChange} className="h-full">
+            <div className="flex items-center justify-between mb-2">
               <TabsList>
                 <TabsTrigger value="line">Line</TabsTrigger>
                 <TabsTrigger value="bar">Bar</TabsTrigger>
@@ -103,11 +103,11 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
               </Button>
             </div>
             
-            <TabsContent value="line" className="space-y-4 w-full h-full">
+            <TabsContent value="line" className="h-full">
               {lineChartComponent}
             </TabsContent>
             
-            <TabsContent value="bar" className="space-y-4 w-full h-full">
+            <TabsContent value="bar" className="h-full">
               {barChartComponent}
             </TabsContent>
           </Tabs>
