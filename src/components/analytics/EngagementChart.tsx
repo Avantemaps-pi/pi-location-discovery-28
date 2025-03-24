@@ -126,7 +126,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
       </Card>
 
       <Dialog open={isFullScreen} onOpenChange={setIsFullScreen}>
-        <DialogContent className="max-w-screen-lg w-[90vw]">
+        <DialogContent className="max-w-[95vw] h-[90vh] w-[95vw] md:max-w-[90vw] md:h-[85vh] flex flex-col p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">{title}</h2>
             <Button 
@@ -138,8 +138,10 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
               <Minimize className="h-4 w-4" />
             </Button>
           </div>
-          {description && <p className="text-sm text-gray-500 mb-6">{description}</p>}
-          {renderChart(activeTab, 500)}
+          {description && <p className="text-sm text-gray-500 mb-4">{description}</p>}
+          <div className="flex-1 w-full">
+            {renderChart(activeTab, isMobile ? 300 : 600)}
+          </div>
         </DialogContent>
       </Dialog>
     </>
