@@ -127,6 +127,8 @@ const FullScreenChart: React.FC<FullScreenChartProps> = ({
                 containerStyle={containerStyle} 
                 xScale={xScale}
                 yScale={yScale}
+                onXScaleChange={setXScale}
+                onYScaleChange={setYScale}
               />
             ) : (
               <BarChartComponent 
@@ -136,6 +138,8 @@ const FullScreenChart: React.FC<FullScreenChartProps> = ({
                 containerStyle={containerStyle} 
                 xScale={xScale}
                 yScale={yScale}
+                onXScaleChange={setXScale}
+                onYScaleChange={setYScale}
               />
             )}
           </div>
@@ -146,3 +150,4 @@ const FullScreenChart: React.FC<FullScreenChartProps> = ({
 };
 
 export default FullScreenChart;
+

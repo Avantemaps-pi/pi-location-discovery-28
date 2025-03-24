@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React, { useState } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, ZAxis } from 'recharts';
 
 interface ChartData {
   name: string;
@@ -19,6 +19,8 @@ interface LineChartComponentProps {
   };
   xScale?: number;
   yScale?: number;
+  onXScaleChange?: (scale: number) => void;
+  onYScaleChange?: (scale: number) => void;
 }
 
 const LineChartComponent: React.FC<LineChartComponentProps> = ({ 
@@ -27,19 +29,44 @@ const LineChartComponent: React.FC<LineChartComponentProps> = ({
   chartHeight, 
   containerStyle,
   xScale = 100,
-  yScale = 100
+  yScale = 100,
+  onXScaleChange,
+  onYScaleChange
 }) => {
+  const [localXScale, setLocalXScale] = useState(xScale);
+  const [localYScale, setLocalYScale] = useState(yScale);
+
   // Calculate scale factors
-  const xScaleFactor = xScale / 100;
-  const yScaleFactor = yScale / 100;
+  const xScaleFactor = localXScale / 100;
+  const yScaleFactor = localYScale / 100;
   
   // Find the maximum values for the Y axis
   const maxValue = Math.max(
     ...data.map(item => Math.max(item.views, item.clicks, item.bookmarks))
   );
   
+  const handleWheel = (e: React.WheelEvent) => {
+    // Ctrl key for zooming
+    if (e.ctrlKey) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -10 : 10;
+      
+      const newXScale = Math.max(50, Math.min(300, localXScale + delta));
+      const newYScale = Math.max(50, Math.min(300, localYScale + delta));
+      
+      setLocalXScale(newXScale);
+      setLocalYScale(newYScale);
+      
+      onXScaleChange?.(newXScale);
+      onYScaleChange?.(newYScale);
+    }
+  };
+  
   return (
-    <div className="w-full overflow-auto">
+    <div 
+      className="w-full overflow-auto" 
+      onWheel={handleWheel}
+    >
       <ResponsiveContainer width={chartWidth} height={chartHeight} style={containerStyle}>
         <LineChart 
           data={data} 
@@ -89,3 +116,4 @@ const LineChartComponent: React.FC<LineChartComponentProps> = ({
 };
 
 export default LineChartComponent;
+

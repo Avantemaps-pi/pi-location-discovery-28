@@ -77,6 +77,10 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
                 chartWidth={chartWidth}
                 chartHeight={chartHeight}
                 containerStyle={containerStyle}
+                xScale={xScale}
+                yScale={yScale}
+                onXScaleChange={setXScale}
+                onYScaleChange={setYScale}
               />
             </TabsContent>
             
@@ -86,6 +90,10 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
                 chartWidth={chartWidth}
                 chartHeight={chartHeight}
                 containerStyle={containerStyle}
+                xScale={xScale}
+                yScale={yScale}
+                onXScaleChange={setXScale}
+                onYScaleChange={setYScale}
               />
             </TabsContent>
           </Tabs>
@@ -112,3 +120,4 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
 };
 
 export default EngagementChart;
+
