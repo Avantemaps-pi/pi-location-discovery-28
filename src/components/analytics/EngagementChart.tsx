@@ -4,9 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { BarChart, LineChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Maximize, Minimize } from 'lucide-react';
+import { Maximize, Minimize, ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Slider } from '@/components/ui/slider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ChartData {
   name: string;
@@ -25,6 +27,9 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
   const isMobile = useIsMobile();
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [activeTab, setActiveTab] = useState<'line' | 'bar'>('line');
+  const [xScale, setXScale] = useState(100);
+  const [yScale, setYScale] = useState(100);
+  const [timelineFilter, setTimelineFilter] = useState('week');
   
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);
@@ -34,57 +39,76 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
     setActiveTab(value as 'line' | 'bar');
   };
   
-  const renderChart = (type: 'line' | 'bar', height: number = 300) => {
+  const renderChart = (type: 'line' | 'bar', height: number = 300, scaleX = 100, scaleY = 100) => {
+    // Calculate scale factors (100 = normal, 200 = 2x, etc.)
+    const xScaleFactor = scaleX / 100;
+    const yScaleFactor = scaleY / 100;
+    
+    // Apply scale to chart dimensions
+    const chartWidth = `${100 * xScaleFactor}%`;
+    const chartHeight = height * yScaleFactor;
+    
+    // Common props for ResponsiveContainer
+    const containerProps = {
+      width: chartWidth,
+      height: chartHeight,
+      style: { overflowX: 'auto', overflowY: 'hidden' },
+    };
+    
     if (type === 'line') {
       return (
-        <ResponsiveContainer width="100%" height={height}>
-          <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip />
-            <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: 15 }} />
-            <Line 
-              type="monotone" 
-              dataKey="views" 
-              stroke="#3b82f6" 
-              strokeWidth={2} 
-              dot={{ r: 4 }} 
-              activeDot={{ r: 6 }} 
-            />
-            <Line 
-              type="monotone" 
-              dataKey="clicks" 
-              stroke="#8b5cf6" 
-              strokeWidth={2} 
-              dot={{ r: 4 }} 
-              activeDot={{ r: 6 }} 
-            />
-            <Line 
-              type="monotone" 
-              dataKey="bookmarks" 
-              stroke="#10b981" 
-              strokeWidth={2} 
-              dot={{ r: 4 }} 
-              activeDot={{ r: 6 }} 
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        <div className="w-full overflow-auto">
+          <ResponsiveContainer {...containerProps}>
+            <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} />
+              <Tooltip />
+              <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: 15 }} />
+              <Line 
+                type="monotone" 
+                dataKey="views" 
+                stroke="#3b82f6" 
+                strokeWidth={2} 
+                dot={{ r: 4 }} 
+                activeDot={{ r: 6 }} 
+              />
+              <Line 
+                type="monotone" 
+                dataKey="clicks" 
+                stroke="#8b5cf6" 
+                strokeWidth={2} 
+                dot={{ r: 4 }} 
+                activeDot={{ r: 6 }} 
+              />
+              <Line 
+                type="monotone" 
+                dataKey="bookmarks" 
+                stroke="#10b981" 
+                strokeWidth={2} 
+                dot={{ r: 4 }} 
+                activeDot={{ r: 6 }} 
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       );
     } else {
       return (
-        <ResponsiveContainer width="100%" height={height}>
-          <BarChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip />
-            <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: 15 }} />
-            <Bar dataKey="views" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="clicks" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="bookmarks" fill="#10b981" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="w-full overflow-auto">
+          <ResponsiveContainer {...containerProps}>
+            <BarChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} />
+              <Tooltip />
+              <Legend layout="horizontal" verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: 15 }} />
+              <Bar dataKey="views" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="clicks" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="bookmarks" fill="#10b981" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       );
     }
   };
@@ -140,6 +164,64 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
           </div>
           {description && <p className="text-sm text-gray-500 mb-4">{description}</p>}
           
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">X-Axis Scale</span>
+                <span className="text-sm text-muted-foreground">{xScale}%</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <ZoomOut className="h-4 w-4 text-muted-foreground" />
+                <Slider
+                  value={[xScale]}
+                  min={50}
+                  max={300}
+                  step={10}
+                  onValueChange={(value) => setXScale(value[0])}
+                  className="flex-1"
+                />
+                <ZoomIn className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Y-Axis Scale</span>
+                <span className="text-sm text-muted-foreground">{yScale}%</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <ZoomOut className="h-4 w-4 text-muted-foreground" />
+                <Slider
+                  value={[yScale]}
+                  min={50}
+                  max={300}
+                  step={10}
+                  onValueChange={(value) => setYScale(value[0])}
+                  className="flex-1"
+                />
+                <ZoomIn className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Time Period</span>
+              </div>
+              <Select value={timelineFilter} onValueChange={setTimelineFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select period" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="day">Day</SelectItem>
+                  <SelectItem value="week">Week</SelectItem>
+                  <SelectItem value="month">Month</SelectItem>
+                  <SelectItem value="quarter">Quarter</SelectItem>
+                  <SelectItem value="year">Year</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          
           <Tabs defaultValue={activeTab} value={activeTab} onValueChange={handleTabChange} className="w-full">
             <div className="flex items-center mb-4">
               <TabsList>
@@ -149,7 +231,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
             </div>
             
             <div className="flex-1 w-full">
-              {renderChart(activeTab, isMobile ? 300 : 600)}
+              {renderChart(activeTab, isMobile ? 300 : 600, xScale, yScale)}
             </div>
           </Tabs>
         </DialogContent>

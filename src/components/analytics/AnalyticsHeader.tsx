@@ -33,14 +33,14 @@ const AnalyticsHeader: React.FC<AnalyticsHeaderProps> = ({
         <Select value={dateRange} onValueChange={onDateRangeChange}>
           <SelectTrigger className="w-[140px]">
             <CalendarIcon className="mr-2 h-4 w-4" />
-            <SelectValue placeholder="Select period" />
+            <SelectValue placeholder="Day, Week, Month, Quarter, Year" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="day">Today</SelectItem>
-            <SelectItem value="week">This Week</SelectItem>
-            <SelectItem value="month">This Month</SelectItem>
-            <SelectItem value="quarter">This Quarter</SelectItem>
-            <SelectItem value="year">This Year</SelectItem>
+            <SelectItem value="day">Day</SelectItem>
+            <SelectItem value="week">Week</SelectItem>
+            <SelectItem value="month">Month</SelectItem>
+            <SelectItem value="quarter">Quarter</SelectItem>
+            <SelectItem value="year">Year</SelectItem>
           </SelectContent>
         </Select>
         
