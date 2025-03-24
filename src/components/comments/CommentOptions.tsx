@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Flag, MoreVertical } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -23,10 +23,7 @@ const CommentOptions: React.FC<CommentOptionsProps> = ({ isReported, onReport })
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={onReport} disabled={isReported}>
-          <Flag className="h-4 w-4 mr-2 text-red-500" />
-          <span>Report Comment</span>
-        </DropdownMenuItem>
+        {/* Report option removed as requested */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

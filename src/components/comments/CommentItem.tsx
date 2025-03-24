@@ -37,19 +37,6 @@ const CommentItem: React.FC<CommentProps> = ({ comment, onVote, onReport }) => {
     }
   };
 
-  const handleReport = () => {
-    if (!checkAuthForAction('report')) {
-      return;
-    }
-    
-    if (comment.isReported) {
-      toast.info("You have already reported this comment");
-      return;
-    }
-    
-    onReport(comment.id);
-  };
-
   return (
     <Card className="border-gray-200">
       <CardContent className="pt-4">
@@ -61,7 +48,7 @@ const CommentItem: React.FC<CommentProps> = ({ comment, onVote, onReport }) => {
           
           <CommentOptions 
             isReported={comment.isReported} 
-            onReport={handleReport} 
+            onReport={() => {}} 
           />
         </div>
         
@@ -70,7 +57,7 @@ const CommentItem: React.FC<CommentProps> = ({ comment, onVote, onReport }) => {
         <VoteActions 
           comment={comment} 
           onVote={handleVote} 
-          onReport={handleReport} 
+          onReport={onReport} 
         />
       </CardContent>
     </Card>

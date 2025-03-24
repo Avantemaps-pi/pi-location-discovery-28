@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ThumbsUp, ThumbsDown, Flag } from 'lucide-react';
+import { ThumbsUp, ThumbsDown } from 'lucide-react';
 
 interface VoteActionsProps {
   comment: {
@@ -36,17 +36,6 @@ const VoteActions: React.FC<VoteActionsProps> = ({ comment, onVote, onReport }) 
       >
         <ThumbsDown className="h-4 w-4 mr-2" />
         <span>{comment.downvotes}</span>
-      </Button>
-      
-      <Button 
-        variant="outline" 
-        size="sm" 
-        className={`px-3 py-1 ml-auto ${comment.isReported ? 'bg-yellow-50 text-yellow-600 border-yellow-200' : ''}`}
-        onClick={() => onReport(comment.id)}
-        disabled={comment.isReported}
-      >
-        <Flag className="h-4 w-4 mr-2" />
-        <span>{comment.isReported ? 'Reported' : 'Report'}</span>
       </Button>
     </div>
   );

@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, LogIn } from 'lucide-react';
+import { Menu, LogIn, ChevronLeft } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Home, Compass, Bookmark, Mail, Info, Settings, FileText, PiSquare, Clipboard, UserPlus, User, Bell, Building } from 'lucide-react';
@@ -19,8 +20,10 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Check if we're on the Analytics page to hide the burger menu
+  // Check if we're on the Analytics or Review page to hide the burger menu
   const isAnalyticsPage = location.pathname === '/analytics';
+  const isReviewPage = location.pathname.includes('/review');
+  const hideMenu = isAnalyticsPage || isReviewPage;
   
   // Update the unread count when notifications change
   useEffect(() => {
@@ -70,9 +73,13 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
     navigate('/');
   };
 
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   return (
     <header className="h-16 border-b flex items-center px-4 bg-white">
-      {!isAnalyticsPage && (
+      {!hideMenu ? (
         <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="mr-auto">
@@ -155,9 +162,19 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title = "Avante Maps" }) => {
             </div>
           </SheetContent>
         </Sheet>
+      ) : (
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="mr-auto"
+          onClick={handleBackClick}
+        >
+          <ChevronLeft className="h-6 w-6" />
+          <span className="sr-only">Back</span>
+        </Button>
       )}
       
-      <div className={`flex-1 flex justify-center ${isAnalyticsPage ? 'ml-10' : ''}`}>
+      <div className={`flex-1 flex justify-center ${hideMenu ? 'ml-0' : ''}`}>
         <h1 
           className="text-xl font-bold cursor-pointer hover:text-blue-500 transition-colors"
           onClick={handleTitleClick}

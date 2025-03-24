@@ -55,8 +55,8 @@ const Review = () => {
   };
 
   return (
-    <AppLayout title={`Review ${business.name}`}>
-      <div className={`${isMobile ? 'max-w-full' : 'max-w-4xl'} mx-auto pb-8`}>
+    <AppLayout title={`Review ${business.name}`} withHeader={false}>
+      <div className={`${isMobile ? 'max-w-full' : 'max-w-4xl'} mx-auto pb-8 px-4 pt-4`}>
         <Button 
           variant="ghost" 
           className="mb-4" 
@@ -87,7 +87,7 @@ const Review = () => {
                   </div>
                   <div>
                     <CardTitle className="text-xl">{business.name}</CardTitle>
-                    <CardDescription className="flex items-center mt-1">
+                    <CardDescription className="flex flex-col items-start mt-1">
                       <div className="flex items-center">
                         {[...Array(5)].map((_, i) => (
                           <StarIcon
@@ -100,10 +100,10 @@ const Review = () => {
                           />
                         ))}
                         <span className="text-sm ml-1">{(business.rating || business.currentRating).toFixed(1)}</span>
-                        <span className="text-sm text-muted-foreground ml-1">
-                          ({business.totalReviews} reviews)
-                        </span>
                       </div>
+                      <span className="text-sm text-muted-foreground">
+                        ({business.totalReviews} reviews)
+                      </span>
                     </CardDescription>
                   </div>
                 </div>
