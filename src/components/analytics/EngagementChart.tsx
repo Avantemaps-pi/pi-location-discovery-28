@@ -90,10 +90,12 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
           {description && <CardDescription>{description}</CardDescription>}
           
           <div className="flex items-center justify-between mt-2">
-            <TabsList>
-              <TabsTrigger value="line">Line</TabsTrigger>
-              <TabsTrigger value="bar">Bar</TabsTrigger>
-            </TabsList>
+            <Tabs value={activeTab} onValueChange={handleTabChange}>
+              <TabsList>
+                <TabsTrigger value="line">Line</TabsTrigger>
+                <TabsTrigger value="bar">Bar</TabsTrigger>
+              </TabsList>
+            </Tabs>
             <Button 
               variant="outline" 
               size="icon" 
@@ -106,7 +108,7 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
           </div>
         </CardHeader>
         <CardContent className="pl-0 pt-2 h-[400px]">
-          <Tabs defaultValue="line" onValueChange={handleTabChange} className="h-full flex flex-col">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="h-full flex flex-col">
             <TabsContent value="line" className="flex-1 h-full">
               {lineChartComponent}
             </TabsContent>

@@ -156,7 +156,7 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
         
         {zoomInstructions}
         
-        <Tabs defaultValue={activeTab} value={activeTab} onValueChange={handleTabChange} className="w-full flex-1 flex flex-col">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full flex-1 flex flex-col">
           <div className="flex items-center mb-2">
             <TabsList>
               <TabsTrigger value="line">Line</TabsTrigger>
