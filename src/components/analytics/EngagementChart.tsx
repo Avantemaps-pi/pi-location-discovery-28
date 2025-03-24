@@ -48,17 +48,16 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
     const chartWidth = `${100 * xScaleFactor}%`;
     const chartHeight = height * yScaleFactor;
     
-    // Common props for ResponsiveContainer
-    const containerProps = {
-      width: chartWidth,
-      height: chartHeight,
-      style: { overflowX: 'auto', overflowY: 'hidden' },
+    // Fixed style prop with valid CSS properties
+    const containerStyle = {
+      overflowX: "auto" as const,
+      overflowY: "hidden" as const
     };
     
     if (type === 'line') {
       return (
         <div className="w-full overflow-auto">
-          <ResponsiveContainer {...containerProps}>
+          <ResponsiveContainer width={chartWidth} height={chartHeight} style={containerStyle}>
             <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis dataKey="name" tick={{ fontSize: 12 }} />
@@ -96,7 +95,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
     } else {
       return (
         <div className="w-full overflow-auto">
-          <ResponsiveContainer {...containerProps}>
+          <ResponsiveContainer width={chartWidth} height={chartHeight} style={containerStyle}>
             <BarChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis dataKey="name" tick={{ fontSize: 12 }} />
