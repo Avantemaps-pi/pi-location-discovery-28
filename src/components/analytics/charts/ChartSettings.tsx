@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Slider } from '@/components/ui/slider';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ZoomIn, ZoomOut } from 'lucide-react';
 
 interface ChartSettingsProps {
@@ -17,12 +16,10 @@ const ChartSettings: React.FC<ChartSettingsProps> = ({
   xScale,
   setXScale,
   yScale,
-  setYScale,
-  timelineFilter,
-  setTimelineFilter
+  setYScale
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium">X-Axis Scale</span>
@@ -59,24 +56,6 @@ const ChartSettings: React.FC<ChartSettingsProps> = ({
           />
           <ZoomIn className="h-4 w-4 text-muted-foreground" />
         </div>
-      </div>
-      
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium">Time Period</span>
-        </div>
-        <Select value={timelineFilter} onValueChange={setTimelineFilter}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select period" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="day">Day</SelectItem>
-            <SelectItem value="week">Week</SelectItem>
-            <SelectItem value="month">Month</SelectItem>
-            <SelectItem value="quarter">Quarter</SelectItem>
-            <SelectItem value="year">Year</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
     </div>
   );

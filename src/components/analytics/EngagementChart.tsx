@@ -26,7 +26,7 @@ const EngagementChart: React.FC<EngagementChartProps> = ({ data, title, descript
   const [activeTab, setActiveTab] = useState<'line' | 'bar'>('line');
   const [xScale, setXScale] = useState(100);
   const [yScale, setYScale] = useState(100);
-  const [timelineFilter, setTimelineFilter] = useState('week');
+  const [timelineFilter, setTimelineFilter] = useState('7d'); // Default to 7d
   
   const toggleFullScreen = () => {
     setIsFullScreen(!isFullScreen);

@@ -5,7 +5,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Minimize } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import ChartSettings from './ChartSettings';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import LineChartComponent from './LineChartComponent';
 import BarChartComponent from './BarChartComponent';
 
@@ -63,6 +63,17 @@ const FullScreenChart: React.FC<FullScreenChartProps> = ({
     overflowY: "hidden" as const
   };
   
+  // Timeline options mapping
+  const timelineOptions = [
+    { value: "1h", label: "1h" },
+    { value: "24h", label: "24h" },
+    { value: "7d", label: "7d" },
+    { value: "30d", label: "30d" },
+    { value: "90d", label: "90d" },
+    { value: "1y", label: "1y" },
+    { value: "all", label: "All" }
+  ];
+  
   return (
     <Dialog open={isFullScreen} onOpenChange={setIsFullScreen}>
       <DialogContent className="max-w-[95vw] h-[90vh] w-[95vw] md:max-w-[90vw] md:h-[85vh] flex flex-col p-6" hideCloseButton>
@@ -79,14 +90,25 @@ const FullScreenChart: React.FC<FullScreenChartProps> = ({
         </div>
         {description && <p className="text-sm text-gray-500 mb-4">{description}</p>}
         
-        <ChartSettings 
-          xScale={xScale}
-          setXScale={setXScale}
-          yScale={yScale}
-          setYScale={setYScale}
-          timelineFilter={timelineFilter}
-          setTimelineFilter={setTimelineFilter}
-        />
+        <div className="mb-4">
+          <ToggleGroup 
+            type="single" 
+            value={timelineFilter} 
+            onValueChange={(value) => value && setTimelineFilter(value)}
+            className="justify-start bg-muted/20 p-1 rounded-lg"
+          >
+            {timelineOptions.map((option) => (
+              <ToggleGroupItem
+                key={option.value}
+                value={option.value}
+                aria-label={`Filter by ${option.label}`}
+                className="data-[state=on]:bg-background data-[state=on]:text-foreground px-3 py-1 text-sm"
+              >
+                {option.label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
         
         <Tabs defaultValue={activeTab} value={activeTab} onValueChange={handleTabChange} className="w-full">
           <div className="flex items-center mb-4">
@@ -103,6 +125,8 @@ const FullScreenChart: React.FC<FullScreenChartProps> = ({
                 chartWidth={chartWidth} 
                 chartHeight={chartHeight} 
                 containerStyle={containerStyle} 
+                xScale={xScale}
+                yScale={yScale}
               />
             ) : (
               <BarChartComponent 
@@ -110,6 +134,8 @@ const FullScreenChart: React.FC<FullScreenChartProps> = ({
                 chartWidth={chartWidth} 
                 chartHeight={chartHeight} 
                 containerStyle={containerStyle} 
+                xScale={xScale}
+                yScale={yScale}
               />
             )}
           </div>
