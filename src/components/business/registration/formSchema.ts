@@ -11,7 +11,14 @@ export const formSchema = z.object({
   // Contact Details
   phone: z.string().min(10, { message: 'Valid phone number is required' }),
   email: z.string().email({ message: 'Valid email address is required' }),
-  website: z.string().url({ message: 'Valid URL is required' }).optional().or(z.literal('')),
+  website: z.string()
+    .url({ message: 'Valid URL is required' })
+    .refine(
+      (val) => val === '' || val.includes('pi-') || val.includes('pi.') || val.includes('.pi.'), 
+      { message: 'Website must contain a Pi Network subdomain (e.g., pi-, pi., .pi.)' }
+    )
+    .optional()
+    .or(z.literal('')),
   
   // Physical Address
   streetAddress: z.string().min(5, { message: 'Street address is required' }),

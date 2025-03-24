@@ -63,7 +63,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
     <Card>
       <CardHeader>
         <CardTitle className="text-xl">Contact Details</CardTitle>
-        <CardDescription>
+        <CardDescription className="whitespace-nowrap overflow-hidden text-ellipsis">
           How customers can reach your business.
         </CardDescription>
       </CardHeader>
@@ -79,7 +79,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
                   value={countryCode}
                   onValueChange={setCountryCode}
                 >
-                  <SelectTrigger className="w-[80px] flex-shrink-0">
+                  <SelectTrigger className="w-[70px] flex-shrink-0">
                     <SelectValue placeholder="+1" />
                   </SelectTrigger>
                   <SelectContent className="max-h-60 overflow-y-auto">
@@ -127,7 +127,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
             <FormItem>
               <FormLabel>Pi Website URL (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="https://yourbusiness.com" {...field} />
+                <Input placeholder="https://pi-network.example.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
