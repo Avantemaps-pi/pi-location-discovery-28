@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -85,9 +86,9 @@ const AppPreferences = ({
         </div>
 
         <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 rounded-md">
-          <div className="h-60 pr-4 overflow-hidden">
-            <ScrollArea className="h-full w-full">
-              <div className="pr-4">
+          <div className="h-60 overflow-hidden">
+            <ScrollArea className="h-full w-full" orientation="both">
+              <div className="pr-4 min-w-[400px]">
                 <div className="flex items-start">
                   <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
                   <div className="w-full">

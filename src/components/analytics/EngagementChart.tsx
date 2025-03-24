@@ -88,25 +88,25 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
         <CardHeader className="pb-0">
           <CardTitle>{title}</CardTitle>
           {description && <CardDescription>{description}</CardDescription>}
+          
+          <div className="flex items-center justify-between mt-2">
+            <TabsList>
+              <TabsTrigger value="line">Line</TabsTrigger>
+              <TabsTrigger value="bar">Bar</TabsTrigger>
+            </TabsList>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={toggleFullScreen} 
+              title="Full Screen"
+              className="mr-4"
+            >
+              <Maximize className="h-4 w-4" />
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="pl-0 pt-2 h-[400px]">
           <Tabs defaultValue="line" onValueChange={handleTabChange} className="h-full flex flex-col">
-            <div className="flex items-center justify-between mb-2">
-              <TabsList>
-                <TabsTrigger value="line">Line</TabsTrigger>
-                <TabsTrigger value="bar">Bar</TabsTrigger>
-              </TabsList>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                onClick={toggleFullScreen} 
-                title="Full Screen"
-                className="mr-4"
-              >
-                <Maximize className="h-4 w-4" />
-              </Button>
-            </div>
-            
             <TabsContent value="line" className="flex-1 h-full">
               {lineChartComponent}
             </TabsContent>
