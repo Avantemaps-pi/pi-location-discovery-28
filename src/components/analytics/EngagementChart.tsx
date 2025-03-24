@@ -46,7 +46,7 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
     
     // Adjust chart dimensions to fit properly within container
     const chartWidth = '100%';
-    const chartHeight = 250; // Further reduced height to ensure it fits within container
+    const chartHeight = 250; // Keep the chart height the same
     
     return { containerStyle, chartWidth, chartHeight };
   }, []);
@@ -89,7 +89,7 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
           <CardTitle>{title}</CardTitle>
           {description && <CardDescription>{description}</CardDescription>}
         </CardHeader>
-        <CardContent className="pl-0 pt-2 h-[300px]">
+        <CardContent className="pl-0 pt-2 h-[400px]">
           <Tabs defaultValue="line" onValueChange={handleTabChange} className="h-full flex flex-col">
             <div className="flex items-center justify-between mb-2">
               <TabsList>

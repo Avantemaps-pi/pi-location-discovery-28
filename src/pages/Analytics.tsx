@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -130,8 +129,7 @@ const Analytics = () => {
           />
         </div>
         
-        {/* Adjust chart container height back to normal */}
-        <div className="w-full mb-8 pl-0 h-[400px]">
+        <div className="w-full mb-8 pl-0 h-[500px]">
           <EngagementChart 
             data={engagementData}
             title="Engagement Overview"
