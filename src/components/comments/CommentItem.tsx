@@ -165,35 +165,35 @@ const CommentItem: React.FC<CommentProps> = ({ comment, onVote, onReport }) => {
           )}
         </div>
         
-        <div className="flex items-center mt-3 gap-2">
+        <div className="flex items-center mt-3 gap-3">
           <Button 
             variant="outline" 
             size="sm" 
-            className={`px-2 ${comment.userVote === 'up' ? 'bg-green-50 text-green-600 border-green-200' : ''}`}
+            className={`px-3 py-1 ${comment.userVote === 'up' ? 'bg-green-50 text-green-600 border-green-200' : ''}`}
             onClick={() => handleVote('up')}
           >
-            <ThumbsUp className="h-4 w-4 mr-1" />
+            <ThumbsUp className="h-4 w-4 mr-2" />
             <span>{comment.upvotes}</span>
           </Button>
           
           <Button 
             variant="outline" 
             size="sm" 
-            className={`px-2 ${comment.userVote === 'down' ? 'bg-red-50 text-red-600 border-red-200' : ''}`}
+            className={`px-3 py-1 ${comment.userVote === 'down' ? 'bg-red-50 text-red-600 border-red-200' : ''}`}
             onClick={() => handleVote('down')}
           >
-            <ThumbsDown className="h-4 w-4 mr-1" />
+            <ThumbsDown className="h-4 w-4 mr-2" />
             <span>{comment.downvotes}</span>
           </Button>
           
           <Button 
             variant="outline" 
             size="sm" 
-            className={`px-2 ml-auto ${comment.isReported ? 'bg-yellow-50 text-yellow-600 border-yellow-200' : ''}`}
+            className={`px-3 py-1 ml-auto ${comment.isReported ? 'bg-yellow-50 text-yellow-600 border-yellow-200' : ''}`}
             onClick={handleReport}
             disabled={comment.isReported}
           >
-            <Flag className="h-4 w-4 mr-1" />
+            <Flag className="h-4 w-4 mr-2" />
             <span>{comment.isReported ? 'Reported' : 'Report'}</span>
           </Button>
         </div>

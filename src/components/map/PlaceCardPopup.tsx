@@ -2,7 +2,7 @@
 import React, { forwardRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Star, Bookmark, CircleCheck, ExternalLink, Info, MapPin } from 'lucide-react';
+import { Star, Bookmark, CircleCheck, ExternalLink, MapPin } from 'lucide-react';
 import CategoryBadge from '@/components/business/CategoryBadge';
 import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
@@ -48,7 +48,7 @@ const PlaceCardPopup = forwardRef<HTMLDivElement, PlaceCardPopupProps>(({
   };
 
   return (
-    <Card className="w-[300px] shadow-md border-gray-200 place-popup z-50" ref={ref}>
+    <Card className="w-[300px] shadow-md border-gray-200 place-popup z-[100]" ref={ref}>
       <CardHeader className="pb-2 px-3 pt-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
@@ -119,21 +119,6 @@ const PlaceCardPopup = forwardRef<HTMLDivElement, PlaceCardPopupProps>(({
               Website
               <ExternalLink className="h-3 w-3" />
             </Button>
-            <Popover>
-              <PopoverTrigger asChild>
-                <div className="text-blue-500 font-medium text-sm cursor-pointer flex items-center">
-                  <Info className="h-3 w-3 mr-1" />
-                  Details
-                </div>
-              </PopoverTrigger>
-              <PopoverContent 
-                className="p-0 w-[420px]" 
-                align="end"
-                ref={detailCardRef}
-              >
-                <DetailsCard place={location} />
-              </PopoverContent>
-            </Popover>
           </div>
         </div>
       </CardContent>
