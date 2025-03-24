@@ -1,8 +1,8 @@
+
 import React from 'react';
-import AppLayout from '@/components/layout/AppLayout';
+import { useNavigate } from 'react-router-dom';
 import { PricingSection } from '@/components/ui/pricing-section';
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 // Define payment frequencies and pricing tiers
@@ -88,9 +88,9 @@ const Pricing = () => {
   );
   
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-screen bg-background overflow-y-auto">
       <CustomHeader />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-y-auto">
         <main className="flex-1 overflow-y-auto">
           <div className="relative w-full">
             <div className="absolute inset-0 -z-10">
@@ -99,8 +99,8 @@ const Pricing = () => {
             
             <div className="container mx-auto px-4 py-8">
               <PricingSection
-                title="Unlock Premium Features"
-                subtitle="Choose the plan that's right for you"
+                title="Unlock Premium Features with Pi"
+                subtitle="Choose the plan that's right for you (prices in Pi, tethered to USDT value)"
                 frequencies={PAYMENT_FREQUENCIES}
                 tiers={TIERS}
               />

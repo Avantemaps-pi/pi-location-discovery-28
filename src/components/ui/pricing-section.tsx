@@ -40,7 +40,7 @@ export function PricingSection({
         </div>
       </div>
 
-      <div className="grid w-full max-w-6xl gap-6 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid w-full max-w-6xl gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {tiers.map((tier) => (
           <PricingCard
             key={tier.name}
@@ -48,6 +48,11 @@ export function PricingSection({
             paymentFrequency={selectedFrequency}
           />
         ))}
+      </div>
+
+      <div className="mt-8 text-center text-sm text-muted-foreground">
+        <p>All prices are in Pi cryptocurrency and tethered to USDT value</p>
+        <p className="mt-1">Save 20% with yearly billing</p>
       </div>
     </section>
   )

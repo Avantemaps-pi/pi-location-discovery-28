@@ -46,12 +46,17 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
         <h3 className="text-lg font-medium">{tier.name}</h3>
         <p className="mt-1 text-sm text-muted-foreground">{tier.description}</p>
         <div className="mt-6 flex items-baseline gap-1">
-          {!isCustom && <span className="text-3xl font-medium">$</span>}
+          {!isCustom && <span className="text-3xl font-medium">π</span>}
           <span className="text-4xl font-bold">{price}</span>
           {!isCustom && (
             <span className="text-sm text-muted-foreground">/{paymentFrequency}</span>
           )}
         </div>
+        {!isCustom && (
+          <p className="mt-1 text-xs text-muted-foreground">
+            (Tethered to ${price} USDT)
+          </p>
+        )}
       </div>
 
       <div className="mt-6 space-y-4">
