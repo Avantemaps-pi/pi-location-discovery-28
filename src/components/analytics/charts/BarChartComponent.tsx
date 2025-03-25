@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 
 interface ChartData {
   name: string;
@@ -35,6 +35,19 @@ const BarChartComponent: React.FC<BarChartComponentProps> = React.memo(({
 }) => {
   const [localXScale, setLocalXScale] = useState(xScale);
   const [localYScale, setLocalYScale] = useState(yScale);
+
+  // Format the data to show only numbers without "Day" prefix
+  const formattedData = useMemo(() => {
+    return data.map(item => {
+      // Extract only the number from the name (e.g., "Day 1" -> "1")
+      const dayNumber = item.name.replace(/\D/g, '');
+      return {
+        ...item,
+        dayNumber,
+        displayName: dayNumber // Use just the number for display
+      };
+    });
+  }, [data]);
 
   // Calculate scale factors - memoized to prevent recalculation on each render
   const { xScaleFactor, yScaleFactor, maxValue } = useMemo(() => {
@@ -74,17 +87,19 @@ const BarChartComponent: React.FC<BarChartComponentProps> = React.memo(({
     >
       <ResponsiveContainer width={chartWidth} height={chartHeight || 400} style={containerStyle}>
         <BarChart 
-          data={data} 
-          margin={{ top: 15, right: 30, left: 0, bottom: 15 }}
+          data={formattedData} 
+          margin={{ top: 15, right: 30, left: 0, bottom: 25 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
-            dataKey="name" 
+            dataKey="displayName" 
             tick={{ fontSize: 12 }} 
             scale={xScaleFactor > 1 ? 'band' : 'auto'}
             interval={xScaleFactor < 1 ? Math.round(1 / xScaleFactor) - 1 : 0}
             padding={{ left: 10, right: 10 }}
-          />
+          >
+            <Label value="Days" position="bottom" offset={5} />
+          </XAxis>
           <YAxis 
             tick={{ fontSize: 12 }} 
             domain={[0, maxValue * (1 / yScaleFactor)]}

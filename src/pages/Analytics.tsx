@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -13,7 +14,7 @@ const generateEngagementData = (days: number) => {
   const data = [];
   for (let i = 0; i < days; i++) {
     data.push({
-      name: `Day ${i + 1}`,
+      name: `Day ${i + 1}`, // We'll keep this format, but our chart will display just numbers
       views: Math.floor(Math.random() * 500) + 200,
       clicks: Math.floor(Math.random() * 120) + 50,
       bookmarks: Math.floor(Math.random() * 20) + 5,
