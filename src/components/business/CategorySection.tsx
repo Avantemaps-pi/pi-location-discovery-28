@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import PlaceCard from './PlaceCard';
 import { Place } from '@/data/mockPlaces';
 
@@ -18,19 +17,23 @@ const CategorySection: React.FC<CategorySectionProps> = ({
   showDetails = false
 }) => {
   return (
-    <div className="mb-8">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {places.map((place) => (
-          <PlaceCard 
-            key={place.id} 
-            place={place} 
-            onPlaceClick={onPlaceClick}
-            showDetails={showDetails}
-          />
+    <section className="mb-10 animate-fade-in">
+      <h2 className="text-xl font-semibold mb-5 flex items-center">
+        <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
+        {title}
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {places.map((place, index) => (
+          <div key={place.id} style={{animationDelay: `${index * 0.05}s`}} className="animate-fade-in">
+            <PlaceCard 
+              place={place} 
+              onPlaceClick={onPlaceClick}
+              showDetails={showDetails}
+            />
+          </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

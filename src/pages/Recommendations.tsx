@@ -2,73 +2,42 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
-import { recommendedForYou, suggestedForYou, avanteTopChoice, allPlaces } from '@/data/mockPlaces';
-import PlaceCard from '@/components/business/PlaceCard';
+import { recommendedForYou, suggestedForYou, avanteTopChoice } from '@/data/mockPlaces';
+import CategorySection from '@/components/business/CategorySection';
 
 const Recommendations = () => {
-  const [selectedPlace, setSelectedPlace] = useState(null);
   const navigate = useNavigate();
   
-  const handlePlaceClick = (placeId) => {
-    // Navigate to the index page with the selected place ID
+  const handlePlaceClick = (placeId: string) => {
     navigate('/', { state: { selectedPlaceId: placeId } });
   };
 
   return (
     <AppLayout>
-      <div className="space-y-6">
-        <div>
+      <div className="max-w-6xl mx-auto space-y-8 p-4 sm:p-6">
+        <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Recommendations</h1>
-          <p className="text-muted-foreground mt-2">Discover top-rated places that accept Pi cryptocurrency as payment.</p>
+          <p className="text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency as payment.</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 mb-6">
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Avante Top Choice</h2>
-              <div className="scroll-container">
-                {avanteTopChoice.map((place) => (
-                  <div key={place.id} className="w-64">
-                    <PlaceCard 
-                      place={place} 
-                      onPlaceClick={handlePlaceClick}
-                      showDetails={false}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Suggested for you</h2>
-              <div className="scroll-container">
-                {suggestedForYou.map((place) => (
-                  <div key={place.id} className="w-64">
-                    <PlaceCard
-                      place={place}
-                      onPlaceClick={handlePlaceClick}
-                      showDetails={false}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h2 className="text-xl font-semibold mb-4">Recommended for you</h2>
-              <div className="scroll-container">
-                {recommendedForYou.map((place) => (
-                  <div key={place.id} className="w-64">
-                    <PlaceCard
-                      place={place}
-                      onPlaceClick={handlePlaceClick}
-                      showDetails={false}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+        <div className="space-y-12">
+          <CategorySection 
+            title="Avante Top Choice" 
+            places={avanteTopChoice} 
+            onPlaceClick={handlePlaceClick} 
+          />
+          
+          <CategorySection 
+            title="Suggested for you" 
+            places={suggestedForYou} 
+            onPlaceClick={handlePlaceClick} 
+          />
+          
+          <CategorySection 
+            title="Recommended for you" 
+            places={recommendedForYou} 
+            onPlaceClick={handlePlaceClick} 
+          />
         </div>
       </div>
     </AppLayout>

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info } from 'lucide-react';
+import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CategoryBadge from '@/components/business/CategoryBadge';
 import { useNavigate } from 'react-router-dom';
@@ -24,8 +24,8 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
   onPlaceClick, 
   onRemove, 
   className,
-  showDetails = false, // Default to not showing details
-  isBookmarked: initialIsBookmarked = false // Default to not bookmarked
+  showDetails = false,
+  isBookmarked: initialIsBookmarked = false
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
   const navigate = useNavigate();
@@ -39,87 +39,120 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
   };
 
   const handlePlaceClick = () => {
-    // If we're already on the index page, just select the marker
     if (window.location.pathname === '/') {
       onPlaceClick(place.id);
     } else {
-      // Navigate to the index page with the place ID as a parameter
       navigate('/', { state: { selectedPlaceId: place.id } });
     }
   };
   
   const handleBookmarkToggle = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent triggering the card click
+    e.stopPropagation();
     setIsBookmarked(!isBookmarked);
     if (onRemove && !isBookmarked === false) {
       onRemove(place.id);
     }
   };
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Web Share API - falls back to copy to clipboard
+    if (navigator.share) {
+      navigator.share({
+        title: place.name,
+        text: `Check out ${place.name} on Avante Maps`,
+        url: window.location.origin + '?place=' + place.id
+      }).catch(err => {
+        console.error('Error sharing', err);
+      });
+    } else {
+      // Fallback - copy link to clipboard
+      navigator.clipboard.writeText(window.location.origin + '?place=' + place.id);
+      alert('Link copied to clipboard!');
+    }
+  };
   
   return (
-    <Card key={place.id} className={`shadow-md border-gray-200 ${className || 'min-w-[250px] w-full flex-shrink-0'}`}>
-      <CardHeader className="pb-2 px-3 pt-3">
+    <Card 
+      key={place.id} 
+      className={`material-card card-hover ${className || 'min-w-[250px] w-full flex-shrink-0'}`}
+    >
+      <div 
+        className="h-40 overflow-hidden cursor-pointer relative"
+        onClick={handlePlaceClick}
+      >
+        <img 
+          src={place.image} 
+          alt={place.name} 
+          className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+          onError={(e) => {
+            e.currentTarget.src = 'public/placeholder.svg';
+            e.currentTarget.alt = 'Business Image';
+          }}
+        />
+        <div className="absolute top-2 right-2 flex gap-2">
+          <Button 
+            variant="secondary" 
+            size="icon" 
+            className="rounded-full w-8 h-8 bg-white/80 backdrop-blur-sm text-gray-800 hover:bg-white"
+            onClick={handleBookmarkToggle}
+          >
+            <Bookmark 
+              className={`h-4 w-4 ${isBookmarked ? 'text-primary fill-primary' : 'text-gray-600'}`}
+            />
+          </Button>
+          <Button 
+            variant="secondary" 
+            size="icon" 
+            className="rounded-full w-8 h-8 bg-white/80 backdrop-blur-sm text-gray-800 hover:bg-white"
+            onClick={handleShare}
+          >
+            <Share2 className="h-4 w-4 text-gray-600" />
+          </Button>
+        </div>
+      </div>
+      
+      <CardHeader className="pb-0 px-4 pt-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
             <div className="flex-shrink-0">
               <CircleCheck className="h-5 w-5 text-green-500" />
             </div>
             <CardTitle 
-              className="text-base font-bold cursor-pointer hover:text-blue-500 transition-colors"
+              className="text-base font-bold cursor-pointer hover:text-primary transition-colors line-clamp-1"
               onClick={handlePlaceClick}
             >
               {place.name}
             </CardTitle>
           </div>
-          <Bookmark 
-            className={`h-5 w-5 cursor-pointer ${isBookmarked ? 'text-blue-500 fill-blue-500' : 'text-gray-400 hover:text-gray-600'}`}
-            onClick={handleBookmarkToggle}
-          />
         </div>
       </CardHeader>
       
-      <div 
-        className="h-40 overflow-hidden px-3 cursor-pointer"
-        onClick={handlePlaceClick}
-      >
-        <div className="bg-gray-100 h-full flex items-center justify-center rounded-md">
-          <img 
-            src={place.image} 
-            alt={place.name} 
-            className="w-full h-full object-cover rounded-md hover:opacity-90 transition-opacity"
-            onError={(e) => {
-              e.currentTarget.src = 'public/placeholder.svg';
-              e.currentTarget.alt = 'Business Image';
-            }}
-          />
-        </div>
-      </div>
-      
-      <CardContent className="pt-3 px-3">
+      <CardContent className="pt-2 px-4 pb-4">
         <div 
-          className="flex items-center gap-1 text-sm text-gray-600 mb-2 cursor-pointer hover:text-blue-500 transition-colors"
+          className="flex items-center gap-1 text-sm text-muted-foreground mb-2 cursor-pointer hover:text-primary transition-colors"
           onClick={handlePlaceClick}
         >
-          <MapPin className="h-4 w-4" />
-          <span className="text-xs">{place.address}</span>
+          <MapPin className="h-4 w-4 flex-shrink-0" />
+          <span className="text-xs line-clamp-1">{place.address}</span>
         </div>
         
-        {/* Replaced the paragraph with our new ExpandableDescription component */}
-        <div className="h-16 mb-2">
-          <ExpandableDescription text={place.description} maxLines={4} />
+        <div className="h-12 mb-3">
+          <ExpandableDescription text={place.description} maxLines={2} />
         </div>
         
-        <div className="flex justify-between items-end mt-4">
-          <div className="flex flex-col gap-1">
+        <div className="flex flex-wrap justify-between items-end mt-auto gap-2">
+          <div className="flex flex-col gap-2">
             <div 
-              className="inline-flex items-center px-2 py-1 w-16 justify-center rounded bg-[#FEF7CD] cursor-pointer"
+              className="inline-flex items-center px-2 py-1 rounded bg-amber-100 dark:bg-amber-950/40 cursor-pointer"
               onClick={handleRatingClick}
             >
-              <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
-              <span className="text-sm font-medium text-amber-800">{place.rating.toFixed(1)}</span>
+              <Star className="h-4 w-4 text-amber-500 fill-amber-500 mr-1" />
+              <span className="text-sm font-medium text-amber-800 dark:text-amber-400">{place.rating.toFixed(1)}</span>
             </div>
             <CategoryBadge category={place.category} />
           </div>
+          
           <div className="flex flex-col gap-2 items-end">
             <Button 
               variant="default" 
@@ -132,7 +165,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
             {showDetails && (
               <Popover>
                 <PopoverTrigger asChild>
-                  <div className="text-blue-500 font-medium text-sm cursor-pointer flex items-center">
+                  <div className="text-primary font-medium text-sm cursor-pointer flex items-center">
                     <Info className="h-3 w-3 mr-1" />
                     Details
                   </div>

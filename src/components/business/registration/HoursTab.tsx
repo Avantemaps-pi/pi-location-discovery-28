@@ -18,7 +18,7 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
   const form = useFormContext<FormValues>();
 
   return (
-    <Card>
+    <Card className="material-card">
       <CardHeader>
         <CardTitle className="text-xl">Trading Hours</CardTitle>
         <CardDescription>
@@ -103,7 +103,7 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
         </Button>
         <Button 
           type="button" 
-          className="bg-avante-blue hover:bg-avante-blue/90"
+          className="bg-primary hover:bg-primary/90"
           onClick={onNext}
         >
           Next
