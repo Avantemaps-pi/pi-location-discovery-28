@@ -1,9 +1,10 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { recommendedForYou, suggestedForYou, avanteTopChoice } from '@/data/mockPlaces';
-import CategorySection from '@/components/business/CategorySection';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import PlaceCard from '@/components/business/PlaceCard';
 
 const Recommendations = () => {
   const navigate = useNavigate();
@@ -21,23 +22,83 @@ const Recommendations = () => {
         </div>
 
         <div className="space-y-12">
-          <CategorySection 
-            title="Avante Top Choice" 
-            places={avanteTopChoice} 
-            onPlaceClick={handlePlaceClick} 
-          />
+          {/* Avante Top Choice Section */}
+          <section className="mb-10 animate-fade-in">
+            <h2 className="text-xl font-semibold mb-5 flex items-center">
+              <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
+              Avante Top Choice
+            </h2>
+            <ScrollArea orientation="horizontal" className="w-full whitespace-nowrap pb-4">
+              <div className="flex space-x-4 pb-2">
+                {avanteTopChoice.map((place, index) => (
+                  <div 
+                    key={place.id} 
+                    style={{animationDelay: `${index * 0.05}s`}} 
+                    className="animate-fade-in"
+                  >
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="min-w-[280px] w-[280px]"
+                    />
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </section>
           
-          <CategorySection 
-            title="Suggested for you" 
-            places={suggestedForYou} 
-            onPlaceClick={handlePlaceClick} 
-          />
+          {/* Suggested for you Section */}
+          <section className="mb-10 animate-fade-in">
+            <h2 className="text-xl font-semibold mb-5 flex items-center">
+              <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
+              Suggested for you
+            </h2>
+            <ScrollArea orientation="horizontal" className="w-full whitespace-nowrap pb-4">
+              <div className="flex space-x-4 pb-2">
+                {suggestedForYou.map((place, index) => (
+                  <div 
+                    key={place.id} 
+                    style={{animationDelay: `${index * 0.05}s`}} 
+                    className="animate-fade-in"
+                  >
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="min-w-[280px] w-[280px]"
+                    />
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </section>
           
-          <CategorySection 
-            title="Recommended for you" 
-            places={recommendedForYou} 
-            onPlaceClick={handlePlaceClick} 
-          />
+          {/* Recommended for you Section */}
+          <section className="mb-10 animate-fade-in">
+            <h2 className="text-xl font-semibold mb-5 flex items-center">
+              <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
+              Recommended for you
+            </h2>
+            <ScrollArea orientation="horizontal" className="w-full whitespace-nowrap pb-4">
+              <div className="flex space-x-4 pb-2">
+                {recommendedForYou.map((place, index) => (
+                  <div 
+                    key={place.id} 
+                    style={{animationDelay: `${index * 0.05}s`}} 
+                    className="animate-fade-in"
+                  >
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="min-w-[280px] w-[280px]"
+                    />
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          </section>
         </div>
       </div>
     </AppLayout>
