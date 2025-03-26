@@ -58,7 +58,14 @@ const Index = () => {
       fullWidth={true}
       hideSidebar={true}
     >
-      <div className="absolute inset-0 top-16 w-full" ref={mapRef}>
+      <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">Avante Maps</h1>
+          <p className="text-muted-foreground">Discover Pi-accepting businesses near you.</p>
+        </div>
+      </div>
+      
+      <div className="absolute inset-0 top-[144px] w-full" ref={mapRef}>
         <GoogleMap 
           places={allPlaces} 
           selectedPlaceId={selectedPlace} 

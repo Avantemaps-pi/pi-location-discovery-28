@@ -43,16 +43,16 @@ const ExpandableDescription: React.FC<ExpandableDescriptionProps> = ({
       onOpenChange={setIsExpanded}
       className={`w-full ${className}`}
     >
-      <div className={`relative overflow-hidden ${!isExpanded ? `max-h-[${maxLines * 1.2}em]` : ''}`} style={!isExpanded ? {maxHeight: `${maxLines * 1.5}em`} : {}}>
+      <div className="relative overflow-hidden" style={!isExpanded ? {maxHeight: `${maxLines * 1.5}em`} : {}}>
         <p 
           ref={textRef} 
-          className={`text-sm text-gray-700 ${!isExpanded ? `line-clamp-${maxLines}` : ''}`}
+          className={`text-sm text-gray-700 dark:text-gray-300 ${!isExpanded ? `line-clamp-${maxLines}` : ''}`}
         >
           {text}
         </p>
         
         {needsExpansion && !isExpanded && (
-          <CollapsibleTrigger className="absolute bottom-0 right-0 text-xs text-blue-500 cursor-pointer bg-gradient-to-l from-white pl-2">
+          <CollapsibleTrigger className="absolute bottom-0 right-0 text-xs text-primary cursor-pointer bg-gradient-to-l from-card pl-2">
             read more...
           </CollapsibleTrigger>
         )}
@@ -60,10 +60,10 @@ const ExpandableDescription: React.FC<ExpandableDescriptionProps> = ({
       
       <CollapsibleContent>
         <ScrollArea className="h-36 mt-1">
-          <p className="text-sm text-gray-700 pr-3">{text}</p>
+          <p className="text-sm text-gray-700 dark:text-gray-300 pr-3">{text}</p>
         </ScrollArea>
         <div className="text-right mt-1">
-          <CollapsibleTrigger className="text-xs text-blue-500 cursor-pointer">
+          <CollapsibleTrigger className="text-xs text-primary cursor-pointer">
             show less
           </CollapsibleTrigger>
         </div>
