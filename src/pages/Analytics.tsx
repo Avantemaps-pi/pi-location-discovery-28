@@ -7,7 +7,7 @@ import AnalyticsHeader from '@/components/analytics/AnalyticsHeader';
 import EngagementChart from '@/components/analytics/EngagementChart';
 import RankingChart from '@/components/analytics/RankingChart';
 import DistributionChart from '@/components/analytics/DistributionChart';
-import { Eye, MousePointerClick, Search, Globe, Bookmark } from 'lucide-react';
+import { Eye, MousePointerClick, Search, Bookmark } from 'lucide-react';
 
 // Mock data for demo purposes
 const generateEngagementData = (days: number) => {
@@ -85,7 +85,7 @@ const Analytics = () => {
       withHeader={true}
       fullHeight={false} // Set to false to enable scrolling
     >
-      <div className="container mx-auto p-4 max-w-7xl">
+      <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4 max-w-7xl overflow-x-hidden">
         <AnalyticsHeader 
           businessName="Pi Cafe"
           dateRange={dateRange}
@@ -93,7 +93,7 @@ const Analytics = () => {
           onExport={handleExport}
         />
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-8">
           <AnalyticCard 
             title="Total Views"
             value={totalViews.toLocaleString()}
@@ -131,7 +131,7 @@ const Analytics = () => {
           />
         </div>
         
-        <div className="w-full mb-8 pl-0 h-[500px]">
+        <div className="w-full mb-4 sm:mb-8 pl-0 h-[300px] sm:h-[400px] md:h-[500px]">
           <EngagementChart 
             data={engagementData}
             title="Engagement Overview"
@@ -139,7 +139,7 @@ const Analytics = () => {
           />
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-8">
           <div className="lg:col-span-2">
             <RankingChart 
               data={rankingData}
@@ -148,7 +148,7 @@ const Analytics = () => {
             />
           </div>
           
-          <div className="lg:col-span-1 grid grid-cols-1 gap-6">
+          <div className="lg:col-span-1 grid grid-cols-1 gap-4 sm:gap-6">
             <DistributionChart 
               data={sourceDistribution}
               title="Traffic Sources"
