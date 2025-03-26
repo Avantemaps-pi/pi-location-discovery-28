@@ -195,3 +195,13 @@
 .embla__slide {
   padding-left: 0 !important;
 }
+
+/* Fix for PlaceCard on mobile */
+@media (max-width: 768px) {
+  .place-card-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info, Share2 } from 'lucide-react';
@@ -76,7 +77,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
   return (
     <Card 
       key={place.id} 
-      className={`material-card card-hover ${className || 'w-full max-w-[300px]'}`}
+      className={`material-card card-hover ${className || 'w-full'} place-card-container`}
     >
       <div 
         className="h-40 overflow-hidden cursor-pointer relative"
@@ -113,7 +114,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
         </div>
       </div>
       
-      <CardHeader className="pb-0 px-4 pt-3">
+      <CardHeader className="pb-0 px-3 pt-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
             <div className="flex-shrink-0">
@@ -129,7 +130,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
         </div>
       </CardHeader>
       
-      <CardContent className="pt-2 px-4 pb-4">
+      <CardContent className="pt-2 px-3 pb-3">
         <div 
           className="flex items-center gap-1 text-sm text-muted-foreground mb-2 cursor-pointer hover:text-primary transition-colors"
           onClick={handlePlaceClick}
@@ -138,8 +139,8 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
           <span className="text-xs line-clamp-1">{place.address}</span>
         </div>
         
-        <div className="h-24 mb-3 overflow-hidden">
-          <ExpandableDescription text={place.description} maxLines={4} />
+        <div className="h-20 mb-2 overflow-hidden">
+          <ExpandableDescription text={place.description} maxLines={3} />
         </div>
         
         <div className="flex flex-wrap justify-between items-end mt-auto gap-2">
@@ -171,7 +172,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
                     Details
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="p-0 w-[420px]" align="end">
+                <PopoverContent className="p-0 w-[300px] sm:w-[420px]" align="end">
                   <DetailsCard place={place} />
                 </PopoverContent>
               </Popover>
