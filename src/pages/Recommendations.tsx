@@ -32,7 +32,7 @@ const Recommendations = () => {
 
         <div className="space-y-12">
           {/* Avante Top Choice Section */}
-          <section className="mb-10 animate-fade-in">
+          <section className="mb-10 animate-fade-in relative">
             <h2 className="text-xl font-semibold mb-5 flex items-center">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Avante Top Choice
@@ -55,13 +55,13 @@ const Recommendations = () => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="left-2 sm:left-4" />
-              <CarouselNext className="right-2 sm:right-4" />
+              <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0" />
+              <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0" />
             </Carousel>
           </section>
           
           {/* Suggested for you Section */}
-          <section className="mb-10 animate-fade-in">
+          <section className="mb-10 animate-fade-in relative">
             <h2 className="text-xl font-semibold mb-5 flex items-center">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Suggested for you
@@ -84,13 +84,13 @@ const Recommendations = () => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="left-2 sm:left-4" />
-              <CarouselNext className="right-2 sm:right-4" />
+              <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0" />
+              <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0" />
             </Carousel>
           </section>
           
           {/* Recommended for you Section */}
-          <section className="mb-10 animate-fade-in">
+          <section className="mb-10 animate-fade-in relative">
             <h2 className="text-xl font-semibold mb-5 flex items-center">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Recommended for you
@@ -113,8 +113,8 @@ const Recommendations = () => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="left-2 sm:left-4" />
-              <CarouselNext className="right-2 sm:right-4" />
+              <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0" />
+              <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0" />
             </Carousel>
           </section>
           
