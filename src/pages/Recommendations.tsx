@@ -46,7 +46,7 @@ const Recommendations = () => {
           <p className="text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency as payment.</p>
         </div>
 
-        <div className="space-y-12 -ml-6">
+        <div className="space-y-12 -ml-10">
           {/* Avante Top Choice Section */}
           <section 
             className="mb-10 animate-fade-in relative"
@@ -54,14 +54,14 @@ const Recommendations = () => {
             onMouseLeave={() => handleMouseLeave('avanteTopChoice')}
             onTouchStart={() => handleTouchStart('avanteTopChoice')}
           >
-            <h2 className="text-xl font-semibold mb-5 flex items-center ml-6">
+            <h2 className="text-xl font-semibold mb-5 flex items-center ml-10">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Avante Top Choice
             </h2>
             <Carousel className="w-full">
-              <CarouselContent className="-ml-0">
+              <CarouselContent className="-ml-2">
                 {avanteTopChoice.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
+                  <CarouselItem key={place.id} className={`pl-2 ${isMobile ? 'basis-[85%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -92,14 +92,14 @@ const Recommendations = () => {
             onMouseLeave={() => handleMouseLeave('suggestedForYou')}
             onTouchStart={() => handleTouchStart('suggestedForYou')}
           >
-            <h2 className="text-xl font-semibold mb-5 flex items-center ml-6">
+            <h2 className="text-xl font-semibold mb-5 flex items-center ml-10">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Suggested for you
             </h2>
             <Carousel className="w-full">
-              <CarouselContent className="-ml-0">
+              <CarouselContent className="-ml-2">
                 {suggestedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
+                  <CarouselItem key={place.id} className={`pl-2 ${isMobile ? 'basis-[85%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -130,14 +130,14 @@ const Recommendations = () => {
             onMouseLeave={() => handleMouseLeave('recommendedForYou')}
             onTouchStart={() => handleTouchStart('recommendedForYou')}
           >
-            <h2 className="text-xl font-semibold mb-5 flex items-center ml-6">
+            <h2 className="text-xl font-semibold mb-5 flex items-center ml-10">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Recommended for you
             </h2>
             <Carousel className="w-full">
-              <CarouselContent className="-ml-0">
+              <CarouselContent className="-ml-2">
                 {recommendedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
+                  <CarouselItem key={place.id} className={`pl-2 ${isMobile ? 'basis-[85%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
