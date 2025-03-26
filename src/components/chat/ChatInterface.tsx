@@ -38,6 +38,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       <div className="flex h-full flex-col">
         <div className="border-b p-3">
           <ChatModeToggle chatMode={chatMode} onChatModeChange={onChatModeChange} />
+          <p className="text-sm text-muted-foreground mt-2">
+            Connect with Avante Maps AI assistant
+          </p>
         </div>
   
         <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[60vh] min-h-[300px]">
