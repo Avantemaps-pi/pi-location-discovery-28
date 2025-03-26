@@ -22,6 +22,7 @@ const MobileMenuButton = ({ onClick }: MobileMenuButtonProps) => {
       size="icon"
       className="md:hidden"
       onClick={handleClick}
+      aria-label="Open menu"
     >
       <Menu className="h-5 w-5" />
       <span className="sr-only">Toggle menu</span>

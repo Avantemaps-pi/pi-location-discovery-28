@@ -1,4 +1,3 @@
-
 import { ReactNode } from 'react';
 import AppSidebar from './AppSidebar';
 import PageHeader from './PageHeader';
@@ -32,7 +31,7 @@ const AppLayout = ({
     <div className="flex flex-col min-h-screen bg-background">
       {withHeader && <PageHeader title={title} />}
       <div className="flex flex-1 overflow-hidden">
-        {!hideSidebar && <AppSidebar />}
+        <AppSidebar className={hideSidebar ? 'lg:hidden' : ''} />
         <main className={`flex-1 ${!hideSidebar && 'md:ml-64'} ${className} ${fullHeight ? 'h-[calc(100vh-4rem)]' : ''} ${withHeader ? 'overflow-y-auto' : 'h-screen overflow-y-auto'}`}>
           <div className={`${fullHeight ? 'h-full' : ''} ${fullWidth ? 'w-full' : 'p-6'}`}>
             {backButton && onBackClick && (
