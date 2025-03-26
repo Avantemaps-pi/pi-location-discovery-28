@@ -2,7 +2,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { PiSquare, X } from 'lucide-react';
+import { PiSquare, X, UserRound } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import NavItem from './NavItem';
 
 interface MobileSidebarProps {
@@ -35,11 +36,17 @@ const MobileSidebar = ({
     <div className={`md:hidden fixed inset-0 bg-background z-40 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       <div className="flex flex-col h-full">
         <div className="p-4 flex items-center justify-between border-b border-sidebar-border">
-          <div className="flex items-center gap-2">
-            <div className="bg-gradient-to-r from-avante-blue to-avante-purple p-2 rounded-md">
-              <PiSquare className="h-5 w-5 text-white" />
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9">
+              <AvatarImage src="/placeholder.svg" />
+              <AvatarFallback>
+                <UserRound className="h-5 w-5" />
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="font-medium text-sm">Username</span>
+              <span className="text-xs text-muted-foreground">Free Plan</span>
             </div>
-            <span className="font-bold text-lg">Avante Maps</span>
           </div>
           <Button
             variant="ghost"
