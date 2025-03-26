@@ -20,34 +20,15 @@ const Index = () => {
     }
   }, [location.state]);
 
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (selectedPlace && mapRef.current && mapRef.current.contains(e.target as Node)) {
-        const clickedElement = e.target as HTMLElement;
-        const isClickInsidePopup = !!clickedElement.closest('.place-popup');
-        const isClickOnMarker = !!clickedElement.closest('div[role="button"]');
-        const isClickInsideDetailCard = detailCardRef.current && 
-          (detailCardRef.current.contains(e.target as Node) || 
-           detailCardRef.current === e.target);
-        
-        if (!isClickInsidePopup && !isClickOnMarker && !isClickInsideDetailCard) {
-          setSelectedPlace(null);
-        }
-      }
-    };
-
-    document.addEventListener('click', handleOutsideClick);
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
-    };
-  }, [selectedPlace]);
+  // Remove the outside click handler as we're now handling this with the overlay
+  // in the GoogleMap component directly
 
   const handleSearch = (searchTerm: string) => {
     console.log('Search for:', searchTerm);
   };
   
   const handlePlaceClick = (placeId: string) => {
-    setSelectedPlace(placeId);
+    setSelectedPlace(placeId === "" ? null : placeId);
   };
 
   return (

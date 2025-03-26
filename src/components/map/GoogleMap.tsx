@@ -78,6 +78,16 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
     });
   };
 
+  const handleOverlayClick = () => {
+    setActiveMarker(null);
+    setShowPopover(false);
+    
+    // Call the parent component's onMarkerClick with null if provided
+    if (onMarkerClick) {
+      onMarkerClick("");
+    }
+  };
+
   // Get the selected place data
   const selectedPlace = activeMarker ? displayPlaces.find(place => place.id === activeMarker) : null;
 
@@ -115,6 +125,14 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
           />
         </MapComponent>
       </Wrapper>
+      
+      {/* Greyish transparent overlay that appears when a place is selected */}
+      {selectedPlace && showPopover && (
+        <div 
+          className="fixed inset-0 bg-black/40 z-40 backdrop-blur-[2px]"
+          onClick={handleOverlayClick}
+        />
+      )}
       
       {/* Popup card overlay for selected place */}
       {selectedPlace && showPopover && (
