@@ -78,8 +78,8 @@ const Recommendations = () => {
               </CarouselContent>
               {showControls.avanteTopChoice && (
                 <>
-                  <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
-                  <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
+                  <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
+                  <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
                 </>
               )}
             </Carousel>
@@ -116,8 +116,8 @@ const Recommendations = () => {
               </CarouselContent>
               {showControls.suggestedForYou && (
                 <>
-                  <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
-                  <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
+                  <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
+                  <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
                 </>
               )}
             </Carousel>
@@ -154,8 +154,8 @@ const Recommendations = () => {
               </CarouselContent>
               {showControls.recommendedForYou && (
                 <>
-                  <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
-                  <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
+                  <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
+                  <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
                 </>
               )}
             </Carousel>
