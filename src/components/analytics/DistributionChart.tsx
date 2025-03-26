@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, TooltipProps } from 'recharts';
 
 interface DistributionData {
   name: string;
@@ -38,6 +38,18 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
+// Define the type for CustomTooltip props
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    name: string;
+    value: number;
+    payload?: any;
+    color?: string;
+  }>;
+  label?: string;
+}
+
 const DistributionChart: React.FC<DistributionChartProps> = ({ data, title, description }) => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -49,8 +61,8 @@ const DistributionChart: React.FC<DistributionChartProps> = ({ data, title, desc
     setActiveIndex(null);
   };
 
-  // Custom tooltip content
-  const CustomTooltip = ({ active, payload }) => {
+  // Custom tooltip content with proper typing
+  const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-background p-2 rounded-md shadow-md border border-border text-sm">
