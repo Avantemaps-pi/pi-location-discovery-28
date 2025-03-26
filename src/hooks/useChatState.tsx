@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChatMessageProps } from '@/components/chat/ChatMessage';
+import { ChatMode } from '@/components/chat/ChatInterface';
 
 export function useChatState() {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ export function useChatState() {
     { id: 1, text: "Welcome to Avante Maps!", sender: "system", timestamp: "10:30 AM" },
     { id: 2, text: "Hi there! How can I help with Avante Maps today?", sender: "support", timestamp: "10:32 AM" },
   ]);
-  const [chatMode, setChatMode] = useState<"ai" | "live">("ai");
+  const [chatMode, setChatMode] = useState<ChatMode>("ai");
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +48,7 @@ export function useChatState() {
         // Redirect to pricing page when switching to LIVE chat
         navigate("/pricing");
       } else {
-        setChatMode(value as "ai" | "live");
+        setChatMode(value as ChatMode);
       }
     }
   };

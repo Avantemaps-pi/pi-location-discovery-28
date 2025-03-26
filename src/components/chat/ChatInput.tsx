@@ -2,7 +2,7 @@
 import React, { KeyboardEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { PaperAirplaneTilt, PaperclipSimple } from '@phosphor-icons/react';
+import { PaperPlaneIcon, PaperclipIcon } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 
 interface ChatInputProps {
@@ -59,7 +59,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               className="h-8 w-8"
               disabled={disabled}
             >
-              <PaperclipSimple className="h-5 w-5" />
+              <PaperclipIcon className="h-5 w-5" />
               <span className="sr-only">Attach file</span>
             </Button>
           )}
@@ -71,7 +71,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             className="h-8 w-8 bg-primary text-primary-foreground"
             disabled={!value.trim() || disabled}
           >
-            <PaperAirplaneTilt className="h-5 w-5" />
+            <PaperPlaneIcon className="h-5 w-5" />
             <span className="sr-only">Send message</span>
           </Button>
         </div>

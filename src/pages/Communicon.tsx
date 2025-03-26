@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import UserProfileCard from '@/components/chat/UserProfileCard';
-import ChatInterface from '@/components/chat/ChatInterface';
+import ChatInterface, { ChatMode } from '@/components/chat/ChatInterface';
 import { useChatState } from '@/hooks/useChatState';
 
 const Communicon = () => {
@@ -32,13 +32,13 @@ const Communicon = () => {
       <div className="max-w-4xl mx-auto">
         <UserProfileCard />
         <ChatInterface 
-          chatMode={chatMode}
+          chatMode={chatMode as ChatMode}
           onChatModeChange={handleChatModeChange}
           messages={messages}
           message={message}
           setMessage={setMessage}
-          handleSendMessage={handleSendMessage}
-          handleAttachmentOption={handleAttachmentOption}
+          handleSendMessage={() => handleSendMessage(new Event('submit') as unknown as React.FormEvent)}
+          handleAttachmentOption={() => handleAttachmentOption('default')}
           showAttachmentIcon={false}
         />
       </div>

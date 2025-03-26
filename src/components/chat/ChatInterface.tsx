@@ -2,15 +2,15 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import ChatModeToggle from './ChatModeToggle';
-import ChatMessage from './ChatMessage';
+import ChatMessage, { ChatMessageProps } from './ChatMessage';
 import ChatInput from './ChatInput';
 
-export type ChatMode = 'customer' | 'business';
+export type ChatMode = 'ai' | 'live';
 
 interface ChatInterfaceProps {
   chatMode: ChatMode;
-  onChatModeChange: (mode: ChatMode) => void;
-  messages: any[];
+  onChatModeChange: (mode: string) => void;
+  messages: ChatMessageProps[];
   message: string;
   setMessage: (message: string) => void;
   handleSendMessage: () => void;
@@ -44,7 +44,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
           ) : (
             messages.map((msg, index) => (
-              <ChatMessage key={index} message={msg} />
+              <ChatMessage 
+                key={index} 
+                id={msg.id}
+                text={msg.text}
+                sender={msg.sender}
+                timestamp={msg.timestamp}
+              />
             ))
           )}
         </div>
@@ -54,7 +60,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           onChange={setMessage}
           onSubmit={handleSendMessage}
           onAttachmentClick={handleAttachmentOption}
-          placeholder={`Type a message as ${chatMode === 'customer' ? 'customer' : 'business'}...`}
+          placeholder={`Type a message as ${chatMode === 'ai' ? 'AI assistant' : 'live agent'}...`}
           showAttachmentIcon={showAttachmentIcon}
         />
       </div>

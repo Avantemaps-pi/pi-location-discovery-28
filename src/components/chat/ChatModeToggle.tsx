@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { Radio, Zap } from 'lucide-react';
+import { Zap, Radio } from 'lucide-react';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { ChatMode } from './ChatInterface';
 
 interface ChatModeToggleProps {
-  chatMode: "ai" | "live";
+  chatMode: ChatMode;
   onChatModeChange: (value: string) => void;
 }
 
