@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import ChatModeToggle from './ChatModeToggle';
@@ -42,7 +41,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             <ChatModeToggle chatMode={chatMode} onChatModeChange={onChatModeChange} />
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            Connect with Avante Maps AI assistant
+            {chatMode === 'ai' 
+              ? "Connect with Avante Maps AI assistant"
+              : "Connect with Avante Maps LIVE Intern"}
           </p>
         </div>
   
