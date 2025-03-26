@@ -55,8 +55,8 @@ const Index = () => {
       title="Avante Maps" 
       withHeader={true} 
       fullHeight={true} 
-      fullWidth={true} 
-      className="!ml-0" // Add this to override sidebar margin
+      fullWidth={true}
+      hideSidebar={true}
     >
       <div className="relative h-[calc(100vh-4rem)] w-full" ref={mapRef}>
         <div className="h-full w-full">

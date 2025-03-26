@@ -13,7 +13,8 @@ interface AppLayoutProps {
   title?: string;
   backButton?: boolean;
   onBackClick?: () => void;
-  className?: string; // Add this line
+  className?: string;
+  hideSidebar?: boolean;
 }
 
 const AppLayout = ({ 
@@ -24,14 +25,15 @@ const AppLayout = ({
   title = "Avante Maps",
   backButton = false,
   onBackClick,
-  className = '' // Add this line with default empty string
+  className = '',
+  hideSidebar = false
 }: AppLayoutProps) => {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {withHeader && <PageHeader title={title} />}
       <div className="flex flex-1 overflow-hidden">
-        <AppSidebar />
-        <main className={`flex-1 md:ml-64 ${className} ${fullHeight ? 'h-[calc(100vh-4rem)]' : ''} ${withHeader ? 'overflow-y-auto' : 'h-screen overflow-y-auto'}`}>
+        {!hideSidebar && <AppSidebar />}
+        <main className={`flex-1 ${!hideSidebar && 'md:ml-64'} ${className} ${fullHeight ? 'h-[calc(100vh-4rem)]' : ''} ${withHeader ? 'overflow-y-auto' : 'h-screen overflow-y-auto'}`}>
           <div className={`${fullHeight ? 'h-full' : ''} ${fullWidth ? 'w-full' : 'p-6'}`}>
             {backButton && onBackClick && (
               <Button 
