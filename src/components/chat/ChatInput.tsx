@@ -2,7 +2,7 @@
 import React, { KeyboardEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send } from 'lucide-react';
+import { Send, Paperclip } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 
 const ChatInput: React.FC<{
@@ -20,7 +20,7 @@ const ChatInput: React.FC<{
   onAttachmentClick,
   placeholder = 'Type a message...',
   disabled = false,
-  showAttachmentIcon = false  // Changed to false per the previous request to remove paperclip
+  showAttachmentIcon = true  // Changed back to true as default
 }) => {
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -48,6 +48,19 @@ const ChatInput: React.FC<{
         />
         
         <div className="absolute right-3 bottom-3 flex space-x-2">
+          {showAttachmentIcon && onAttachmentClick && (
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              onClick={onAttachmentClick}
+              className="h-8 w-8"
+              disabled={disabled}
+            >
+              <Paperclip className="h-5 w-5" />
+              <span className="sr-only">Add attachment</span>
+            </Button>
+          )}
           <Button
             type="button"
             size="icon"

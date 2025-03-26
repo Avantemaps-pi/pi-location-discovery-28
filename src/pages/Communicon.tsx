@@ -47,7 +47,7 @@ const Communicon = () => {
           setMessage={setMessage}
           handleSendMessage={handleSendMessageWrapper}
           handleAttachmentOption={handleAttachmentOptionWrapper}
-          showAttachmentIcon={false}
+          showAttachmentIcon={true}
         />
       </div>
     </AppLayout>
