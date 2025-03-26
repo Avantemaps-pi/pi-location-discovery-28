@@ -41,7 +41,8 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
     // Fixed style prop with valid CSS properties
     const containerStyle = {
       overflowX: "auto" as const,
-      overflowY: "hidden" as const
+      overflowY: "hidden" as const,
+      maxWidth: "100%" as const // Ensure container doesn't exceed parent width
     };
     
     // Adjust chart dimensions to fit properly within container
@@ -86,8 +87,8 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
     <>
       <Card className="w-full h-full">
         <CardHeader className="pb-0">
-          <CardTitle className="whitespace-nowrap">{title}</CardTitle>
-          {description && <CardDescription className="whitespace-nowrap">{description}</CardDescription>}
+          <CardTitle className="text-lg sm:text-xl">{title}</CardTitle>
+          {description && <CardDescription className="text-sm">{description}</CardDescription>}
           
           <div className="flex items-center justify-between mt-2">
             <Tabs value={activeTab} onValueChange={handleTabChange}>
@@ -101,13 +102,13 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
               size="icon" 
               onClick={toggleFullScreen} 
               title="Full Screen"
-              className="mr-4"
+              className="mr-2 sm:mr-4"
             >
               <Maximize className="h-4 w-4" />
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="pl-0 pt-2 h-[400px]">
+        <CardContent className="pl-0 pt-2 h-[400px] w-full overflow-hidden">
           <Tabs value={activeTab} onValueChange={handleTabChange} className="h-full flex flex-col">
             <TabsContent value="line" className="flex-1 h-full">
               {lineChartComponent}
