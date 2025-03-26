@@ -29,10 +29,10 @@ const Recommendations = () => {
           <p className="text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency as payment.</p>
         </div>
 
-        <div className="space-y-12 pl-0">
+        <div className="space-y-12 -ml-6">
           {/* Avante Top Choice Section */}
           <section className="mb-10 animate-fade-in relative">
-            <h2 className="text-xl font-semibold mb-5 flex items-center">
+            <h2 className="text-xl font-semibold mb-5 flex items-center ml-6">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Avante Top Choice
             </h2>
@@ -61,7 +61,7 @@ const Recommendations = () => {
           
           {/* Suggested for you Section */}
           <section className="mb-10 animate-fade-in relative">
-            <h2 className="text-xl font-semibold mb-5 flex items-center">
+            <h2 className="text-xl font-semibold mb-5 flex items-center ml-6">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Suggested for you
             </h2>
@@ -90,7 +90,7 @@ const Recommendations = () => {
           
           {/* Recommended for you Section */}
           <section className="mb-10 animate-fade-in relative">
-            <h2 className="text-xl font-semibold mb-5 flex items-center">
+            <h2 className="text-xl font-semibold mb-5 flex items-center ml-6">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Recommended for you
             </h2>
