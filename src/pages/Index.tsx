@@ -52,7 +52,7 @@ const Index = () => {
 
   return (
     <AppLayout title="Avante Maps" withHeader={true} fullHeight={true} fullWidth={true}>
-      <div className="absolute inset-0 h-screen w-full" ref={mapRef}>
+      <div className="relative h-[calc(100vh-4rem)] w-full" ref={mapRef}>
         <div className="h-full w-full">
           <GoogleMap 
             places={allPlaces} 
