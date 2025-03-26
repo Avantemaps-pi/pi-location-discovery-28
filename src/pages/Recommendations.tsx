@@ -37,7 +37,7 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="-ml-4">
                 {avanteTopChoice.map((place, index) => (
-                  <CarouselItem key={place.id} className="pl-4 basis-4/5 md:basis-2/3 lg:basis-3/5">
+                  <CarouselItem key={place.id} className="pl-4 basis-[85%] sm:basis-[75%] md:basis-[70%] lg:basis-[60%]">
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -65,7 +65,7 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="-ml-4">
                 {suggestedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className="pl-4 basis-4/5 md:basis-2/3 lg:basis-3/5">
+                  <CarouselItem key={place.id} className="pl-4 basis-[85%] sm:basis-[75%] md:basis-[70%] lg:basis-[60%]">
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -93,7 +93,7 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="-ml-4">
                 {recommendedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className="pl-4 basis-4/5 md:basis-2/3 lg:basis-3/5">
+                  <CarouselItem key={place.id} className="pl-4 basis-[85%] sm:basis-[75%] md:basis-[70%] lg:basis-[60%]">
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
