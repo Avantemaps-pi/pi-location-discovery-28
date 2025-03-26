@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { recommendedForYou, suggestedForYou, avanteTopChoice } from '@/data/mockPlaces';
 import PlaceCard from '@/components/business/PlaceCard';
-import CategorySection from '@/components/business/CategorySection';
 import {
   Carousel,
   CarouselContent,
@@ -30,7 +29,7 @@ const Recommendations = () => {
           <p className="text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency as payment.</p>
         </div>
 
-        <div className="space-y-12">
+        <div className="space-y-12 pl-0">
           {/* Avante Top Choice Section */}
           <section className="mb-10 animate-fade-in relative">
             <h2 className="text-xl font-semibold mb-5 flex items-center">
@@ -117,30 +116,6 @@ const Recommendations = () => {
               <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0" />
             </Carousel>
           </section>
-          
-          {/* Display Places in Grid Layout */}
-          <div className="space-y-12">
-            <CategorySection 
-              title="Recommended for You" 
-              places={recommendedForYou} 
-              onPlaceClick={handlePlaceClick}
-              showDetails={true}
-            />
-            
-            <CategorySection 
-              title="Suggested for You" 
-              places={suggestedForYou} 
-              onPlaceClick={handlePlaceClick}
-              showDetails={true}
-            />
-            
-            <CategorySection 
-              title="Avante Top Choice" 
-              places={avanteTopChoice} 
-              onPlaceClick={handlePlaceClick}
-              showDetails={true}
-            />
-          </div>
         </div>
       </div>
     </AppLayout>
