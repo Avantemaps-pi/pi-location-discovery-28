@@ -61,8 +61,8 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="ml-0">
                 {avanteTopChoice.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[85%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
-                    <div className="px-2 sm:px-4">
+                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[60%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'}`}>
+                    <div className="pl-0 pr-2">
                       <PlaceCard 
                         place={place} 
                         onPlaceClick={handlePlaceClick}
@@ -96,8 +96,8 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="ml-0">
                 {suggestedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[85%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
-                    <div className="px-2 sm:px-4">
+                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[60%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'}`}>
+                    <div className="pl-0 pr-2">
                       <PlaceCard 
                         place={place} 
                         onPlaceClick={handlePlaceClick}
@@ -131,8 +131,8 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="ml-0">
                 {recommendedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[85%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
-                    <div className="px-2 sm:px-4">
+                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[60%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'}`}>
+                    <div className="pl-0 pr-2">
                       <PlaceCard 
                         place={place} 
                         onPlaceClick={handlePlaceClick}

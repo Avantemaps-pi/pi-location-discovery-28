@@ -205,3 +205,10 @@
     padding-right: 0 !important;
   }
 }
+
+/* Recommendations page specific styles */
+.carousel-item-recommendations .place-card-container {
+  max-width: 66.67% !important; /* Make cards 1/3 narrower */
+  width: 66.67% !important;
+  margin: 0 auto;
+}
