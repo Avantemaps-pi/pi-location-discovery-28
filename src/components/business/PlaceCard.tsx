@@ -75,7 +75,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
   return (
     <Card 
       key={place.id} 
-      className={`material-card card-hover ${className || 'min-w-[250px] w-full flex-shrink-0'}`}
+      className={`material-card card-hover ${className || 'w-full max-w-[350px]'}`}
     >
       <div 
         className="h-40 overflow-hidden cursor-pointer relative"

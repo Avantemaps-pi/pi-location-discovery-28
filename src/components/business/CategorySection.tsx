@@ -29,6 +29,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
               place={place} 
               onPlaceClick={onPlaceClick}
               showDetails={showDetails}
+              className="w-full max-w-[400px] mx-auto"
             />
           </div>
         ))}

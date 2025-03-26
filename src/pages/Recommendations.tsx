@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { recommendedForYou, suggestedForYou, avanteTopChoice } from '@/data/mockPlaces';
 import PlaceCard from '@/components/business/PlaceCard';
+import CategorySection from '@/components/business/CategorySection';
 import {
   Carousel,
   CarouselContent,
@@ -37,7 +38,7 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="-ml-4">
                 {avanteTopChoice.map((place, index) => (
-                  <CarouselItem key={place.id} className="pl-4 basis-[85%] sm:basis-[75%] md:basis-[70%] lg:basis-[60%]">
+                  <CarouselItem key={place.id} className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -46,6 +47,7 @@ const Recommendations = () => {
                         place={place} 
                         onPlaceClick={handlePlaceClick}
                         showDetails={true}
+                        className="mx-auto"
                       />
                     </div>
                   </CarouselItem>
@@ -65,7 +67,7 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="-ml-4">
                 {suggestedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className="pl-4 basis-[85%] sm:basis-[75%] md:basis-[70%] lg:basis-[60%]">
+                  <CarouselItem key={place.id} className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -74,6 +76,7 @@ const Recommendations = () => {
                         place={place} 
                         onPlaceClick={handlePlaceClick}
                         showDetails={true}
+                        className="mx-auto"
                       />
                     </div>
                   </CarouselItem>
@@ -93,7 +96,7 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="-ml-4">
                 {recommendedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className="pl-4 basis-[85%] sm:basis-[75%] md:basis-[70%] lg:basis-[60%]">
+                  <CarouselItem key={place.id} className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -102,6 +105,7 @@ const Recommendations = () => {
                         place={place} 
                         onPlaceClick={handlePlaceClick}
                         showDetails={true}
+                        className="mx-auto"
                       />
                     </div>
                   </CarouselItem>
@@ -111,6 +115,30 @@ const Recommendations = () => {
               <CarouselNext className="right-2 sm:right-4" />
             </Carousel>
           </section>
+          
+          {/* Display Places in Grid Layout */}
+          <div className="space-y-12">
+            <CategorySection 
+              title="Recommended for You" 
+              places={recommendedForYou} 
+              onPlaceClick={handlePlaceClick}
+              showDetails={true}
+            />
+            
+            <CategorySection 
+              title="Suggested for You" 
+              places={suggestedForYou} 
+              onPlaceClick={handlePlaceClick}
+              showDetails={true}
+            />
+            
+            <CategorySection 
+              title="Avante Top Choice" 
+              places={avanteTopChoice} 
+              onPlaceClick={handlePlaceClick}
+              showDetails={true}
+            />
+          </div>
         </div>
       </div>
     </AppLayout>
