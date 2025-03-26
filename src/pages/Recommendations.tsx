@@ -37,9 +37,9 @@ const Recommendations = () => {
               Avante Top Choice
             </h2>
             <Carousel className="w-full">
-              <CarouselContent className="-ml-2">
+              <CarouselContent className="-ml-0">
                 {avanteTopChoice.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-2 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
+                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -66,9 +66,9 @@ const Recommendations = () => {
               Suggested for you
             </h2>
             <Carousel className="w-full">
-              <CarouselContent className="-ml-2">
+              <CarouselContent className="-ml-0">
                 {suggestedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-2 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
+                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -95,9 +95,9 @@ const Recommendations = () => {
               Recommended for you
             </h2>
             <Carousel className="w-full">
-              <CarouselContent className="-ml-2">
+              <CarouselContent className="-ml-0">
                 {recommendedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-2 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
+                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
