@@ -190,3 +190,8 @@
     margin-left: 0 !important; 
   }
 }
+
+/* Remove carousel item padding */
+.embla__slide {
+  padding-left: 0 !important;
+}
