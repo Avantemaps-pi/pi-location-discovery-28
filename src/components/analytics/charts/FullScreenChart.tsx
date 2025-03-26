@@ -117,24 +117,24 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
   
   return (
     <Dialog open={isFullScreen} onOpenChange={setIsFullScreen}>
-      <DialogContent className="max-w-[95vw] w-[95vw] md:max-w-[90vw] flex flex-col p-4" hideCloseButton>
+      <DialogContent className="max-w-[95vw] w-[95vw] md:max-w-[90vw] h-[90vh] flex flex-col p-4 overflow-hidden" hideCloseButton>
         <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
         <div className="flex items-center justify-between">
-          <div className="flex-1">
-            {description && <p className="text-sm text-gray-500">{description}</p>}
+          <div className="flex-1 overflow-hidden">
+            {description && <p className="text-sm text-gray-500 truncate">{description}</p>}
           </div>
           <Button 
             variant="outline" 
             size="icon" 
             onClick={() => setIsFullScreen(false)}
             title="Exit Full Screen"
-            className="ml-2"
+            className="ml-2 flex-shrink-0"
           >
             <Minimize className="h-4 w-4" />
           </Button>
         </div>
         
-        <div className="mt-4 mb-2">
+        <div className="mt-4 mb-2 overflow-x-auto">
           <ToggleGroup 
             type="single" 
             value={timelineFilter} 
