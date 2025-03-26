@@ -2,141 +2,115 @@
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { PiSquare, Globe, Search, Map, Shield, Users, CheckCircle } from 'lucide-react';
+import { PiSquare, Heart, Mail, Github } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const About = () => {
   return (
-    <AppLayout>
-      <div className="space-y-8">
-        <div>
+    <AppLayout title="About Us">
+      <div className="max-w-5xl mx-auto space-y-8 p-4 sm:p-6 animate-fade-in">
+        <div className="space-y-4">
           <h1 className="text-3xl font-bold tracking-tight">About Avante Maps</h1>
-          <p className="text-muted-foreground mt-2">Discover the story and mission behind our platform.</p>
+          <p className="text-muted-foreground">Discover the mission behind our platform for Pi cryptocurrency adoption.</p>
         </div>
 
-        {/* Mission Section */}
-        <Card>
+        <Card className="material-card">
           <CardHeader>
-            <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-r from-avante-blue to-avante-purple p-3 rounded-lg">
-                <PiSquare className="h-8 w-8 text-white" />
+            <CardTitle className="text-xl font-semibold flex items-center gap-2">
+              <div className="bg-gradient-to-r from-primary to-secondary p-2 rounded-md">
+                <PiSquare className="h-5 w-5 text-white" />
               </div>
-              <div>
-                <CardTitle className="text-2xl">Our Mission</CardTitle>
-                <CardDescription>Connecting Pi users with businesses worldwide</CardDescription>
-              </div>
-            </div>
+              Our Mission
+            </CardTitle>
+            <CardDescription>
+              Empowering businesses and consumers with cryptocurrency
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <p className="leading-7">
-              Avante Maps is a premier location-based platform designed specifically for Pi Network users, with the sole purpose of increasing discoverability of businesses that accept Pi coin as a form of payment onsite. Our mission is to bridge the gap between the digital Pi ecosystem and physical retail spaces, making it easier for users to spend their Pi cryptocurrency in real-world settings.
+          <CardContent className="space-y-4">
+            <p>
+              Avante Maps is dedicated to accelerating the adoption of Pi cryptocurrency by connecting consumers with local and online businesses that accept Pi as payment.
             </p>
-            <p className="leading-7 mt-4">
-              By creating a comprehensive directory of Pi-accepting businesses, we aim to accelerate the adoption of Pi as a legitimate currency and help businesses that embrace cryptocurrency to thrive in the evolving digital economy.
+            <p>
+              Our platform makes it easy for Pi holders to discover places where they can spend their digital currency, while helping businesses reach a growing community of crypto enthusiasts.
             </p>
           </CardContent>
         </Card>
 
-        {/* Features Section */}
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight mb-4">Key Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card>
-              <CardHeader className="pb-2">
-                <Map className="h-6 w-6 mb-2 text-avante-purple" />
-                <CardTitle className="text-xl">Interactive Maps</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">Explore Pi-accepting businesses on our interactive map interface, making it easy to find locations near you.</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <Search className="h-6 w-6 mb-2 text-avante-blue" />
-                <CardTitle className="text-xl">Advanced Search</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">Find exactly what you're looking for with our powerful search functionality, filtering by business type, location, and more.</p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CheckCircle className="h-6 w-6 mb-2 text-green-500" />
-                <CardTitle className="text-xl">Verified Listings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">All businesses on our platform are verified to accept Pi payments, ensuring a seamless experience for users.</p>
-              </CardContent>
-            </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="material-card">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold">For Businesses</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p>
+                By registering your business on Avante Maps, you gain access to a dedicated community of Pi users looking to support businesses that embrace cryptocurrency.
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                <li>Increased visibility in the Pi ecosystem</li>
+                <li>Simplified customer discovery process</li>
+                <li>Free business listing and promotion</li>
+                <li>Join the future of digital payments</li>
+              </ul>
+              <Button className="w-full mt-4" variant="outline">
+                Register Your Business
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="material-card">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold">For Consumers</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p>
+                Find places to spend your Pi cryptocurrency, from local cafes to online shops, all in one convenient location.
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                <li>Discover Pi-accepting businesses near you</li>
+                <li>Save your favorite places for later</li>
+                <li>Get notifications about new businesses</li>
+                <li>Support the growing Pi economy</li>
+              </ul>
+              <Button className="w-full mt-4">
+                Explore the Map
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="material-card">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold">Our Story</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p>
+              Avante Maps was founded by a group of Pi Network enthusiasts who recognized the need for a dedicated platform to connect Pi users with businesses accepting the currency.
+            </p>
+            <p>
+              What started as a simple directory has evolved into a comprehensive mapping service, designed to make Pi cryptocurrency more accessible and useful in everyday transactions.
+            </p>
+            <p>
+              We're constantly working to improve our platform and expand our database of Pi-accepting businesses worldwide.
+            </p>
+          </CardContent>
+        </Card>
+
+        <div className="flex flex-col items-center justify-center space-y-4 py-8">
+          <h2 className="text-2xl font-semibold">Connect With Us</h2>
+          <div className="flex space-x-4">
+            <Button variant="outline" className="rounded-full" size="icon">
+              <Heart className="h-5 w-5" />
+            </Button>
+            <Button variant="outline" className="rounded-full" size="icon">
+              <Mail className="h-5 w-5" />
+            </Button>
+            <Button variant="outline" className="rounded-full" size="icon">
+              <Github className="h-5 w-5" />
+            </Button>
           </div>
-        </div>
-
-        {/* Team Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Our Team</CardTitle>
-            <CardDescription>The passionate individuals behind Avante Maps</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-avante-blue to-avante-purple flex items-center justify-center mb-4">
-                  <Users className="h-12 w-12 text-white" />
-                </div>
-                <h3 className="font-bold text-lg">Tapelo Daniel</h3>
-                <p className="text-sm text-muted-foreground">IT Support Specialist & Software Developer (In Training)</p>
-                <p className="mt-2 text-sm font-bold text-black">bridges IT support with software development, ensuring smooth operations.</p>
-              </div>
-              
-              <div className="flex flex-col items-center text-center">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-avante-blue to-avante-purple flex items-center justify-center mb-4">
-                  <Users className="h-12 w-12 text-white" />
-                </div>
-                <h3 className="font-bold text-lg">Loyiso Xulu</h3>
-                <p className="text-sm text-muted-foreground">Software Engineer & System Architect</p>
-                <p className="mt-2 text-sm font-bold text-black">builds and optimizes the platform's architecture to handle growth.</p>
-              </div>
-              
-              <div className="flex flex-col items-center text-center">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-avante-blue to-avante-purple flex items-center justify-center mb-4">
-                  <Users className="h-12 w-12 text-white" />
-                </div>
-                <h3 className="font-bold text-lg">Neo Memani</h3>
-                <p className="text-sm text-muted-foreground">Financial Analyst & Market Strategist</p>
-                <p className="mt-2 text-sm font-bold text-black">ensures the platform aligns with business strategy and financial sustainability.</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Vision Section */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-r from-avante-teal to-avante-blue p-3 rounded-lg">
-                <Globe className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <CardTitle className="text-2xl">Our Vision</CardTitle>
-                <CardDescription>The future of Pi payments and Avante Maps</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="leading-7">
-              We envision a world where cryptocurrency, particularly Pi, becomes a mainstream payment method across global markets. Avante Maps aims to be at the forefront of this revolution, creating the infrastructure needed to connect consumers with businesses in the Pi ecosystem.
-            </p>
-            <p className="leading-7 mt-4">
-              As Pi Network continues to grow, we plan to expand our services to include more features such as in-app payments, loyalty programs, and enhanced business analytics for our listed merchants. Our ultimate goal is to become the definitive platform for discovering and engaging with Pi-accepting businesses worldwide.
-            </p>
-          </CardContent>
-        </Card>
-
-        <div className="text-center py-6">
-          <p className="text-sm text-muted-foreground">© 2023 Avante Maps. All rights reserved.</p>
-          <p className="text-sm text-muted-foreground mt-1">Proudly supporting the Pi Network ecosystem.</p>
+          <p className="text-sm text-muted-foreground mt-4">
+            © 2023 Avante Maps. All rights reserved.
+          </p>
         </div>
       </div>
     </AppLayout>

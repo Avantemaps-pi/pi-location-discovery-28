@@ -1,148 +1,100 @@
 
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const PrivacyPolicy = () => {
   return (
-    <AppLayout>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-3xl">Privacy Policy</CardTitle>
-        </CardHeader>
-        <CardContent className="prose prose-slate max-w-none">
+    <AppLayout title="Privacy Policy">
+      <div className="max-w-5xl mx-auto space-y-8 p-4 sm:p-6 animate-fade-in">
+        <div className="space-y-4">
+          <h1 className="text-3xl font-bold tracking-tight">Privacy Policy</h1>
           <p className="text-muted-foreground">Last updated: May 1, 2023</p>
-          
-          <Separator className="my-6" />
-          
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">1. Introduction</h2>
-            <p>
-              Avante Maps ("we," "our," or "us") respects your privacy and is committed to protecting your personal data. This Privacy Policy will inform you about how we look after your personal data when you visit our website or use our mobile application (collectively, the "Service") and tell you about your privacy rights and how the law protects you.
-            </p>
-            <p className="mt-4">
-              Please read this Privacy Policy carefully before using the Service. By using the Service, you acknowledge that you have read and understood this Privacy Policy.
-            </p>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">2. The Data We Collect</h2>
-            <p>
-              We may collect, use, store, and transfer different kinds of personal data about you which we have grouped together as follows:
-            </p>
-            <ul className="list-disc pl-6 mt-2 space-y-1">
-              <li><strong>Identity Data</strong> includes first name, last name, username or similar identifier.</li>
-              <li><strong>Contact Data</strong> includes email address and telephone numbers.</li>
-              <li><strong>Technical Data</strong> includes internet protocol (IP) address, your login data, browser type and version, time zone setting and location, browser plug-in types and versions, operating system and platform, and other technology on the devices you use to access this Service.</li>
-              <li><strong>Usage Data</strong> includes information about how you use our Service.</li>
-              <li><strong>Location Data</strong> includes your current location disclosed by GPS technology so that we can provide you with information about nearby businesses accepting Pi cryptocurrency.</li>
-            </ul>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">3. How We Use Your Data</h2>
-            <p>
-              We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:
-            </p>
-            <ul className="list-disc pl-6 mt-2 space-y-1">
-              <li>Where we need to perform the contract we are about to enter into or have entered into with you.</li>
-              <li>Where it is necessary for our legitimate interests (or those of a third party) and your interests and fundamental rights do not override those interests.</li>
-              <li>Where we need to comply with a legal obligation.</li>
-            </ul>
-            <p className="mt-4">
-              Specifically, we may use your data for the following purposes:
-            </p>
-            <ul className="list-disc pl-6 mt-2 space-y-1">
-              <li>To register you as a new user</li>
-              <li>To provide you with the services available through our Service</li>
-              <li>To show you businesses accepting Pi cryptocurrency near your location</li>
-              <li>To manage your account</li>
-              <li>To notify you about changes to our Service</li>
-              <li>To improve our Service</li>
-            </ul>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">4. Data Sharing</h2>
-            <p>
-              We may share your personal data with the following parties:
-            </p>
-            <ul className="list-disc pl-6 mt-2 space-y-1">
-              <li><strong>Service Providers:</strong> We may share your personal data with service providers who perform services on our behalf, such as hosting, data analysis, payment processing, and customer service.</li>
-              <li><strong>Business Partners:</strong> We may share your personal data with our business partners who offer services that may be of interest to you.</li>
-              <li><strong>Legal Requirements:</strong> We may disclose your personal data where required to do so by law or in response to valid requests by public authorities.</li>
-            </ul>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">5. Data Security</h2>
-            <p>
-              We have implemented appropriate security measures to prevent your personal data from being accidentally lost, used, or accessed in an unauthorized way, altered, or disclosed.
-            </p>
-            <p className="mt-4">
-              We have put in place procedures to deal with any suspected personal data breach and will notify you and any applicable regulator of a breach where we are legally required to do so.
-            </p>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">6. Data Retention</h2>
-            <p>
-              We will only retain your personal data for as long as reasonably necessary to fulfill the purposes we collected it for, including for the purposes of satisfying any legal, regulatory, tax, accounting, or reporting requirements.
-            </p>
-            <p className="mt-4">
-              To determine the appropriate retention period for personal data, we consider the amount, nature, and sensitivity of the personal data, the potential risk of harm from unauthorized use or disclosure of your personal data, the purposes for which we process your personal data, and whether we can achieve those purposes through other means, and the applicable legal, regulatory, tax, accounting, or other requirements.
-            </p>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">7. Your Legal Rights</h2>
-            <p>
-              Under certain circumstances, you have rights under data protection laws in relation to your personal data, including the right to:
-            </p>
-            <ul className="list-disc pl-6 mt-2 space-y-1">
-              <li>Request access to your personal data</li>
-              <li>Request correction of your personal data</li>
-              <li>Request erasure of your personal data</li>
-              <li>Object to processing of your personal data</li>
-              <li>Request restriction of processing your personal data</li>
-              <li>Request transfer of your personal data</li>
-              <li>Right to withdraw consent</li>
-            </ul>
-            <p className="mt-4">
-              If you wish to exercise any of these rights, please contact us using the details provided below.
-            </p>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">8. Third-Party Links</h2>
-            <p>
-              The Service may include links to third-party websites, plug-ins, and applications. Clicking on those links or enabling those connections may allow third parties to collect or share data about you. We do not control these third-party websites and are not responsible for their privacy statements. When you leave our Service, we encourage you to read the privacy policy of every website you visit.
-            </p>
-          </section>
-          
-          <section className="mb-8">
-            <h2 className="text-xl font-bold mb-4">9. Changes to This Privacy Policy</h2>
-            <p>
-              We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date at the top of this Privacy Policy.
-            </p>
-            <p className="mt-4">
-              You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.
-            </p>
-          </section>
-          
-          <section>
-            <h2 className="text-xl font-bold mb-4">10. Contact Us</h2>
-            <p>
-              If you have any questions about this Privacy Policy, please contact us at:
-            </p>
-            <p className="mt-2">
-              <strong>Email:</strong> privacy@avantemaps.com<br />
-              <strong>Address:</strong> 123 Pi Street, Suite 456, San Francisco, CA 94103
-            </p>
-          </section>
-        </CardContent>
-      </Card>
+        </div>
+
+        <Card className="material-card">
+          <CardHeader>
+            <CardTitle>Our Commitment to Privacy</CardTitle>
+          </CardHeader>
+          <CardContent className="prose prose-sm dark:prose-invert max-w-none">
+            <ScrollArea className="h-[60vh] pr-4">
+              <div className="space-y-6">
+                <p>
+                  At Avante Maps, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our mobile application.
+                </p>
+                <p>
+                  Please read this Privacy Policy carefully. By accessing or using the Service, you acknowledge that you have read, understood, and agree to be bound by all the terms of this Privacy Policy.
+                </p>
+
+                <h3 className="text-lg font-medium">1. Information We Collect</h3>
+                <p>
+                  We may collect information about you in a variety of ways. The information we may collect includes:
+                </p>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li><strong>Personal Data:</strong> Personally identifiable information, such as your name, email address, and phone number, that you voluntarily give to us when you register with the Service or when you choose to participate in various activities related to the Service.</li>
+                  <li><strong>Derivative Data:</strong> Information our servers automatically collect when you access the Service, such as your IP address, browser type, operating system, access times, and the pages you have viewed.</li>
+                  <li><strong>Financial Data:</strong> Financial information, such as data related to your payment method, that we may collect when you purchase, order, or use the Service.</li>
+                  <li><strong>Mobile Device Data:</strong> Device information, such as your mobile device ID, model, and manufacturer, and information about the location of your device, if you access the Service from a mobile device.</li>
+                </ul>
+
+                <h3 className="text-lg font-medium">2. Use of Your Information</h3>
+                <p>
+                  Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the Service to:
+                </p>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li>Create and manage your account.</li>
+                  <li>Process payments and refunds.</li>
+                  <li>Facilitate business registrations and transactions.</li>
+                  <li>Increase the efficiency and operation of the Service.</li>
+                  <li>Monitor and analyze usage and trends to improve your experience with the Service.</li>
+                  <li>Notify you of updates to the Service.</li>
+                  <li>Resolve disputes and troubleshoot problems.</li>
+                  <li>Prevent fraudulent transactions, monitor against theft, and protect against criminal activity.</li>
+                </ul>
+
+                <h3 className="text-lg font-medium">3. Disclosure of Your Information</h3>
+                <p>
+                  We may share information we have collected about you in certain situations. Your information may be disclosed as follows:
+                </p>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li><strong>By Law or to Protect Rights:</strong> If we believe the release of information about you is necessary to respond to legal process, to investigate or remedy potential violations of our policies, or to protect the rights, property, and safety of others, we may share your information as permitted or required by any applicable law, rule, or regulation.</li>
+                  <li><strong>Third-Party Service Providers:</strong> We may share your information with third parties that perform services for us or on our behalf, including payment processing, data analysis, email delivery, hosting services, customer service, and marketing assistance.</li>
+                  <li><strong>Business Transfers:</strong> If we or our subsidiaries are involved in a merger, acquisition, or sale of all or a portion of our assets, your information may be transferred as part of that transaction.</li>
+                </ul>
+
+                <h3 className="text-lg font-medium">4. Security of Your Information</h3>
+                <p>
+                  We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse.
+                </p>
+
+                <h3 className="text-lg font-medium">5. Your Rights and Choices</h3>
+                <p>
+                  You may at any time review or change the information in your account by:
+                </p>
+                <ul className="list-disc pl-6 space-y-2">
+                  <li>Logging into your account settings and updating your account.</li>
+                  <li>Contacting us using the contact information provided below.</li>
+                </ul>
+                <p>
+                  Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, some information may be retained in our files to prevent fraud, troubleshoot problems, assist with any investigations, enforce our Terms of Use and/or comply with legal requirements.
+                </p>
+
+                <h3 className="text-lg font-medium">6. Contact Us</h3>
+                <p>
+                  If you have questions or comments about this Privacy Policy, please contact us at:
+                </p>
+                <p>
+                  privacy@avantemaps.com<br />
+                  Avante Maps<br />
+                  123 Pi Street<br />
+                  San Francisco, CA 94103
+                </p>
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
     </AppLayout>
   );
 };
