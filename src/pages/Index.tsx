@@ -58,15 +58,13 @@ const Index = () => {
       fullWidth={true}
       hideSidebar={true}
     >
-      <div className="relative h-[calc(100vh-4rem)] w-full" ref={mapRef}>
-        <div className="h-full w-full">
-          <GoogleMap 
-            places={allPlaces} 
-            selectedPlaceId={selectedPlace} 
-            onMarkerClick={handlePlaceClick}
-            detailCardRef={detailCardRef}
-          />
-        </div>
+      <div className="absolute inset-0 top-16 w-full" ref={mapRef}>
+        <GoogleMap 
+          places={allPlaces} 
+          selectedPlaceId={selectedPlace} 
+          onMarkerClick={handlePlaceClick}
+          detailCardRef={detailCardRef}
+        />
         
         <div className="absolute top-4 left-0 right-0 z-10 px-4">
           <div className="max-w-md mx-auto">
