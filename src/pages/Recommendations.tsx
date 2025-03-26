@@ -3,8 +3,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { recommendedForYou, suggestedForYou, avanteTopChoice } from '@/data/mockPlaces';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import PlaceCard from '@/components/business/PlaceCard';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const Recommendations = () => {
   const navigate = useNavigate();
@@ -28,12 +34,11 @@ const Recommendations = () => {
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Avante Top Choice
             </h2>
-            <div className="relative">
-              <ScrollArea orientation="horizontal" className="w-full overflow-x-auto pb-4">
-                <div className="flex space-x-4 pb-2 min-w-full">
-                  {avanteTopChoice.map((place, index) => (
+            <Carousel className="w-full">
+              <CarouselContent>
+                {avanteTopChoice.map((place, index) => (
+                  <CarouselItem key={place.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
                     <div 
-                      key={place.id} 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
                     >
@@ -41,13 +46,14 @@ const Recommendations = () => {
                         place={place} 
                         onPlaceClick={handlePlaceClick}
                         showDetails={true}
-                        className="min-w-[280px] w-[280px]"
                       />
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-2 sm:left-4" />
+              <CarouselNext className="right-2 sm:right-4" />
+            </Carousel>
           </section>
           
           {/* Suggested for you Section */}
@@ -56,12 +62,11 @@ const Recommendations = () => {
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Suggested for you
             </h2>
-            <div className="relative">
-              <ScrollArea orientation="horizontal" className="w-full overflow-x-auto pb-4">
-                <div className="flex space-x-4 pb-2 min-w-full">
-                  {suggestedForYou.map((place, index) => (
+            <Carousel className="w-full">
+              <CarouselContent>
+                {suggestedForYou.map((place, index) => (
+                  <CarouselItem key={place.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
                     <div 
-                      key={place.id} 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
                     >
@@ -69,13 +74,14 @@ const Recommendations = () => {
                         place={place} 
                         onPlaceClick={handlePlaceClick}
                         showDetails={true}
-                        className="min-w-[280px] w-[280px]"
                       />
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-2 sm:left-4" />
+              <CarouselNext className="right-2 sm:right-4" />
+            </Carousel>
           </section>
           
           {/* Recommended for you Section */}
@@ -84,12 +90,11 @@ const Recommendations = () => {
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Recommended for you
             </h2>
-            <div className="relative">
-              <ScrollArea orientation="horizontal" className="w-full overflow-x-auto pb-4">
-                <div className="flex space-x-4 pb-2 min-w-full">
-                  {recommendedForYou.map((place, index) => (
+            <Carousel className="w-full">
+              <CarouselContent>
+                {recommendedForYou.map((place, index) => (
+                  <CarouselItem key={place.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
                     <div 
-                      key={place.id} 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
                     >
@@ -97,13 +102,14 @@ const Recommendations = () => {
                         place={place} 
                         onPlaceClick={handlePlaceClick}
                         showDetails={true}
-                        className="min-w-[280px] w-[280px]"
                       />
                     </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-2 sm:left-4" />
+              <CarouselNext className="right-2 sm:right-4" />
+            </Carousel>
           </section>
         </div>
       </div>
