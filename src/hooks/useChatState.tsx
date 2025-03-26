@@ -1,13 +1,17 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChatMessageProps } from '@/components/chat/ChatMessage';
 import { ChatMode } from '@/components/chat/ChatInterface';
 
 export function useChatState() {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<ChatMessageProps[]>([
+  const [messages, setMessages] = useState<Array<{
+    id: number;
+    text: string;
+    sender: string;
+    timestamp: string;
+  }>>([
     { id: 1, text: "Welcome to Avante Maps!", sender: "system", timestamp: "10:30 AM" },
     { id: 2, text: "Hi there! How can I help with Avante Maps today?", sender: "support", timestamp: "10:32 AM" },
   ]);

@@ -2,7 +2,7 @@
 import React, { KeyboardEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { PaperPlaneIcon } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 
 const ChatInput: React.FC<{
@@ -55,7 +55,7 @@ const ChatInput: React.FC<{
             className="h-8 w-8 bg-primary text-primary-foreground"
             disabled={!value.trim() || disabled}
           >
-            <PaperPlaneIcon className="h-5 w-5" />
+            <Send className="h-5 w-5" />
             <span className="sr-only">Send message</span>
           </Button>
         </div>
