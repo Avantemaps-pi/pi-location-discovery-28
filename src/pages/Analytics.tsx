@@ -131,7 +131,7 @@ const Analytics = () => {
           />
         </div>
         
-        <div className="w-full mb-4 sm:mb-8 h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden">
+        <div className="w-full mb-4 sm:mb-8 h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden">
           <EngagementChart 
             data={engagementData}
             title="Engagement Overview"

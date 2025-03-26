@@ -108,16 +108,18 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="pl-0 pt-2 h-[400px] w-full overflow-hidden">
-          <Tabs value={activeTab} onValueChange={handleTabChange} className="h-full flex flex-col">
-            <TabsContent value="line" className="flex-1 h-full">
-              {lineChartComponent}
-            </TabsContent>
-            
-            <TabsContent value="bar" className="flex-1 h-full">
-              {barChartComponent}
-            </TabsContent>
-          </Tabs>
+        <CardContent className="pl-0 pt-2 h-[300px] w-full overflow-hidden flex items-center justify-center">
+          <div className="w-full h-[250px]">
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="h-full flex flex-col">
+              <TabsContent value="line" className="flex-1 h-full">
+                {lineChartComponent}
+              </TabsContent>
+              
+              <TabsContent value="bar" className="flex-1 h-full">
+                {barChartComponent}
+              </TabsContent>
+            </Tabs>
+          </div>
         </CardContent>
       </Card>
 

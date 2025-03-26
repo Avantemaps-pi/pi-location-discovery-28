@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { PiSquare } from 'lucide-react';
 import MobileMenuButton from './header/MobileMenuButton';
 import DesktopMenuButton from './header/DesktopMenuButton';
@@ -9,13 +10,16 @@ interface PageHeaderProps {
 }
 
 const PageHeader = ({ title = "Avante Maps" }: PageHeaderProps) => {
+  const location = useLocation();
+  const isAnalyticsPage = location.pathname === '/analytics';
+
   return (
     <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-full items-center px-4">
-        <MobileMenuButton />
-        <DesktopMenuButton onClick={() => console.log('Desktop menu clicked')} />
+        {!isAnalyticsPage && <MobileMenuButton />}
+        {!isAnalyticsPage && <DesktopMenuButton onClick={() => console.log('Desktop menu clicked')} />}
         
-        <Link to="/" className="ml-4 flex items-center gap-2">
+        <Link to="/" className={`${!isAnalyticsPage ? 'ml-4' : ''} flex items-center gap-2`}>
           <div className="bg-gradient-to-r from-avante-blue to-avante-purple p-2 rounded-md">
             <PiSquare className="h-5 w-5 text-white" />
           </div>
