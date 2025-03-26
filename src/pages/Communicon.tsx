@@ -39,6 +39,7 @@ const Communicon = () => {
           setMessage={setMessage}
           handleSendMessage={handleSendMessage}
           handleAttachmentOption={handleAttachmentOption}
+          showAttachmentIcon={false}
         />
       </div>
     </AppLayout>

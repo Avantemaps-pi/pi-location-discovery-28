@@ -51,7 +51,7 @@ const Index = () => {
   };
 
   return (
-    <AppLayout title="Avante Maps" withHeader={true} fullHeight={true}>
+    <AppLayout title="Avante Maps" withHeader={true} fullHeight={true} fullWidth={true}>
       <div className="relative h-full w-full" ref={mapRef}>
         <div className="absolute inset-0 z-0">
           <GoogleMap 

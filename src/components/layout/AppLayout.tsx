@@ -8,6 +8,7 @@ import { ArrowLeft } from 'lucide-react';
 interface AppLayoutProps {
   children: ReactNode;
   fullHeight?: boolean;
+  fullWidth?: boolean;
   withHeader?: boolean;
   title?: string;
   backButton?: boolean;
@@ -16,7 +17,8 @@ interface AppLayoutProps {
 
 const AppLayout = ({ 
   children, 
-  fullHeight = false, 
+  fullHeight = false,
+  fullWidth = false,
   withHeader = true, 
   title = "Avante Maps",
   backButton = false,
@@ -28,7 +30,7 @@ const AppLayout = ({
       <div className="flex flex-1 overflow-hidden">
         <AppSidebar />
         <main className={`flex-1 md:ml-64 ${fullHeight ? 'h-[calc(100vh-4rem)]' : ''} ${withHeader ? 'overflow-y-auto' : 'h-screen overflow-y-auto'}`}>
-          <div className={fullHeight ? 'h-full' : 'p-6'}>
+          <div className={`${fullHeight ? 'h-full' : ''} ${fullWidth ? 'w-full' : 'p-6'}`}>
             {backButton && onBackClick && (
               <Button 
                 variant="ghost" 

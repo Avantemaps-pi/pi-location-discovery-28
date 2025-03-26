@@ -43,10 +43,10 @@ const ExpandableDescription: React.FC<ExpandableDescriptionProps> = ({
       onOpenChange={setIsExpanded}
       className={`w-full ${className}`}
     >
-      <div className={`relative overflow-hidden ${!isExpanded ? 'max-h-[4.8em]' : ''}`}>
+      <div className={`relative overflow-hidden ${!isExpanded ? `max-h-[${maxLines * 1.2}em]` : ''}`} style={!isExpanded ? {maxHeight: `${maxLines * 1.5}em`} : {}}>
         <p 
           ref={textRef} 
-          className={`text-sm text-gray-700 ${!isExpanded ? 'line-clamp-4' : ''}`}
+          className={`text-sm text-gray-700 ${!isExpanded ? `line-clamp-${maxLines}` : ''}`}
         >
           {text}
         </p>

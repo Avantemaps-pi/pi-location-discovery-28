@@ -28,24 +28,26 @@ const Recommendations = () => {
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Avante Top Choice
             </h2>
-            <ScrollArea orientation="horizontal" className="w-full whitespace-nowrap pb-4">
-              <div className="flex space-x-4 pb-2">
-                {avanteTopChoice.map((place, index) => (
-                  <div 
-                    key={place.id} 
-                    style={{animationDelay: `${index * 0.05}s`}} 
-                    className="animate-fade-in"
-                  >
-                    <PlaceCard 
-                      place={place} 
-                      onPlaceClick={handlePlaceClick}
-                      showDetails={true}
-                      className="min-w-[280px] w-[280px]"
-                    />
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
+            <div className="relative">
+              <ScrollArea orientation="horizontal" className="w-full overflow-x-auto pb-4">
+                <div className="flex space-x-4 pb-2 min-w-full">
+                  {avanteTopChoice.map((place, index) => (
+                    <div 
+                      key={place.id} 
+                      style={{animationDelay: `${index * 0.05}s`}} 
+                      className="animate-fade-in"
+                    >
+                      <PlaceCard 
+                        place={place} 
+                        onPlaceClick={handlePlaceClick}
+                        showDetails={true}
+                        className="min-w-[280px] w-[280px]"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
           </section>
           
           {/* Suggested for you Section */}
@@ -54,24 +56,26 @@ const Recommendations = () => {
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Suggested for you
             </h2>
-            <ScrollArea orientation="horizontal" className="w-full whitespace-nowrap pb-4">
-              <div className="flex space-x-4 pb-2">
-                {suggestedForYou.map((place, index) => (
-                  <div 
-                    key={place.id} 
-                    style={{animationDelay: `${index * 0.05}s`}} 
-                    className="animate-fade-in"
-                  >
-                    <PlaceCard 
-                      place={place} 
-                      onPlaceClick={handlePlaceClick}
-                      showDetails={true}
-                      className="min-w-[280px] w-[280px]"
-                    />
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
+            <div className="relative">
+              <ScrollArea orientation="horizontal" className="w-full overflow-x-auto pb-4">
+                <div className="flex space-x-4 pb-2 min-w-full">
+                  {suggestedForYou.map((place, index) => (
+                    <div 
+                      key={place.id} 
+                      style={{animationDelay: `${index * 0.05}s`}} 
+                      className="animate-fade-in"
+                    >
+                      <PlaceCard 
+                        place={place} 
+                        onPlaceClick={handlePlaceClick}
+                        showDetails={true}
+                        className="min-w-[280px] w-[280px]"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
           </section>
           
           {/* Recommended for you Section */}
@@ -80,24 +84,26 @@ const Recommendations = () => {
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Recommended for you
             </h2>
-            <ScrollArea orientation="horizontal" className="w-full whitespace-nowrap pb-4">
-              <div className="flex space-x-4 pb-2">
-                {recommendedForYou.map((place, index) => (
-                  <div 
-                    key={place.id} 
-                    style={{animationDelay: `${index * 0.05}s`}} 
-                    className="animate-fade-in"
-                  >
-                    <PlaceCard 
-                      place={place} 
-                      onPlaceClick={handlePlaceClick}
-                      showDetails={true}
-                      className="min-w-[280px] w-[280px]"
-                    />
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
+            <div className="relative">
+              <ScrollArea orientation="horizontal" className="w-full overflow-x-auto pb-4">
+                <div className="flex space-x-4 pb-2 min-w-full">
+                  {recommendedForYou.map((place, index) => (
+                    <div 
+                      key={place.id} 
+                      style={{animationDelay: `${index * 0.05}s`}} 
+                      className="animate-fade-in"
+                    >
+                      <PlaceCard 
+                        place={place} 
+                        onPlaceClick={handlePlaceClick}
+                        showDetails={true}
+                        className="min-w-[280px] w-[280px]"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
           </section>
         </div>
       </div>

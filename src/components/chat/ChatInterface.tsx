@@ -1,20 +1,21 @@
 
-import React, { useRef, useEffect } from 'react';
-import { Bot, Radio } from 'lucide-react';
-import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
-import { ScrollArea } from '@/components/ui/scroll-area';
-import ChatMessage, { ChatMessageProps } from './ChatMessage';
-import ChatInput from './ChatInput';
+import React from 'react';
+import { Card } from '@/components/ui/card';
 import ChatModeToggle from './ChatModeToggle';
+import ChatMessage from './ChatMessage';
+import ChatInput from './ChatInput';
+
+export type ChatMode = 'customer' | 'business';
 
 interface ChatInterfaceProps {
-  chatMode: "ai" | "live";
-  onChatModeChange: (value: string) => void;
-  messages: ChatMessageProps[];
+  chatMode: ChatMode;
+  onChatModeChange: (mode: ChatMode) => void;
+  messages: any[];
   message: string;
   setMessage: (message: string) => void;
-  handleSendMessage: (e: React.FormEvent) => void;
-  handleAttachmentOption: (type: string) => void;
+  handleSendMessage: () => void;
+  handleAttachmentOption: () => void;
+  showAttachmentIcon?: boolean;
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({
@@ -24,59 +25,39 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   message,
   setMessage,
   handleSendMessage,
-  handleAttachmentOption
+  handleAttachmentOption,
+  showAttachmentIcon = true
 }) => {
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  
-  // Scroll to bottom whenever messages change
-  useEffect(() => {
-    if (scrollAreaRef.current) {
-      const scrollContainer = scrollAreaRef.current;
-      scrollContainer.scrollTop = scrollContainer.scrollHeight;
-    }
-  }, [messages]);
-
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Bot className="h-5 w-5 text-primary" />
-            <CardTitle>Chat</CardTitle>
-          </div>
-          
+    <Card className="mt-6 overflow-hidden border-none shadow-md">
+      <div className="flex h-full flex-col">
+        <div className="border-b p-3">
           <ChatModeToggle chatMode={chatMode} onChatModeChange={onChatModeChange} />
         </div>
-        <CardDescription className="whitespace-nowrap">Connect with Avante Maps {chatMode === "ai" ? "AI assistant" : "support team"}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col h-[400px]">
-          <ScrollArea 
-            className="flex-1 pr-4 mb-4" 
-            ref={scrollAreaRef}
-          >
-            <div className="space-y-4">
-              {messages.map((msg) => (
-                <ChatMessage 
-                  key={msg.id} 
-                  id={msg.id} 
-                  text={msg.text} 
-                  sender={msg.sender} 
-                  timestamp={msg.timestamp} 
-                />
-              ))}
+  
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[60vh] min-h-[300px]">
+          {messages.length === 0 ? (
+            <div className="flex h-full items-center justify-center">
+              <p className="text-center text-muted-foreground">
+                No messages yet. Start a conversation!
+              </p>
             </div>
-          </ScrollArea>
-          
-          <ChatInput 
-            chatMode={chatMode}
-            onSendMessage={handleSendMessage}
-            message={message}
-            setMessage={setMessage}
-            handleAttachmentOption={handleAttachmentOption}
-          />
+          ) : (
+            messages.map((msg, index) => (
+              <ChatMessage key={index} message={msg} />
+            ))
+          )}
         </div>
-      </CardContent>
+  
+        <ChatInput
+          value={message}
+          onChange={setMessage}
+          onSubmit={handleSendMessage}
+          onAttachmentClick={handleAttachmentOption}
+          placeholder={`Type a message as ${chatMode === 'customer' ? 'customer' : 'business'}...`}
+          showAttachmentIcon={showAttachmentIcon}
+        />
+      </div>
     </Card>
   );
 };

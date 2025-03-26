@@ -137,8 +137,8 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
           <span className="text-xs line-clamp-1">{place.address}</span>
         </div>
         
-        <div className="h-12 mb-3">
-          <ExpandableDescription text={place.description} maxLines={2} />
+        <div className="h-24 mb-3">
+          <ExpandableDescription text={place.description} maxLines={4} />
         </div>
         
         <div className="flex flex-wrap justify-between items-end mt-auto gap-2">

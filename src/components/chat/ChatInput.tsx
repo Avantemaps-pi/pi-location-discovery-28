@@ -1,67 +1,82 @@
 
-import React from 'react';
-import { Paperclip, SendHorizontal, Image } from 'lucide-react';
+import React, { KeyboardEvent } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Textarea } from '@/components/ui/textarea';
+import { PaperAirplaneTilt, PaperclipSimple } from '@phosphor-icons/react';
+import { Avatar } from '@/components/ui/avatar';
 
 interface ChatInputProps {
-  chatMode: "ai" | "live";
-  onSendMessage: (e: React.FormEvent) => void;
-  message: string;
-  setMessage: (message: string) => void;
-  handleAttachmentOption: (type: string) => void;
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
+  onAttachmentClick?: () => void;
+  placeholder?: string;
+  disabled?: boolean;
+  showAttachmentIcon?: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ 
-  chatMode, 
-  onSendMessage, 
-  message, 
-  setMessage,
-  handleAttachmentOption
+const ChatInput: React.FC<ChatInputProps> = ({
+  value,
+  onChange,
+  onSubmit,
+  onAttachmentClick,
+  placeholder = 'Type a message...',
+  disabled = false,
+  showAttachmentIcon = true
 }) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (value.trim()) {
+        onSubmit();
+      }
+    }
+  };
+
   return (
-    <form onSubmit={onSendMessage} className="relative">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button 
-            type="button" 
-            variant="ghost" 
-            size="icon" 
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 h-8 w-8 opacity-70 hover:opacity-100"
-          >
-            <Paperclip className="h-5 w-5 text-gray-500" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-20 p-0" align="start" side="top">
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div 
-              className="flex items-center gap-2 p-3 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleAttachmentOption('photos')}
+    <div className="flex items-end space-x-2 bg-background p-4 border-t">
+      <Avatar className="hidden sm:flex h-9 w-9">
+        <img src="/placeholder.svg" alt="User" />
+      </Avatar>
+      
+      <div className="relative flex-1">
+        <Textarea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          className="min-h-[80px] pr-20 resize-none"
+          disabled={disabled}
+        />
+        
+        <div className="absolute right-3 bottom-3 flex space-x-2">
+          {showAttachmentIcon && onAttachmentClick && (
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              onClick={onAttachmentClick}
+              className="h-8 w-8"
+              disabled={disabled}
             >
-              <Image className="h-5 w-5 text-gray-600" />
-              <span className="text-gray-800 text-sm">Photos</span>
-            </div>
-          </div>
-        </PopoverContent>
-      </Popover>
-      
-      <Input
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder={`Type your message to ${chatMode === "ai" ? "AI" : "support"}...`}
-        className="flex-1 pr-10 pl-10 py-4 h-14 bg-gray-50 border-gray-200"
-      />
-      
-      <Button 
-        type="submit" 
-        variant="ghost" 
-        size="icon" 
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 opacity-70 hover:opacity-100"
-      >
-        <SendHorizontal className="h-5 w-5 text-primary" />
-      </Button>
-    </form>
+              <PaperclipSimple className="h-5 w-5" />
+              <span className="sr-only">Attach file</span>
+            </Button>
+          )}
+          
+          <Button
+            type="button"
+            size="icon"
+            onClick={onSubmit}
+            className="h-8 w-8 bg-primary text-primary-foreground"
+            disabled={!value.trim() || disabled}
+          >
+            <PaperAirplaneTilt className="h-5 w-5" />
+            <span className="sr-only">Send message</span>
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 
