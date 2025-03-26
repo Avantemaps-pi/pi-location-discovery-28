@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -28,6 +27,10 @@ import {
   SidebarHeader,
   useSidebar
 } from '@/components/ui/sidebar';
+
+interface AppSidebarProps {
+  className?: string;
+}
 
 interface NavItemProps {
   to: string;
@@ -59,7 +62,7 @@ const NavItem = ({ to, icon: Icon, label, isActive, onClick, badge }: NavItemPro
   </li>
 );
 
-const AppSidebar = () => {
+const AppSidebar = ({ className }: AppSidebarProps = {}) => {
   const location = useLocation();
   const { openMobile, setOpenMobile } = useSidebar();
   
@@ -89,7 +92,7 @@ const AppSidebar = () => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <Sidebar className="hidden md:flex">
+      <Sidebar className={cn("hidden md:flex", className)}>
         <SidebarHeader className="p-4 border-b border-sidebar-border">
           <Link to="/" className="flex items-center gap-2">
             <div className="bg-gradient-to-r from-avante-blue to-avante-purple p-2 rounded-md">
@@ -104,7 +107,6 @@ const AppSidebar = () => {
           </Link>
         </SidebarHeader>
         
-        {/* Login button */}
         <div className="p-4 border-b border-sidebar-border">
           <Button className="w-full flex items-center gap-2" variant="outline">
             <LogIn className="h-4 w-4" />
@@ -113,7 +115,6 @@ const AppSidebar = () => {
         </div>
 
         <SidebarContent>
-          {/* Navigation items */}
           <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-8">
             <nav>
               <ul className="space-y-1">
@@ -131,7 +132,6 @@ const AppSidebar = () => {
               </ul>
             </nav>
 
-            {/* Legal links */}
             <div>
               <h3 className="text-xs uppercase text-muted-foreground font-medium mb-2 px-3">Legal</h3>
               <ul className="space-y-1">
@@ -163,7 +163,6 @@ const AppSidebar = () => {
       {/* Mobile Sidebar */}
       <div className={`md:hidden fixed inset-0 bg-background z-40 transform transition-transform duration-300 ease-in-out ${openMobile ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex flex-col h-full">
-          {/* Mobile Header with close button */}
           <div className="p-4 flex items-center justify-between border-b border-sidebar-border">
             <div className="flex items-center gap-2">
               <div className="bg-gradient-to-r from-avante-blue to-avante-purple p-2 rounded-md">
@@ -180,7 +179,6 @@ const AppSidebar = () => {
             </Button>
           </div>
           
-          {/* Login Button */}
           <div className="p-4 border-b border-sidebar-border">
             <Button variant="outline" className="w-full flex items-center gap-2 text-base py-6">
               <span className="text-xl">➔</span>
@@ -188,7 +186,6 @@ const AppSidebar = () => {
             </Button>
           </div>
           
-          {/* Navigation items */}
           <div className="flex-1 overflow-y-auto py-4">
             <nav>
               <ul className="space-y-1 px-2">
@@ -206,7 +203,6 @@ const AppSidebar = () => {
               </ul>
             </nav>
 
-            {/* Legal links */}
             <div className="mt-6 px-2">
               <h3 className="text-xs uppercase text-muted-foreground font-medium mb-2 px-3">Legal</h3>
               <ul className="space-y-1">
@@ -224,7 +220,6 @@ const AppSidebar = () => {
             </div>
           </div>
           
-          {/* Footer */}
           <div className="p-4 border-t border-sidebar-border text-xs text-muted-foreground">
             <p>© 2023 Avante Maps</p>
             <p>Architectured by Avante Labs</p>
