@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import UserProfileCard from '@/components/chat/UserProfileCard';
-import ChatInterface, { ChatMode } from '@/components/chat/ChatInterface';
+import ChatInterface from '@/components/chat/ChatInterface';
 import { useChatState } from '@/hooks/useChatState';
 
 const Communicon = () => {
@@ -17,11 +17,9 @@ const Communicon = () => {
     sendVerificationRequest
   } = useChatState();
 
-  // Export the function so it can be used from other components
   useEffect(() => {
     window.sendVerificationRequest = sendVerificationRequest;
     
-    // Clean up when component unmounts
     return () => {
       window.sendVerificationRequest = undefined;
     };
@@ -32,13 +30,13 @@ const Communicon = () => {
       <div className="max-w-4xl mx-auto">
         <UserProfileCard />
         <ChatInterface 
-          chatMode={chatMode as ChatMode}
+          chatMode={chatMode}
           onChatModeChange={handleChatModeChange}
           messages={messages}
           message={message}
           setMessage={setMessage}
-          handleSendMessage={() => handleSendMessage(new Event('submit') as unknown as React.FormEvent)}
-          handleAttachmentOption={() => handleAttachmentOption('default')}
+          handleSendMessage={handleSendMessage}
+          handleAttachmentOption={handleAttachmentOption}
           showAttachmentIcon={false}
         />
       </div>

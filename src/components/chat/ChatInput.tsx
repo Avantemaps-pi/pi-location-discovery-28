@@ -2,10 +2,10 @@
 import React, { KeyboardEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { PaperPlaneIcon, PaperclipIcon } from 'lucide-react';
+import { PaperPlaneIcon } from 'lucide-react';
 import { Avatar } from '@/components/ui/avatar';
 
-interface ChatInputProps {
+const ChatInput: React.FC<{
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
@@ -13,16 +13,14 @@ interface ChatInputProps {
   placeholder?: string;
   disabled?: boolean;
   showAttachmentIcon?: boolean;
-}
-
-const ChatInput: React.FC<ChatInputProps> = ({
+}> = ({
   value,
   onChange,
   onSubmit,
   onAttachmentClick,
   placeholder = 'Type a message...',
   disabled = false,
-  showAttachmentIcon = true
+  showAttachmentIcon = false  // Changed to false per the previous request to remove paperclip
 }) => {
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -50,20 +48,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
         />
         
         <div className="absolute right-3 bottom-3 flex space-x-2">
-          {showAttachmentIcon && onAttachmentClick && (
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              onClick={onAttachmentClick}
-              className="h-8 w-8"
-              disabled={disabled}
-            >
-              <PaperclipIcon className="h-5 w-5" />
-              <span className="sr-only">Attach file</span>
-            </Button>
-          )}
-          
           <Button
             type="button"
             size="icon"

@@ -2,19 +2,24 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import ChatModeToggle from './ChatModeToggle';
-import ChatMessage, { ChatMessageProps } from './ChatMessage';
+import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 
 export type ChatMode = 'ai' | 'live';
 
 interface ChatInterfaceProps {
-  chatMode: ChatMode;
-  onChatModeChange: (mode: string) => void;
-  messages: ChatMessageProps[];
+  chatMode: 'ai' | 'live';
+  onChatModeChange: (mode: 'ai' | 'live') => void;
+  messages: Array<{
+    id: number;
+    text: string;
+    sender: string;
+    timestamp: string;
+  }>;
   message: string;
   setMessage: (message: string) => void;
   handleSendMessage: () => void;
-  handleAttachmentOption: () => void;
+  handleAttachmentOption?: () => void;
   showAttachmentIcon?: boolean;
 }
 
@@ -26,7 +31,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   setMessage,
   handleSendMessage,
   handleAttachmentOption,
-  showAttachmentIcon = true
+  showAttachmentIcon = false
 }) => {
   return (
     <Card className="mt-6 overflow-hidden border-none shadow-md">
@@ -43,9 +48,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               </p>
             </div>
           ) : (
-            messages.map((msg, index) => (
+            messages.map((msg) => (
               <ChatMessage 
-                key={index} 
+                key={msg.id} 
                 id={msg.id}
                 text={msg.text}
                 sender={msg.sender}
