@@ -86,8 +86,8 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
     <>
       <Card className="w-full h-full">
         <CardHeader className="pb-0">
-          <CardTitle>{title}</CardTitle>
-          {description && <CardDescription>{description}</CardDescription>}
+          <CardTitle className="whitespace-nowrap">{title}</CardTitle>
+          {description && <CardDescription className="whitespace-nowrap">{description}</CardDescription>}
           
           <div className="flex items-center justify-between mt-2">
             <Tabs value={activeTab} onValueChange={handleTabChange}>

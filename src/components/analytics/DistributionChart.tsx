@@ -74,6 +74,59 @@ const DistributionChart: React.FC<DistributionChartProps> = ({ data, title, desc
     return null;
   };
 
+  // Custom legend that arranges items in two rows for Traffic Sources chart
+  const CustomizedLegend = (props) => {
+    const { payload } = props;
+    
+    // Only apply the custom layout for Traffic Sources chart (4 items)
+    if (payload.length === 4) {
+      const firstRow = payload.slice(0, 2);
+      const secondRow = payload.slice(2, 4);
+      
+      return (
+        <div className="flex flex-col items-center gap-2 mt-2">
+          <div className="flex justify-center gap-4">
+            {firstRow.map((entry, index) => (
+              <div key={`item-${index}`} className="flex items-center gap-1.5">
+                <div
+                  className="h-2 w-2 shrink-0 rounded-[2px]"
+                  style={{ backgroundColor: entry.color }}
+                />
+                <span className="text-xs">{entry.value}</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-center gap-4">
+            {secondRow.map((entry, index) => (
+              <div key={`item-${index}`} className="flex items-center gap-1.5">
+                <div
+                  className="h-2 w-2 shrink-0 rounded-[2px]"
+                  style={{ backgroundColor: entry.color }}
+                />
+                <span className="text-xs">{entry.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    
+    // For other charts, use the default legend
+    return (
+      <div className="flex justify-center gap-4 mt-2">
+        {payload.map((entry, index) => (
+          <div key={`item-${index}`} className="flex items-center gap-1.5">
+            <div
+              className="h-2 w-2 shrink-0 rounded-[2px]"
+              style={{ backgroundColor: entry.color }}
+            />
+            <span className="text-xs">{entry.value}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <Card className="w-full h-full">
       <CardHeader className="pb-2">
@@ -120,7 +173,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({ data, title, desc
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
-              <Legend layout="horizontal" verticalAlign="bottom" align="center" />
+              <Legend content={<CustomizedLegend />} verticalAlign="bottom" align="center" />
             </PieChart>
           </ResponsiveContainer>
         </div>
