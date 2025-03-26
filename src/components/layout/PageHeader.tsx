@@ -35,27 +35,27 @@ const PageHeader = ({ title = "Avante Maps" }: PageHeaderProps) => {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56 bg-popover">
+            <DropdownMenuContent align="start" className="w-56">
               <DropdownMenuLabel>Navigation</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link to="/" className="flex w-full">Home</Link>
+                <Link to="/">Home</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/recommendations" className="flex w-full">Recommendations</Link>
+                <Link to="/recommendations">Recommendations</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/bookmarks" className="flex w-full">Bookmarks</Link>
+                <Link to="/bookmarks">Bookmarks</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/registration" className="flex w-full">Register Business</Link>
+                <Link to="/registration">Register Business</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link to="/about" className="flex w-full">About Us</Link>
+                <Link to="/about">About Us</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/contact" className="flex w-full">Contact</Link>
+                <Link to="/contact">Contact</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
