@@ -40,13 +40,13 @@ const Recommendations = () => {
 
   return (
     <AppLayout>
-      <div className="max-w-7xl mx-auto p-4 sm:p-6">
-        <div className="space-y-2 mb-6">
-          <h1 className="text-3xl font-bold tracking-tight">Recommendations</h1>
-          <p className="text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency as payment.</p>
+      <div className="w-full mx-auto px-2 sm:px-4">
+        <div className="space-y-1 mb-3 sm:mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Recommendations</h1>
+          <p className="text-sm text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency.</p>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-5 sm:space-y-6">
           {/* Avante Top Choice Section */}
           <section 
             className="animate-fade-in relative"
@@ -54,14 +54,14 @@ const Recommendations = () => {
             onMouseLeave={() => handleMouseLeave('avanteTopChoice')}
             onTouchStart={() => handleTouchStart('avanteTopChoice')}
           >
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 flex items-center">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Avante Top Choice
             </h2>
             <Carousel className="w-full">
-              <CarouselContent className="-ml-2 md:-ml-4">
+              <CarouselContent className="ml-0">
                 {avanteTopChoice.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-2 md:pl-4 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
+                  <CarouselItem key={place.id} className={`pl-2 ${isMobile ? 'basis-[85%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -70,7 +70,7 @@ const Recommendations = () => {
                         place={place} 
                         onPlaceClick={handlePlaceClick}
                         showDetails={true}
-                        className="mx-auto max-w-[300px]"
+                        className="mx-auto max-w-[280px]"
                       />
                     </div>
                   </CarouselItem>
@@ -78,8 +78,8 @@ const Recommendations = () => {
               </CarouselContent>
               {showControls.avanteTopChoice && (
                 <>
-                  <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
-                  <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
+                  <CarouselPrevious className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7" />
+                  <CarouselNext className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7" />
                 </>
               )}
             </Carousel>
@@ -92,14 +92,14 @@ const Recommendations = () => {
             onMouseLeave={() => handleMouseLeave('suggestedForYou')}
             onTouchStart={() => handleTouchStart('suggestedForYou')}
           >
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 flex items-center">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Suggested for you
             </h2>
             <Carousel className="w-full">
-              <CarouselContent className="-ml-2 md:-ml-4">
+              <CarouselContent className="ml-0">
                 {suggestedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-2 md:pl-4 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
+                  <CarouselItem key={place.id} className={`pl-2 ${isMobile ? 'basis-[85%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -108,7 +108,7 @@ const Recommendations = () => {
                         place={place} 
                         onPlaceClick={handlePlaceClick}
                         showDetails={true}
-                        className="mx-auto max-w-[300px]"
+                        className="mx-auto max-w-[280px]"
                       />
                     </div>
                   </CarouselItem>
@@ -116,8 +116,8 @@ const Recommendations = () => {
               </CarouselContent>
               {showControls.suggestedForYou && (
                 <>
-                  <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
-                  <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
+                  <CarouselPrevious className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7" />
+                  <CarouselNext className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7" />
                 </>
               )}
             </Carousel>
@@ -130,14 +130,14 @@ const Recommendations = () => {
             onMouseLeave={() => handleMouseLeave('recommendedForYou')}
             onTouchStart={() => handleTouchStart('recommendedForYou')}
           >
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <h2 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 flex items-center">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Recommended for you
             </h2>
             <Carousel className="w-full">
-              <CarouselContent className="-ml-2 md:-ml-4">
+              <CarouselContent className="ml-0">
                 {recommendedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-2 md:pl-4 ${isMobile ? 'basis-[90%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
+                  <CarouselItem key={place.id} className={`pl-2 ${isMobile ? 'basis-[85%]' : 'sm:basis-1/2 md:basis-1/3 lg:basis-1/4'}`}>
                     <div 
                       style={{animationDelay: `${index * 0.05}s`}} 
                       className="animate-fade-in"
@@ -146,7 +146,7 @@ const Recommendations = () => {
                         place={place} 
                         onPlaceClick={handlePlaceClick}
                         showDetails={true}
-                        className="mx-auto max-w-[300px]"
+                        className="mx-auto max-w-[280px]"
                       />
                     </div>
                   </CarouselItem>
@@ -154,8 +154,8 @@ const Recommendations = () => {
               </CarouselContent>
               {showControls.recommendedForYou && (
                 <>
-                  <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
-                  <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300" />
+                  <CarouselPrevious className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7" />
+                  <CarouselNext className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7" />
                 </>
               )}
             </Carousel>

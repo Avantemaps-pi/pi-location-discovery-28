@@ -183,3 +183,10 @@
 .glass {
   @apply bg-background/80 backdrop-blur-sm border border-border/40;
 }
+
+/* Reset CarouselContent styles for mobile */
+@media (max-width: 768px) {
+  .embla__container {
+    margin-left: 0 !important; 
+  }
+}
