@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info, Share2 } from 'lucide-react';
@@ -9,6 +8,7 @@ import { Place } from '@/data/mockPlaces';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import DetailsCard from './DetailsCard';
 import ExpandableDescription from './ExpandableDescription';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface PlaceCardProps {
   place: Place;
@@ -29,6 +29,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
 }) => {
   const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   const handleRatingClick = () => {
     navigate(`/review/${place.id}`, { 
@@ -75,7 +76,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
   return (
     <Card 
       key={place.id} 
-      className={`material-card card-hover ${className || 'w-full max-w-[350px]'}`}
+      className={`material-card card-hover ${className || 'w-full max-w-[300px]'}`}
     >
       <div 
         className="h-40 overflow-hidden cursor-pointer relative"
