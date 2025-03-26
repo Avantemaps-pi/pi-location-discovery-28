@@ -17,7 +17,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
   showDetails = false
 }) => {
   return (
-    <section className="mb-10 animate-fade-in">
+    <section className="mb-10 animate-fade-in overflow-hidden">
       <h2 className="text-xl font-semibold mb-5 flex items-center">
         <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
         {title}

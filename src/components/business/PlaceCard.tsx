@@ -137,7 +137,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
           <span className="text-xs line-clamp-1">{place.address}</span>
         </div>
         
-        <div className="h-24 mb-3">
+        <div className="h-24 mb-3 overflow-hidden">
           <ExpandableDescription text={place.description} maxLines={4} />
         </div>
         
@@ -157,7 +157,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
             <Button 
               variant="default" 
               size="sm" 
-              className="bg-green-500 hover:bg-green-600 text-xs font-medium flex items-center gap-1"
+              className="bg-green-500 hover:bg-green-600 text-xs font-medium flex items-center gap-1 whitespace-nowrap"
             >
               Website
               <ExternalLink className="h-3 w-3" />
@@ -165,7 +165,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
             {showDetails && (
               <Popover>
                 <PopoverTrigger asChild>
-                  <div className="text-primary font-medium text-sm cursor-pointer flex items-center">
+                  <div className="text-primary font-medium text-sm cursor-pointer flex items-center whitespace-nowrap">
                     <Info className="h-3 w-3 mr-1" />
                     Details
                   </div>
