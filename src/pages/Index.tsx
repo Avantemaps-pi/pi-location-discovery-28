@@ -51,7 +51,13 @@ const Index = () => {
   };
 
   return (
-    <AppLayout title="Avante Maps" withHeader={true} fullHeight={true} fullWidth={true}>
+    <AppLayout 
+      title="Avante Maps" 
+      withHeader={true} 
+      fullHeight={true} 
+      fullWidth={true} 
+      className="!ml-0" // Add this to override sidebar margin
+    >
       <div className="relative h-[calc(100vh-4rem)] w-full" ref={mapRef}>
         <div className="h-full w-full">
           <GoogleMap 
