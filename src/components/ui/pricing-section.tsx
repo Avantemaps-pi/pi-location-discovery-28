@@ -10,6 +10,7 @@ interface PricingSectionProps {
   subtitle: string
   tiers: PricingTier[]
   frequencies: string[]
+  organizationTierId?: string
 }
 
 export function PricingSection({
@@ -17,6 +18,7 @@ export function PricingSection({
   subtitle,
   tiers,
   frequencies,
+  organizationTierId,
 }: PricingSectionProps) {
   const [selectedFrequency, setSelectedFrequency] = React.useState(frequencies[0])
 
@@ -46,6 +48,7 @@ export function PricingSection({
             key={tier.name}
             tier={tier}
             paymentFrequency={selectedFrequency}
+            id={tier.id === organizationTierId ? `tier-${tier.id}` : undefined}
           />
         ))}
       </div>

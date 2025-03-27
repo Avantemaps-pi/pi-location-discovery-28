@@ -22,14 +22,16 @@ export interface PricingTier {
 interface PricingCardProps {
   tier: PricingTier
   paymentFrequency: string
+  id?: string
 }
 
-export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
+export function PricingCard({ tier, paymentFrequency, id }: PricingCardProps) {
   const price = tier.price[paymentFrequency as keyof typeof tier.price]
   const isCustom = typeof price === "string"
 
   return (
     <div
+      id={id}
       className={cn(
         "flex flex-col justify-between rounded-lg border bg-card p-6 text-card-foreground shadow relative",
         tier.highlighted &&

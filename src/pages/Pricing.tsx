@@ -76,19 +76,24 @@ const Pricing = () => {
   
   useEffect(() => {
     // Check if we're redirected from LIVE chat
-    if (location.state?.fromLiveChat && organizationTierRef.current) {
-      // Scroll to the organization tier with a smooth animation
-      organizationTierRef.current.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'center'
-      });
-      // Add a subtle highlight animation
-      organizationTierRef.current.classList.add('animate-pulse-subtle');
+    if (location.state?.fromLiveChat) {
+      // Use setTimeout to ensure the DOM is fully rendered
       setTimeout(() => {
-        if (organizationTierRef.current) {
-          organizationTierRef.current.classList.remove('animate-pulse-subtle');
+        // Find the organization tier element by ID
+        const organizationTier = document.getElementById('tier-organization');
+        if (organizationTier) {
+          // Scroll to the organization tier with a smooth animation
+          organizationTier.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+          });
+          // Add a subtle highlight animation
+          organizationTier.classList.add('animate-pulse-subtle');
+          setTimeout(() => {
+            organizationTier.classList.remove('animate-pulse-subtle');
+          }, 2000);
         }
-      }, 2000);
+      }, 100);
     }
   }, [location.state]);
   
@@ -118,12 +123,13 @@ const Pricing = () => {
               <div className="h-full w-full bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:35px_35px] opacity-30 [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
             </div>
             
-            <div className="container mx-auto px-4 py-8" ref={organizationTierRef}>
+            <div className="container mx-auto px-4 py-8">
               <PricingSection
                 title="Unlock Premium Features with Pi"
                 subtitle="Choose the plan that's right for you"
                 frequencies={PAYMENT_FREQUENCIES}
                 tiers={TIERS}
+                organizationTierId="organization"
               />
             </div>
           </div>
