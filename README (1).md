@@ -11,7 +11,7 @@
 - **Future Business Card NFTs**: A unique digital identity solution for businesses in the Pi Network ecosystem.  
 - **Enhanced UI/UX**: Optimized for different screen sizes to ensure a seamless experience.  
 
-## 🏆 Partnerships  
+## 🏆 Future Partnerships  
 
 Avante Maps collaborates with:  
 
