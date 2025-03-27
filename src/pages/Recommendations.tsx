@@ -83,7 +83,7 @@ const Recommendations = () => {
                 ))}
               </CarouselContent>
               {showControls.avanteTopChoice && (
-                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
+                <CarouselNext className="absolute right-4 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
               )}
             </Carousel>
           </section>
@@ -116,7 +116,7 @@ const Recommendations = () => {
                 ))}
               </CarouselContent>
               {showControls.suggestedForYou && (
-                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
+                <CarouselNext className="absolute right-4 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
               )}
             </Carousel>
           </section>
@@ -149,7 +149,7 @@ const Recommendations = () => {
                 ))}
               </CarouselContent>
               {showControls.recommendedForYou && (
-                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
+                <CarouselNext className="absolute right-4 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
               )}
             </Carousel>
           </section>
