@@ -52,12 +52,6 @@ const ProfileSettings = ({ language, setLanguage }: ProfileSettingsProps) => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="english">English</SelectItem>
-              <SelectItem value="spanish">Español</SelectItem>
-              <SelectItem value="french">Français</SelectItem>
-              <SelectItem value="german">Deutsch</SelectItem>
-              <SelectItem value="chinese">中文</SelectItem>
-              <SelectItem value="japanese">日本語</SelectItem>
-              <SelectItem value="korean">한국어</SelectItem>
             </SelectContent>
           </Select>
           <p className="text-xs text-muted-foreground mt-1">

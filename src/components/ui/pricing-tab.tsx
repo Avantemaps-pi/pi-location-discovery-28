@@ -22,7 +22,7 @@ export function Tab({ text, selected, setSelected, discount = false }: TabProps)
     >
       {text}
       {discount && (
-        <span className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] text-white">
+        <span className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-medium text-white shadow-sm ring-1 ring-green-400 animate-pulse">
           -20%
         </span>
       )}

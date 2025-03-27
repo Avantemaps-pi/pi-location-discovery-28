@@ -89,7 +89,7 @@ const Settings = () => {
 
   return (
     <AppLayout title="" fullWidth={false} className="overflow-x-hidden">
-      <div className="w-full max-w-2xl mx-auto px-4 py-6 overflow-x-hidden">
+      <div className="max-w-xl mx-auto px-4 py-6 overflow-x-hidden">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
           <p className="text-muted-foreground mt-2">Manage your account preferences.</p>
