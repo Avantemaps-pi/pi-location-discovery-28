@@ -17,9 +17,10 @@ interface DistributionChartProps {
 
 const RADIAN = Math.PI / 180;
 
-// Custom label rendering function for better visibility
+// Modified label rendering function to position labels closer to center
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }) => {
-  const radius = outerRadius * 0.8;
+  // Move radius closer to center (from 0.8 to 0.65)
+  const radius = outerRadius * 0.65;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 

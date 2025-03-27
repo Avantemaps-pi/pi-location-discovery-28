@@ -66,7 +66,8 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
     
     // Apply scale to chart dimensions
     const chartWidth = `${100 * xScaleFactor}%`;
-    const chartHeight = (isMobile ? 400 : 700) * yScaleFactor; // Increased height for better visibility
+    // Reduce the height for better fit on screen
+    const chartHeight = (isMobile ? 300 : 500) * yScaleFactor; 
     
     // Fixed style prop with valid CSS properties
     const containerStyle = {
@@ -76,13 +77,6 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
 
     return { chartWidth, chartHeight, containerStyle };
   }, [xScale, yScale, isMobile]);
-  
-  // Handle zoom instructions
-  const zoomInstructions = (
-    <div className="text-xs text-muted-foreground mb-2 italic">
-      Use Ctrl + Mouse Wheel to zoom in/out on the chart
-    </div>
-  );
   
   // Memoize the chart component to prevent unnecessary re-renders
   const chartComponent = useMemo(() => {
@@ -153,8 +147,6 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
             ))}
           </ToggleGroup>
         </div>
-        
-        {zoomInstructions}
         
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full flex-1 flex flex-col">
           <div className="flex items-center mb-2">

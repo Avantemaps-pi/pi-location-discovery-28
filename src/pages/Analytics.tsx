@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -9,12 +8,11 @@ import RankingChart from '@/components/analytics/RankingChart';
 import DistributionChart from '@/components/analytics/DistributionChart';
 import { Eye, MousePointerClick, Search, Bookmark } from 'lucide-react';
 
-// Mock data for demo purposes
 const generateEngagementData = (days: number) => {
   const data = [];
   for (let i = 0; i < days; i++) {
     data.push({
-      name: `Day ${i + 1}`, // We'll keep this format, but our chart will display just numbers
+      name: `Day ${i + 1}`,
       views: Math.floor(Math.random() * 500) + 200,
       clicks: Math.floor(Math.random() * 120) + 50,
       bookmarks: Math.floor(Math.random() * 20) + 5,
@@ -48,7 +46,6 @@ const Analytics = () => {
   const navigate = useNavigate();
   const [dateRange, setDateRange] = useState('week');
   
-  // Change the data based on selected date range
   const getDataForRange = () => {
     switch(dateRange) {
       case 'day': return generateEngagementData(24);
@@ -62,17 +59,14 @@ const Analytics = () => {
   
   const engagementData = getDataForRange();
   
-  // Calculate totals from the data
   const totalViews = engagementData.reduce((sum, item) => sum + item.views, 0);
   const totalClicks = engagementData.reduce((sum, item) => sum + item.clicks, 0);
   const totalBookmarks = engagementData.reduce((sum, item) => sum + item.bookmarks, 0);
   
-  // Mock conversion rates
   const clickRate = ((totalClicks / totalViews) * 100).toFixed(1);
   const bookmarkRate = ((totalBookmarks / totalViews) * 100).toFixed(1);
   
   const handleExport = (format: 'csv' | 'pdf') => {
-    // This would be integrated with a real export system in production
     console.log(`Exporting data as ${format}...`);
     alert(`Data would be exported as ${format} in a production environment`);
   };
@@ -80,12 +74,12 @@ const Analytics = () => {
   return (
     <AppLayout 
       title="Business Analytics"
-      backButton={true}
-      onBackClick={() => navigate('/registered-business')}
+      backButton={false}
       withHeader={true}
-      fullHeight={false} // Set to false to enable scrolling
+      fullHeight={false}
+      hideSidebar={false}
     >
-      <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4 max-w-7xl overflow-x-hidden">
+      <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-4 max-w-7xl">
         <AnalyticsHeader 
           businessName="Pi Cafe"
           dateRange={dateRange}
@@ -131,11 +125,10 @@ const Analytics = () => {
           />
         </div>
         
-        <div className="w-full mb-4 sm:mb-8 h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden">
+        <div className="w-full mb-4 sm:mb-8 h-[400px] sm:h-[500px] md:h-[600px]">
           <EngagementChart 
             data={engagementData}
             title="Engagement Overview"
-            description="Track views, clicks, and bookmarks over time"
           />
         </div>
         
