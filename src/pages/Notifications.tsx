@@ -21,6 +21,10 @@ const Notifications = () => {
       setNotifications(getAllNotifications());
     };
 
+    // Update notifications when component mounts
+    window.dispatchEvent(notificationUpdateEvent);
+
+    // Listen for notification updates
     window.addEventListener('notificationUpdate', updateNotifications);
 
     return () => {

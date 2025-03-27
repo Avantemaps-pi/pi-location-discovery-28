@@ -42,3 +42,8 @@
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 }
+
+/* Adjust carousel position */
+.embla__container {
+  margin-left: -0.5rem !important;
+}

@@ -1,33 +1,78 @@
-
-import { 
-  Home, 
-  Compass, 
-  Bookmark, 
-  Mail, 
-  Info, 
-  Settings,
-  FileText,
-  User,
+import {
+  Home,
+  Star,
+  Bookmark,
   Bell,
-  Building2,
-  ClipboardList
+  BarChart,
+  ShieldCheck,
+  MessageCircle,
+  Settings,
+  Info,
+  Lock,
+  FileText,
 } from 'lucide-react';
 
+// Create a function to dynamically get the notification count
+import { getUnreadNotificationsCount } from '@/utils/notificationUtils';
+
 export const navItems = [
-  { to: '/', icon: Home, label: 'Home' },
-  { to: '/recommendations', icon: Compass, label: 'Recommendations' },
-  { to: '/bookmarks', icon: Bookmark, label: 'Bookmarks' },
-  { to: '/communicon', icon: User, label: 'Communicon' },
-  { to: '/notifications', icon: Bell, label: 'Notifications', badge: 2 },
-  { to: '/registered-business', icon: Building2, label: 'My Businesses' },
-  { to: '/registration', icon: ClipboardList, label: 'Register Business' },
-  { to: '/contact', icon: Mail, label: 'Contact' },
-  { to: '/about', icon: Info, label: 'About Us' },
-  { to: '/settings', icon: Settings, label: 'Settings' },
+  {
+    to: '/',
+    icon: Home,
+    label: 'Map',
+  },
+  {
+    to: '/recommendations',
+    icon: Star,
+    label: 'Recommendations',
+  },
+  {
+    to: '/bookmarks',
+    icon: Bookmark,
+    label: 'Bookmarks',
+  },
+  {
+    to: '/notifications',
+    icon: Bell,
+    label: 'Notifications',
+    badge: getUnreadNotificationsCount(),
+  },
+  {
+    to: '/analytics',
+    icon: BarChart,
+    label: 'Analytics',
+  },
+  {
+    to: '/verifications',
+    icon: ShieldCheck,
+    label: 'Verifications',
+  },
+  {
+    to: '/communicon',
+    icon: MessageCircle,
+    label: 'CommuniCon',
+  },
+  {
+    to: '/settings',
+    icon: Settings,
+    label: 'Settings',
+  },
 ];
 
 export const legalItems = [
-  { to: '/terms', icon: FileText, label: 'Terms of Service' },
-  { to: '/privacy', icon: FileText, label: 'Privacy Policy' },
-  { to: '/cookies', icon: FileText, label: 'Cookie Policy' },
+  {
+    to: '/about',
+    icon: Info,
+    label: 'About',
+  },
+  {
+    to: '/privacy-policy',
+    icon: Lock,
+    label: 'Privacy Policy',
+  },
+  {
+    to: '/terms-of-service',
+    icon: FileText,
+    label: 'Terms of Service',
+  },
 ];

@@ -85,15 +85,16 @@ const PlaceCardPopup = forwardRef<HTMLDivElement, PlaceCardPopupProps>(({
         </div>
         
         <div className="flex justify-between items-start mt-4">
-          <div className="flex items-center">
+          <div className="flex flex-col items-start gap-2">
             <PlaceRating 
               rating={location.rating} 
               onClick={handleRatingClick} 
             />
+            <CategoryBadge category={location.category} />
           </div>
           
           <div className="flex flex-col gap-2 items-end">
-            <WebsiteButton />
+            <WebsiteButton url={location.website} />
             
             <Popover>
               <PopoverTrigger asChild>
@@ -106,8 +107,6 @@ const PlaceCardPopup = forwardRef<HTMLDivElement, PlaceCardPopupProps>(({
                 <DetailsCard place={location} />
               </PopoverContent>
             </Popover>
-            
-            <CategoryBadge category={location.category} />
           </div>
         </div>
       </CardContent>
