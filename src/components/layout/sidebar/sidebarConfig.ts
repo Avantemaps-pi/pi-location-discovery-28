@@ -39,9 +39,9 @@ export const navItems = [
     badge: getUnreadNotificationsCount(),
   },
   {
-    to: '/registration',
+    to: '/registered-business',
     icon: Building,
-    label: 'Register Business',
+    label: 'Registered Business',
   },
   {
     to: '/contact',

@@ -100,7 +100,7 @@ const Pricing = () => {
             <div className="container mx-auto px-4 py-8">
               <PricingSection
                 title="Unlock Premium Features with Pi"
-                subtitle="Choose the plan that's right for you (prices in Pi, tethered to USDT value)"
+                subtitle="Choose the plan that's right for you"
                 frequencies={PAYMENT_FREQUENCIES}
                 tiers={TIERS}
               />

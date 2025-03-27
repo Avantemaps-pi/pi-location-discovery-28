@@ -1,9 +1,8 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { LogIn, PiSquare } from 'lucide-react';
+import { PiSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import {
   Sidebar,
   SidebarContent,
@@ -51,13 +50,6 @@ const DesktopSidebar = ({
           </div>
         </Link>
       </SidebarHeader>
-      
-      <div className="p-4 border-b border-sidebar-border">
-        <Button className="w-full flex items-center gap-2" variant="outline">
-          <LogIn className="h-4 w-4" />
-          <span>Login</span>
-        </Button>
-      </div>
 
       <SidebarContent>
         <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-8">

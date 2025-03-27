@@ -67,13 +67,6 @@ const MobileSidebar = ({
             </Button>
           </div>
           
-          <div className="p-4 border-b border-sidebar-border">
-            <Button variant="outline" className="w-full flex items-center gap-2 text-base py-6">
-              <span className="text-xl">➔</span>
-              <span>Login</span>
-            </Button>
-          </div>
-          
           <div className="flex-1 overflow-y-auto py-4">
             <nav>
               <ul className="space-y-1 px-2">

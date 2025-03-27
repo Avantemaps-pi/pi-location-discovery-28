@@ -52,11 +52,6 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
             <span className="text-sm text-muted-foreground">/{paymentFrequency}</span>
           )}
         </div>
-        {!isCustom && (
-          <p className="mt-1 text-xs text-muted-foreground">
-            (Tethered to ${price} USDT)
-          </p>
-        )}
       </div>
 
       <div className="mt-6 space-y-4">
