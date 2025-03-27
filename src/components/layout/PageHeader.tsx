@@ -38,9 +38,6 @@ const PageHeader = ({ title = "Avante Maps" }: PageHeaderProps) => {
             alt="Avante Maps" 
             className="h-8"
           />
-          <span className="font-bold text-lg text-foreground">
-            {title}
-          </span>
         </Link>
         
         <div className="ml-auto flex items-center space-x-4">

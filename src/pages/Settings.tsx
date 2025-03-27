@@ -88,7 +88,7 @@ const Settings = () => {
   };
 
   return (
-    <AppLayout title="Avante Maps">
+    <AppLayout title="">
       <div className="space-y-6 max-w-2xl mx-auto px-4 prevent-overflow">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
