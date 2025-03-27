@@ -1,15 +1,16 @@
+
 import {
   Home,
   Star,
   Bookmark,
   Bell,
-  BarChart,
-  ShieldCheck,
+  Building,
   MessageCircle,
   Settings,
   Info,
   Lock,
   FileText,
+  Mail
 } from 'lucide-react';
 
 // Create a function to dynamically get the notification count
@@ -38,14 +39,14 @@ export const navItems = [
     badge: getUnreadNotificationsCount(),
   },
   {
-    to: '/analytics',
-    icon: BarChart,
-    label: 'Analytics',
+    to: '/registration',
+    icon: Building,
+    label: 'Register Business',
   },
   {
-    to: '/verifications',
-    icon: ShieldCheck,
-    label: 'Verifications',
+    to: '/contact',
+    icon: Mail,
+    label: 'Contact Us',
   },
   {
     to: '/communicon',

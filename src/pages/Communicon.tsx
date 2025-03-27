@@ -47,7 +47,7 @@ const Communicon = () => {
           setMessage={setMessage}
           handleSendMessage={handleSendMessageWrapper}
           handleAttachmentOption={handleAttachmentOptionWrapper}
-          showAttachmentIcon={true}
+          showAttachmentIcon={false} {/* Changed to false to remove the paper-clip icon */}
         />
       </div>
     </AppLayout>
