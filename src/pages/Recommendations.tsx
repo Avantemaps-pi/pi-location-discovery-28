@@ -41,9 +41,9 @@ const Recommendations = () => {
   // Determine the appropriate width class based on device
   const getWidthClass = () => {
     if (isMobile) {
-      return 'basis-full sm:basis-full';
+      return 'basis-[80%] sm:basis-[80%]'; // Reduced from full to 80%
     }
-    return 'basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4';
+    return 'basis-[80%] sm:basis-[40%] md:basis-[30%] lg:basis-1/5'; // Made slightly smaller at all breakpoints
   };
 
   return (
