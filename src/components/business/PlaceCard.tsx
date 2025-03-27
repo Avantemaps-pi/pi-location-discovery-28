@@ -144,26 +144,27 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
         </div>
         
         <div className="flex flex-wrap justify-between items-end mt-auto gap-2">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-row items-center gap-2">
             <div 
-              className="inline-flex items-center px-2 py-1 rounded bg-amber-100 dark:bg-amber-950/40 cursor-pointer"
+              className="inline-flex items-center px-2 py-1 rounded bg-amber-100 dark:bg-amber-950/40 cursor-pointer w-14 justify-center"
               onClick={handleRatingClick}
             >
-              <Star className="h-4 w-4 text-amber-500 fill-amber-500 mr-1" />
-              <span className="text-sm font-medium text-amber-800 dark:text-amber-400">{place.rating.toFixed(1)}</span>
+              <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500 mr-1" />
+              <span className="text-xs font-medium text-amber-800 dark:text-amber-400">{place.rating.toFixed(1)}</span>
             </div>
-            <CategoryBadge category={place.category} />
-          </div>
-          
-          <div className="flex flex-col gap-2 items-end">
+            
             <Button 
               variant="default" 
               size="sm" 
-              className="bg-green-500 hover:bg-green-600 text-xs font-medium flex items-center gap-1 whitespace-nowrap"
+              className="bg-green-500 hover:bg-green-600 text-xs font-medium flex items-center gap-1 whitespace-nowrap h-7 px-2.5"
             >
               Website
               <ExternalLink className="h-3 w-3" />
             </Button>
+          </div>
+          
+          <div className="flex flex-col gap-2 items-end">
+            <CategoryBadge category={place.category} />
             {showDetails && (
               <Popover>
                 <PopoverTrigger asChild>
