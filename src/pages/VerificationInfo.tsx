@@ -118,6 +118,11 @@ const VerificationInfo = () => {
                 <p className="text-white/80 text-sm mt-1 max-w-xs text-center">
                   Certification is available after your business is verified
                 </p>
+                
+                {/* Coming Soon Badge */}
+                <div className="absolute top-0 right-0 bg-blue-600 text-white px-4 py-2 rounded-bl-lg rounded-tr-lg font-bold shadow-md z-20 transform rotate-0">
+                  COMING SOON
+                </div>
               </div>
             </div>
           </div>
