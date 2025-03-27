@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { PiSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Sidebar,
@@ -39,11 +38,13 @@ const DesktopSidebar = ({
     <Sidebar className={cn("hidden md:flex", className)}>
       <SidebarHeader className="p-4 border-b border-sidebar-border">
         <Link to="/" className="flex items-center gap-2">
-          <div className="bg-gradient-to-r from-avante-blue to-avante-purple p-2 rounded-md">
-            <PiSquare className="h-5 w-5 text-white" />
-          </div>
+          <img 
+            src="/lovable-uploads/b0daa374-9909-4cf8-a2ae-e08e2184c3fc.png" 
+            alt="Avante Maps" 
+            className="h-8"
+          />
           <div className="flex flex-col">
-            <span className="font-bold text-lg bg-gradient-to-r from-avante-blue to-avante-purple bg-clip-text text-transparent">
+            <span className="font-bold text-lg text-foreground">
               Avante Maps
             </span>
             <span className="text-xs text-muted-foreground">Pi Payment Finder</span>
@@ -91,7 +92,11 @@ const DesktopSidebar = ({
         <p>© 2023 Avante Maps</p>
         <p>Powered by Pi Network</p>
         <div className="mt-2 flex items-center">
-          <PiSquare className="h-4 w-4 mr-1 text-avante-purple" />
+          <img 
+            src="/lovable-uploads/b0daa374-9909-4cf8-a2ae-e08e2184c3fc.png" 
+            alt="Avante Maps" 
+            className="h-4 w-4 mr-1"
+          />
           <span>Find Pi-enabled businesses near you</span>
         </div>
       </SidebarFooter>

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { PiSquare, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import MobileMenuButton from './header/MobileMenuButton';
 import DesktopMenuButton from './header/DesktopMenuButton';
 import { Button } from '@/components/ui/button';
@@ -33,10 +33,12 @@ const PageHeader = ({ title = "Avante Maps" }: PageHeaderProps) => {
         )}
         
         <Link to="/" className={`${!isAnalyticsPage ? 'ml-4' : ''} flex items-center gap-2`}>
-          <div className="bg-gradient-to-r from-avante-blue to-avante-purple p-2 rounded-md">
-            <PiSquare className="h-5 w-5 text-white" />
-          </div>
-          <span className="font-bold text-lg bg-gradient-to-r from-avante-blue to-avante-purple bg-clip-text text-transparent">
+          <img 
+            src="/lovable-uploads/b0daa374-9909-4cf8-a2ae-e08e2184c3fc.png" 
+            alt="Avante Maps" 
+            className="h-8"
+          />
+          <span className="font-bold text-lg text-foreground">
             {title}
           </span>
         </Link>
