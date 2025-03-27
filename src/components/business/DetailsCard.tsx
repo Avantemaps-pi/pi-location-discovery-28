@@ -51,21 +51,23 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ place }) => {
               </div>
             </div>
             
-            <div className="flex items-start space-x-3">
-              <Globe className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-2">Website</h3>
-                <a 
-                  href="https://www.business.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-avante-blue flex items-center text-xs hover:underline"
-                >
-                  www.business.com
-                  <ExternalLink className="h-3 w-3 ml-1" />
-                </a>
+            {place.website && (
+              <div className="flex items-start space-x-3">
+                <Globe className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">Website</h3>
+                  <a 
+                    href={place.website}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-avante-blue flex items-center text-xs hover:underline"
+                  >
+                    {place.website.replace(/(^\w+:|^)\/\//, '')}
+                    <ExternalLink className="h-3 w-3 ml-1" />
+                  </a>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </CardContent>

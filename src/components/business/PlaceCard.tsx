@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info, Share2 } from 'lucide-react';
@@ -73,7 +72,20 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
       alert('Link copied to clipboard!');
     }
   };
-  
+
+  const WebsiteButton = ({ url }: { url: string }) => {
+    return (
+      <Button 
+        variant="default" 
+        size="sm" 
+        className="bg-green-500 hover:bg-green-600 text-xs font-medium flex items-center gap-1 whitespace-nowrap h-9 px-3"
+      >
+        Website
+        <ExternalLink className="h-3 w-3" />
+      </Button>
+    );
+  };
+
   return (
     <Card 
       key={place.id} 
@@ -156,14 +168,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
           </div>
           
           <div className="flex flex-col gap-2 items-end">
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="bg-green-500 hover:bg-green-600 text-xs font-medium flex items-center gap-1 whitespace-nowrap h-9 px-3"
-            >
-              Website
-              <ExternalLink className="h-3 w-3" />
-            </Button>
+            <WebsiteButton url={place.website} />
             
             {showDetails && (
               <Popover>

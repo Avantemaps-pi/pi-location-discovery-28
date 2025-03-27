@@ -18,6 +18,7 @@ const bookmarkedPlaces: Place[] = [
     description: 'A cozy cafe that accepts Pi payments for coffee, pastries and light meals. Great atmosphere for working or meeting friends.',
     image: '/placeholder.svg',
     rating: 4.5,
+    website: 'https://picafedowntown.com',
     position: { lat: 37.773, lng: -122.413 }
   },
   {
@@ -29,6 +30,7 @@ const bookmarkedPlaces: Place[] = [
     description: 'Electronics and gadgets store that accepts Pi cryptocurrency. Offers repairs and accessories for all major brands.',
     image: '/placeholder.svg',
     rating: 4.2,
+    website: 'https://pitechstore.com',
     position: { lat: 37.789, lng: -122.401 }
   },
   {
@@ -40,6 +42,7 @@ const bookmarkedPlaces: Place[] = [
     description: 'Artisanal bakery with fresh bread, pastries and cakes. Uses local ingredients and accepts Pi for all purchases.',
     image: '/placeholder.svg',
     rating: 4.7,
+    website: 'https://pibakery.com',
     position: { lat: 37.785, lng: -122.405 }
   },
 ];

@@ -7,7 +7,8 @@ export interface Place {
   rating: number;
   category: string;
   image: string;
-  dateAdded?: string; // Added this property as optional
+  dateAdded?: string;
+  website?: string; // Adding the website property
   position: {
     lat: number;
     lng: number;
@@ -24,6 +25,7 @@ export const recommendedForYou: Place[] = [
     rating: 4.8,
     category: 'Technology',
     image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2020&auto=format&fit=crop',
+    website: 'https://pitechhub.com',
     position: { lat: 37.775, lng: -122.419 }
   },
   {
@@ -34,6 +36,7 @@ export const recommendedForYou: Place[] = [
     rating: 4.5,
     category: 'Food & Drink',
     image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1978&auto=format&fit=crop',
+    website: 'https://cryptocafe.com',
     position: { lat: 37.785, lng: -122.421 }
   },
   {
@@ -44,6 +47,7 @@ export const recommendedForYou: Place[] = [
     rating: 4.6,
     category: 'Shopping',
     image: 'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop',
+    website: 'https://pifashion.com',
     position: { lat: 37.770, lng: -122.430 }
   },
 ];
@@ -57,6 +61,7 @@ export const suggestedForYou: Place[] = [
     rating: 4.7,
     category: 'Health & Wellness',
     image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=2070&auto=format&fit=crop',
+    website: 'https://piwellness.com',
     position: { lat: 37.760, lng: -122.415 }
   },
   {
@@ -67,6 +72,7 @@ export const suggestedForYou: Place[] = [
     rating: 4.4,
     category: 'Books',
     image: 'https://images.unsplash.com/photo-1521056787327-239a23f27ebb?q=80&w=2070&auto=format&fit=crop',
+    website: 'https://pibookshop.com',
     position: { lat: 37.790, lng: -122.410 }
   },
   {
@@ -77,6 +83,7 @@ export const suggestedForYou: Place[] = [
     rating: 4.5,
     category: 'Grocery',
     image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=2074&auto=format&fit=crop',
+    website: 'https://piorganicmarket.com',
     position: { lat: 37.780, lng: -122.425 }
   },
 ];
@@ -90,6 +97,7 @@ export const avanteTopChoice: Place[] = [
     rating: 4.9,
     category: 'Technology',
     image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop',
+    website: 'https://picomputing.com',
     position: { lat: 37.795, lng: -122.405 }
   },
   {
@@ -100,6 +108,7 @@ export const avanteTopChoice: Place[] = [
     rating: 4.8,
     category: 'Food & Drink',
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop',
+    website: 'https://pirestaurant.com',
     position: { lat: 37.765, lng: -122.420 }
   },
   {
@@ -110,6 +119,7 @@ export const avanteTopChoice: Place[] = [
     rating: 4.7,
     category: 'Travel',
     image: 'https://images.unsplash.com/photo-1533619242606-bb0a792f90a3?q=80&w=2070&auto=format&fit=crop',
+    website: 'https://piadventures.com',
     position: { lat: 37.755, lng: -122.435 }
   },
 ];
