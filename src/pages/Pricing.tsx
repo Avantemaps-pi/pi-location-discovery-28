@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { PricingSection } from '@/components/ui/pricing-section';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -61,15 +61,36 @@ const TIERS = [
     ],
     cta: "Upgrade Now",
     highlighted: true,
+    comingSoon: true,
   },
 ];
 
 const Pricing = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const organizationTierRef = useRef<HTMLDivElement>(null);
   
   const handleBack = () => {
     navigate(-1);
   };
+  
+  useEffect(() => {
+    // Check if we're redirected from LIVE chat
+    if (location.state?.fromLiveChat && organizationTierRef.current) {
+      // Scroll to the organization tier with a smooth animation
+      organizationTierRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+      // Add a subtle highlight animation
+      organizationTierRef.current.classList.add('animate-pulse-subtle');
+      setTimeout(() => {
+        if (organizationTierRef.current) {
+          organizationTierRef.current.classList.remove('animate-pulse-subtle');
+        }
+      }, 2000);
+    }
+  }, [location.state]);
   
   // Create a custom header with back button for the Pricing page
   const CustomHeader = () => (
@@ -97,7 +118,7 @@ const Pricing = () => {
               <div className="h-full w-full bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:35px_35px] opacity-30 [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
             </div>
             
-            <div className="container mx-auto px-4 py-8">
+            <div className="container mx-auto px-4 py-8" ref={organizationTierRef}>
               <PricingSection
                 title="Unlock Premium Features with Pi"
                 subtitle="Choose the plan that's right for you"

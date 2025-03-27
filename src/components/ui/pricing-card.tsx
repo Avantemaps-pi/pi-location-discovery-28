@@ -16,6 +16,7 @@ export interface PricingTier {
   cta: string
   highlighted?: boolean
   popular?: boolean
+  comingSoon?: boolean
 }
 
 interface PricingCardProps {
@@ -30,7 +31,7 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
   return (
     <div
       className={cn(
-        "flex flex-col justify-between rounded-lg border bg-card p-6 text-card-foreground shadow",
+        "flex flex-col justify-between rounded-lg border bg-card p-6 text-card-foreground shadow relative",
         tier.highlighted &&
           "border-avante-purple bg-gradient-to-br from-avante-blue/10 to-avante-purple/20",
         tier.popular && "border-avante-blue"
@@ -39,6 +40,14 @@ export function PricingCard({ tier, paymentFrequency }: PricingCardProps) {
       {tier.popular && (
         <div className="mb-4 rounded-full bg-avante-blue/10 px-3 py-1 text-xs font-medium text-avante-blue w-fit">
           Most popular
+        </div>
+      )}
+
+      {tier.comingSoon && (
+        <div className="absolute inset-0 bg-gray-700/70 backdrop-blur-sm rounded-lg flex items-center justify-center overflow-hidden z-10">
+          <div className="absolute transform rotate-[-35deg] bg-avante-purple/90 py-2 px-1 w-[150%] text-center">
+            <span className="text-white font-bold text-xl tracking-wider">Coming Soon</span>
+          </div>
         </div>
       )}
 
