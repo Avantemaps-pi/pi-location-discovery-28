@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, AlertTriangle, Info, ArrowLeft, Shield } from 'lucide-react';
+import { CheckCircle, AlertTriangle, Info, ArrowLeft, Shield, Lock } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
@@ -72,43 +72,54 @@ const VerificationInfo = () => {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <Shield className="h-6 w-6 text-blue-500" />
-                  <CardTitle className="text-xl">Certification</CardTitle>
-                </div>
-                <CardDescription>
-                  Proof of Business Legitimacy
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Certification confirms your business meets advanced standards of legitimacy, quality, and customer satisfaction.
-                </p>
-                
-                <h3 className="text-base font-medium mb-2">Requirements:</h3>
-                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4">
-                  <li>Completed verification process</li>
-                  <li>Minimum 3 months of active Pi transactions</li>
-                  <li>Video of business operations</li>
-                  <li>Images of services / products offered</li>
-                  <li>Compliance with Pi Network policies</li>
-                  <li>Regular business activity updates</li>
-                  <li>Subscription member</li>
-                </ul>
+            <div className="relative">
+              <Card>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Shield className="h-6 w-6 text-blue-500" />
+                    <CardTitle className="text-xl">Certification</CardTitle>
+                  </div>
+                  <CardDescription>
+                    Proof of Business Legitimacy
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Certification confirms your business meets advanced standards of legitimacy, quality, and customer satisfaction.
+                  </p>
+                  
+                  <h3 className="text-base font-medium mb-2">Requirements:</h3>
+                  <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground mb-4">
+                    <li>Completed verification process</li>
+                    <li>Minimum 3 months of active Pi transactions</li>
+                    <li>Video of business operations</li>
+                    <li>Images of services / products offered</li>
+                    <li>Compliance with Pi Network policies</li>
+                    <li>Regular business activity updates</li>
+                    <li>Subscription member</li>
+                  </ul>
 
-                <h3 className="text-base font-medium mb-2">Benefits:</h3>
-                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                  <li>Premium placement in Pi business directory</li>
-                  <li>"Certified" badge with enhanced visibility</li>
-                  <li>Access to business analytics tools</li>
-                  <li>Featured in Avante Maps communications</li>
-                  <li>Advanced transaction analytics</li>
-                  <li>Eligibility for Avante Maps promotions</li>
-                </ul>
-              </CardContent>
-            </Card>
+                  <h3 className="text-base font-medium mb-2">Benefits:</h3>
+                  <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                    <li>Premium placement in Pi business directory</li>
+                    <li>"Certified" badge with enhanced visibility</li>
+                    <li>Access to business analytics tools</li>
+                    <li>Featured in Avante Maps communications</li>
+                    <li>Advanced transaction analytics</li>
+                    <li>Eligibility for Avante Maps promotions</li>
+                  </ul>
+                </CardContent>
+              </Card>
+              
+              {/* Grey transparent overlay with lock icon */}
+              <div className="absolute inset-0 bg-gray-800/50 backdrop-blur-[2px] rounded-lg flex flex-col items-center justify-center z-10">
+                <Lock className="h-12 w-12 text-white mb-3 opacity-80" />
+                <p className="text-white font-medium text-lg">Complete Verification First</p>
+                <p className="text-white/80 text-sm mt-1 max-w-xs text-center">
+                  Certification is available after your business is verified
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-4 mb-8">
