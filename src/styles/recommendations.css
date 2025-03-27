@@ -1,0 +1,25 @@
+
+/* Fix for PlaceCard on mobile */
+@media (max-width: 768px) {
+  .place-card-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* Recommendations page specific styles */
+.carousel-item-recommendations .place-card-container {
+  max-width: 66.67% !important;
+  width: 66.67% !important;
+  margin: 0 auto;
+}
+
+/* Prevent horizontal scrolling on recommendations page */
+.recommendations-container {
+  width: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
+  position: relative;
+}

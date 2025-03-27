@@ -1,0 +1,10 @@
+
+/* Grid layouts */
+.card-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
+}
+
+/* Glass morphism */
+.glass {
+  @apply bg-background/80 backdrop-blur-sm border border-border/40;
+}

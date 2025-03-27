@@ -1,0 +1,14 @@
+
+/* Custom button styles */
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors;
+}
+
+/* Interactive elements */
+.interactive {
+  @apply transition-all duration-200 hover:bg-accent/10 active:bg-accent/20;
+}
