@@ -208,7 +208,15 @@
 
 /* Recommendations page specific styles */
 .carousel-item-recommendations .place-card-container {
-  max-width: 66.67% !important; /* Make cards 1/3 narrower */
-  width: 66.67% !important;
+  max-width: 73.37% !important; /* Increased by 10% from 66.67% */
+  width: 73.37% !important;
   margin: 0 auto;
+}
+
+/* Prevent horizontal scrolling on recommendations page */
+.recommendations-container {
+  width: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
+  position: relative;
 }

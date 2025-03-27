@@ -40,7 +40,7 @@ const Recommendations = () => {
 
   return (
     <AppLayout>
-      <div className="w-full mx-auto">
+      <div className="w-full mx-auto recommendations-container">
         <div className="space-y-1 mb-3 sm:mb-4 px-2 sm:px-4">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Recommendations</h1>
           <p className="text-sm text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency.</p>
@@ -61,7 +61,7 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="ml-0">
                 {avanteTopChoice.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[60%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'}`}>
+                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[66%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'} carousel-item-recommendations`}>
                     <div className="pl-0 pr-2">
                       <PlaceCard 
                         place={place} 
@@ -96,7 +96,7 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="ml-0">
                 {suggestedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[60%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'}`}>
+                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[66%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'} carousel-item-recommendations`}>
                     <div className="pl-0 pr-2">
                       <PlaceCard 
                         place={place} 
@@ -131,7 +131,7 @@ const Recommendations = () => {
             <Carousel className="w-full">
               <CarouselContent className="ml-0">
                 {recommendedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[60%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'}`}>
+                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[66%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'} carousel-item-recommendations`}>
                     <div className="pl-0 pr-2">
                       <PlaceCard 
                         place={place} 
