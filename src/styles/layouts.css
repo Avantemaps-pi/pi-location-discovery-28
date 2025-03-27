@@ -28,3 +28,16 @@
     margin: 0 auto;
   }
 }
+
+/* Prevent horizontal scrolling */
+.prevent-overflow {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Scrollable content that won't cause page overflow */
+.contained-scroll-area {
+  max-width: 100%;
+  overflow-x: auto;
+}
+

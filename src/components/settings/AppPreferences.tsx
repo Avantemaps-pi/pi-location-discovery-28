@@ -86,7 +86,7 @@ const AppPreferences = ({
         </div>
 
         <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 rounded-md">
-          <div className="h-60 overflow-hidden">
+          <div className="h-60 overflow-hidden contained-scroll-area">
             <ScrollArea className="h-full w-full pr-4" orientation="both">
               <div className="pr-4 min-w-[400px]">
                 <div className="flex items-start">
