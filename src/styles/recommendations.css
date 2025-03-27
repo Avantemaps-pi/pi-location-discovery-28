@@ -10,9 +10,12 @@
 }
 
 /* Recommendations page specific styles */
+.carousel-item-recommendations {
+  padding-right: 1rem;
+}
+
 .carousel-item-recommendations .place-card-container {
-  max-width: 66.67% !important;
-  width: 66.67% !important;
+  width: 100% !important;
   margin: 0 auto;
 }
 

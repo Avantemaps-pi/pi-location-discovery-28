@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -37,6 +38,14 @@ const Recommendations = () => {
     setShowControls(prev => ({ ...prev, [section]: true }));
   };
 
+  // Determine the appropriate width class based on device
+  const getWidthClass = () => {
+    if (isMobile) {
+      return 'basis-full sm:basis-full';
+    }
+    return 'basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4';
+  };
+
   return (
     <AppLayout>
       <div className="w-full mx-auto recommendations-container">
@@ -59,16 +68,14 @@ const Recommendations = () => {
             </h2>
             <Carousel className="w-full">
               <CarouselContent className="ml-0">
-                {avanteTopChoice.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[66%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'} carousel-item-recommendations`}>
-                    <div className="pl-0 pr-2">
-                      <PlaceCard 
-                        place={place} 
-                        onPlaceClick={handlePlaceClick}
-                        showDetails={true}
-                        className="mx-auto w-full"
-                      />
-                    </div>
+                {avanteTopChoice.map((place) => (
+                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="w-full"
+                    />
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -94,16 +101,14 @@ const Recommendations = () => {
             </h2>
             <Carousel className="w-full">
               <CarouselContent className="ml-0">
-                {suggestedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[66%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'} carousel-item-recommendations`}>
-                    <div className="pl-0 pr-2">
-                      <PlaceCard 
-                        place={place} 
-                        onPlaceClick={handlePlaceClick}
-                        showDetails={true}
-                        className="mx-auto w-full"
-                      />
-                    </div>
+                {suggestedForYou.map((place) => (
+                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="w-full"
+                    />
                   </CarouselItem>
                 ))}
               </CarouselContent>
@@ -129,16 +134,14 @@ const Recommendations = () => {
             </h2>
             <Carousel className="w-full">
               <CarouselContent className="ml-0">
-                {recommendedForYou.map((place, index) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${isMobile ? 'basis-[66%]' : 'sm:basis-1/3 md:basis-1/4 lg:basis-1/5'} carousel-item-recommendations`}>
-                    <div className="pl-0 pr-2">
-                      <PlaceCard 
-                        place={place} 
-                        onPlaceClick={handlePlaceClick}
-                        showDetails={true}
-                        className="mx-auto w-full"
-                      />
-                    </div>
+                {recommendedForYou.map((place) => (
+                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="w-full"
+                    />
                   </CarouselItem>
                 ))}
               </CarouselContent>
