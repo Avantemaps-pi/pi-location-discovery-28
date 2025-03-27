@@ -1,3 +1,4 @@
+
 import React, { forwardRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CircleCheck, Info } from 'lucide-react';
@@ -83,17 +84,17 @@ const PlaceCardPopup = forwardRef<HTMLDivElement, PlaceCardPopupProps>(({
           <ExpandableDescription text={location.description} maxLines={4} />
         </div>
         
-        <div className="flex justify-between items-center mt-4">
-          <div className="flex items-center gap-2">
+        <div className="flex justify-between items-start mt-4">
+          <div className="flex items-center">
             <PlaceRating 
               rating={location.rating} 
               onClick={handleRatingClick} 
             />
-            <WebsiteButton />
           </div>
           
           <div className="flex flex-col gap-2 items-end">
-            <CategoryBadge category={location.category} />
+            <WebsiteButton />
+            
             <Popover>
               <PopoverTrigger asChild>
                 <div className="text-blue-500 font-medium text-sm cursor-pointer flex items-center">
@@ -105,6 +106,8 @@ const PlaceCardPopup = forwardRef<HTMLDivElement, PlaceCardPopupProps>(({
                 <DetailsCard place={location} />
               </PopoverContent>
             </Popover>
+            
+            <CategoryBadge category={location.category} />
           </div>
         </div>
       </CardContent>

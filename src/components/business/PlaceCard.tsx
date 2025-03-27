@@ -143,8 +143,8 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
           <ExpandableDescription text={place.description} maxLines={3} />
         </div>
         
-        <div className="flex flex-wrap justify-between items-end mt-auto gap-2">
-          <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-wrap justify-between items-start mt-auto gap-2">
+          <div className="flex items-center">
             <div 
               className="inline-flex items-center px-2 py-1 rounded bg-amber-100 dark:bg-amber-950/40 cursor-pointer w-14 justify-center"
               onClick={handleRatingClick}
@@ -152,7 +152,9 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
               <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500 mr-1" />
               <span className="text-xs font-medium text-amber-800 dark:text-amber-400">{place.rating.toFixed(1)}</span>
             </div>
-            
+          </div>
+          
+          <div className="flex flex-col gap-2 items-end">
             <Button 
               variant="default" 
               size="sm" 
@@ -161,10 +163,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
               Website
               <ExternalLink className="h-3 w-3" />
             </Button>
-          </div>
-          
-          <div className="flex flex-col gap-2 items-end">
-            <CategoryBadge category={place.category} />
+            
             {showDetails && (
               <Popover>
                 <PopoverTrigger asChild>
@@ -178,6 +177,8 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
                 </PopoverContent>
               </Popover>
             )}
+            
+            <CategoryBadge category={place.category} />
           </div>
         </div>
       </CardContent>
