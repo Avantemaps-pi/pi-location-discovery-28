@@ -28,14 +28,14 @@ const AppPreferences = ({
   onSaveSettings
 }: AppPreferencesProps) => {
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardHeader>
         <CardTitle>App Preferences</CardTitle>
         <CardDescription>Customize your Avante Maps experience.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-3">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <div className="space-y-0.5">
               <Label htmlFor="notifications">Push Notifications</Label>
               <p className="text-muted-foreground text-sm">Receive notifications about new Pi-accepting businesses.</p>
@@ -44,16 +44,17 @@ const AppPreferences = ({
               id="notifications" 
               checked={notifications}
               onCheckedChange={setNotifications}
+              className="mt-2 sm:mt-0"
             />
           </div>
           
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mt-4">
             <div className="space-y-0.5">
               <Label htmlFor="color-scheme">Color Scheme</Label>
               <p className="text-muted-foreground text-sm">Choose between light, dark, or system theme.</p>
             </div>
             <Select value={colorScheme} onValueChange={onColorSchemeChange}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full sm:w-[180px] mt-2 sm:mt-0">
                 <SelectValue placeholder="Select color scheme" />
               </SelectTrigger>
               <SelectContent>
@@ -85,10 +86,10 @@ const AppPreferences = ({
           <p className="text-sm text-muted-foreground mt-1">As a Business Owner, you need to complete these steps to get verified:</p>
         </div>
 
-        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 rounded-md">
-          <div className="h-60 overflow-hidden contained-scroll-area">
-            <ScrollArea className="h-full w-full pr-4" orientation="both">
-              <div className="pr-4 min-w-[400px]">
+        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 rounded-md w-full overflow-hidden">
+          <div className="h-60 w-full">
+            <ScrollArea className="h-full w-full pr-0">
+              <div className="pr-4">
                 <div className="flex items-start">
                   <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
                   <div className="w-full">

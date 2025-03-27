@@ -88,31 +88,33 @@ const Settings = () => {
   };
 
   return (
-    <AppLayout title="">
-      <div className="space-y-6 max-w-2xl mx-auto px-4 prevent-overflow">
+    <AppLayout title="" fullWidth={false} className="overflow-x-hidden">
+      <div className="w-full max-w-2xl mx-auto px-4 py-6 overflow-x-hidden">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
           <p className="text-muted-foreground mt-2">Manage your account preferences.</p>
         </div>
 
-        <ProfileSettings 
-          language={language} 
-          setLanguage={setLanguage} 
-        />
+        <div className="mt-6 space-y-6 overflow-x-hidden">
+          <ProfileSettings 
+            language={language} 
+            setLanguage={setLanguage} 
+          />
 
-        <AppPreferences 
-          notifications={notifications}
-          setNotifications={setNotifications}
-          isDarkMode={isDarkMode}
-          colorScheme={colorScheme}
-          onColorSchemeChange={handleColorSchemeChange}
-          onSaveSettings={handleSaveSettings}
-        />
+          <AppPreferences 
+            notifications={notifications}
+            setNotifications={setNotifications}
+            isDarkMode={isDarkMode}
+            colorScheme={colorScheme}
+            onColorSchemeChange={handleColorSchemeChange}
+            onSaveSettings={handleSaveSettings}
+          />
 
-        <DangerZone 
-          onDeleteAccount={handleDeleteAccount}
-          onReinstateAccount={handleReinstateAccount}
-        />
+          <DangerZone 
+            onDeleteAccount={handleDeleteAccount}
+            onReinstateAccount={handleReinstateAccount}
+          />
+        </div>
       </div>
     </AppLayout>
   );
