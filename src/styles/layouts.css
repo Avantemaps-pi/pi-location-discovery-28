@@ -8,3 +8,23 @@
 .glass {
   @apply bg-background/80 backdrop-blur-sm border border-border/40;
 }
+
+/* Registration form responsive fixes */
+@media (max-width: 640px) {
+  .form-container {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .form-card {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .form-container {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+}

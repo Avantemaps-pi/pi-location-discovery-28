@@ -3,10 +3,9 @@ import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, FormProvider } from 'react-hook-form';
 import { Form } from '@/components/ui/form';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
 
 // Import the form schema and components
 import { formSchema, FormValues } from './registration/formSchema';
@@ -15,6 +14,8 @@ import ContactTab from './registration/ContactTab';
 import AddressTab from './registration/AddressTab';
 import HoursTab from './registration/HoursTab';
 import DetailsTab from './registration/DetailsTab';
+import TabNavigation from './registration/components/TabNavigation';
+import TabContent from './registration/components/TabContent';
 
 interface BusinessRegistrationFormProps {
   onSuccess?: () => void;
@@ -90,67 +91,19 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
 
       <FormProvider {...form}>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full max-w-4xl mx-auto">
             <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-              <TabsList className={cn(
-                "grid mb-6 w-full",
-                isMobile ? "grid-cols-3 gap-1" : "grid-cols-5"
-              )}>
-                <TabsTrigger value="business-owner" className="text-sm whitespace-nowrap">
-                  {isMobile ? "Owner" : "Business Owner"}
-                </TabsTrigger>
-                <TabsTrigger value="contact" className="text-sm">Contact</TabsTrigger>
-                <TabsTrigger value="address" className="text-sm">Address</TabsTrigger>
-                {isMobile && (
-                  <div className="col-span-3 mt-1">
-                    <TabsList className="grid grid-cols-2 w-full">
-                      <TabsTrigger value="hours" className="text-sm">Hours</TabsTrigger>
-                      <TabsTrigger value="details" className="text-sm">Details</TabsTrigger>
-                    </TabsList>
-                  </div>
-                )}
-                {!isMobile && (
-                  <>
-                    <TabsTrigger value="hours" className="text-sm">Hours</TabsTrigger>
-                    <TabsTrigger value="details" className="text-sm">Details</TabsTrigger>
-                  </>
-                )}
-              </TabsList>
+              <TabNavigation 
+                isMobile={isMobile} 
+                value={selectedTab} 
+                onValueChange={setSelectedTab} 
+              />
 
-              <div className="w-full">
-                <TabsContent value="business-owner" className="space-y-4 w-full">
-                  <BusinessOwnerTab onNext={() => setSelectedTab('contact')} />
-                </TabsContent>
-
-                <TabsContent value="contact" className="space-y-4 w-full">
-                  <ContactTab 
-                    onNext={() => setSelectedTab('address')} 
-                    onPrevious={() => setSelectedTab('business-owner')} 
-                  />
-                </TabsContent>
-
-                <TabsContent value="address" className="space-y-4 w-full">
-                  <AddressTab 
-                    onNext={() => setSelectedTab('hours')} 
-                    onPrevious={() => setSelectedTab('contact')} 
-                  />
-                </TabsContent>
-
-                <TabsContent value="hours" className="space-y-4 w-full">
-                  <HoursTab 
-                    onNext={() => setSelectedTab('details')} 
-                    onPrevious={() => setSelectedTab('address')} 
-                  />
-                </TabsContent>
-
-                <TabsContent value="details" className="space-y-4 w-full">
-                  <DetailsTab 
-                    onPrevious={() => setSelectedTab('hours')} 
-                    selectedImage={selectedImage}
-                    handleImageUpload={handleImageUpload}
-                  />
-                </TabsContent>
-              </div>
+              <TabContent
+                selectedImage={selectedImage}
+                handleImageUpload={handleImageUpload}
+                setSelectedTab={setSelectedTab}
+              />
             </Tabs>
           </form>
         </Form>

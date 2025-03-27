@@ -11,7 +11,7 @@ const Registration = () => {
   return (
     <AppLayout title="Avante Maps" fullHeight>
       <motion.div 
-        className="w-full max-w-5xl mx-auto px-4 py-6 md:py-8"
+        className="w-full max-w-5xl mx-auto px-4 py-4 md:py-6 overflow-y-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
