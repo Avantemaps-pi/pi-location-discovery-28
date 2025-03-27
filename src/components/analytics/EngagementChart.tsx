@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import LineChartComponent from './charts/LineChartComponent';
 import BarChartComponent from './charts/BarChartComponent';
 import FullScreenChart from './charts/FullScreenChart';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface ChartData {
   name: string;
@@ -20,6 +21,15 @@ interface EngagementChartProps {
   title: string;
   description?: string;
 }
+
+// Timeline options to filter the data
+const timelineOptions = [
+  { value: "day", label: "Day" },
+  { value: "week", label: "Week" },
+  { value: "month", label: "Month" },
+  { value: "quarter", label: "Quarter" },
+  { value: "year", label: "Year" }
+];
 
 const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, title, description }) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -47,7 +57,7 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
     
     // Adjust chart dimensions to fit properly within container
     const chartWidth = '100%';
-    const chartHeight = 250; // Keep the chart height the same
+    const chartHeight = 230; // Reduced height to add more space at the bottom
     
     return { containerStyle, chartWidth, chartHeight };
   }, []);
@@ -87,8 +97,39 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
     <>
       <Card className="w-full h-full">
         <CardHeader className="pb-0">
-          <CardTitle className="text-lg sm:text-xl">{title}</CardTitle>
-          {/* Description removed as requested */}
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg sm:text-xl">{title}</CardTitle>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={toggleFullScreen} 
+              title="Full Screen"
+              className="mr-0"
+            >
+              <Maximize className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          {/* Timeline filter buttons */}
+          <div className="mt-3">
+            <ToggleGroup 
+              type="single" 
+              value={timelineFilter} 
+              onValueChange={(value) => value && setTimelineFilter(value)}
+              className="justify-start bg-muted/20 p-1 rounded-lg"
+            >
+              {timelineOptions.map((option) => (
+                <ToggleGroupItem
+                  key={option.value}
+                  value={option.value}
+                  aria-label={`Filter by ${option.label}`}
+                  className="data-[state=on]:bg-background data-[state=on]:text-foreground px-3 py-1 text-sm"
+                >
+                  {option.label}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
           
           <div className="flex items-center justify-between mt-2">
             <Tabs value={activeTab} onValueChange={handleTabChange}>
@@ -97,19 +138,10 @@ const EngagementChart: React.FC<EngagementChartProps> = React.memo(({ data, titl
                 <TabsTrigger value="bar">Bar</TabsTrigger>
               </TabsList>
             </Tabs>
-            <Button 
-              variant="outline" 
-              size="icon" 
-              onClick={toggleFullScreen} 
-              title="Full Screen"
-              className="mr-2 sm:mr-4"
-            >
-              <Maximize className="h-4 w-4" />
-            </Button>
           </div>
         </CardHeader>
         <CardContent className="pl-0 pt-2 h-[300px] w-full overflow-hidden flex items-center justify-center">
-          <div className="w-full h-[250px]">
+          <div className="w-full h-[250px] pb-3"> {/* Added padding bottom to create space below x-axis labels */}
             <Tabs value={activeTab} onValueChange={handleTabChange} className="h-full flex flex-col">
               <TabsContent value="line" className="flex-1 h-full">
                 {lineChartComponent}

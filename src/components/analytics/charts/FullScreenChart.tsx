@@ -67,7 +67,7 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
     // Apply scale to chart dimensions
     const chartWidth = `${100 * xScaleFactor}%`;
     // Reduce the height for better fit on screen
-    const chartHeight = (isMobile ? 300 : 500) * yScaleFactor; 
+    const chartHeight = (isMobile ? 250 : 400) * yScaleFactor; // Reduced from 300/500 to 250/400
     
     // Fixed style prop with valid CSS properties
     const containerStyle = {
@@ -112,11 +112,8 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
   return (
     <Dialog open={isFullScreen} onOpenChange={setIsFullScreen}>
       <DialogContent className="max-w-[95vw] w-[95vw] md:max-w-[90vw] h-[90vh] flex flex-col p-4 overflow-hidden" hideCloseButton>
-        <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
         <div className="flex items-center justify-between">
-          <div className="flex-1 overflow-hidden">
-            {description && <p className="text-sm text-gray-500 truncate">{description}</p>}
-          </div>
+          <DialogTitle className="text-xl font-semibold">{title}</DialogTitle>
           <Button 
             variant="outline" 
             size="icon" 
@@ -156,7 +153,7 @@ const FullScreenChart: React.FC<FullScreenChartProps> = React.memo(({
             </TabsList>
           </div>
           
-          <div className="flex-1 w-full overflow-hidden">
+          <div className="flex-1 w-full overflow-hidden pb-4">
             {chartComponent}
           </div>
         </Tabs>
