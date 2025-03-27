@@ -59,7 +59,10 @@ const ExpandableDescription: React.FC<ExpandableDescriptionProps> = ({
       </div>
       
       <CollapsibleContent>
-        <ScrollArea className="h-36 mt-1 overflow-y-auto">
+        <ScrollArea 
+          className="max-h-36 mt-1 overflow-y-auto" 
+          orientation="vertical"
+        >
           <p className="text-sm text-gray-700 dark:text-gray-300 pr-3">{text}</p>
         </ScrollArea>
         <div className="text-right mt-1">
@@ -73,3 +76,4 @@ const ExpandableDescription: React.FC<ExpandableDescriptionProps> = ({
 };
 
 export default ExpandableDescription;
+
