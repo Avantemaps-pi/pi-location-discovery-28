@@ -66,28 +66,26 @@ const Recommendations = () => {
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Avante Top Choice
             </h2>
-            <div className="flex items-center">
+            <Carousel className="w-full">
               {showControls.avanteTopChoice && (
-                <CarouselPrevious className="relative left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
+                <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
               )}
-              <Carousel className="w-full">
-                <CarouselContent className="ml-0">
-                  {avanteTopChoice.map((place) => (
-                    <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
-                      <PlaceCard 
-                        place={place} 
-                        onPlaceClick={handlePlaceClick}
-                        showDetails={true}
-                        className="w-full"
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
+              <CarouselContent className="ml-0">
+                {avanteTopChoice.map((place) => (
+                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="w-full"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
               {showControls.avanteTopChoice && (
-                <CarouselNext className="relative right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
+                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
               )}
-            </div>
+            </Carousel>
           </section>
           
           {/* Suggested for you Section */}
@@ -101,28 +99,26 @@ const Recommendations = () => {
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Suggested for you
             </h2>
-            <div className="flex items-center">
+            <Carousel className="w-full">
               {showControls.suggestedForYou && (
-                <CarouselPrevious className="relative left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
+                <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
               )}
-              <Carousel className="w-full">
-                <CarouselContent className="ml-0">
-                  {suggestedForYou.map((place) => (
-                    <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
-                      <PlaceCard 
-                        place={place} 
-                        onPlaceClick={handlePlaceClick}
-                        showDetails={true}
-                        className="w-full"
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
+              <CarouselContent className="ml-0">
+                {suggestedForYou.map((place) => (
+                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="w-full"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
               {showControls.suggestedForYou && (
-                <CarouselNext className="relative right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
+                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
               )}
-            </div>
+            </Carousel>
           </section>
           
           {/* Recommended for you Section */}
@@ -136,28 +132,26 @@ const Recommendations = () => {
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Recommended for you
             </h2>
-            <div className="flex items-center">
+            <Carousel className="w-full">
               {showControls.recommendedForYou && (
-                <CarouselPrevious className="relative left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
+                <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
               )}
-              <Carousel className="w-full">
-                <CarouselContent className="ml-0">
-                  {recommendedForYou.map((place) => (
-                    <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
-                      <PlaceCard 
-                        place={place} 
-                        onPlaceClick={handlePlaceClick}
-                        showDetails={true}
-                        className="w-full"
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
+              <CarouselContent className="ml-0">
+                {recommendedForYou.map((place) => (
+                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="w-full"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
               {showControls.recommendedForYou && (
-                <CarouselNext className="relative right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
+                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
               )}
-            </div>
+            </Carousel>
           </section>
         </div>
       </div>
