@@ -15,7 +15,7 @@
 }
 
 .carousel-item-recommendations .place-card-container {
-  width: 80% !important; /* Reduced from 100% to 80% (20% reduction) */
+  width: 90% !important; /* Increased from 80% to 90% */
   margin: 0 auto;
 }
 
