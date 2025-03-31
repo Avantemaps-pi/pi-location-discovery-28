@@ -5,8 +5,10 @@ import { toast } from 'sonner';
 import ProfileSettings from '@/components/settings/ProfileSettings';
 import AppPreferences from '@/components/settings/AppPreferences';
 import DangerZone from '@/components/settings/DangerZone';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Settings = () => {
+  const isMobile = useIsMobile();
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem('language') || 'english';
   });
@@ -89,16 +91,17 @@ const Settings = () => {
 
   return (
     <AppLayout title="" fullWidth={false} className="overflow-x-hidden">
-      <div className="max-w-xl mx-auto px-4 py-6 overflow-x-hidden">
+      <div className="w-full max-w-lg mx-auto px-3 sm:px-4 py-4 sm:py-6 overflow-hidden">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-          <p className="text-muted-foreground mt-2">Manage your account preferences.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Settings</h1>
+          <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">Manage your account preferences.</p>
         </div>
 
-        <div className="mt-6 space-y-6 overflow-x-hidden">
+        <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6 overflow-hidden">
           <ProfileSettings 
             language={language} 
             setLanguage={setLanguage} 
+            isMobile={isMobile}
           />
 
           <AppPreferences 
