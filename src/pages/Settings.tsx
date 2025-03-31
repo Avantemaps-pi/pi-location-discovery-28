@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { toast } from 'sonner';
@@ -26,11 +25,9 @@ const Settings = () => {
     if (savedScheme === 'dark') return true;
     if (savedScheme === 'light') return false;
     
-    // If 'system', default to light instead of checking system preference
     return false;
   });
 
-  // Apply dark mode class to document
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -39,7 +36,6 @@ const Settings = () => {
     }
   }, [isDarkMode]);
 
-  // For system mode, we'll still listen for system changes, but default to light
   useEffect(() => {
     if (colorScheme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -65,7 +61,6 @@ const Settings = () => {
     } else if (scheme === 'light') {
       setIsDarkMode(false);
     } else {
-      // System preference - default to light
       setIsDarkMode(false);
     }
   };
@@ -91,7 +86,7 @@ const Settings = () => {
 
   return (
     <AppLayout title="" fullWidth={false} className="overflow-x-hidden">
-      <div className="w-full max-w-md mx-auto px-3 sm:px-4 py-4 sm:py-6 overflow-hidden">
+      <div className="w-full max-w-sm mx-auto px-3 sm:px-4 py-4 sm:py-6 overflow-hidden">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Settings</h1>
           <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">Manage your account preferences.</p>
