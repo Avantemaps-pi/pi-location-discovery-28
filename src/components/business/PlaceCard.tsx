@@ -90,8 +90,11 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
   // Check if we're on the recommendations page
   const isRecommendationsPage = window.location.pathname === '/recommendations';
 
-  // Parse categories from the place
-  const categories = place.category.split(',').map(cat => cat.trim()).filter(Boolean);
+  // Parse categories and limit to 2
+  const categories = place.category.split(',')
+    .map(cat => cat.trim())
+    .filter(Boolean)
+    .slice(0, 2); // Limit to 2 categories
 
   return (
     <Card 
@@ -172,7 +175,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
               <span className="text-xs font-medium text-amber-800 dark:text-amber-400">{place.rating.toFixed(1)}</span>
             </div>
             
-            {/* Display categories vertically when there's more than one */}
+            {/* Display up to 2 categories vertically */}
             <div className="flex flex-col gap-1.5">
               {categories.map((category, index) => (
                 <CategoryBadge key={index} category={category} />
