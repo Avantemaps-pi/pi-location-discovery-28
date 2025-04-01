@@ -7,21 +7,22 @@ import GoogleMap from '@/components/map/GoogleMap';
 import SearchBar from '@/components/map/SearchBar';
 import { Button } from '@/components/ui/button';
 import { allPlaces } from '@/data/mockPlaces';
+import { useSessionTimeout } from '@/hooks/useSessionTimeout';
 
 const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
   const location = useLocation();
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
+  
+  // Use the session timeout hook
+  useSessionTimeout();
 
   useEffect(() => {
     if (location.state && location.state.selectedPlaceId) {
       setSelectedPlace(location.state.selectedPlaceId);
     }
   }, [location.state]);
-
-  // Remove the outside click handler as we're now handling this with the overlay
-  // in the GoogleMap component directly
 
   const handleSearch = (searchTerm: string) => {
     console.log('Search for:', searchTerm);
@@ -37,7 +38,7 @@ const Index = () => {
       withHeader={true} 
       fullHeight={true} 
       fullWidth={true}
-      hideSidebar={false} // Changed from true to false to keep the sidebar in DOM and accessible
+      hideSidebar={false}
     >
       <div className="absolute inset-0 top-16 w-full" ref={mapRef}>
         <GoogleMap 

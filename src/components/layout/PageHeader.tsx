@@ -6,6 +6,7 @@ import MobileMenuButton from './header/MobileMenuButton';
 import DesktopMenuButton from './header/DesktopMenuButton';
 import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/components/ui/sidebar';
+import AuthStatus from '@/components/auth/AuthStatus';
 
 interface PageHeaderProps {
   title?: string;
@@ -72,7 +73,7 @@ const PageHeader = ({ title = "Avante Maps", hideSidebar = false }: PageHeaderPr
         </Link>
         
         <div className="ml-auto flex items-center space-x-4">
-          {/* Add any other header elements here */}
+          <AuthStatus />
         </div>
       </div>
     </header>
