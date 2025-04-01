@@ -1,15 +1,18 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info, Share2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import CategoryBadge from '@/components/business/CategoryBadge';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import DetailsCard from './DetailsCard';
+import CategoryBadge from '@/components/business/CategoryBadge';
 import ExpandableDescription from './ExpandableDescription';
 import { useIsMobile } from '@/hooks/use-mobile';
+import PlaceCardActions from './PlaceCardActions';
+import PlaceCardImage from './PlaceCardImage';
+import PlaceCardTitle from './PlaceCardTitle';
+import PlaceCardAddress from './PlaceCardAddress';
+import PlaceCardRating from './PlaceCardRating';
+import PlaceCardWebsiteButton from './PlaceCardWebsiteButton';
+import PlaceCardDetails from './PlaceCardDetails';
 
 interface PlaceCardProps {
   place: Place;
@@ -74,19 +77,6 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
     }
   };
 
-  const WebsiteButton = ({ url }: { url: string }) => {
-    return (
-      <Button 
-        variant="default" 
-        size="sm" 
-        className="bg-green-500 hover:bg-green-600 text-xs font-medium flex items-center gap-1 whitespace-nowrap h-9 px-3"
-      >
-        Website
-        <ExternalLink className="h-3 w-3" />
-      </Button>
-    );
-  };
-
   // Check if we're on the recommendations page
   const isRecommendationsPage = window.location.pathname === '/recommendations';
 
@@ -101,65 +91,24 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
       key={place.id} 
       className={`material-card card-hover ${className || 'w-full'} place-card-container`}
     >
-      <div 
-        className="h-40 overflow-hidden cursor-pointer relative"
+      <PlaceCardImage 
+        image={place.image} 
+        name={place.name} 
         onClick={handlePlaceClick}
       >
-        <img 
-          src={place.image} 
-          alt={place.name} 
-          className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-          onError={(e) => {
-            e.currentTarget.src = 'public/placeholder.svg';
-            e.currentTarget.alt = 'Business Image';
-          }}
+        <PlaceCardActions 
+          isBookmarked={isBookmarked} 
+          onBookmarkToggle={handleBookmarkToggle} 
+          onShare={handleShare} 
         />
-        <div className="absolute top-2 right-2 flex gap-2">
-          <Button 
-            variant="secondary" 
-            size="icon" 
-            className="rounded-full w-8 h-8 bg-white/80 backdrop-blur-sm text-gray-800 hover:bg-white"
-            onClick={handleBookmarkToggle}
-          >
-            <Bookmark 
-              className={`h-4 w-4 ${isBookmarked ? 'text-primary fill-primary' : 'text-gray-600'}`}
-            />
-          </Button>
-          <Button 
-            variant="secondary" 
-            size="icon" 
-            className="rounded-full w-8 h-8 bg-white/80 backdrop-blur-sm text-gray-800 hover:bg-white"
-            onClick={handleShare}
-          >
-            <Share2 className="h-4 w-4 text-gray-600" />
-          </Button>
-        </div>
-      </div>
+      </PlaceCardImage>
       
       <CardHeader className="pb-0 px-3 pt-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex-shrink-0">
-              <CircleCheck className="h-5 w-5 text-green-500" />
-            </div>
-            <CardTitle 
-              className="text-base font-bold cursor-pointer hover:text-primary transition-colors line-clamp-1"
-              onClick={handlePlaceClick}
-            >
-              {place.name}
-            </CardTitle>
-          </div>
-        </div>
+        <PlaceCardTitle name={place.name} onClick={handlePlaceClick} />
       </CardHeader>
       
       <CardContent className="pt-2 px-3 pb-3">
-        <div 
-          className="flex items-center gap-1 text-sm text-muted-foreground mb-2 cursor-pointer hover:text-primary transition-colors"
-          onClick={handlePlaceClick}
-        >
-          <MapPin className="h-4 w-4 flex-shrink-0" />
-          <span className="text-xs line-clamp-1">{place.address}</span>
-        </div>
+        <PlaceCardAddress address={place.address} onClick={handlePlaceClick} />
         
         <div className="h-20 mb-2 overflow-hidden">
           <ExpandableDescription text={place.description} maxLines={3} />
@@ -167,13 +116,7 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
         
         <div className="flex flex-wrap justify-between items-start mt-auto gap-2">
           <div className="flex flex-col items-start gap-2">
-            <div 
-              className="inline-flex items-center px-2 py-1 rounded bg-amber-100 dark:bg-amber-950/40 cursor-pointer w-14 justify-center"
-              onClick={handleRatingClick}
-            >
-              <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500 mr-1" />
-              <span className="text-xs font-medium text-amber-800 dark:text-amber-400">{place.rating.toFixed(1)}</span>
-            </div>
+            <PlaceCardRating rating={place.rating} onClick={handleRatingClick} />
             
             {/* Display up to 2 categories vertically */}
             <div className="flex flex-col gap-1.5">
@@ -184,21 +127,13 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
           </div>
           
           <div className="flex flex-col gap-2 items-end">
-            <WebsiteButton url={place.website} />
+            <PlaceCardWebsiteButton url={place.website} />
             
-            {showDetails && !isRecommendationsPage && (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <div className="text-primary font-medium text-sm cursor-pointer flex items-center whitespace-nowrap">
-                    <Info className="h-3 w-3 mr-1" />
-                    Details
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent className="p-0 w-[300px] sm:w-[420px]" align="end">
-                  <DetailsCard place={place} />
-                </PopoverContent>
-              </Popover>
-            )}
+            <PlaceCardDetails 
+              place={place} 
+              showDetails={showDetails} 
+              isRecommendationsPage={isRecommendationsPage} 
+            />
           </div>
         </div>
       </CardContent>

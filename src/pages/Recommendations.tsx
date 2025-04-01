@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -38,7 +37,6 @@ const Recommendations = () => {
     setShowControls(prev => ({ ...prev, [section]: true }));
   };
 
-  // Determine the appropriate width class based on device
   const getWidthClass = () => {
     if (isMobile) {
       return 'basis-[90%] sm:basis-[90%]';
@@ -55,7 +53,6 @@ const Recommendations = () => {
         </div>
 
         <div className="space-y-4 sm:space-y-5">
-          {/* Avante Top Choice Section */}
           <section 
             className="relative"
             onMouseEnter={() => handleMouseEnter('avanteTopChoice')}
@@ -87,7 +84,6 @@ const Recommendations = () => {
             </Carousel>
           </section>
           
-          {/* Suggested for you Section */}
           <section 
             className="relative"
             onMouseEnter={() => handleMouseEnter('suggestedForYou')}
@@ -119,7 +115,6 @@ const Recommendations = () => {
             </Carousel>
           </section>
           
-          {/* Recommended for you Section */}
           <section 
             className="relative"
             onMouseEnter={() => handleMouseEnter('recommendedForYou')}
