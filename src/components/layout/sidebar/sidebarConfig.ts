@@ -1,7 +1,7 @@
 
 import {
   Map,
-  MonitorStack,
+  LayoutGrid,
   Bookmark,
   Bell,
   Building,
@@ -25,7 +25,7 @@ export const navItems = [
   },
   {
     to: '/recommendations',
-    icon: MonitorStack,
+    icon: LayoutGrid,
     label: 'Recommendations',
   },
   {
