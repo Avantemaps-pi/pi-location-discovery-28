@@ -12,6 +12,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Recommendations = () => {
   const navigate = useNavigate();
@@ -81,6 +83,18 @@ const Recommendations = () => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
+              {/* Always visible right arrow for Avante Top Choice section */}
+              <Button 
+                variant="secondary"
+                size="icon"
+                className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 rounded-full h-8 w-8 top-1/2 transform -translate-y-1/2 hover:bg-white/90"
+                onClick={() => {
+                  const api = document.querySelector('.embla__container')?.parentElement?.__emblaApi;
+                  if (api) api.scrollNext();
+                }}
+              >
+                <ArrowRight className="h-4 w-4" />
+              </Button>
               {showControls.avanteTopChoice && (
                 <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
               )}
