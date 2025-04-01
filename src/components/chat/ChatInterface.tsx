@@ -3,6 +3,8 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import ChatModeToggle from './ChatModeToggle';
 import ChatMessage from './ChatMessage';
+import { Menu, Send } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 export type ChatMode = 'ai' | 'live';
 
@@ -65,6 +67,35 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               />
             ))
           )}
+        </div>
+
+        <div className="p-3 border-t">
+          <div className="relative flex items-center">
+            <div className="flex w-full bg-slate-50 rounded-full px-4 py-3">
+              <button 
+                onClick={handleAttachmentOption}
+                className="text-gray-400 hover:text-gray-500 mr-2"
+              >
+                <Menu size={20} className="text-gray-400" />
+              </button>
+
+              <Input
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="flex-1 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-600 placeholder:text-gray-500"
+                placeholder="Type your message to Avante Maps..."
+                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+              />
+
+              <button
+                onClick={handleSendMessage}
+                disabled={!message.trim()}
+                className="text-blue-500 hover:text-blue-600 ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Send size={20} className="transform rotate-45" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </Card>

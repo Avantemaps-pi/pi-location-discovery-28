@@ -12,6 +12,8 @@ const Communicon = () => {
     messages,
     chatMode,
     handleChatModeChange,
+    handleSendMessage,
+    handleAttachmentOption,
     sendVerificationRequest
   } = useChatState();
 
@@ -23,6 +25,12 @@ const Communicon = () => {
     };
   }, [sendVerificationRequest]);
 
+  // Create wrapper function to match expected signature
+  const handleSendMessageWrapper = () => {
+    const event = new Event('submit') as unknown as React.FormEvent;
+    handleSendMessage(event);
+  };
+
   return (
     <AppLayout title="Avante Maps">
       <div className="max-w-4xl mx-auto">
@@ -33,8 +41,9 @@ const Communicon = () => {
           messages={messages}
           message={message}
           setMessage={setMessage}
-          handleSendMessage={() => {}}
-          showAttachmentIcon={false}
+          handleSendMessage={handleSendMessageWrapper}
+          handleAttachmentOption={handleAttachmentOption}
+          showAttachmentIcon={true}
         />
       </div>
     </AppLayout>
