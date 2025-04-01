@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info, Share2 } from 'lucide-react';
@@ -89,6 +90,9 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
   // Check if we're on the recommendations page
   const isRecommendationsPage = window.location.pathname === '/recommendations';
 
+  // Parse categories from the place
+  const categories = place.category.split(',').map(cat => cat.trim()).filter(Boolean);
+
   return (
     <Card 
       key={place.id} 
@@ -167,7 +171,13 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
               <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500 mr-1" />
               <span className="text-xs font-medium text-amber-800 dark:text-amber-400">{place.rating.toFixed(1)}</span>
             </div>
-            <CategoryBadge category={place.category} />
+            
+            {/* Display categories vertically when there's more than one */}
+            <div className="flex flex-col gap-1.5">
+              {categories.map((category, index) => (
+                <CategoryBadge key={index} category={category} />
+              ))}
+            </div>
           </div>
           
           <div className="flex flex-col gap-2 items-end">
