@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
@@ -13,6 +13,8 @@ import PlaceCardAddress from './PlaceCardAddress';
 import PlaceCardRating from './PlaceCardRating';
 import PlaceCardWebsiteButton from './PlaceCardWebsiteButton';
 import PlaceCardDetails from './PlaceCardDetails';
+import { useBookmark } from '@/hooks/useBookmark';
+import { useSharePlace } from '@/hooks/useSharePlace';
 
 interface PlaceCardProps {
   place: Place;
@@ -31,9 +33,17 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
   showDetails = false,
   isBookmarked: initialIsBookmarked = false
 }) => {
-  const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  
+  // Use our custom hooks
+  const { isBookmarked, handleBookmarkToggle } = useBookmark({
+    initialIsBookmarked,
+    onRemove,
+    id: place.id
+  });
+  
+  const { handleShare } = useSharePlace(place.name, place.id);
   
   const handleRatingClick = () => {
     navigate(`/review/${place.id}`, { 
@@ -51,32 +61,6 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
     }
   };
   
-  const handleBookmarkToggle = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsBookmarked(!isBookmarked);
-    if (onRemove && !isBookmarked === false) {
-      onRemove(place.id);
-    }
-  };
-
-  const handleShare = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Web Share API - falls back to copy to clipboard
-    if (navigator.share) {
-      navigator.share({
-        title: place.name,
-        text: `Check out ${place.name} on Avante Maps`,
-        url: window.location.origin + '?place=' + place.id
-      }).catch(err => {
-        console.error('Error sharing', err);
-      });
-    } else {
-      // Fallback - copy link to clipboard
-      navigator.clipboard.writeText(window.location.origin + '?place=' + place.id);
-      alert('Link copied to clipboard!');
-    }
-  };
-
   // Check if we're on the recommendations page
   const isRecommendationsPage = window.location.pathname === '/recommendations';
 
