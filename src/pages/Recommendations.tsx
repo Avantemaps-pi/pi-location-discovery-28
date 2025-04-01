@@ -1,31 +1,20 @@
 
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AppLayout from '@/components/layout/AppLayout';
+import Layout from '@/components/layout/Layout';
+import CategorySection from '@/components/business/CategorySection';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { allPlaces as getAllPlaces } from '@/data/mockPlaces';
-import PlaceCard from '@/components/business/PlaceCard';
-
-// Creating categories from the existing places data
-const categories = [
-  { name: 'Technology', id: 'tech' },
-  { name: 'Food & Drink', id: 'food' },
-  { name: 'Shopping', id: 'shopping' },
-  { name: 'Health & Wellness', id: 'health' },
-  { name: 'Books', id: 'books' },
-  { name: 'Grocery', id: 'grocery' },
-  { name: 'Travel', id: 'travel' }
-];
+import { getAllMockPlaces, mockPlaceCategories } from '@/data/mockPlaces';
 
 const Recommendations = () => {
   const navigate = useNavigate();
-  const allPlaces = getAllPlaces;
+  const allPlaces = getAllMockPlaces();
   const categorySectionsRef = useRef<(HTMLDivElement | null)[]>([]);
   
   // State to track the current visible card in each category
   const [currentVisibleIndices, setCurrentVisibleIndices] = useState<Record<string, number>>(
-    categories.reduce((acc, category) => ({ ...acc, [category.name]: 0 }), {})
+    mockPlaceCategories.reduce((acc, category) => ({ ...acc, [category.name]: 0 }), {})
   );
 
   const handlePlaceClick = (placeId: string) => {
@@ -44,7 +33,7 @@ const Recommendations = () => {
     }));
     
     // Find the category section and scroll to the next card
-    const categoryIndex = categories.findIndex(c => c.name === categoryName);
+    const categoryIndex = mockPlaceCategories.findIndex(c => c.name === categoryName);
     const sectionRef = categorySectionsRef.current[categoryIndex];
     
     if (sectionRef) {
@@ -71,7 +60,7 @@ const Recommendations = () => {
     }));
     
     // Find the category section and scroll to the previous card
-    const categoryIndex = categories.findIndex(c => c.name === categoryName);
+    const categoryIndex = mockPlaceCategories.findIndex(c => c.name === categoryName);
     const sectionRef = categorySectionsRef.current[categoryIndex];
     
     if (sectionRef) {
@@ -87,16 +76,12 @@ const Recommendations = () => {
   };
 
   return (
-    <AppLayout>
+    <Layout>
       <div className="container mx-auto py-6 px-4 md:px-6">
         <h1 className="text-3xl font-bold mb-6">Recommended For You</h1>
         
-        {categories.map((category, categoryIndex) => {
+        {mockPlaceCategories.map((category, categoryIndex) => {
           const placesInCategory = allPlaces.filter(place => place.category === category.name);
-          
-          // Skip categories with no places
-          if (placesInCategory.length === 0) return null;
-          
           const currentIndex = currentVisibleIndices[category.name];
           
           return (
@@ -158,12 +143,15 @@ const Recommendations = () => {
                         
                         {/* PlaceCard component without the Details option */}
                         <div className="w-full">
-                          <PlaceCard
-                            place={place}
-                            onPlaceClick={handlePlaceClick}
-                            showDetails={false}
-                            className="w-full"
-                          />
+                          {React.createElement(
+                            require('@/components/business/PlaceCard').default,
+                            {
+                              place,
+                              onPlaceClick: handlePlaceClick,
+                              showDetails: false,
+                              className: "w-full"
+                            }
+                          )}
                         </div>
                         
                         {/* Next Arrow - Visible on hover when not the last card */}
@@ -189,7 +177,7 @@ const Recommendations = () => {
           );
         })}
       </div>
-    </AppLayout>
+    </Layout>
   );
 };
 

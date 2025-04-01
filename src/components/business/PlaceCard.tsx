@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Share2 } from 'lucide-react';
+import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CategoryBadge from '@/components/business/CategoryBadge';
 import { useNavigate } from 'react-router-dom';
@@ -175,7 +175,8 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
               <Popover>
                 <PopoverTrigger asChild>
                   <div className="text-primary font-medium text-sm cursor-pointer flex items-center whitespace-nowrap">
-                    <div className="sr-only">Details</div>
+                    <Info className="h-3 w-3 mr-1" />
+                    Details
                   </div>
                 </PopoverTrigger>
                 <PopoverContent className="p-0 w-[300px] sm:w-[420px]" align="end">
