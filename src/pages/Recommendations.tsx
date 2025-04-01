@@ -4,17 +4,27 @@ import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getAllMockPlaces, mockPlaceCategories } from '@/data/mockPlaces';
+import { allPlaces, Place } from '@/data/mockPlaces';
 import PlaceCard from '@/components/business/PlaceCard';
+
+// Define the categories we need since mockPlaceCategories isn't exported
+const categories = [
+  { name: 'Technology' },
+  { name: 'Food & Drink' },
+  { name: 'Shopping' },
+  { name: 'Health & Wellness' },
+  { name: 'Books' },
+  { name: 'Grocery' },
+  { name: 'Travel' }
+];
 
 const Recommendations = () => {
   const navigate = useNavigate();
-  const allPlaces = getAllMockPlaces();
   const categorySectionsRef = useRef<(HTMLDivElement | null)[]>([]);
   
   // State to track the current visible card in each category
   const [currentVisibleIndices, setCurrentVisibleIndices] = useState<Record<string, number>>(
-    mockPlaceCategories.reduce((acc, category) => ({ ...acc, [category.name]: 0 }), {})
+    categories.reduce((acc, category) => ({ ...acc, [category.name]: 0 }), {})
   );
 
   const handlePlaceClick = (placeId: string) => {
@@ -22,7 +32,7 @@ const Recommendations = () => {
   };
 
   // Function to scroll to the next card in a category
-  const scrollNext = (categoryName: string, placesInCategory: any[]) => {
+  const scrollNext = (categoryName: string, placesInCategory: Place[]) => {
     const currentIndex = currentVisibleIndices[categoryName];
     const newIndex = Math.min(currentIndex + 1, placesInCategory.length - 1);
     
@@ -33,7 +43,7 @@ const Recommendations = () => {
     }));
     
     // Find the category section and scroll to the next card
-    const categoryIndex = mockPlaceCategories.findIndex(c => c.name === categoryName);
+    const categoryIndex = categories.findIndex(c => c.name === categoryName);
     const sectionRef = categorySectionsRef.current[categoryIndex];
     
     if (sectionRef) {
@@ -60,7 +70,7 @@ const Recommendations = () => {
     }));
     
     // Find the category section and scroll to the previous card
-    const categoryIndex = mockPlaceCategories.findIndex(c => c.name === categoryName);
+    const categoryIndex = categories.findIndex(c => c.name === categoryName);
     const sectionRef = categorySectionsRef.current[categoryIndex];
     
     if (sectionRef) {
@@ -80,8 +90,12 @@ const Recommendations = () => {
       <div className="container mx-auto py-6 px-4 md:px-6">
         <h1 className="text-3xl font-bold mb-6">Recommended For You</h1>
         
-        {mockPlaceCategories.map((category, categoryIndex) => {
+        {categories.map((category, categoryIndex) => {
           const placesInCategory = allPlaces.filter(place => place.category === category.name);
+          
+          // Skip rendering categories with no places
+          if (placesInCategory.length === 0) return null;
+          
           const currentIndex = currentVisibleIndices[category.name];
           
           return (
@@ -109,7 +123,8 @@ const Recommendations = () => {
                     variant="outline"
                     size="icon"
                     onClick={() => scrollNext(category.name, placesInCategory)}
-                    disabled={currentIndex === placesInCategory.length - 1}
+                    disabled={currentIndex === placesInCategory.length -
+                    1}
                     className="flex items-center justify-center h-8 w-8 rounded-full"
                   >
                     <ChevronRight className="h-4 w-4" />
