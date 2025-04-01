@@ -8,13 +8,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useSidebarContext } from './sidebar-context';
+import { useSidebar } from './context';
 import { cn } from '@/lib/utils';
 import { Building, ChevronDown, User, X } from 'lucide-react';
 import { Button } from '../button';
 
 const SidebarHeader = () => {
-  const { collapsed, expanded, setExpanded, toggleCollapsed } = useSidebarContext();
+  const { state, open, setOpen, toggleSidebar } = useSidebar();
+  const collapsed = state === "collapsed";
 
   return (
     <div className="flex-shrink-0 overflow-x-hidden px-2">
@@ -30,7 +31,7 @@ const SidebarHeader = () => {
               variant="ghost"
               size="icon"
               className="h-9 w-9"
-              onClick={toggleCollapsed}
+              onClick={toggleSidebar}
             >
               <X className="h-4 w-4" />
               <span className="sr-only">Toggle sidebar</span>

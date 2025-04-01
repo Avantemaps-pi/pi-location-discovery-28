@@ -2,11 +2,12 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { useSidebarContext } from './sidebar-context';
+import { useSidebar } from './context';
 import { Home, Map, Bookmark, MessageSquare, Bell, Building, Info, Settings, Phone } from 'lucide-react';
 
 const SidebarMenu = () => {
-  const { collapsed } = useSidebarContext();
+  const { state } = useSidebar();
+  const collapsed = state === "collapsed";
   const location = useLocation();
 
   const links = [
