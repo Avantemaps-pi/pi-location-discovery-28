@@ -1,79 +1,68 @@
 
-import {
-  Home,
-  Star,
-  Bookmark,
-  Bell,
-  Building,
-  MessageCircle,
-  Settings,
-  Info,
-  Lock,
-  FileText,
-  Mail
-} from 'lucide-react';
-
-// Create a function to dynamically get the notification count
-import { getUnreadNotificationsCount } from '@/utils/notificationUtils';
+import { GalleryVertical, Map, Bookmark, MessageSquare, Bell, Building, Info, Settings, Phone, Shield, FileText, Trash2 } from 'lucide-react';
 
 export const navItems = [
   {
-    to: '/',
-    icon: Home,
-    label: 'Map',
+    to: "/",
+    icon: Map,
+    label: "Map"
   },
   {
-    to: '/recommendations',
-    icon: Star,
-    label: 'Recommendations',
+    to: "/recommendations",
+    icon: GalleryVertical,
+    label: "Recommendations"
   },
   {
-    to: '/bookmarks',
+    to: "/bookmarks",
     icon: Bookmark,
-    label: 'Bookmarks',
+    label: "Bookmarks"
   },
   {
-    to: '/notifications',
+    to: "/communicon",
+    icon: MessageSquare,
+    label: "Communicon"
+  },
+  {
+    to: "/notifications",
     icon: Bell,
-    label: 'Notifications',
-    badge: getUnreadNotificationsCount(),
+    label: "Notifications"
   },
   {
-    to: '/registered-business',
+    to: "/registered-business",
     icon: Building,
-    label: 'Registered Business',
+    label: "My Business"
   },
   {
-    to: '/contact',
-    icon: Mail,
-    label: 'Contact Us',
+    to: "/about",
+    icon: Info,
+    label: "About"
   },
   {
-    to: '/communicon',
-    icon: MessageCircle,
-    label: 'CommuniCon',
-  },
-  {
-    to: '/settings',
+    to: "/settings",
     icon: Settings,
-    label: 'Settings',
+    label: "Settings"
   },
+  {
+    to: "/contact",
+    icon: Phone,
+    label: "Contact Us"
+  }
 ];
 
 export const legalItems = [
   {
-    to: '/about',
-    icon: Info,
-    label: 'About',
-  },
-  {
-    to: '/privacy-policy',
-    icon: Lock,
-    label: 'Privacy Policy',
-  },
-  {
-    to: '/terms-of-service',
+    to: "/terms",
     icon: FileText,
-    label: 'Terms of Service',
+    label: "Terms of Service"
   },
+  {
+    to: "/privacy",
+    icon: Shield,
+    label: "Privacy Policy"
+  },
+  {
+    to: "/cookies",
+    icon: Trash2,
+    label: "Cookie Policy"
+  }
 ];
