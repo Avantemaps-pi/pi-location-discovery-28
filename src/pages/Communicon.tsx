@@ -30,6 +30,13 @@ const Communicon = () => {
     const event = new Event('submit') as unknown as React.FormEvent;
     handleSendMessage(event);
   };
+  
+  // Create a wrapper for handleAttachmentOption that doesn't take any parameters
+  const handleAttachmentOptionWrapper = () => {
+    if (handleAttachmentOption) {
+      handleAttachmentOption('default');
+    }
+  };
 
   return (
     <AppLayout title="Avante Maps">
@@ -42,7 +49,7 @@ const Communicon = () => {
           message={message}
           setMessage={setMessage}
           handleSendMessage={handleSendMessageWrapper}
-          handleAttachmentOption={handleAttachmentOption}
+          handleAttachmentOption={handleAttachmentOptionWrapper}
           showAttachmentIcon={true}
         />
       </div>

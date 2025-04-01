@@ -5,6 +5,7 @@ import ChatModeToggle from './ChatModeToggle';
 import ChatMessage from './ChatMessage';
 import { Menu, Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export type ChatMode = 'ai' | 'live';
 
@@ -34,6 +35,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   handleAttachmentOption,
   showAttachmentIcon = false
 }) => {
+  const handleMenuOptionClick = (command: string) => {
+    setMessage(message + command + ' ');
+  };
+
   return (
     <Card className="mt-6 overflow-hidden border-none shadow-md">
       <div className="flex h-full flex-col">
@@ -72,12 +77,47 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         <div className="p-3 border-t">
           <div className="relative flex items-center">
             <div className="flex w-full bg-slate-50 rounded-full px-4 py-3">
-              <button 
-                onClick={handleAttachmentOption}
-                className="text-gray-400 hover:text-gray-500 mr-2"
-              >
-                <Menu size={20} className="text-gray-400" />
-              </button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button 
+                    className="text-gray-400 hover:text-gray-500 mr-2"
+                  >
+                    <Menu size={20} className="text-gray-400" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-64 p-0 bg-[#1e2732] text-white" sideOffset={5}>
+                  <div className="flex flex-col divide-y divide-gray-700">
+                    <button 
+                      onClick={() => handleMenuOptionClick('/start')}
+                      className="flex justify-between items-center p-3 hover:bg-gray-700 transition-colors"
+                    >
+                      <span className="text-lg">Main Menu</span>
+                      <span className="text-gray-400">/start</span>
+                    </button>
+                    <button 
+                      onClick={() => handleMenuOptionClick('/help')}
+                      className="flex justify-between items-center p-3 hover:bg-gray-700 transition-colors"
+                    >
+                      <span className="text-lg">Help</span>
+                      <span className="text-gray-400">/help</span>
+                    </button>
+                    <button 
+                      onClick={() => handleMenuOptionClick('/buy')}
+                      className="flex justify-between items-center p-3 hover:bg-gray-700 transition-colors"
+                    >
+                      <span className="text-lg">Buy Token</span>
+                      <span className="text-gray-400">/buy</span>
+                    </button>
+                    <button 
+                      onClick={() => handleMenuOptionClick('/manage')}
+                      className="flex justify-between items-center p-3 hover:bg-gray-700 transition-colors"
+                    >
+                      <span className="text-lg">Sell & Manage</span>
+                      <span className="text-gray-400">/manage</span>
+                    </button>
+                  </div>
+                </PopoverContent>
+              </Popover>
 
               <Input
                 value={message}
