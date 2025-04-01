@@ -3,7 +3,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import ChatModeToggle from './ChatModeToggle';
 import ChatMessage from './ChatMessage';
-import { Menu, Send } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
@@ -80,9 +80,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               <Popover>
                 <PopoverTrigger asChild>
                   <button 
-                    className="text-gray-400 hover:text-gray-500 mr-2"
+                    className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-full px-4 py-1 mr-3 transition-colors"
                   >
-                    <Menu size={20} className="text-gray-400" />
+                    <Menu size={18} className="mr-1.5" />
+                    <span className="text-sm font-medium">Menu</span>
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-64 p-0 bg-[#1e2732] text-white" sideOffset={5}>
