@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info, Share2 } from 'lucide-react';
@@ -180,19 +179,6 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
                   <div className="text-primary font-medium text-sm cursor-pointer flex items-center whitespace-nowrap">
                     <Info className="h-3 w-3 mr-1" />
                     Details
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent className="p-0 w-[300px] sm:w-[420px]" align="end">
-                  <DetailsCard place={place} />
-                </PopoverContent>
-              </Popover>
-            )}
-            
-            {showDetails && isRecommendationsPage && (
-              <Popover>
-                <PopoverTrigger asChild>
-                  <div className="text-primary font-medium text-sm cursor-pointer flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors w-7 h-7">
-                    <Info className="h-4 w-4" />
                   </div>
                 </PopoverTrigger>
                 <PopoverContent className="p-0 w-[300px] sm:w-[420px]" align="end">

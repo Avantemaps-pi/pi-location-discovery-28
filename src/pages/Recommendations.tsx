@@ -41,9 +41,9 @@ const Recommendations = () => {
   // Determine the appropriate width class based on device
   const getWidthClass = () => {
     if (isMobile) {
-      return 'basis-[90%] sm:basis-[90%]'; // Increased from 80% to 90%
+      return 'basis-[90%] sm:basis-[90%]';
     }
-    return 'basis-[90%] sm:basis-[45%] md:basis-[35%] lg:basis-1/4'; // Made slightly wider at all breakpoints
+    return 'basis-[90%] sm:basis-[45%] md:basis-[35%] lg:basis-1/4';
   };
 
   return (
@@ -76,7 +76,6 @@ const Recommendations = () => {
                     <PlaceCard 
                       place={place} 
                       onPlaceClick={handlePlaceClick}
-                      showDetails={true}
                       className="w-full"
                     />
                   </CarouselItem>
@@ -109,7 +108,6 @@ const Recommendations = () => {
                     <PlaceCard 
                       place={place} 
                       onPlaceClick={handlePlaceClick}
-                      showDetails={true}
                       className="w-full"
                     />
                   </CarouselItem>
@@ -142,7 +140,6 @@ const Recommendations = () => {
                     <PlaceCard 
                       place={place} 
                       onPlaceClick={handlePlaceClick}
-                      showDetails={true}
                       className="w-full"
                     />
                   </CarouselItem>
