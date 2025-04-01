@@ -1,7 +1,7 @@
 
 import {
   Map,
-  Monitor,
+  MonitorStack,
   Bookmark,
   Bell,
   Building,
@@ -10,7 +10,8 @@ import {
   Info,
   Lock,
   FileText,
-  Phone
+  Phone,
+  Cookie
 } from 'lucide-react';
 
 // Create a function to dynamically get the notification count
@@ -24,7 +25,7 @@ export const navItems = [
   },
   {
     to: '/recommendations',
-    icon: Monitor,
+    icon: MonitorStack,
     label: 'Recommendations',
   },
   {
@@ -75,5 +76,10 @@ export const legalItems = [
     to: '/terms-of-service',
     icon: FileText,
     label: 'Terms of Service',
+  },
+  {
+    to: '/cookies',
+    icon: Cookie,
+    label: 'Cookie Policy',
   },
 ];
