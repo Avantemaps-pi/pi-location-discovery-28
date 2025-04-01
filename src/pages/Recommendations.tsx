@@ -1,183 +1,161 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Layout from '@/components/layout/Layout';
-import CategorySection from '@/components/business/CategorySection';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getAllMockPlaces, mockPlaceCategories } from '@/data/mockPlaces';
+import AppLayout from '@/components/layout/AppLayout';
+import { recommendedForYou, suggestedForYou, avanteTopChoice } from '@/data/mockPlaces';
+import PlaceCard from '@/components/business/PlaceCard';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Recommendations = () => {
   const navigate = useNavigate();
-  const allPlaces = getAllMockPlaces();
-  const categorySectionsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const isMobile = useIsMobile();
+  const [showControls, setShowControls] = useState({
+    avanteTopChoice: false,
+    suggestedForYou: false,
+    recommendedForYou: false
+  });
   
-  // State to track the current visible card in each category
-  const [currentVisibleIndices, setCurrentVisibleIndices] = useState<Record<string, number>>(
-    mockPlaceCategories.reduce((acc, category) => ({ ...acc, [category.name]: 0 }), {})
-  );
-
   const handlePlaceClick = (placeId: string) => {
     navigate('/', { state: { selectedPlaceId: placeId } });
   };
 
-  // Function to scroll to the next card in a category
-  const scrollNext = (categoryName: string, placesInCategory: any[]) => {
-    const currentIndex = currentVisibleIndices[categoryName];
-    const newIndex = Math.min(currentIndex + 1, placesInCategory.length - 1);
-    
-    // Update the current visible index for this category
-    setCurrentVisibleIndices(prev => ({
-      ...prev,
-      [categoryName]: newIndex
-    }));
-    
-    // Find the category section and scroll to the next card
-    const categoryIndex = mockPlaceCategories.findIndex(c => c.name === categoryName);
-    const sectionRef = categorySectionsRef.current[categoryIndex];
-    
-    if (sectionRef) {
-      const cardElements = sectionRef.querySelectorAll('.place-card-container');
-      if (cardElements[newIndex]) {
-        cardElements[newIndex].scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center'
-        });
-      }
-    }
+  const handleMouseEnter = (section: keyof typeof showControls) => {
+    setShowControls(prev => ({ ...prev, [section]: true }));
   };
 
-  // Function to scroll to the previous card in a category
-  const scrollPrev = (categoryName: string) => {
-    const currentIndex = currentVisibleIndices[categoryName];
-    const newIndex = Math.max(currentIndex - 1, 0);
-    
-    // Update the current visible index for this category
-    setCurrentVisibleIndices(prev => ({
-      ...prev,
-      [categoryName]: newIndex
-    }));
-    
-    // Find the category section and scroll to the previous card
-    const categoryIndex = mockPlaceCategories.findIndex(c => c.name === categoryName);
-    const sectionRef = categorySectionsRef.current[categoryIndex];
-    
-    if (sectionRef) {
-      const cardElements = sectionRef.querySelectorAll('.place-card-container');
-      if (cardElements[newIndex]) {
-        cardElements[newIndex].scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center'
-        });
-      }
+  const handleMouseLeave = (section: keyof typeof showControls) => {
+    setShowControls(prev => ({ ...prev, [section]: false }));
+  };
+
+  const handleTouchStart = (section: keyof typeof showControls) => {
+    setShowControls(prev => ({ ...prev, [section]: true }));
+  };
+
+  // Determine the appropriate width class based on device
+  const getWidthClass = () => {
+    if (isMobile) {
+      return 'basis-[90%] sm:basis-[90%]'; // Increased from 80% to 90%
     }
+    return 'basis-[90%] sm:basis-[45%] md:basis-[35%] lg:basis-1/4'; // Made slightly wider at all breakpoints
   };
 
   return (
-    <Layout>
-      <div className="container mx-auto py-6 px-4 md:px-6">
-        <h1 className="text-3xl font-bold mb-6">Recommended For You</h1>
-        
-        {mockPlaceCategories.map((category, categoryIndex) => {
-          const placesInCategory = allPlaces.filter(place => place.category === category.name);
-          const currentIndex = currentVisibleIndices[category.name];
-          
-          return (
-            <div 
-              key={category.name} 
-              className="mb-10 relative"
-              ref={el => categorySectionsRef.current[categoryIndex] = el}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold flex items-center">
-                  <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
-                  {category.name}
-                </h2>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => scrollPrev(category.name)}
-                    disabled={currentIndex === 0}
-                    className="flex items-center justify-center h-8 w-8 rounded-full"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => scrollNext(category.name, placesInCategory)}
-                    disabled={currentIndex === placesInCategory.length - 1}
-                    className="flex items-center justify-center h-8 w-8 rounded-full"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide snap-x">
-                {placesInCategory.map((place, placeIndex) => (
-                  <div 
-                    key={place.id} 
-                    className="place-card-container min-w-[280px] max-w-[280px] snap-center relative"
-                    style={{animationDelay: `${placeIndex * 0.05}s`}}
-                  >
-                    <div className="animate-fade-in w-full">
-                      <div className="relative group">
-                        {/* Previous Arrow - Visible on hover when not the first card */}
-                        {placeIndex > 0 && (
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              scrollPrev(category.name);
-                            }}
-                            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 z-10 
-                                     bg-white/80 text-gray-800 rounded-full p-1.5 shadow-md opacity-0 
-                                     group-hover:opacity-100 transition-opacity duration-300"
-                          >
-                            <ChevronLeft className="h-5 w-5" />
-                          </button>
-                        )}
-                        
-                        {/* PlaceCard component without the Details option */}
-                        <div className="w-full">
-                          {React.createElement(
-                            require('@/components/business/PlaceCard').default,
-                            {
-                              place,
-                              onPlaceClick: handlePlaceClick,
-                              showDetails: false,
-                              className: "w-full"
-                            }
-                          )}
-                        </div>
-                        
-                        {/* Next Arrow - Visible on hover when not the last card */}
-                        {placeIndex < placesInCategory.length - 1 && (
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              scrollNext(category.name, placesInCategory);
-                            }}
-                            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2 z-10 
-                                     bg-white/80 text-gray-800 rounded-full p-1.5 shadow-md opacity-0
-                                     group-hover:opacity-100 transition-opacity duration-300"
-                          >
-                            <ChevronRight className="h-5 w-5" />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+    <AppLayout>
+      <div className="w-full mx-auto recommendations-container">
+        <div className="space-y-1 mb-3 sm:mb-4 px-2 sm:px-4">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Recommendations</h1>
+          <p className="text-sm text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency.</p>
+        </div>
+
+        <div className="space-y-4 sm:space-y-5">
+          {/* Avante Top Choice Section */}
+          <section 
+            className="relative"
+            onMouseEnter={() => handleMouseEnter('avanteTopChoice')}
+            onMouseLeave={() => handleMouseLeave('avanteTopChoice')}
+            onTouchStart={() => handleTouchStart('avanteTopChoice')}
+          >
+            <h2 className="text-xl sm:text-xl font-semibold mb-2 flex items-center px-2 sm:px-4">
+              <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
+              Avante Top Choice
+            </h2>
+            <Carousel className="w-full">
+              {showControls.avanteTopChoice && (
+                <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
+              )}
+              <CarouselContent className="ml-0">
+                {avanteTopChoice.map((place) => (
+                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="w-full"
+                    />
+                  </CarouselItem>
                 ))}
-              </div>
-            </div>
-          );
-        })}
+              </CarouselContent>
+              {showControls.avanteTopChoice && (
+                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
+              )}
+            </Carousel>
+          </section>
+          
+          {/* Suggested for you Section */}
+          <section 
+            className="relative"
+            onMouseEnter={() => handleMouseEnter('suggestedForYou')}
+            onMouseLeave={() => handleMouseLeave('suggestedForYou')}
+            onTouchStart={() => handleTouchStart('suggestedForYou')}
+          >
+            <h2 className="text-xl sm:text-xl font-semibold mb-2 flex items-center px-2 sm:px-4">
+              <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
+              Suggested for you
+            </h2>
+            <Carousel className="w-full">
+              {showControls.suggestedForYou && (
+                <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
+              )}
+              <CarouselContent className="ml-0">
+                {suggestedForYou.map((place) => (
+                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="w-full"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              {showControls.suggestedForYou && (
+                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
+              )}
+            </Carousel>
+          </section>
+          
+          {/* Recommended for you Section */}
+          <section 
+            className="relative"
+            onMouseEnter={() => handleMouseEnter('recommendedForYou')}
+            onMouseLeave={() => handleMouseLeave('recommendedForYou')}
+            onTouchStart={() => handleTouchStart('recommendedForYou')}
+          >
+            <h2 className="text-xl sm:text-xl font-semibold mb-2 flex items-center px-2 sm:px-4">
+              <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
+              Recommended for you
+            </h2>
+            <Carousel className="w-full">
+              {showControls.recommendedForYou && (
+                <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
+              )}
+              <CarouselContent className="ml-0">
+                {recommendedForYou.map((place) => (
+                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                    <PlaceCard 
+                      place={place} 
+                      onPlaceClick={handlePlaceClick}
+                      showDetails={true}
+                      className="w-full"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              {showControls.recommendedForYou && (
+                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
+              )}
+            </Carousel>
+          </section>
+        </div>
       </div>
-    </Layout>
+    </AppLayout>
   );
 };
 
