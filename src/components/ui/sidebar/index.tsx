@@ -31,7 +31,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "./menu/sidebar-menu-sub"
+} from "./menu/sidebar-menu-sub/index"
 
 export {
   Sidebar,
