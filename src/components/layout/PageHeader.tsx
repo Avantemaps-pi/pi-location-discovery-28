@@ -5,6 +5,7 @@ import { ArrowLeft, Menu } from 'lucide-react';
 import MobileMenuButton from './header/MobileMenuButton';
 import DesktopMenuButton from './header/DesktopMenuButton';
 import { Button } from '@/components/ui/button';
+import { useSidebar } from '@/components/ui/sidebar';
 
 interface PageHeaderProps {
   title?: string;
@@ -14,9 +15,14 @@ interface PageHeaderProps {
 const PageHeader = ({ title = "Avante Maps", hideSidebar = false }: PageHeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { setOpenMobile } = useSidebar();
   const isAnalyticsPage = location.pathname === '/analytics';
   const isRegistrationPage = location.pathname === '/registration';
   const isIndexPage = location.pathname === '/';
+
+  const handleMenuClick = () => {
+    setOpenMobile(true);
+  };
 
   return (
     <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -28,10 +34,7 @@ const PageHeader = ({ title = "Avante Maps", hideSidebar = false }: PageHeaderPr
           <Button 
             variant="ghost" 
             size="icon" 
-            onClick={() => {
-              const { setOpenMobile } = require('@/components/ui/sidebar').useSidebar();
-              setOpenMobile(true);
-            }}
+            onClick={handleMenuClick}
             className="mr-2"
           >
             <Menu className="h-5 w-5" />
