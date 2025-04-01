@@ -5,6 +5,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { allPlaces as getAllPlaces } from '@/data/mockPlaces';
+import PlaceCard from '@/components/business/PlaceCard';
 
 // Creating categories from the existing places data
 const categories = [
@@ -157,15 +158,12 @@ const Recommendations = () => {
                         
                         {/* PlaceCard component without the Details option */}
                         <div className="w-full">
-                          {React.createElement(
-                            require('@/components/business/PlaceCard').default,
-                            {
-                              place,
-                              onPlaceClick: handlePlaceClick,
-                              showDetails: false,
-                              className: "w-full"
-                            }
-                          )}
+                          <PlaceCard
+                            place={place}
+                            onPlaceClick={handlePlaceClick}
+                            showDetails={false}
+                            className="w-full"
+                          />
                         </div>
                         
                         {/* Next Arrow - Visible on hover when not the last card */}
