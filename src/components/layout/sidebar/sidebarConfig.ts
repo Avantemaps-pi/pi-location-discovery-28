@@ -1,16 +1,16 @@
 
 import {
-  Home,
-  Star,
+  Map,
+  Monitor,
   Bookmark,
   Bell,
   Building,
-  MessageCircle,
+  MessageSquare,
   Settings,
   Info,
   Lock,
   FileText,
-  Mail
+  Phone
 } from 'lucide-react';
 
 // Create a function to dynamically get the notification count
@@ -19,12 +19,12 @@ import { getUnreadNotificationsCount } from '@/utils/notificationUtils';
 export const navItems = [
   {
     to: '/',
-    icon: Home,
+    icon: Map,
     label: 'Map',
   },
   {
     to: '/recommendations',
-    icon: Star,
+    icon: Monitor,
     label: 'Recommendations',
   },
   {
@@ -45,12 +45,12 @@ export const navItems = [
   },
   {
     to: '/contact',
-    icon: Mail,
+    icon: Phone,
     label: 'Contact Us',
   },
   {
     to: '/communicon',
-    icon: MessageCircle,
+    icon: MessageSquare,
     label: 'CommuniCon',
   },
   {
