@@ -37,7 +37,7 @@ const Index = () => {
       withHeader={true} 
       fullHeight={true} 
       fullWidth={true}
-      hideSidebar={true} // Keep hideSidebar true for visual layout, but sidebar stays in DOM
+      hideSidebar={false} // Changed from true to false to keep the sidebar in DOM and accessible
     >
       <div className="absolute inset-0 top-16 w-full" ref={mapRef}>
         <GoogleMap 
