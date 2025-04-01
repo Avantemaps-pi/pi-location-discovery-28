@@ -2,13 +2,12 @@
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Shield, LogOut, LogIn, WifiOff } from 'lucide-react';
+import { Shield, LogOut, WifiOff } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const AuthStatus: React.FC = () => {
   const { isAuthenticated, user, logout, login, isLoading, isOffline } = useAuth();
   const location = useLocation();
-  const isIndexPage = location.pathname === '/';
 
   if (isLoading) {
     return (
@@ -45,23 +44,8 @@ const AuthStatus: React.FC = () => {
     );
   }
 
-  // Don't show login button on the index page
-  if (isIndexPage) {
-    return null;
-  }
-
-  return (
-    <Button 
-      variant="outline" 
-      size="sm" 
-      onClick={login} 
-      className="h-8" 
-      disabled={isLoading}
-    >
-      <LogIn className="h-4 w-4 mr-1" />
-      <span>Login with Pi</span>
-    </Button>
-  );
+  // Don't show the login button on any page
+  return null;
 };
 
 export default AuthStatus;
