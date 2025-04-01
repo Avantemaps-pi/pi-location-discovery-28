@@ -1,8 +1,8 @@
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import ChatModeToggle from './ChatModeToggle';
 import ChatMessage from './ChatMessage';
-import ChatInput from './ChatInput';
 
 export type ChatMode = 'ai' | 'live';
 
@@ -47,7 +47,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </p>
         </div>
   
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[60vh] min-h-[300px]">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[60vh] min-h-[400px]">
           {messages.length === 0 ? (
             <div className="flex h-full items-center justify-center">
               <p className="text-center text-muted-foreground">
@@ -66,15 +66,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             ))
           )}
         </div>
-  
-        <ChatInput
-          value={message}
-          onChange={setMessage}
-          onSubmit={handleSendMessage}
-          onAttachmentClick={handleAttachmentOption}
-          placeholder={`Type a message as ${chatMode === 'ai' ? 'AI assistant' : 'live agent'}...`}
-          showAttachmentIcon={showAttachmentIcon}
-        />
       </div>
     </Card>
   );
