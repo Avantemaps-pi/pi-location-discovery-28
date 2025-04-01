@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import { recommendedForYou, suggestedForYou, avanteTopChoice } from '@/data/mockPlaces';
@@ -10,7 +10,6 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  useEmblaCarousel
 } from "@/components/ui/carousel";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ArrowRight } from 'lucide-react';
@@ -24,9 +23,6 @@ const Recommendations = () => {
     suggestedForYou: false,
     recommendedForYou: false
   });
-  
-  // Reference to the Embla API for the Avante Top Choice carousel
-  const [avanteCarouselRef, avanteCarouselApi] = useEmblaCarousel();
   
   const handlePlaceClick = (placeId: string) => {
     navigate('/', { state: { selectedPlaceId: placeId } });
@@ -72,7 +68,7 @@ const Recommendations = () => {
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Avante Top Choice
             </h2>
-            <Carousel className="w-full" setApi={api => avanteCarouselApi} ref={avanteCarouselRef}>
+            <Carousel className="w-full">
               {showControls.avanteTopChoice && (
                 <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
               )}
@@ -93,9 +89,8 @@ const Recommendations = () => {
                 size="icon"
                 className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 rounded-full h-8 w-8 top-1/2 transform -translate-y-1/2 hover:bg-white/90"
                 onClick={() => {
-                  if (avanteCarouselApi) {
-                    avanteCarouselApi.scrollNext();
-                  }
+                  const api = document.querySelector('.embla__container')?.parentElement?.__emblaApi;
+                  if (api) api.scrollNext();
                 }}
               >
                 <ArrowRight className="h-4 w-4" />
