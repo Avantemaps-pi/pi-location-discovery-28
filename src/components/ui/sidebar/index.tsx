@@ -26,12 +26,10 @@ import {
   SidebarMenuItem,
   SidebarMenuSkeleton,
   sidebarMenuButtonVariants,
-} from "./menu"
-import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "./menu/sidebar-menu-sub/index"
+} from "./menu"
 
 export {
   Sidebar,
