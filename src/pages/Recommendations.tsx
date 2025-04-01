@@ -1,11 +1,11 @@
 
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Layout from '@/components/layout/Layout';
-import CategorySection from '@/components/business/CategorySection';
+import AppLayout from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { getAllMockPlaces, mockPlaceCategories } from '@/data/mockPlaces';
+import PlaceCard from '@/components/business/PlaceCard';
 
 const Recommendations = () => {
   const navigate = useNavigate();
@@ -76,7 +76,7 @@ const Recommendations = () => {
   };
 
   return (
-    <Layout>
+    <AppLayout>
       <div className="container mx-auto py-6 px-4 md:px-6">
         <h1 className="text-3xl font-bold mb-6">Recommended For You</h1>
         
@@ -143,15 +143,12 @@ const Recommendations = () => {
                         
                         {/* PlaceCard component without the Details option */}
                         <div className="w-full">
-                          {React.createElement(
-                            require('@/components/business/PlaceCard').default,
-                            {
-                              place,
-                              onPlaceClick: handlePlaceClick,
-                              showDetails: false,
-                              className: "w-full"
-                            }
-                          )}
+                          <PlaceCard
+                            place={place}
+                            onPlaceClick={handlePlaceClick}
+                            showDetails={false}
+                            className="w-full"
+                          />
                         </div>
                         
                         {/* Next Arrow - Visible on hover when not the last card */}
@@ -177,7 +174,7 @@ const Recommendations = () => {
           );
         })}
       </div>
-    </Layout>
+    </AppLayout>
   );
 };
 
