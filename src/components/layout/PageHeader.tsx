@@ -34,6 +34,17 @@ const PageHeader = ({ title = "Avante Maps", hideSidebar = false }: PageHeaderPr
           </Button>
         )}
         
+        {isRegistrationPage && (
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => navigate('/')}
+            className="mr-2"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        )}
+        
         <Link to="/" className={`${(!isAnalyticsPage && !hideSidebar && !isRegistrationPage) ? 'ml-4' : ''} flex items-center gap-2`}>
           <img 
             src="/lovable-uploads/b0daa374-9909-4cf8-a2ae-e08e2184c3fc.png" 
