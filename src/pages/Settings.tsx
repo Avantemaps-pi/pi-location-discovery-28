@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { toast } from 'sonner';
@@ -86,7 +87,7 @@ const Settings = () => {
 
   return (
     <AppLayout title="" fullWidth={false} className="overflow-x-hidden">
-      <div className="w-full max-w-sm mx-auto px-3 sm:px-4 py-4 sm:py-6 overflow-hidden">
+      <div className="w-full max-w-xs mx-auto px-3 sm:px-4 py-4 sm:py-6 overflow-hidden">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Settings</h1>
           <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">Manage your account preferences.</p>

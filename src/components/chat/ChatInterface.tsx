@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import ChatModeToggle from './ChatModeToggle';
@@ -88,32 +89,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 <PopoverContent className="w-64 p-0 bg-[#1e2732] text-white" sideOffset={5}>
                   <div className="flex flex-col divide-y divide-gray-700">
                     <button 
-                      onClick={() => handleMenuOptionClick('/start')}
+                      onClick={() => handleMenuOptionClick('/attach')}
                       className="flex justify-between items-center p-3 hover:bg-gray-700 transition-colors"
                     >
-                      <span className="text-lg">Main Menu</span>
-                      <span className="text-gray-400">/start</span>
+                      <span className="text-lg">Attach</span>
+                      <span className="text-gray-400">/attach</span>
                     </button>
                     <button 
-                      onClick={() => handleMenuOptionClick('/help')}
+                      onClick={() => handleMenuOptionClick('/verification')}
                       className="flex justify-between items-center p-3 hover:bg-gray-700 transition-colors"
                     >
-                      <span className="text-lg">Help</span>
-                      <span className="text-gray-400">/help</span>
+                      <span className="text-lg">Verification</span>
+                      <span className="text-gray-400">/verification</span>
                     </button>
                     <button 
-                      onClick={() => handleMenuOptionClick('/buy')}
+                      onClick={() => handleMenuOptionClick('/certification')}
                       className="flex justify-between items-center p-3 hover:bg-gray-700 transition-colors"
                     >
-                      <span className="text-lg">Buy Token</span>
-                      <span className="text-gray-400">/buy</span>
-                    </button>
-                    <button 
-                      onClick={() => handleMenuOptionClick('/manage')}
-                      className="flex justify-between items-center p-3 hover:bg-gray-700 transition-colors"
-                    >
-                      <span className="text-lg">Sell & Manage</span>
-                      <span className="text-gray-400">/manage</span>
+                      <span className="text-lg">Certification</span>
+                      <span className="text-gray-400">/certification</span>
                     </button>
                   </div>
                 </PopoverContent>

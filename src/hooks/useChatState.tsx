@@ -20,6 +20,28 @@ export function useChatState() {
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim()) {
+      // Check for special commands
+      if (message.includes('/verification')) {
+        sendVerificationRequest('verification');
+        setMessage("");
+        return;
+      }
+      
+      if (message.includes('/certification')) {
+        sendVerificationRequest('certification');
+        setMessage("");
+        return;
+      }
+      
+      if (message.includes('/attach')) {
+        // Handle attachment request
+        if (handleAttachmentOption) {
+          handleAttachmentOption('default');
+        }
+        setMessage("");
+        return;
+      }
+      
       const newMessage = {
         id: messages.length + 1,
         text: message,
@@ -61,6 +83,26 @@ export function useChatState() {
   const handleAttachmentOption = (type: string) => {
     console.log(`Attachment type selected: ${type}`);
     // Implement actual attachment handling logic here
+    
+    const requestMessage = {
+      id: messages.length + 1,
+      text: "Requesting to attach a file",
+      sender: "user",
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    
+    setMessages([...messages, requestMessage]);
+    
+    // Add a response
+    setTimeout(() => {
+      const responseMessage = {
+        id: messages.length + 2,
+        text: "File attachment is currently unavailable in the demo version.",
+        sender: "support",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages(prev => [...prev, responseMessage]);
+    }, 1000);
   };
 
   const sendVerificationRequest = (type: 'verification' | 'certification') => {
