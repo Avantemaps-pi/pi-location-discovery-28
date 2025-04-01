@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Star, Bookmark, CircleCheck, ExternalLink, Info, Share2 } from 'lucide-react';
@@ -30,6 +31,13 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
   const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  
+  // Parse multiple categories if available
+  const categories = Array.isArray(place.category) 
+    ? place.category 
+    : place.category.includes(',') 
+      ? place.category.split(',').map(cat => cat.trim())
+      : [place.category];
   
   const handleRatingClick = () => {
     navigate(`/review/${place.id}`, { 
@@ -167,7 +175,13 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
               <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500 mr-1" />
               <span className="text-xs font-medium text-amber-800 dark:text-amber-400">{place.rating.toFixed(1)}</span>
             </div>
-            <CategoryBadge category={place.category} />
+            
+            {/* Display categories vertically if there are multiple */}
+            <div className={`flex flex-col gap-1.5 ${categories.length > 1 ? 'mt-1' : ''}`}>
+              {categories.map((category, index) => (
+                <CategoryBadge key={index} category={category} />
+              ))}
+            </div>
           </div>
           
           <div className="flex flex-col gap-2 items-end">
@@ -194,3 +208,4 @@ const PlaceCard: React.FC<PlaceCardProps> = ({
 };
 
 export default PlaceCard;
+
