@@ -1,33 +1,22 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
-
-// Define the Pi Network SDK types
-declare global {
-  interface Window {
-    Pi?: {
-      authenticate: (
-        scopes: string[], 
-        onIncompletePaymentFound?: (payment: any) => void
-      ) => Promise<{
-        accessToken: string;
-        user: {
-          uid: string;
-          username: string;
-          roles?: string[];
-        };
-      }>;
-    };
-  }
-}
+import { 
+  isPiNetworkAvailable, 
+  requestUserPermissions, 
+  SubscriptionTier
+} from '@/utils/piNetworkUtils';
+import { supabase } from '@/integrations/supabase/client';
 
 // Define the user type
 export interface PiUser {
   uid: string;
   username: string;
+  email?: string;
   roles?: string[];
   accessToken: string;
   lastAuthenticated: number;
+  subscriptionTier: SubscriptionTier;
 }
 
 interface AuthContextType {
@@ -38,6 +27,8 @@ interface AuthContextType {
   login: () => Promise<void>;
   logout: () => void;
   authError: string | null;
+  hasAccess: (requiredTier: SubscriptionTier) => boolean;
+  refreshUserData: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -110,6 +101,91 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     checkSession();
   }, []);
 
+  // Update user data in Supabase and local storage
+  const updateUserData = async (userData: PiUser) => {
+    try {
+      // Save to Supabase if we have a valid connection
+      const { error } = await supabase
+        .from('users')
+        .upsert({
+          uid: userData.uid,
+          username: userData.username,
+          email: userData.email,
+          subscription_tier: userData.subscriptionTier,
+          last_login: new Date().toISOString()
+        }, {
+          onConflict: 'uid'
+        });
+
+      if (error) {
+        console.error("Error updating user in Supabase:", error);
+      }
+
+      // Save to localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+      setUser(userData);
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    }
+  };
+
+  // Get user's subscription from Supabase
+  const getUserSubscription = async (uid: string): Promise<SubscriptionTier> => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('subscription_tier')
+        .eq('uid', uid)
+        .single();
+
+      if (error || !data) {
+        console.error("Error fetching subscription:", error);
+        return SubscriptionTier.INDIVIDUAL; // Default to INDIVIDUAL if error
+      }
+
+      return data.subscription_tier as SubscriptionTier || SubscriptionTier.INDIVIDUAL;
+    } catch (error) {
+      console.error("Error in getUserSubscription:", error);
+      return SubscriptionTier.INDIVIDUAL;
+    }
+  };
+
+  // Refresh user data without full login
+  const refreshUserData = async (): Promise<void> => {
+    if (!user) return;
+
+    try {
+      setIsLoading(true);
+      // Get user's current subscription
+      const subscriptionTier = await getUserSubscription(user.uid);
+
+      // Request additional permissions if email is not already available
+      if (!user.email && isPiNetworkAvailable()) {
+        const additionalInfo = await requestUserPermissions();
+        if (additionalInfo && additionalInfo.email) {
+          await updateUserData({
+            ...user,
+            email: additionalInfo.email,
+            subscriptionTier
+          });
+          toast.success("User profile updated");
+        }
+      } else {
+        // Just update the subscription
+        if (user.subscriptionTier !== subscriptionTier) {
+          await updateUserData({
+            ...user,
+            subscriptionTier
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error refreshing user data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const login = async (): Promise<void> => {
     setIsLoading(true);
     setAuthError(null);
@@ -124,7 +200,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       // Check if Pi SDK is available
-      if (!window.Pi) {
+      if (!isPiNetworkAvailable()) {
         throw new Error("Pi Network SDK is not available");
       }
 
@@ -132,17 +208,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const authResult = await window.Pi.authenticate(['username'], () => {});
       
       if (authResult && authResult.user && authResult.accessToken) {
+        // Get additional user permissions after authentication
+        const additionalInfo = await requestUserPermissions();
+        
+        // Get user's subscription tier from Supabase
+        const subscriptionTier = await getUserSubscription(authResult.user.uid);
+        
         const userData: PiUser = {
           uid: authResult.user.uid,
           username: authResult.user.username,
+          email: additionalInfo?.email,
           roles: authResult.user.roles,
           accessToken: authResult.accessToken,
-          lastAuthenticated: Date.now()
+          lastAuthenticated: Date.now(),
+          subscriptionTier
         };
 
-        // Save to localStorage
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-        setUser(userData);
+        // Update Supabase and localStorage
+        await updateUserData(userData);
         
         toast.success(`Welcome back, ${userData.username}!`);
       } else {
@@ -169,6 +252,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     toast.info("You've been logged out");
   };
 
+  // Check if user has access to a feature based on their subscription
+  const hasAccess = (requiredTier: SubscriptionTier): boolean => {
+    if (!user) return false;
+    
+    const tierLevel = {
+      [SubscriptionTier.INDIVIDUAL]: 0,
+      [SubscriptionTier.SMALL_BUSINESS]: 1,
+      [SubscriptionTier.ORGANIZATION]: 2,
+    };
+
+    const userLevel = tierLevel[user.subscriptionTier] || 0;
+    const requiredLevel = tierLevel[requiredTier];
+
+    return userLevel >= requiredLevel;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -178,7 +277,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isOffline,
         login,
         logout,
-        authError
+        authError,
+        hasAccess,
+        refreshUserData
       }}
     >
       {children}

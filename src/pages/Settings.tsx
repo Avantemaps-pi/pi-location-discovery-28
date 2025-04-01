@@ -6,9 +6,14 @@ import ProfileSettings from '@/components/settings/ProfileSettings';
 import AppPreferences from '@/components/settings/AppPreferences';
 import DangerZone from '@/components/settings/DangerZone';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/context/AuthContext';
+import { useSessionTimeout } from '@/hooks/useSessionTimeout';
 
 const Settings = () => {
   const isMobile = useIsMobile();
+  const { user, refreshUserData, isLoading } = useAuth();
+  useSessionTimeout();
+  
   const [language, setLanguage] = useState(() => {
     return localStorage.getItem('language') || 'english';
   });
@@ -28,6 +33,17 @@ const Settings = () => {
     
     return false;
   });
+
+  // Refresh user data when component mounts
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (user && !user.email) {
+        await refreshUserData();
+      }
+    };
+    
+    loadUserData();
+  }, [user, refreshUserData]);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -98,6 +114,8 @@ const Settings = () => {
             language={language} 
             setLanguage={setLanguage} 
             isMobile={isMobile}
+            user={user}
+            isLoading={isLoading}
           />
 
           <AppPreferences 

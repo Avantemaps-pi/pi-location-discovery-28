@@ -1,4 +1,5 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
 import AnalyticCard from '@/components/analytics/AnalyticCard';
@@ -7,6 +8,10 @@ import EngagementChart from '@/components/analytics/EngagementChart';
 import RankingChart from '@/components/analytics/RankingChart';
 import DistributionChart from '@/components/analytics/DistributionChart';
 import { Eye, MousePointerClick, Search, Bookmark } from 'lucide-react';
+import { useFeatureAccess } from '@/hooks/useFeatureAccess';
+import { SubscriptionTier } from '@/utils/piNetworkUtils';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 const generateEngagementData = (days: number) => {
   const data = [];
@@ -45,6 +50,10 @@ const deviceDistribution = [
 const Analytics = () => {
   const navigate = useNavigate();
   const [dateRange, setDateRange] = useState('week');
+  const { hasPermission, isLoading } = useFeatureAccess(
+    SubscriptionTier.ORGANIZATION,
+    { redirectTo: '' } // We'll handle redirection within the component
+  );
   
   const getDataForRange = () => {
     switch(dateRange) {
@@ -70,6 +79,58 @@ const Analytics = () => {
     console.log(`Exporting data as ${format}...`);
     alert(`Data would be exported as ${format} in a production environment`);
   };
+
+  // Render subscription upgrade prompt if no access
+  if (!isLoading && !hasPermission) {
+    return (
+      <AppLayout 
+        title="Business Analytics"
+        backButton={true}
+        withHeader={true}
+        fullHeight={false}
+        hideSidebar={false}
+      >
+        <div className="container mx-auto px-4 py-8 max-w-2xl flex flex-col items-center justify-center min-h-[60vh]">
+          <Card className="w-full text-center p-6">
+            <CardContent className="pt-6 flex flex-col items-center space-y-6">
+              <div className="bg-primary/10 p-4 rounded-full">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-8 w-8 text-primary"
+                >
+                  <path d="M6 18h8"></path>
+                  <path d="M3 22h18"></path>
+                  <path d="M14 22a7 7 0 1 0 0-14h-1"></path>
+                  <path d="M9 14h2"></path>
+                  <path d="M9 12a2 2 0 0 1 0-4h1"></path>
+                  <path d="M7 8h1"></path>
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold">Analytics Requires Organization Subscription</h2>
+              <p className="text-muted-foreground">
+                Access detailed insights about your business performance with our Organization subscription plan.
+              </p>
+              <Button 
+                className="mt-4" 
+                size="lg"
+                onClick={() => navigate('/pricing')}
+              >
+                Upgrade Your Subscription
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </AppLayout>
+    );
+  }
   
   return (
     <AppLayout 

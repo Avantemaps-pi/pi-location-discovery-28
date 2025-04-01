@@ -8,15 +8,22 @@ import SearchBar from '@/components/map/SearchBar';
 import { Button } from '@/components/ui/button';
 import { allPlaces } from '@/data/mockPlaces';
 import { useSessionTimeout } from '@/hooks/useSessionTimeout';
+import { useAuth } from '@/context/AuthContext';
 
 const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
   const location = useLocation();
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
+  const { refreshUserData } = useAuth();
   
   // Use the session timeout hook
   useSessionTimeout();
+
+  // Attempt to refresh user data on initial load
+  useEffect(() => {
+    refreshUserData();
+  }, [refreshUserData]);
 
   useEffect(() => {
     if (location.state && location.state.selectedPlaceId) {

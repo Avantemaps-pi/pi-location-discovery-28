@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Select,
   SelectContent,
@@ -10,14 +11,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { PiUser } from '@/context/AuthContext';
 
 interface ProfileSettingsProps {
   language: string;
   setLanguage: (value: string) => void;
   isMobile?: boolean;
+  user: PiUser | null;
+  isLoading: boolean;
 }
 
-const ProfileSettings = ({ language, setLanguage, isMobile }: ProfileSettingsProps) => {
+const ProfileSettings = ({ 
+  language, 
+  setLanguage, 
+  isMobile,
+  user,
+  isLoading 
+}: ProfileSettingsProps) => {
   // Apply language change effect (in a real app, this would change the UI language)
   useEffect(() => {
     console.log(`Language changed to: ${language}`);
@@ -33,18 +43,56 @@ const ProfileSettings = ({ language, setLanguage, isMobile }: ProfileSettingsPro
       <CardContent className="p-4 sm:p-6 pt-0 space-y-4 sm:space-y-6">
         <div className="space-y-1 sm:space-y-2">
           <Label htmlFor="username" className="text-sm">Username</Label>
-          <Input id="username" placeholder="johnsmith" value="johnsmith" readOnly className="bg-gray-100 h-9" />
+          {isLoading ? (
+            <Skeleton className="h-9 w-full" />
+          ) : (
+            <Input 
+              id="username" 
+              placeholder="username" 
+              value={user?.username || ''} 
+              readOnly 
+              className="bg-gray-100 h-9" 
+            />
+          )}
           <p className="text-xs text-muted-foreground mt-1">
-            Username cannot be changed.
+            Username is provided by Pi Network and cannot be changed.
           </p>
         </div>
+        
         <div className="space-y-1 sm:space-y-2">
           <Label htmlFor="email" className="text-sm">Email</Label>
-          <Input id="email" type="email" placeholder="john.smith@example.com" value="john.smith@example.com" readOnly className="bg-gray-100 h-9" />
+          {isLoading ? (
+            <Skeleton className="h-9 w-full" />
+          ) : (
+            <Input 
+              id="email" 
+              type="email" 
+              placeholder="Not provided" 
+              value={user?.email || ''} 
+              readOnly 
+              className="bg-gray-100 h-9" 
+            />
+          )}
           <p className="text-xs text-muted-foreground mt-1">
-            Email address cannot be changed.
+            Email address is provided by Pi Network and cannot be changed.
           </p>
         </div>
+        
+        <div className="space-y-1 sm:space-y-2">
+          <Label htmlFor="subscription" className="text-sm">Subscription Tier</Label>
+          {isLoading ? (
+            <Skeleton className="h-9 w-full" />
+          ) : (
+            <Input 
+              id="subscription" 
+              placeholder="Individual" 
+              value={user?.subscriptionTier?.charAt(0).toUpperCase() + user?.subscriptionTier?.slice(1).replace('-', ' ') || 'Individual'} 
+              readOnly 
+              className="bg-gray-100 h-9" 
+            />
+          )}
+        </div>
+        
         <div className="space-y-1 sm:space-y-2">
           <Label htmlFor="language" className="text-sm">Language Preference</Label>
           <Select value={language} onValueChange={setLanguage}>
