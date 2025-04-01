@@ -8,18 +8,20 @@ import { Button } from '@/components/ui/button';
 
 interface PageHeaderProps {
   title?: string;
+  hideSidebar?: boolean;
 }
 
-const PageHeader = ({ title = "Avante Maps" }: PageHeaderProps) => {
+const PageHeader = ({ title = "Avante Maps", hideSidebar = false }: PageHeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const isAnalyticsPage = location.pathname === '/analytics';
+  const isRegistrationPage = location.pathname === '/registration';
 
   return (
     <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-full items-center px-4">
-        {!isAnalyticsPage && <MobileMenuButton />}
-        {!isAnalyticsPage && <DesktopMenuButton onClick={() => console.log('Desktop menu clicked')} />}
+        {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && <MobileMenuButton />}
+        {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && <DesktopMenuButton onClick={() => console.log('Desktop menu clicked')} />}
         
         {isAnalyticsPage && (
           <Button 
@@ -32,7 +34,7 @@ const PageHeader = ({ title = "Avante Maps" }: PageHeaderProps) => {
           </Button>
         )}
         
-        <Link to="/" className={`${!isAnalyticsPage ? 'ml-4' : ''} flex items-center gap-2`}>
+        <Link to="/" className={`${(!isAnalyticsPage && !hideSidebar && !isRegistrationPage) ? 'ml-4' : ''} flex items-center gap-2`}>
           <img 
             src="/lovable-uploads/b0daa374-9909-4cf8-a2ae-e08e2184c3fc.png" 
             alt="Avante Maps" 
