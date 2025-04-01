@@ -55,7 +55,7 @@ const MobileSidebar = ({
               </Avatar>
               <div className="flex flex-col">
                 <span className="font-medium text-sm">Username</span>
-                <span className="text-xs text-muted-foreground">Free Plan</span>
+                <span className="text-xs text-muted-foreground">Individual Plan</span>
               </div>
             </div>
             <Button

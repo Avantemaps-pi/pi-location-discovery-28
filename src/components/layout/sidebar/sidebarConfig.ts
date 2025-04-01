@@ -44,11 +44,6 @@ export const navItems = [
     label: 'Registered Business',
   },
   {
-    to: '/contact',
-    icon: Phone,
-    label: 'Contact Us',
-  },
-  {
     to: '/communicon',
     icon: MessageSquare,
     label: 'CommuniCon',
@@ -58,14 +53,19 @@ export const navItems = [
     icon: Settings,
     label: 'Settings',
   },
-];
-
-export const legalItems = [
+  {
+    to: '/contact',
+    icon: Phone,
+    label: 'Contact Us',
+  },
   {
     to: '/about',
     icon: Info,
-    label: 'About',
+    label: 'About Us',
   },
+];
+
+export const legalItems = [
   {
     to: '/privacy-policy',
     icon: Lock,
