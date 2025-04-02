@@ -47,8 +47,11 @@ export const performLogin = async (
       throw new Error("Failed to initialize Pi Network SDK");
     }
 
-    // Authenticate with Pi Network
-    const authResult = await window.Pi!.authenticate(['username'], () => {});
+    // Authenticate with Pi Network - include 'payments' scope
+    const authResult = await window.Pi!.authenticate(['username', 'payments'], (payment) => {
+      console.log('Incomplete payment found:', payment);
+      // Handle incomplete payment if needed
+    });
     
     if (authResult && authResult.user && authResult.accessToken) {
       // Get additional user permissions after authentication

@@ -154,7 +154,7 @@ export const requestUserPermissions = async (): Promise<{
   }
 
   try {
-    const result = await window.Pi?.requestPermissions(['username', 'email']);
+    const result = await window.Pi?.requestPermissions(['username', 'email', 'payments']);
     if (!result) {
       console.error('Failed to get user permissions');
       return null;

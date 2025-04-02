@@ -33,7 +33,9 @@ export const executeSubscriptionPayment = async (
       timestamp: new Date().toISOString(),
     };
     
-    // Execute the payment
+    console.log("Creating payment with amount:", amount);
+    
+    // Execute the payment - make sure the user has been authenticated with the payments scope
     const payment = await window.Pi?.createPayment({
       amount: amount,
       memo: `Avante Maps ${tier} subscription (${frequency})`,
@@ -44,8 +46,12 @@ export const executeSubscriptionPayment = async (
       throw new Error("Failed to create payment");
     }
     
+    console.log("Payment created:", payment);
+    
     // Wait for the payment to complete
     const result = await window.Pi?.submitPayment(payment.identifier);
+    
+    console.log("Payment result:", result);
     
     if (result?.status === 'completed') {
       return {
