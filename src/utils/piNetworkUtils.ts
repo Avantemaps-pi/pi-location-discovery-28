@@ -132,7 +132,7 @@ export const isSessionExpired = (lastAuthenticated: number, timeout: number): bo
   return Date.now() - lastAuthenticated > timeout;
 };
 
-// Request additional user permissions including email
+// Request additional user permissions including email and payments
 export const requestUserPermissions = async (): Promise<{
   email?: string;
   username: string;
@@ -154,6 +154,7 @@ export const requestUserPermissions = async (): Promise<{
   }
 
   try {
+    // Always include 'payments' scope in permission requests
     const result = await window.Pi?.requestPermissions(['username', 'email', 'payments']);
     if (!result) {
       console.error('Failed to get user permissions');

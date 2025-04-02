@@ -35,35 +35,45 @@ export const executeSubscriptionPayment = async (
     
     console.log("Creating payment with amount:", amount);
     
-    // Execute the payment - make sure the user has been authenticated with the payments scope
-    const payment = await window.Pi?.createPayment({
-      amount: amount,
-      memo: `Avante Maps ${tier} subscription (${frequency})`,
-      metadata: metadata,
-    });
-    
-    if (!payment) {
-      throw new Error("Failed to create payment");
-    }
-    
-    console.log("Payment created:", payment);
-    
-    // Wait for the payment to complete
-    const result = await window.Pi?.submitPayment(payment.identifier);
-    
-    console.log("Payment result:", result);
-    
-    if (result?.status === 'completed') {
-      return {
-        success: true,
-        transactionId: result.transaction?.txid,
-        message: "Payment successful! Your subscription has been upgraded."
-      };
-    } else {
-      return {
-        success: false,
-        message: `Payment failed: ${result?.status || 'unknown error'}`
-      };
+    // Check if we have the payments scope before proceeding
+    try {
+      // Execute the payment - make sure the user has been authenticated with the payments scope
+      const payment = await window.Pi?.createPayment({
+        amount: amount,
+        memo: `Avante Maps ${tier} subscription (${frequency})`,
+        metadata: metadata,
+      });
+      
+      if (!payment) {
+        throw new Error("Failed to create payment");
+      }
+      
+      console.log("Payment created:", payment);
+      
+      // Wait for the payment to complete
+      const result = await window.Pi?.submitPayment(payment.identifier);
+      
+      console.log("Payment result:", result);
+      
+      if (result?.status === 'completed') {
+        return {
+          success: true,
+          transactionId: result.transaction?.txid,
+          message: "Payment successful! Your subscription has been upgraded."
+        };
+      } else {
+        return {
+          success: false,
+          message: `Payment failed: ${result?.status || 'unknown error'}`
+        };
+      }
+    } catch (error) {
+      // Specific handling for permissions errors
+      if (error.message && error.message.includes("scope")) {
+        console.error("Payment scope error:", error);
+        throw new Error("Payment permission not granted. Please log out and log in again to grant payment permissions.");
+      }
+      throw error;
     }
   } catch (error) {
     console.error("Pi payment error:", error);
