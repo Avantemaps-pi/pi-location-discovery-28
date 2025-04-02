@@ -26,11 +26,19 @@ declare global {
         accessToken: string;
         email?: string;
       }>;
-      createPayment: (payment: {
-        amount: number;
-        memo: string;
-        metadata?: any;
-      }) => Promise<{
+      createPayment: (
+        payment: {
+          amount: number;
+          memo: string;
+          metadata?: any;
+        },
+        callbacks?: {
+          onReadyForServerApproval?: (paymentId: string) => void;
+          onReadyForServerCompletion?: (paymentId: string, txid: string) => void;
+          onCancel?: (paymentId: string) => void;
+          onError?: (error: Error, payment?: any) => void;
+        }
+      ) => Promise<{
         identifier: string;
         user_uid: string;
         amount: number;
