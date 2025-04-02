@@ -6,7 +6,7 @@ import ProfileSettings from '@/components/settings/ProfileSettings';
 import AppPreferences from '@/components/settings/AppPreferences';
 import DangerZone from '@/components/settings/DangerZone';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/auth';
 import { useSessionTimeout } from '@/hooks/useSessionTimeout';
 
 const Settings = () => {
