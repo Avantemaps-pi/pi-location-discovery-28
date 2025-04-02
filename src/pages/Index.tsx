@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
@@ -8,7 +7,7 @@ import SearchBar from '@/components/map/SearchBar';
 import { Button } from '@/components/ui/button';
 import { allPlaces } from '@/data/mockPlaces';
 import { useSessionTimeout } from '@/hooks/useSessionTimeout';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/auth';
 
 const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);

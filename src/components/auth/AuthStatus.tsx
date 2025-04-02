@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/auth';
 import { Button } from '@/components/ui/button';
 import { Shield, LogOut, WifiOff } from 'lucide-react';
 import { useLocation } from 'react-router-dom';

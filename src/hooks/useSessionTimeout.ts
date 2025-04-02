@@ -1,6 +1,6 @@
 
 import { useEffect, useRef } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/auth';
 import { toast } from 'sonner';
 
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
