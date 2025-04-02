@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { PiUser } from './types';
 import { 
   isPiNetworkAvailable, 
+  initializePiNetwork,
   requestUserPermissions,
   SubscriptionTier 
 } from '@/utils/piNetworkUtils';
@@ -37,6 +38,13 @@ export const performLogin = async (
     // Check if Pi SDK is available
     if (!isPiNetworkAvailable()) {
       throw new Error("Pi Network SDK is not available");
+    }
+
+    // Ensure SDK is initialized before authentication
+    try {
+      await initializePiNetwork();
+    } catch (error) {
+      throw new Error("Failed to initialize Pi Network SDK");
     }
 
     // Authenticate with Pi Network
@@ -90,6 +98,15 @@ export const refreshUserData = async (
 
   try {
     setIsLoading(true);
+    
+    // Ensure SDK is initialized before proceeding
+    try {
+      await initializePiNetwork();
+    } catch (error) {
+      console.error("Failed to initialize Pi Network SDK:", error);
+      return;
+    }
+    
     // Get user's current subscription
     const subscriptionTier = await getUserSubscription(user.uid);
 

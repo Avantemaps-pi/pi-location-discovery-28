@@ -16,17 +16,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSdkInitialized, setIsSdkInitialized] = useState<boolean>(false);
   const pendingAuthRef = useRef<boolean>(false);
+  const initAttempted = useRef<boolean>(false);
 
   // Initialize Pi Network SDK
   useEffect(() => {
+    // Only attempt initialization once
+    if (initAttempted.current) return;
+    
+    initAttempted.current = true;
     const initSdk = async () => {
       try {
-        await initializePiNetwork();
-        setIsSdkInitialized(true);
-        console.log("Pi Network SDK initialized successfully");
+        console.log("Starting Pi Network SDK initialization...");
+        const result = await initializePiNetwork();
+        setIsSdkInitialized(result);
+        console.log("Pi Network SDK initialization complete:", result);
       } catch (error) {
         console.error("Failed to initialize Pi Network SDK:", error);
-        toast.error("Failed to initialize Pi Network SDK");
+        toast.error("Failed to initialize Pi Network SDK. Some features may be unavailable.");
+        setIsSdkInitialized(false);
       }
     };
     
@@ -35,6 +42,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Login function - using useCallback to avoid infinite loops
   const login = useCallback(async (): Promise<void> => {
+    if (!isSdkInitialized) {
+      try {
+        console.log("Attempting to initialize SDK before login...");
+        const result = await initializePiNetwork();
+        setIsSdkInitialized(result);
+      } catch (error) {
+        console.error("Failed to initialize Pi Network SDK during login:", error);
+        toast.error("Failed to initialize Pi Network SDK. Please try again later.");
+        return;
+      }
+    }
+    
     await performLogin(
       isSdkInitialized,
       setIsLoading,
@@ -52,8 +71,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Refresh user data without full login
   const refreshUserData = useCallback(async (): Promise<void> => {
+    if (!isSdkInitialized) {
+      try {
+        const result = await initializePiNetwork();
+        setIsSdkInitialized(result);
+      } catch (error) {
+        console.error("Failed to initialize Pi Network SDK during refresh:", error);
+        return;
+      }
+    }
+    
     await refreshUserDataService(user, setUser, setIsLoading);
-  }, [user]);
+  }, [user, isSdkInitialized]);
 
   const logout = (): void => {
     localStorage.removeItem(STORAGE_KEY);
