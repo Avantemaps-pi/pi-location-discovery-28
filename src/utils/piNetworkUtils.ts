@@ -26,6 +26,27 @@ declare global {
         accessToken: string;
         email?: string;
       }>;
+      createPayment: (payment: {
+        amount: number;
+        memo: string;
+        metadata?: any;
+      }) => Promise<{
+        identifier: string;
+        user_uid: string;
+        amount: number;
+        memo: string;
+        metadata: any;
+        status: string;
+        transaction?: any;
+      }>;
+      submitPayment: (paymentId: string) => Promise<{
+        status: string;
+        transaction?: {
+          txid: string;
+          verified: boolean;
+          _link: string;
+        };
+      }>;
     };
   }
 }

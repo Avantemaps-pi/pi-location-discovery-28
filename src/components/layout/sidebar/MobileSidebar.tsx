@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { X, UserRound } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import NavItem from './NavItem';
+import { useAuth } from '@/context/auth';
 
 interface MobileSidebarProps {
   isOpen: boolean;
@@ -32,6 +33,10 @@ const MobileSidebar = ({
   onClose,
   onLinkClick
 }: MobileSidebarProps) => {
+  const { user } = useAuth();
+  const username = user?.username || 'Guest';
+  const planType = user?.subscriptionTier ? user.subscriptionTier.charAt(0).toUpperCase() + user.subscriptionTier.slice(1) : 'Individual';
+
   return (
     <>
       {/* Overlay that appears when sidebar is open */}
@@ -54,8 +59,8 @@ const MobileSidebar = ({
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <span className="font-medium text-sm">Username</span>
-                <span className="text-xs text-muted-foreground">Individual Plan</span>
+                <span className="font-medium text-sm">{username}</span>
+                <span className="text-xs text-muted-foreground">{planType} Plan</span>
               </div>
             </div>
             <Button

@@ -23,9 +23,19 @@ interface PricingCardProps {
   tier: PricingTier
   paymentFrequency: string
   id?: string
+  onSubscribe?: () => void
+  isLoading?: boolean
+  disabled?: boolean
 }
 
-export function PricingCard({ tier, paymentFrequency, id }: PricingCardProps) {
+export function PricingCard({ 
+  tier, 
+  paymentFrequency, 
+  id,
+  onSubscribe,
+  isLoading,
+  disabled
+}: PricingCardProps) {
   const price = tier.price[paymentFrequency as keyof typeof tier.price]
   const isCustom = typeof price === "string"
 
@@ -80,8 +90,10 @@ export function PricingCard({ tier, paymentFrequency, id }: PricingCardProps) {
           tier.highlighted && "bg-avante-purple hover:bg-avante-purple/90",
           tier.popular && "bg-avante-blue hover:bg-avante-blue/90"
         )}
+        onClick={onSubscribe}
+        disabled={isLoading || disabled}
       >
-        {tier.cta}
+        {isLoading ? "Processing..." : tier.cta}
       </Button>
     </div>
   )

@@ -8,9 +8,14 @@ import { Tab } from "@/components/ui/pricing-tab"
 interface PricingSectionProps {
   title: string
   subtitle: string
-  tiers: PricingTier[]
+  tiers: (PricingTier & {
+    onSubscribe?: () => void
+    isLoading?: boolean
+    disabled?: boolean
+  })[]
   frequencies: string[]
   organizationTierId?: string
+  onFrequencyChange?: (frequency: string) => void
 }
 
 export function PricingSection({
@@ -19,8 +24,16 @@ export function PricingSection({
   tiers,
   frequencies,
   organizationTierId,
+  onFrequencyChange,
 }: PricingSectionProps) {
   const [selectedFrequency, setSelectedFrequency] = React.useState(frequencies[0])
+
+  const handleFrequencyChange = (frequency: string) => {
+    setSelectedFrequency(frequency)
+    if (onFrequencyChange) {
+      onFrequencyChange(frequency)
+    }
+  }
 
   return (
     <section className="flex flex-col items-center gap-10 py-10">
@@ -35,7 +48,7 @@ export function PricingSection({
               key={freq}
               text={freq}
               selected={selectedFrequency === freq}
-              setSelected={setSelectedFrequency}
+              setSelected={handleFrequencyChange}
               discount={freq === "yearly"}
             />
           ))}
@@ -49,6 +62,9 @@ export function PricingSection({
             tier={tier}
             paymentFrequency={selectedFrequency}
             id={tier.id === organizationTierId ? `tier-${tier.id}` : undefined}
+            onSubscribe={tier.onSubscribe}
+            isLoading={tier.isLoading}
+            disabled={tier.disabled}
           />
         ))}
       </div>

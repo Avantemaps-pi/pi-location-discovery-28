@@ -1,9 +1,13 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { PricingSection } from '@/components/ui/pricing-section';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/context/auth';
+import { executeSubscriptionPayment, getSubscriptionPrice } from '@/utils/piPaymentUtils';
+import { SubscriptionTier } from '@/utils/piNetworkUtils';
+import { toast } from 'sonner';
 
 // Define payment frequencies and pricing tiers
 const PAYMENT_FREQUENCIES = ["monthly", "yearly"];
@@ -69,6 +73,9 @@ const Pricing = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const organizationTierRef = useRef<HTMLDivElement>(null);
+  const { user, isAuthenticated, login, refreshUserData } = useAuth();
+  const [selectedFrequency, setSelectedFrequency] = useState(PAYMENT_FREQUENCIES[0]);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   
   const handleBack = () => {
     navigate(-1);
@@ -97,6 +104,55 @@ const Pricing = () => {
     }
   }, [location.state]);
   
+  const handleSubscribe = async (tier: string) => {
+    // Skip if it's the free tier or if it's marked as coming soon
+    if (tier === "individual" || 
+        TIERS.find(t => t.id === tier)?.comingSoon) {
+      return;
+    }
+    
+    // If not authenticated, prompt to login first
+    if (!isAuthenticated) {
+      toast.info("Please log in to upgrade your subscription");
+      await login();
+      return;
+    }
+    
+    // Don't allow upgrading to the same tier
+    if (user?.subscriptionTier === tier) {
+      toast.info("You are already subscribed to this plan");
+      return;
+    }
+    
+    setIsProcessingPayment(true);
+    
+    try {
+      // Get the subscription price
+      const subscriptionTier = tier as SubscriptionTier;
+      const price = getSubscriptionPrice(subscriptionTier, selectedFrequency);
+      
+      // Execute the payment
+      const result = await executeSubscriptionPayment(
+        price,
+        subscriptionTier,
+        selectedFrequency as 'monthly' | 'yearly'
+      );
+      
+      if (result.success) {
+        toast.success(result.message);
+        // Refresh user data to update subscription info
+        await refreshUserData();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error("Subscription error:", error);
+      toast.error("Failed to process subscription payment");
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
+  
   // Create a custom header with back button for the Pricing page
   const CustomHeader = () => (
     <header className="h-16 border-b flex items-center px-4 bg-white">
@@ -113,6 +169,19 @@ const Pricing = () => {
     </header>
   );
   
+  // Create custom pricing tiers with click handlers
+  const customTiers = TIERS.map(tier => ({
+    ...tier,
+    onSubscribe: () => handleSubscribe(tier.id),
+    isLoading: isProcessingPayment,
+    disabled: tier.id === "individual" || // Free tier
+             tier.comingSoon || // Coming soon
+             user?.subscriptionTier === tier.id, // Already subscribed
+    cta: user?.subscriptionTier === tier.id 
+         ? "Current Plan" 
+         : tier.cta
+  }));
+  
   return (
     <div className="flex flex-col min-h-screen bg-background overflow-y-auto">
       <CustomHeader />
@@ -128,8 +197,9 @@ const Pricing = () => {
                 title="Unlock Premium Features with Pi"
                 subtitle="Choose the plan that's right for you"
                 frequencies={PAYMENT_FREQUENCIES}
-                tiers={TIERS}
+                tiers={customTiers}
                 organizationTierId="organization"
+                onFrequencyChange={setSelectedFrequency}
               />
             </div>
           </div>
