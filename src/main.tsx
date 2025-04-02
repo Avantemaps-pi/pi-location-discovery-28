@@ -2,10 +2,6 @@
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-import { initializePiNetwork } from '@/utils/piNetworkUtils';
-
-// Initialize Pi Network SDK
-initializePiNetwork();
 
 // Register service worker
 if ('serviceWorker' in navigator) {

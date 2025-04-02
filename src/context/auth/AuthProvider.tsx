@@ -3,7 +3,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { 
   isPiNetworkAvailable, 
-  requestUserPermissions
+  requestUserPermissions,
+  initializePiNetwork,
+  SubscriptionTier
 } from '@/utils/piNetworkUtils';
 import { PiUser, AuthContextType, SESSION_TIMEOUT, STORAGE_KEY } from './types';
 import { updateUserData, getUserSubscription, checkAccess } from './authUtils';
@@ -17,6 +19,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isOffline, setIsOffline] = useState<boolean>(!navigator.onLine);
   const [authError, setAuthError] = useState<string | null>(null);
   const [pendingAuth, setPendingAuth] = useState<boolean>(false);
+  const [isSdkInitialized, setIsSdkInitialized] = useState<boolean>(false);
+
+  // Initialize Pi Network SDK
+  useEffect(() => {
+    const initSdk = async () => {
+      try {
+        await initializePiNetwork();
+        setIsSdkInitialized(true);
+        console.log("Pi Network SDK initialized successfully");
+      } catch (error) {
+        console.error("Failed to initialize Pi Network SDK:", error);
+        toast.error("Failed to initialize Pi Network SDK");
+      }
+    };
+    
+    initSdk();
+  }, []);
 
   // Handle online/offline status
   useEffect(() => {
@@ -45,8 +64,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, [pendingAuth]);
 
-  // Check for stored session on mount and validate it
+  // Check for stored session on mount and validate it - but only after SDK is initialized
   useEffect(() => {
+    if (!isSdkInitialized) return;
+    
     const checkSession = async () => {
       try {
         const storedSession = localStorage.getItem(STORAGE_KEY);
@@ -74,7 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     checkSession();
-  }, []);
+  }, [isSdkInitialized]);
 
   // Refresh user data without full login
   const refreshUserData = async (): Promise<void> => {
@@ -113,6 +134,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const login = async (): Promise<void> => {
+    // Don't attempt login if SDK is not initialized yet
+    if (!isSdkInitialized) {
+      setPendingAuth(true);
+      toast.warning("Pi Network SDK is initializing. Please try again in a moment.");
+      return;
+    }
+    
     setIsLoading(true);
     setAuthError(null);
 

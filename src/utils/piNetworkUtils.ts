@@ -35,25 +35,34 @@ export const isPiNetworkAvailable = (): boolean => {
 };
 
 // Initialize the Pi Network SDK
-export const initializePiNetwork = (): void => {
-  // This is a placeholder - the Pi Network SDK is loaded via <script> tag
-  // and should be globally available as window.Pi
-  if (!isPiNetworkAvailable()) {
-    console.warn('Pi Network SDK is not available. Loading from CDN...');
+export const initializePiNetwork = (): Promise<boolean> => {
+  return new Promise((resolve, reject) => {
+    // If SDK is already available, resolve immediately
+    if (isPiNetworkAvailable()) {
+      console.log('Pi Network SDK is already loaded and available');
+      resolve(true);
+      return;
+    }
     
-    // Create a script element to load the Pi SDK if it's not already available
+    console.log('Loading Pi Network SDK from CDN...');
+    
+    // Create a script element to load the Pi SDK
     const script = document.createElement('script');
     script.src = 'https://sdk.minepi.com/pi-sdk.js';
     script.async = true;
+    
     script.onload = () => {
       console.log('Pi Network SDK loaded successfully');
+      resolve(true);
     };
-    script.onerror = () => {
-      console.error('Failed to load Pi Network SDK');
+    
+    script.onerror = (error) => {
+      console.error('Failed to load Pi Network SDK', error);
+      reject(new Error('Failed to load Pi Network SDK'));
     };
     
     document.head.appendChild(script);
-  }
+  });
 };
 
 // Check if a session is expired
