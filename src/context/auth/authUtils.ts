@@ -10,13 +10,13 @@ export const updateUserData = async (userData: PiUser, setUser: (user: PiUser) =
     const { error } = await supabase
       .from('users')
       .upsert({
-        uid: userData.uid,
+        id: userData.uid,
         username: userData.username,
-        email: userData.email,
-        subscription_tier: userData.subscriptionTier,
+        email: userData.email || '',
+        subscription: userData.subscriptionTier,
         last_login: new Date().toISOString()
       }, {
-        onConflict: 'uid'
+        onConflict: 'id'
       });
 
     if (error) {
@@ -36,8 +36,8 @@ export const getUserSubscription = async (uid: string): Promise<SubscriptionTier
   try {
     const { data, error } = await supabase
       .from('users')
-      .select('subscription_tier')
-      .eq('uid', uid)
+      .select('subscription')
+      .eq('id', uid)
       .single();
 
     if (error || !data) {
@@ -45,7 +45,7 @@ export const getUserSubscription = async (uid: string): Promise<SubscriptionTier
       return SubscriptionTier.INDIVIDUAL; // Default to INDIVIDUAL if error
     }
 
-    return data.subscription_tier as SubscriptionTier || SubscriptionTier.INDIVIDUAL;
+    return data.subscription as SubscriptionTier || SubscriptionTier.INDIVIDUAL;
   } catch (error) {
     console.error("Error in getUserSubscription:", error);
     return SubscriptionTier.INDIVIDUAL;

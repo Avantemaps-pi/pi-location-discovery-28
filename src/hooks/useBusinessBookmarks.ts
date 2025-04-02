@@ -1,93 +1,135 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/auth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 export const useBusinessBookmarks = () => {
-  const [bookmarks, setBookmarks] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const { user, isAuthenticated } = useAuth();
+  const [bookmarks, setBookmarks] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Load bookmarks when user is authenticated
-  useEffect(() => {
-    const loadBookmarks = async () => {
-      if (!isAuthenticated || !user) {
-        setBookmarks([]);
-        setIsLoading(false);
-        return;
+  // Fetch user's bookmarks
+  const fetchBookmarks = useCallback(async () => {
+    if (!user || !isAuthenticated) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      
+      const { data, error } = await supabase
+        .from('bookmarks')
+        .select('business_id')
+        .eq('user_id', user.uid);
+
+      if (error) {
+        throw error;
       }
 
-      try {
-        setIsLoading(true);
-        const { data, error } = await supabase
-          .from('bookmarks')
-          .select('business_id')
-          .eq('user_id', user.uid);
-
-        if (error) {
-          throw error;
-        }
-
-        const bookmarkIds = data.map(item => item.business_id);
+      if (data) {
+        // Convert business_id to string array
+        const bookmarkIds = data.map(item => String(item.business_id));
         setBookmarks(bookmarkIds);
-      } catch (error) {
-        console.error('Error loading bookmarks:', error);
-        toast.error('Failed to load your bookmarks');
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching bookmarks:', error);
+      toast.error('Failed to load your bookmarks');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, isAuthenticated]);
 
-    loadBookmarks();
-  }, [isAuthenticated, user]);
+  // Load bookmarks when user changes
+  useEffect(() => {
+    fetchBookmarks();
+  }, [fetchBookmarks]);
 
-  // Toggle bookmark
-  const toggleBookmark = async (businessId: string) => {
-    if (!isAuthenticated || !user) {
+  // Check if a business is bookmarked
+  const isBookmarked = useCallback((businessId: string) => {
+    return bookmarks.includes(businessId);
+  }, [bookmarks]);
+
+  // Add a bookmark
+  const addBookmark = useCallback(async (businessId: string) => {
+    if (!user || !isAuthenticated) {
       toast.error('Please sign in to bookmark businesses');
       return false;
     }
 
     try {
-      const isBookmarked = bookmarks.includes(businessId);
+      setIsLoading(true);
+      
+      const { error } = await supabase
+        .from('bookmarks')
+        .insert({
+          user_id: user.uid,
+          business_id: parseInt(businessId),
+        });
 
-      if (isBookmarked) {
-        // Remove bookmark
-        const { error } = await supabase
-          .from('bookmarks')
-          .delete()
-          .eq('user_id', user.uid)
-          .eq('business_id', businessId);
-
-        if (error) throw error;
-
-        setBookmarks(prev => prev.filter(id => id !== businessId));
-        toast.success('Bookmark removed');
-      } else {
-        // Add bookmark
-        const { error } = await supabase
-          .from('bookmarks')
-          .insert({ user_id: user.uid, business_id: businessId });
-
-        if (error) throw error;
-
-        setBookmarks(prev => [...prev, businessId]);
-        toast.success('Business bookmarked');
+      if (error) {
+        throw error;
       }
 
+      // Update local state
+      setBookmarks(prev => [...prev, businessId]);
+      toast.success('Business added to your bookmarks');
       return true;
     } catch (error) {
-      console.error('Error toggling bookmark:', error);
-      toast.error('Failed to update bookmark');
+      console.error('Error adding bookmark:', error);
+      toast.error('Failed to add bookmark');
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, isAuthenticated]);
+
+  // Remove a bookmark
+  const removeBookmark = useCallback(async (businessId: string) => {
+    if (!user || !isAuthenticated) {
       return false;
     }
-  };
+
+    try {
+      setIsLoading(true);
+      
+      const { error } = await supabase
+        .from('bookmarks')
+        .delete()
+        .eq('user_id', user.uid)
+        .eq('business_id', parseInt(businessId));
+
+      if (error) {
+        throw error;
+      }
+
+      // Update local state
+      setBookmarks(prev => prev.filter(id => id !== businessId));
+      toast.success('Business removed from your bookmarks');
+      return true;
+    } catch (error) {
+      console.error('Error removing bookmark:', error);
+      toast.error('Failed to remove bookmark');
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, isAuthenticated]);
+
+  // Toggle bookmark status
+  const toggleBookmark = useCallback(async (businessId: string) => {
+    return isBookmarked(businessId) 
+      ? removeBookmark(businessId)
+      : addBookmark(businessId);
+  }, [isBookmarked, removeBookmark, addBookmark]);
 
   return {
     bookmarks,
-    isBookmarked: (id: string) => bookmarks.includes(id),
+    isLoading,
+    isBookmarked,
+    addBookmark,
+    removeBookmark,
     toggleBookmark,
-    isLoading
+    refreshBookmarks: fetchBookmarks
   };
 };
