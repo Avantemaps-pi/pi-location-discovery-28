@@ -1,17 +1,16 @@
 
 import { toast } from 'sonner';
-import { initializePiNetwork, isPiNetworkAvailable, SubscriptionTier } from './piNetwork';
+import { initializePiNetwork, isPiNetworkAvailable } from '../piNetwork';
+import { PaymentResult, SubscriptionFrequency } from './types';
+import { SubscriptionTier } from '../piNetwork';
 
-interface PaymentResult {
-  success: boolean;
-  transactionId?: string;
-  message: string;
-}
-
+/**
+ * Executes a payment transaction for subscription upgrades
+ */
 export const executeSubscriptionPayment = async (
   amount: number,
   tier: SubscriptionTier,
-  frequency: 'monthly' | 'yearly'
+  frequency: SubscriptionFrequency
 ): Promise<PaymentResult> => {
   try {
     // Ensure Pi SDK is available
@@ -77,8 +76,6 @@ export const executeSubscriptionPayment = async (
       
       console.log("Payment created:", payment);
       
-      // Fix: Use Pi.submitPayment instead of window.Pi?.submitPayment
-      // to ensure that the function is properly called
       const result = await window.Pi!.submitPayment(payment.identifier);
       
       console.log("Payment result:", result);
@@ -123,26 +120,4 @@ export const executeSubscriptionPayment = async (
       message: errorMessage
     };
   }
-};
-
-// Helper to determine the correct price based on tier and frequency
-export const getSubscriptionPrice = (
-  tier: SubscriptionTier,
-  frequency: string
-): number => {
-  const prices = {
-    [SubscriptionTier.INDIVIDUAL]: { monthly: 0, yearly: 0 },
-    [SubscriptionTier.SMALL_BUSINESS]: { monthly: 5, yearly: 48 },
-    [SubscriptionTier.ORGANIZATION]: { monthly: 10, yearly: 96 },
-  };
-  
-  // Default to monthly price if frequency is invalid
-  const validFrequency = frequency === 'yearly' ? 'yearly' : 'monthly';
-  
-  // Convert yearly price to correct amount (monthly price × 12 × 0.8 for 20% discount)
-  if (validFrequency === 'yearly' && typeof prices[tier].monthly === 'number') {
-    return prices[tier].monthly * 12 * 0.8;
-  }
-  
-  return prices[tier][validFrequency] || 0;
 };
