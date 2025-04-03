@@ -1,6 +1,6 @@
 
 import { toast } from 'sonner';
-import { initializePiNetwork, isPiNetworkAvailable } from '../piNetwork';
+import { initializePiNetwork, isPiNetworkAvailable, requestUserPermissions } from '../piNetwork';
 import { PaymentResult, SubscriptionFrequency } from './types';
 import { SubscriptionTier } from '../piNetwork';
 
@@ -20,6 +20,12 @@ export const executeSubscriptionPayment = async (
     
     // Ensure SDK is initialized
     await initializePiNetwork();
+    
+    // First, explicitly request payment permissions
+    const permissions = await requestUserPermissions();
+    if (!permissions) {
+      throw new Error("Failed to get user permissions");
+    }
     
     // Create a payment identifier
     const paymentId = `subscription_${tier}_${frequency}_${Date.now()}`;

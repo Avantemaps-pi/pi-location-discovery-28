@@ -98,7 +98,10 @@ export const requestUserPermissions = async (): Promise<{
 
   try {
     // Always include 'payments' scope in permission requests
+    console.log('Requesting permissions: username, email, payments');
     const result = await window.Pi?.requestPermissions(['username', 'email', 'payments']);
+    console.log('Permission request result:', result);
+    
     if (!result) {
       console.error('Failed to get user permissions');
       return null;

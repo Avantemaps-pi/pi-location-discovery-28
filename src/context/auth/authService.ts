@@ -48,13 +48,16 @@ export const performLogin = async (
     }
 
     // Authenticate with Pi Network - ALWAYS include 'payments' scope
+    console.log("Authenticating with Pi Network, requesting scopes: username, payments");
     const authResult = await window.Pi!.authenticate(['username', 'payments'], (payment) => {
       console.log('Incomplete payment found:', payment);
       // Handle incomplete payment if needed
     });
     
     if (authResult && authResult.user && authResult.accessToken) {
-      // Get additional user permissions after authentication
+      console.log("Authentication successful, requesting additional permissions");
+      
+      // Get additional user permissions after authentication - ALWAYS include payments scope
       const additionalInfo = await requestUserPermissions();
       
       // Get user's subscription tier from Supabase
@@ -113,13 +116,14 @@ export const refreshUserData = async (
     // Get user's current subscription
     const subscriptionTier = await getUserSubscription(user.uid);
 
-    // Request additional permissions if email is not already available
-    if (!user.email && isPiNetworkAvailable()) {
+    // Request additional permissions - explicitly include payments scope
+    if (isPiNetworkAvailable()) {
+      console.log("Refreshing user permissions, including payments scope");
       const additionalInfo = await requestUserPermissions();
-      if (additionalInfo && additionalInfo.email) {
+      if (additionalInfo) {
         await updateUserData({
           ...user,
-          email: additionalInfo.email,
+          email: additionalInfo.email || user.email,
           subscriptionTier
         }, setUser);
         toast.success("User profile updated");

@@ -36,6 +36,9 @@ export const useSubscriptionPayment = () => {
     setIsProcessingPayment(true);
     
     try {
+      // First refresh user data to ensure we have the latest permissions
+      await refreshUserData();
+      
       // Get the subscription price
       const subscriptionTier = tier as SubscriptionTier;
       const price = getSubscriptionPrice(subscriptionTier, selectedFrequency);
@@ -52,11 +55,26 @@ export const useSubscriptionPayment = () => {
         // Refresh user data to update subscription info
         await refreshUserData();
       } else {
-        toast.error(result.message);
+        // Handle permission errors with a prompt to login again
+        if (result.message.includes("permission not granted")) {
+          toast.error(result.message);
+          toast.info("Attempting to refresh your permissions...");
+          await login(); // Re-login to get fresh permissions
+        } else {
+          toast.error(result.message);
+        }
       }
     } catch (error) {
       console.error("Subscription error:", error);
-      toast.error("Failed to process subscription payment");
+      
+      // If it's a permissions error, prompt to login again
+      if (error instanceof Error && error.message.includes("permission not granted")) {
+        toast.error(error.message);
+        toast.info("Please try logging in again to grant payment permissions");
+        await login(); // Re-login to get fresh permissions
+      } else {
+        toast.error("Failed to process subscription payment");
+      }
     } finally {
       setIsProcessingPayment(false);
     }
