@@ -103,7 +103,7 @@ export const requestUserPermissions = async (): Promise<{
     console.log('Permission request result:', result);
     
     if (!result) {
-      console.error('Failed to get user permissions');
+      console.error('Failed to get user permissions - no result returned');
       return null;
     }
 
@@ -114,6 +114,7 @@ export const requestUserPermissions = async (): Promise<{
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);
-    return null;
+    // Throw the error so it can be properly handled by the caller
+    throw error;
   }
 };

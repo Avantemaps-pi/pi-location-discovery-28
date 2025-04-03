@@ -21,10 +21,17 @@ export const executeSubscriptionPayment = async (
     // Ensure SDK is initialized
     await initializePiNetwork();
     
-    // First, explicitly request payment permissions
-    const permissions = await requestUserPermissions();
-    if (!permissions) {
-      throw new Error("Failed to get user permissions");
+    // First, explicitly request payment permissions with proper error handling
+    try {
+      console.log("Requesting payment permissions before transaction");
+      const permissions = await requestUserPermissions();
+      if (!permissions) {
+        throw new Error("Failed to get required payment permissions. Please try logging in again.");
+      }
+      console.log("Successfully obtained payment permissions");
+    } catch (error) {
+      console.error("Error requesting payment permissions:", error);
+      throw new Error("Payment permission not granted. Please log out and log in again to grant payment permissions.");
     }
     
     // Create a payment identifier

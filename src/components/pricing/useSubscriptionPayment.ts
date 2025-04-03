@@ -43,6 +43,8 @@ export const useSubscriptionPayment = () => {
       const subscriptionTier = tier as SubscriptionTier;
       const price = getSubscriptionPrice(subscriptionTier, selectedFrequency);
       
+      toast.info("Preparing payment, please wait...");
+      
       // Execute the payment
       const result = await executeSubscriptionPayment(
         price,
