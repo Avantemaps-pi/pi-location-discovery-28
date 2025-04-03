@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { X, UserRound } from 'lucide-react';
+import { X, UserRound, LogIn } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import NavItem from './NavItem';
 import { useAuth } from '@/context/auth';
@@ -33,7 +33,7 @@ const MobileSidebar = ({
   onClose,
   onLinkClick
 }: MobileSidebarProps) => {
-  const { user } = useAuth();
+  const { user, isAuthenticated, login, isLoading } = useAuth();
   const username = user?.username || 'Guest';
   const planType = user?.subscriptionTier ? user.subscriptionTier.charAt(0).toUpperCase() + user.subscriptionTier.slice(1) : 'Individual';
 
@@ -104,6 +104,23 @@ const MobileSidebar = ({
                 ))}
               </ul>
             </div>
+            
+            {!isAuthenticated && (
+              <div className="mt-6 px-4">
+                <Button 
+                  onClick={() => {
+                    login();
+                    onClose();
+                  }} 
+                  disabled={isLoading}
+                  className="w-full"
+                  variant="outline"
+                >
+                  <LogIn className="h-4 w-4 mr-2" />
+                  {isLoading ? "Authenticating..." : "Login with Pi"}
+                </Button>
+              </div>
+            )}
           </div>
           
           <div className="p-4 border-t border-sidebar-border text-xs text-muted-foreground">

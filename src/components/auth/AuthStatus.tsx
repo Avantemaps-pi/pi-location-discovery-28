@@ -6,7 +6,7 @@ import { Shield, LogOut, WifiOff } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const AuthStatus: React.FC = () => {
-  const { isAuthenticated, user, logout, login, isLoading, isOffline } = useAuth();
+  const { isAuthenticated, user, logout, isLoading, isOffline } = useAuth();
   const location = useLocation();
 
   if (isLoading) {
@@ -44,7 +44,7 @@ const AuthStatus: React.FC = () => {
     );
   }
 
-  // Don't show the login button on any page
+  // Login button removed (now in sidebar)
   return null;
 };
 

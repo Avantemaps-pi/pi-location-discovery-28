@@ -9,6 +9,9 @@ import {
   SidebarHeader
 } from '@/components/ui/sidebar';
 import NavItem from './NavItem';
+import { useAuth } from '@/context/auth';
+import { Button } from '@/components/ui/button';
+import { LogIn } from 'lucide-react';
 
 interface DesktopSidebarProps {
   className?: string;
@@ -34,6 +37,8 @@ const DesktopSidebar = ({
   currentPath, 
   onLinkClick 
 }: DesktopSidebarProps) => {
+  const { isAuthenticated, login, isLoading } = useAuth();
+  
   return (
     <Sidebar className={cn("hidden md:flex", className)}>
       <SidebarHeader className="p-4 border-b border-sidebar-border">
@@ -85,6 +90,20 @@ const DesktopSidebar = ({
               ))}
             </ul>
           </div>
+          
+          {!isAuthenticated && (
+            <div className="mt-4">
+              <Button 
+                onClick={login} 
+                disabled={isLoading}
+                className="w-full"
+                variant="outline"
+              >
+                <LogIn className="h-4 w-4 mr-2" />
+                {isLoading ? "Authenticating..." : "Login with Pi"}
+              </Button>
+            </div>
+          )}
         </div>
       </SidebarContent>
 

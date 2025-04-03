@@ -78,8 +78,9 @@ export const executeSubscriptionPayment = async (
       
       console.log("Payment created:", payment);
       
-      // Wait for the payment to complete
-      const result = await window.Pi?.submitPayment(payment.identifier);
+      // Fix: Use Pi.submitPayment instead of window.Pi?.submitPayment
+      // to ensure that the function is properly called
+      const result = await window.Pi.submitPayment(payment.identifier);
       
       console.log("Payment result:", result);
       
