@@ -1,6 +1,6 @@
 
 import { useEffect } from 'react';
-import { isPiNetworkAvailable } from '@/utils/piNetworkUtils';
+import { isPiNetworkAvailable } from '@/utils/piNetwork';
 import { STORAGE_KEY, SESSION_TIMEOUT, PiUser } from './types';
 
 export const useSessionCheck = (

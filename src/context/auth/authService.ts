@@ -6,7 +6,7 @@ import {
   initializePiNetwork,
   requestUserPermissions,
   SubscriptionTier 
-} from '@/utils/piNetworkUtils';
+} from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from './authUtils';
 
 export const performLogin = async (

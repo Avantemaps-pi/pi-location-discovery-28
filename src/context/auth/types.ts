@@ -1,5 +1,4 @@
-
-import { SubscriptionTier } from '@/utils/piNetworkUtils';
+import { SubscriptionTier } from '@/utils/piNetwork';
 
 export interface PiUser {
   uid: string;

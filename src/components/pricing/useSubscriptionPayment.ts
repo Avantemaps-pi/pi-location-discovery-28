@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/context/auth';
 import { executeSubscriptionPayment, getSubscriptionPrice } from '@/utils/piPaymentUtils';
-import { SubscriptionTier } from '@/utils/piNetworkUtils';
+import { SubscriptionTier } from '@/utils/piNetwork';
 import { toast } from 'sonner';
 
 export const useSubscriptionPayment = () => {

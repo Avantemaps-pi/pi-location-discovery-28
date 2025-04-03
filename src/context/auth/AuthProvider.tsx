@@ -1,14 +1,13 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
-import { initializePiNetwork } from '@/utils/piNetworkUtils';
+import { initializePiNetwork } from '@/utils/piNetwork';
 import { PiUser, AuthContextType, STORAGE_KEY } from './types';
 import { checkAccess, } from './authUtils';
 import { performLogin, refreshUserData as refreshUserDataService } from './authService';
 import { useNetworkStatus } from './networkStatusService';
 import { useSessionCheck } from './useSessionCheck';
 import AuthContext from './useAuth';
-import { SubscriptionTier } from '@/utils/piNetworkUtils';
+import { SubscriptionTier } from '@/utils/piNetwork';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<PiUser | null>(null);

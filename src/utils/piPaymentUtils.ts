@@ -1,7 +1,5 @@
-
 import { toast } from 'sonner';
-import { initializePiNetwork, isPiNetworkAvailable } from './piNetworkUtils';
-import { SubscriptionTier } from './piNetworkUtils';
+import { initializePiNetwork, isPiNetworkAvailable, SubscriptionTier } from './piNetwork';
 
 interface PaymentResult {
   success: boolean;

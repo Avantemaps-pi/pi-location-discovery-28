@@ -1,68 +1,8 @@
 
 /**
- * Utility functions for interacting with the Pi Network SDK
+ * Core utilities for interacting with the Pi Network SDK
  */
-
-// Define the Pi Network SDK types to extend the global Window interface
-declare global {
-  interface Window {
-    Pi?: {
-      init: (options?: { version?: string }) => Promise<void>;
-      authenticate: (
-        scopes: string[], 
-        onIncompletePaymentFound?: (payment: any) => void
-      ) => Promise<{
-        accessToken: string;
-        user: {
-          uid: string;
-          username: string;
-          roles?: string[];
-        };
-      }>;
-      requestPermissions: (permissions: string[]) => Promise<{
-        uid: string;
-        username: string;
-        credentials: any[];
-        accessToken: string;
-        email?: string;
-      }>;
-      createPayment: (
-        payment: {
-          amount: number;
-          memo: string;
-          metadata?: any;
-        },
-        callbacks?: {
-          onReadyForServerApproval?: (paymentId: string) => void;
-          onReadyForServerCompletion?: (paymentId: string, txid: string) => void;
-          onCancel?: (paymentId: string) => void;
-          onError?: (error: Error, payment?: any) => void;
-        }
-      ) => Promise<{
-        identifier: string;
-        user_uid: string;
-        amount: number;
-        memo: string;
-        metadata: any;
-        status: string;
-        transaction?: any;
-      }>;
-      submitPayment: (paymentId: string) => Promise<{
-        status: string;
-        transaction?: {
-          txid: string;
-          verified: boolean;
-          _link: string;
-        };
-      }>;
-    };
-  }
-}
-
-// Check if Pi Network SDK is available
-export const isPiNetworkAvailable = (): boolean => {
-  return typeof window !== 'undefined' && !!window.Pi;
-};
+import { isPiNetworkAvailable } from './helpers';
 
 // Flag to track SDK initialization
 let isInitialized = false;
@@ -135,11 +75,6 @@ export const isSdkInitialized = (): boolean => {
   return isInitialized;
 };
 
-// Check if a session is expired
-export const isSessionExpired = (lastAuthenticated: number, timeout: number): boolean => {
-  return Date.now() - lastAuthenticated > timeout;
-};
-
 // Request additional user permissions including email and payments
 export const requestUserPermissions = async (): Promise<{
   email?: string;
@@ -178,26 +113,4 @@ export const requestUserPermissions = async (): Promise<{
     console.error('Error requesting user permissions:', error);
     return null;
   }
-};
-
-// Enum for subscription tiers
-export enum SubscriptionTier {
-  INDIVIDUAL = 'individual',
-  SMALL_BUSINESS = 'small-business',
-  ORGANIZATION = 'organization',
-}
-
-// Check if a user has access to a feature based on their subscription
-export const hasFeatureAccess = (userTier: SubscriptionTier | string, requiredTier: SubscriptionTier): boolean => {
-  const tierLevel = {
-    [SubscriptionTier.INDIVIDUAL]: 0,
-    [SubscriptionTier.SMALL_BUSINESS]: 1,
-    [SubscriptionTier.ORGANIZATION]: 2,
-  };
-
-  // Default to INDIVIDUAL if tier is unknown
-  const userLevel = tierLevel[userTier as SubscriptionTier] || 0;
-  const requiredLevel = tierLevel[requiredTier];
-
-  return userLevel >= requiredLevel;
 };
