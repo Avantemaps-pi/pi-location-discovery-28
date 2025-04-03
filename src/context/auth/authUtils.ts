@@ -1,6 +1,6 @@
 
 import { PiUser } from './types';
-import { SubscriptionTier } from '@/utils/piNetworkUtils';
+import { SubscriptionTier } from '@/utils/piNetwork';
 import { supabase } from '@/integrations/supabase/client';
 
 // Update user data in Supabase and local storage

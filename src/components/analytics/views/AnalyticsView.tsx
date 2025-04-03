@@ -5,7 +5,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import AnalyticsMainView from '@/components/analytics/AnalyticsMainView';
 import SubscriptionPrompt from '@/components/analytics/SubscriptionPrompt';
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
-import { SubscriptionTier } from '@/utils/piNetworkUtils';
+import { SubscriptionTier } from '@/utils/piNetwork';
 
 interface AnalyticsViewProps {
   handleExport: (format: 'csv' | 'pdf') => void;

@@ -1,3 +1,4 @@
+
 import { toast } from 'sonner';
 import { initializePiNetwork, isPiNetworkAvailable, SubscriptionTier } from './piNetwork';
 
@@ -78,7 +79,7 @@ export const executeSubscriptionPayment = async (
       
       // Fix: Use Pi.submitPayment instead of window.Pi?.submitPayment
       // to ensure that the function is properly called
-      const result = await window.Pi.submitPayment(payment.identifier);
+      const result = await window.Pi!.submitPayment(payment.identifier);
       
       console.log("Payment result:", result);
       

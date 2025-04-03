@@ -1,10 +1,11 @@
+
 import React, { useEffect, useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import UserProfileCard from '@/components/chat/UserProfileCard';
 import ChatInterface from '@/components/chat/ChatInterface';
 import { useChatState } from '@/hooks/useChatState';
 import { useFeatureAccess } from '@/hooks/useFeatureAccess';
-import { SubscriptionTier } from '@/utils/piNetworkUtils';
+import { SubscriptionTier } from '@/utils/piNetwork';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';

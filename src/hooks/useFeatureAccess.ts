@@ -1,7 +1,7 @@
 
 import { useAuth } from '@/context/auth';
 import { useNavigate } from 'react-router-dom';
-import { SubscriptionTier } from '@/utils/piNetworkUtils';
+import { SubscriptionTier } from '@/utils/piNetwork';
 import { useEffect, useState } from 'react';
 
 interface UseFeatureAccessOptions {
