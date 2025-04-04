@@ -3,7 +3,7 @@
  * Pi Network SDK permission utilities
  */
 import { isPiNetworkAvailable } from './helpers';
-import { initializePiNetwork, isSdkInitialized } from './initialization';
+import { initializePiNetwork, isSdkInitialized, waitForSdkInitialization } from './initialization';
 import { toast } from 'sonner';
 
 // Validate that permissions can be requested
@@ -33,10 +33,20 @@ export const requestUserPermissions = async (): Promise<{
     return null;
   }
   
+  // Make sure SDK is initialized and wait for it if needed
   if (!isSdkInitialized()) {
     console.log('Pi Network SDK was not initialized. Initializing now...');
     try {
       await initializePiNetwork();
+      
+      // Double check that initialization worked and wait for it if needed (up to 3 seconds)
+      try {
+        await waitForSdkInitialization(3000);
+      } catch (error) {
+        console.error('Timed out waiting for SDK initialization');
+        toast.error('Failed to initialize Pi Network SDK. Please refresh the page and try again.');
+        return null;
+      }
     } catch (error) {
       console.error('Failed to initialize Pi Network SDK:', error);
       toast.error('Failed to initialize Pi Network SDK. Please refresh the page and try again.');
@@ -44,8 +54,16 @@ export const requestUserPermissions = async (): Promise<{
     }
   }
 
+  // Double-check SDK is available after initialization attempt
+  if (!isPiNetworkAvailable()) {
+    console.error('Pi Network SDK still not available after initialization');
+    toast.error('Pi Network SDK not available. Please refresh the page and try again.');
+    return null;
+  }
+
   // Validate permissions request is possible
   if (!validatePermissionsRequest()) {
+    console.error('Pi SDK methods not available');
     toast.error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
     throw new Error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
   }

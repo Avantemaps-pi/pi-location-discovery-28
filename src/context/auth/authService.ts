@@ -6,6 +6,7 @@ import {
   initializePiNetwork,
   requestUserPermissions,
   isSdkInitialized,
+  waitForSdkInitialization,
   SubscriptionTier 
 } from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from './authUtils';
@@ -58,9 +59,18 @@ export const performLogin = async (
       throw new Error("Pi Network SDK is not available");
     }
 
-    // Ensure SDK is initialized before authentication
+    // Ensure SDK is initialized before authentication and wait for it
     try {
       await initializePiNetwork();
+      
+      // Double check that initialization worked and wait for it if needed
+      try {
+        await waitForSdkInitialization(3000);
+      } catch (timeoutError) {
+        console.error("Timed out waiting for SDK initialization");
+        toast.error("Failed to initialize Pi Network SDK. Please refresh and try again.");
+        throw new Error("Timed out waiting for SDK initialization");
+      }
     } catch (error) {
       console.error("Failed to initialize Pi Network SDK:", error);
       toast.error("Failed to initialize Pi Network. Please refresh and try again.");

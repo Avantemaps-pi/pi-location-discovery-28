@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Login function - using useCallback to avoid infinite loops
   const login = useCallback(async (): Promise<void> => {
-    if (!isSdkInitializedState) {
+    if (!isSdkInitializedState && isPiNetworkAvailable()) {
       try {
         console.log("Attempting to initialize SDK before login...");
         const result = await initializePiNetwork();
@@ -75,6 +75,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch (error) {
         console.error("Failed to initialize Pi Network SDK during login:", error);
         toast.error("Failed to initialize Pi Network SDK. Please try again later.");
+        return;
+      }
+    } else if (!isPiNetworkAvailable()) {
+      // If Pi Network is not available at all, attempt to load the script
+      toast.info("Loading Pi Network SDK. Please wait...");
+      try {
+        const result = await initializePiNetwork();
+        setIsSdkInitializedState(result);
+        
+        if (!result) {
+          toast.error("Failed to load Pi Network SDK. Please refresh the page and try again.");
+          return;
+        }
+      } catch (error) {
+        console.error("Failed to load Pi Network SDK:", error);
+        toast.error("Failed to load Pi Network SDK. Please refresh the page and try again.");
         return;
       }
     }
@@ -132,7 +148,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         isAuthenticated: !!user,
         isLoading,
-        isOffline,
+        isOffline: isOffline,
         login,
         logout,
         authError,

@@ -7,11 +7,13 @@
 export { 
   initializePiNetwork, 
   isSdkInitialized, 
-  waitForSdkInitialization 
+  waitForSdkInitialization,
+  validatePiSDK
 } from './initialization';
 
 export {
-  requestUserPermissions
+  requestUserPermissions,
+  validatePermissionsRequest
 } from './permissions';
 
 // Export helpers

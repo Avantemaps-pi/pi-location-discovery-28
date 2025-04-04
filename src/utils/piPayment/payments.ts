@@ -1,6 +1,11 @@
-
 import { toast } from 'sonner';
-import { initializePiNetwork, isPiNetworkAvailable, requestUserPermissions, isSdkInitialized } from '../piNetwork';
+import { 
+  initializePiNetwork, 
+  isPiNetworkAvailable, 
+  requestUserPermissions, 
+  isSdkInitialized,
+  waitForSdkInitialization
+} from '../piNetwork';
 import { PaymentResult, SubscriptionFrequency } from './types';
 import { SubscriptionTier } from '../piNetwork';
 
@@ -43,20 +48,16 @@ export const executeSubscriptionPayment = async (
     try {
       console.log("Initializing Pi Network SDK before payment...");
       await initializePiNetwork();
-      // Check if SDK is initialized
+      
+      // Wait for SDK to fully initialize (up to 3 seconds)
       if (!isSdkInitialized()) {
-        // Wait up to 3 seconds for SDK to initialize
-        let attempts = 0;
-        const maxAttempts = 30; // 3 seconds total (100ms intervals)
-        
-        while (!isSdkInitialized() && attempts < maxAttempts) {
-          await new Promise(resolve => setTimeout(resolve, 100));
-          attempts++;
-        }
-        
-        if (!isSdkInitialized()) {
+        console.log("Waiting for SDK to initialize...");
+        try {
+          await waitForSdkInitialization(3000);
+        } catch (timeoutError) {
+          console.error("Timed out waiting for SDK initialization");
           toast.error("Failed to initialize Pi Network. Please refresh and try again.");
-          throw new Error("Failed to initialize Pi Network SDK after waiting");
+          throw new Error("Timed out waiting for SDK initialization");
         }
       }
     } catch (error) {

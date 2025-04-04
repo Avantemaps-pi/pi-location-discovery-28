@@ -4,7 +4,12 @@ import { useAuth } from '@/context/auth';
 import { executeSubscriptionPayment, getSubscriptionPrice } from '@/utils/piPayment';
 import { SubscriptionTier } from '@/utils/piNetwork';
 import { toast } from 'sonner';
-import { isPiNetworkAvailable, initializePiNetwork, isSdkInitialized } from '@/utils/piNetwork';
+import { 
+  isPiNetworkAvailable, 
+  initializePiNetwork, 
+  isSdkInitialized,
+  waitForSdkInitialization 
+} from '@/utils/piNetwork';
 
 export const useSubscriptionPayment = () => {
   const { user, isAuthenticated, login, refreshUserData } = useAuth();
@@ -44,7 +49,7 @@ export const useSubscriptionPayment = () => {
         return;
       }
       
-      // Initialize SDK before attempting payment
+      // Initialize SDK before attempting payment and wait for it to be ready
       try {
         toast.info("Initializing Pi Network, please wait...");
         const initResult = await initializePiNetwork();
@@ -57,15 +62,10 @@ export const useSubscriptionPayment = () => {
         // Wait for SDK to be fully initialized
         if (!isSdkInitialized()) {
           toast.info("Waiting for Pi Network SDK to initialize...");
-          let attempts = 0;
-          const maxAttempts = 30; // 3 seconds (100ms intervals)
-          
-          while (!isSdkInitialized() && attempts < maxAttempts) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            attempts++;
-          }
-          
-          if (!isSdkInitialized()) {
+          try {
+            await waitForSdkInitialization(5000); // Wait up to 5 seconds
+          } catch (timeoutError) {
+            console.error("Timed out waiting for SDK initialization");
             toast.error("Failed to initialize Pi Network. Please refresh and try again.");
             setIsProcessingPayment(false);
             return;
