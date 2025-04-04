@@ -4,6 +4,7 @@ import { useAuth } from '@/context/auth';
 import { executeSubscriptionPayment, getSubscriptionPrice } from '@/utils/piPayment';
 import { SubscriptionTier } from '@/utils/piNetwork';
 import { toast } from 'sonner';
+import { isPiNetworkAvailable, initializePiNetwork } from '@/utils/piNetwork';
 
 export const useSubscriptionPayment = () => {
   const { user, isAuthenticated, login, refreshUserData } = useAuth();
@@ -36,6 +37,24 @@ export const useSubscriptionPayment = () => {
     setIsProcessingPayment(true);
     
     try {
+      // First check if Pi SDK is available
+      if (!isPiNetworkAvailable()) {
+        toast.error("Pi Network SDK is not available. Please refresh the page and try again.");
+        setIsProcessingPayment(false);
+        return;
+      }
+      
+      // Initialize SDK before attempting payment
+      try {
+        toast.info("Initializing Pi Network, please wait...");
+        await initializePiNetwork();
+      } catch (error) {
+        console.error("SDK initialization error:", error);
+        toast.error("Failed to initialize Pi Network. Please refresh and try again.");
+        setIsProcessingPayment(false);
+        return;
+      }
+      
       // First refresh user data to ensure we have the latest permissions
       await refreshUserData();
       
@@ -74,6 +93,8 @@ export const useSubscriptionPayment = () => {
         toast.error(error.message);
         toast.info("Please try logging in again to grant payment permissions");
         await login(); // Re-login to get fresh permissions
+      } else if (error instanceof Error) {
+        toast.error(error.message);
       } else {
         toast.error("Failed to process subscription payment");
       }
