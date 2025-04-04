@@ -46,6 +46,12 @@ export const executeSubscriptionPayment = async (
     
     console.log("Creating payment with amount:", amount);
     
+    // Check if window.Pi exists and createPayment is a function
+    if (!window.Pi || typeof window.Pi.createPayment !== 'function') {
+      console.error('Pi.createPayment is not a function or Pi SDK is not properly loaded');
+      throw new Error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
+    }
+    
     // Check if we have the payments scope before proceeding
     try {
       // Define the callbacks for payment events
@@ -72,7 +78,7 @@ export const executeSubscriptionPayment = async (
       };
       
       // Execute the payment with all required callbacks
-      const payment = await window.Pi?.createPayment({
+      const payment = await window.Pi.createPayment({
         amount: amount,
         memo: `Avante Maps ${tier} subscription (${frequency})`,
         metadata: metadata,
@@ -89,7 +95,13 @@ export const executeSubscriptionPayment = async (
       
       console.log("Payment created:", payment);
       
-      const result = await window.Pi!.submitPayment(payment.identifier);
+      // Check if submitPayment is a function
+      if (typeof window.Pi.submitPayment !== 'function') {
+        console.error('Pi.submitPayment is not a function');
+        throw new Error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
+      }
+      
+      const result = await window.Pi.submitPayment(payment.identifier);
       
       console.log("Payment result:", result);
       

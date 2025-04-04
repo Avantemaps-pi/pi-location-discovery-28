@@ -99,7 +99,14 @@ export const requestUserPermissions = async (): Promise<{
   try {
     // Always include 'payments' scope in permission requests
     console.log('Requesting permissions: username, email, payments');
-    const result = await window.Pi?.requestPermissions(['username', 'email', 'payments']);
+    
+    // Correct way to call requestPermissions from the Pi object
+    if (!window.Pi || typeof window.Pi.requestPermissions !== 'function') {
+      console.error('Pi.requestPermissions is not a function or Pi SDK is not properly loaded');
+      throw new Error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
+    }
+    
+    const result = await window.Pi.requestPermissions(['username', 'email', 'payments']);
     console.log('Permission request result:', result);
     
     if (!result) {
