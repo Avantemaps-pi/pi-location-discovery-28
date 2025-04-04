@@ -10,6 +10,21 @@ let isInitialized = false;
 let initializationInProgress = false;
 let initializationPromise: Promise<boolean> | null = null;
 
+// Check Pi object availability and properties
+const validatePiSDK = (): boolean => {
+  if (!window.Pi) {
+    console.error('Pi SDK object is not available');
+    return false;
+  }
+
+  if (typeof window.Pi.init !== 'function') {
+    console.error('Pi.init is not a function');
+    return false;
+  }
+
+  return true;
+};
+
 // Initialize the Pi Network SDK with improved error handling and prevention of parallel initialization
 export const initializePiNetwork = async (): Promise<boolean> => {
   // If already initialized, return immediately
@@ -31,9 +46,8 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     if (isPiNetworkAvailable()) {
       console.log('Pi Network SDK is loaded, initializing...');
       
-      // Ensure Pi.init is a function
-      if (!window.Pi || typeof window.Pi.init !== 'function') {
-        console.error('Pi.init is not a function or Pi SDK is not properly loaded');
+      // Ensure Pi SDK is valid
+      if (!validatePiSDK()) {
         initializationInProgress = false;
         reject(new Error('Pi Network SDK not properly loaded. Please refresh the page and try again.'));
         return;
@@ -61,36 +75,6 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     script.src = 'https://sdk.minepi.com/pi-sdk.js';
     script.async = true;
     
-    script.onload = () => {
-      console.log('Pi Network SDK loaded successfully, initializing...');
-      // Initialize the SDK after it's loaded
-      if (window.Pi && typeof window.Pi.init === 'function') {
-        window.Pi.init({ version: "2.0" })
-          .then(() => {
-            console.log('Pi Network SDK initialized successfully');
-            isInitialized = true;
-            initializationInProgress = false;
-            resolve(true);
-          })
-          .catch(error => {
-            console.error('Failed to initialize Pi Network SDK:', error);
-            initializationInProgress = false;
-            reject(error);
-          });
-      } else {
-        const error = new Error('Pi Network SDK loaded but not properly defined');
-        console.error(error);
-        initializationInProgress = false;
-        reject(error);
-      }
-    };
-    
-    script.onerror = (error) => {
-      console.error('Failed to load Pi Network SDK', error);
-      initializationInProgress = false;
-      reject(new Error('Failed to load Pi Network SDK'));
-    };
-    
     // Add timeout for script loading
     const timeout = setTimeout(() => {
       if (!isInitialized) {
@@ -103,26 +87,34 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     script.onload = () => {
       clearTimeout(timeout);
       console.log('Pi Network SDK loaded successfully, initializing...');
-      // Initialize the SDK after it's loaded
-      if (window.Pi && typeof window.Pi.init === 'function') {
-        window.Pi.init({ version: "2.0" })
-          .then(() => {
-            console.log('Pi Network SDK initialized successfully');
-            isInitialized = true;
-            initializationInProgress = false;
-            resolve(true);
-          })
-          .catch(error => {
-            console.error('Failed to initialize Pi Network SDK:', error);
-            initializationInProgress = false;
-            reject(error);
-          });
-      } else {
-        const error = new Error('Pi Network SDK loaded but not properly defined');
-        console.error(error);
+      
+      // Validate the SDK after loading
+      if (!validatePiSDK()) {
         initializationInProgress = false;
-        reject(error);
+        reject(new Error('Pi Network SDK loaded but not properly defined'));
+        return;
       }
+      
+      // Initialize the SDK after it's loaded
+      window.Pi.init({ version: "2.0" })
+        .then(() => {
+          console.log('Pi Network SDK initialized successfully');
+          isInitialized = true;
+          initializationInProgress = false;
+          resolve(true);
+        })
+        .catch(error => {
+          console.error('Failed to initialize Pi Network SDK:', error);
+          initializationInProgress = false;
+          reject(error);
+        });
+    };
+    
+    script.onerror = (error) => {
+      clearTimeout(timeout);
+      console.error('Failed to load Pi Network SDK', error);
+      initializationInProgress = false;
+      reject(new Error('Failed to load Pi Network SDK'));
     };
     
     document.head.appendChild(script);
@@ -152,6 +144,21 @@ export const waitForSdkInitialization = async (timeoutMs = 5000): Promise<boolea
   return true;
 };
 
+// Validate that permissions can be requested
+const validatePermissionsRequest = (): boolean => {
+  if (!window.Pi) {
+    console.error('Pi object is not available');
+    return false;
+  }
+  
+  if (typeof window.Pi.requestPermissions !== 'function') {
+    console.error('Pi.requestPermissions is not a function');
+    return false;
+  }
+  
+  return true;
+};
+
 // Request additional user permissions including email and payments
 export const requestUserPermissions = async (): Promise<{
   email?: string;
@@ -175,16 +182,15 @@ export const requestUserPermissions = async (): Promise<{
     }
   }
 
+  // Validate permissions request is possible
+  if (!validatePermissionsRequest()) {
+    toast.error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
+    throw new Error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
+  }
+
   try {
     // Always include 'payments' scope in permission requests
     console.log('Requesting permissions: username, email, payments');
-    
-    // Correct way to call requestPermissions from the Pi object
-    if (!window.Pi || typeof window.Pi.requestPermissions !== 'function') {
-      console.error('Pi.requestPermissions is not a function or Pi SDK is not properly loaded');
-      toast.error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
-      throw new Error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
-    }
     
     const result = await window.Pi.requestPermissions(['username', 'email', 'payments']);
     console.log('Permission request result:', result);

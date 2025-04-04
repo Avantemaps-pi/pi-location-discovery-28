@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
-import { initializePiNetwork } from '@/utils/piNetwork';
+import { initializePiNetwork, isPiNetworkAvailable, isSdkInitialized } from '@/utils/piNetwork';
 import { PiUser, AuthContextType, STORAGE_KEY } from './types';
 import { checkAccess, } from './authUtils';
 import { performLogin, refreshUserData as refreshUserDataService } from './authService';
@@ -13,7 +14,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<PiUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [isSdkInitialized, setIsSdkInitialized] = useState<boolean>(false);
+  const [isSdkInitialized, setIsSdkInitializedState] = useState<boolean>(false);
   const pendingAuthRef = useRef<boolean>(false);
   const initAttempted = useRef<boolean>(false);
 
@@ -27,17 +28,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         console.log("Starting Pi Network SDK initialization...");
         const result = await initializePiNetwork();
-        setIsSdkInitialized(result);
+        setIsSdkInitializedState(result);
         console.log("Pi Network SDK initialization complete:", result);
       } catch (error) {
         console.error("Failed to initialize Pi Network SDK:", error);
         toast.error("Failed to initialize Pi Network SDK. Some features may be unavailable.");
-        setIsSdkInitialized(false);
+        setIsSdkInitializedState(false);
       }
     };
     
     initSdk();
   }, []);
+
+  // Update SDK initialized state when the global state changes
+  useEffect(() => {
+    const checkSdkState = () => {
+      const currentState = isSdkInitialized();
+      if (currentState !== isSdkInitialized) {
+        setIsSdkInitializedState(currentState);
+      }
+    };
+
+    // Check immediately
+    checkSdkState();
+
+    // Set up an interval to periodically check if SDK is initialized
+    const interval = setInterval(checkSdkState, 1000);
+    
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isSdkInitialized]);
 
   // Login function - using useCallback to avoid infinite loops
   const login = useCallback(async (): Promise<void> => {
@@ -45,7 +66,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         console.log("Attempting to initialize SDK before login...");
         const result = await initializePiNetwork();
-        setIsSdkInitialized(result);
+        setIsSdkInitializedState(result);
+        
+        if (!result) {
+          toast.error("Failed to initialize Pi Network SDK. Please try again later.");
+          return;
+        }
       } catch (error) {
         console.error("Failed to initialize Pi Network SDK during login:", error);
         toast.error("Failed to initialize Pi Network SDK. Please try again later.");
@@ -73,7 +99,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!isSdkInitialized) {
       try {
         const result = await initializePiNetwork();
-        setIsSdkInitialized(result);
+        setIsSdkInitializedState(result);
+        
+        if (!result) {
+          toast.error("Failed to initialize Pi Network SDK. Please try again later.");
+          return;
+        }
       } catch (error) {
         console.error("Failed to initialize Pi Network SDK during refresh:", error);
         return;

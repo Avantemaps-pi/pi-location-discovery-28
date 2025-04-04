@@ -5,9 +5,25 @@ import {
   isPiNetworkAvailable, 
   initializePiNetwork,
   requestUserPermissions,
+  isSdkInitialized,
   SubscriptionTier 
 } from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from './authUtils';
+
+// Helper function to verify the Pi SDK authentication method is available
+const validateAuthenticateMethod = (): boolean => {
+  if (!window.Pi) {
+    console.error('Pi object is not available');
+    return false;
+  }
+  
+  if (typeof window.Pi.authenticate !== 'function') {
+    console.error('Pi.authenticate is not a function');
+    return false;
+  }
+  
+  return true;
+};
 
 export const performLogin = async (
   isSdkInitialized: boolean,
@@ -37,6 +53,8 @@ export const performLogin = async (
 
     // Check if Pi SDK is available
     if (!isPiNetworkAvailable()) {
+      console.error("Pi Network SDK is not available");
+      toast.error("Pi Network SDK is not available. Please refresh the page and try again.");
       throw new Error("Pi Network SDK is not available");
     }
 
@@ -44,12 +62,20 @@ export const performLogin = async (
     try {
       await initializePiNetwork();
     } catch (error) {
+      console.error("Failed to initialize Pi Network SDK:", error);
+      toast.error("Failed to initialize Pi Network. Please refresh and try again.");
       throw new Error("Failed to initialize Pi Network SDK");
+    }
+
+    // Validate the authenticate method
+    if (!validateAuthenticateMethod()) {
+      toast.error("Pi Network SDK not properly loaded. Please refresh the page and try again.");
+      throw new Error("Pi Network SDK not properly loaded. Please refresh the page and try again.");
     }
 
     // Authenticate with Pi Network - ALWAYS include 'payments' scope
     console.log("Authenticating with Pi Network, requesting scopes: username, payments");
-    const authResult = await window.Pi!.authenticate(['username', 'payments'], (payment) => {
+    const authResult = await window.Pi.authenticate(['username', 'payments'], (payment) => {
       console.log('Incomplete payment found:', payment);
       // Handle incomplete payment if needed
     });
@@ -119,14 +145,19 @@ export const refreshUserData = async (
     // Request additional permissions - explicitly include payments scope
     if (isPiNetworkAvailable()) {
       console.log("Refreshing user permissions, including payments scope");
-      const additionalInfo = await requestUserPermissions();
-      if (additionalInfo) {
-        await updateUserData({
-          ...user,
-          email: additionalInfo.email || user.email,
-          subscriptionTier
-        }, setUser);
-        toast.success("User profile updated");
+      try {
+        const additionalInfo = await requestUserPermissions();
+        if (additionalInfo) {
+          await updateUserData({
+            ...user,
+            email: additionalInfo.email || user.email,
+            subscriptionTier
+          }, setUser);
+          toast.success("User profile updated");
+        }
+      } catch (error) {
+        console.error("Error refreshing user permissions:", error);
+        toast.error("Failed to refresh user permissions. Please log in again.");
       }
     } else {
       // Just update the subscription

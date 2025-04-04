@@ -4,6 +4,26 @@ import { initializePiNetwork, isPiNetworkAvailable, requestUserPermissions, isSd
 import { PaymentResult, SubscriptionFrequency } from './types';
 import { SubscriptionTier } from '../piNetwork';
 
+// Helper to check if the payment methods are available
+const validatePaymentMethods = (): boolean => {
+  if (!window.Pi) {
+    console.error('Pi object is not available');
+    return false;
+  }
+  
+  if (typeof window.Pi.createPayment !== 'function') {
+    console.error('Pi.createPayment is not a function');
+    return false;
+  }
+  
+  if (typeof window.Pi.submitPayment !== 'function') {
+    console.error('Pi.submitPayment is not a function');
+    return false;
+  }
+  
+  return true;
+};
+
 /**
  * Executes a payment transaction for subscription upgrades
  */
@@ -45,6 +65,12 @@ export const executeSubscriptionPayment = async (
       throw new Error("Failed to initialize Pi Network SDK");
     }
     
+    // Verify payment methods are available
+    if (!validatePaymentMethods()) {
+      toast.error("Pi Network SDK not properly loaded. Please refresh the page and try again.");
+      throw new Error("Pi Network SDK not properly loaded. Please refresh the page and try again.");
+    }
+    
     // First, explicitly request payment permissions with proper error handling
     try {
       console.log("Requesting payment permissions before transaction");
@@ -72,14 +98,7 @@ export const executeSubscriptionPayment = async (
     
     console.log("Creating payment with amount:", amount);
     
-    // Check if window.Pi exists and createPayment is a function
-    if (!window.Pi || typeof window.Pi.createPayment !== 'function') {
-      console.error('Pi.createPayment is not a function or Pi SDK is not properly loaded');
-      toast.error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
-      throw new Error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
-    }
-    
-    // Check if we have the payments scope before proceeding
+    // Execute the payment with all required callbacks
     try {
       // Define the callbacks for payment events
       const onReadyForServerApproval = (paymentId: string) => {
@@ -127,13 +146,6 @@ export const executeSubscriptionPayment = async (
       }
       
       console.log("Payment created:", payment);
-      
-      // Check if submitPayment is a function
-      if (typeof window.Pi.submitPayment !== 'function') {
-        console.error('Pi.submitPayment is not a function');
-        toast.error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
-        throw new Error('Pi Network SDK not properly loaded. Please refresh the page and try again.');
-      }
       
       toast.info("Processing payment...");
       const result = await window.Pi.submitPayment(payment.identifier);
