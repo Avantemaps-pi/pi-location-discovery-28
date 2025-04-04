@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { initializePiNetwork, isPiNetworkAvailable, isSdkInitialized } from '@/utils/piNetwork';
@@ -14,7 +13,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<PiUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [isSdkInitialized, setIsSdkInitializedState] = useState<boolean>(false);
+  const [isSdkInitializedState, setIsSdkInitializedState] = useState<boolean>(false);
   const pendingAuthRef = useRef<boolean>(false);
   const initAttempted = useRef<boolean>(false);
 
@@ -44,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const checkSdkState = () => {
       const currentState = isSdkInitialized();
-      if (currentState !== isSdkInitialized) {
+      if (currentState !== isSdkInitializedState) {
         setIsSdkInitializedState(currentState);
       }
     };
@@ -58,11 +57,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       clearInterval(interval);
     };
-  }, [isSdkInitialized]);
+  }, [isSdkInitializedState]);
 
   // Login function - using useCallback to avoid infinite loops
   const login = useCallback(async (): Promise<void> => {
-    if (!isSdkInitialized) {
+    if (!isSdkInitializedState) {
       try {
         console.log("Attempting to initialize SDK before login...");
         const result = await initializePiNetwork();
@@ -80,23 +79,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     
     await performLogin(
-      isSdkInitialized,
+      isSdkInitializedState,
       setIsLoading,
       setAuthError,
       (pending) => { pendingAuthRef.current = pending; },
       setUser
     );
-  }, [isSdkInitialized]);
+  }, [isSdkInitializedState]);
 
   // Handle online/offline status
   const isOffline = useNetworkStatus(pendingAuthRef, login);
 
   // Check for stored session on mount and validate it
-  useSessionCheck(isSdkInitialized, login, setUser, setIsLoading);
+  useSessionCheck(isSdkInitializedState, login, setUser, setIsLoading);
 
   // Refresh user data without full login
   const refreshUserData = useCallback(async (): Promise<void> => {
-    if (!isSdkInitialized) {
+    if (!isSdkInitializedState) {
       try {
         const result = await initializePiNetwork();
         setIsSdkInitializedState(result);
@@ -112,7 +111,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     
     await refreshUserDataService(user, setUser, setIsLoading);
-  }, [user, isSdkInitialized]);
+  }, [user, isSdkInitializedState]);
 
   const logout = (): void => {
     localStorage.removeItem(STORAGE_KEY);
