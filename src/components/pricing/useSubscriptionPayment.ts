@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useAuth } from '@/context/auth';
 import { executeSubscriptionPayment, getSubscriptionPrice } from '@/utils/piPayment';
 import { SubscriptionTier } from '@/utils/piNetwork';
@@ -19,6 +19,48 @@ export const useSubscriptionPayment = () => {
   const handleFrequencyChange = (frequency: string) => {
     setSelectedFrequency(frequency);
   };
+  
+  // Helper function to ensure SDK is ready
+  const ensureSDKReady = useCallback(async (): Promise<boolean> => {
+    console.log("Checking if Pi Network SDK is ready...");
+    
+    // First check if Pi SDK is available
+    if (!isPiNetworkAvailable()) {
+      console.log("Pi Network SDK is not available, attempting to load it...");
+      toast.info("Loading Pi Network SDK, please wait...");
+      
+      try {
+        const initResult = await initializePiNetwork();
+        if (!initResult) {
+          console.error("Failed to initialize Pi Network");
+          toast.error("Failed to initialize Pi Network. Please refresh and try again.");
+          return false;
+        }
+      } catch (error) {
+        console.error("SDK initialization error:", error);
+        toast.error("Failed to initialize Pi Network. Please refresh and try again.");
+        return false;
+      }
+    }
+    
+    // Wait for SDK to be fully initialized
+    if (!isSdkInitialized()) {
+      console.log("Waiting for SDK to initialize...");
+      toast.info("Preparing Pi Network, please wait...");
+      
+      try {
+        await waitForSdkInitialization(8000); // Wait up to 8 seconds
+        console.log("SDK initialization complete");
+      } catch (timeoutError) {
+        console.error("Timed out waiting for SDK initialization");
+        toast.error("Failed to initialize Pi Network. Please refresh and try again.");
+        return false;
+      }
+    }
+    
+    console.log("Pi Network SDK is ready");
+    return true;
+  }, []);
   
   const handleSubscribe = async (tier: string) => {
     // Skip if it's the free tier or if it's marked as coming soon
@@ -42,43 +84,15 @@ export const useSubscriptionPayment = () => {
     setIsProcessingPayment(true);
     
     try {
-      // First check if Pi SDK is available
-      if (!isPiNetworkAvailable()) {
-        toast.error("Pi Network SDK is not available. Please refresh the page and try again.");
-        setIsProcessingPayment(false);
-        return;
-      }
-      
-      // Initialize SDK before attempting payment and wait for it to be ready
-      try {
-        toast.info("Initializing Pi Network, please wait...");
-        const initResult = await initializePiNetwork();
-        if (!initResult) {
-          toast.error("Failed to initialize Pi Network. Please refresh and try again.");
-          setIsProcessingPayment(false);
-          return;
-        }
-        
-        // Wait for SDK to be fully initialized
-        if (!isSdkInitialized()) {
-          toast.info("Waiting for Pi Network SDK to initialize...");
-          try {
-            await waitForSdkInitialization(5000); // Wait up to 5 seconds
-          } catch (timeoutError) {
-            console.error("Timed out waiting for SDK initialization");
-            toast.error("Failed to initialize Pi Network. Please refresh and try again.");
-            setIsProcessingPayment(false);
-            return;
-          }
-        }
-      } catch (error) {
-        console.error("SDK initialization error:", error);
-        toast.error("Failed to initialize Pi Network. Please refresh and try again.");
+      // Ensure SDK is properly initialized
+      const sdkReady = await ensureSDKReady();
+      if (!sdkReady) {
         setIsProcessingPayment(false);
         return;
       }
       
       // First refresh user data to ensure we have the latest permissions
+      console.log("Refreshing user data before payment...");
       await refreshUserData();
       
       // Get the subscription price

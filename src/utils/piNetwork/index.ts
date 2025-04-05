@@ -24,3 +24,6 @@ export { hasFeatureAccess } from './subscription';
 
 // Export types
 export { SubscriptionTier } from './types';
+
+// Export all core utilities (for backwards compatibility)
+export * from './core';
