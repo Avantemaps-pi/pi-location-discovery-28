@@ -25,6 +25,7 @@ declare global {
         credentials: any[];
         accessToken: string;
         email?: string;
+        wallet_address?: string;
       }>;
       createPayment: (
         payment: {

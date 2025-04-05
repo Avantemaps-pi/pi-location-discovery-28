@@ -79,6 +79,24 @@ const ProfileSettings = ({
         </div>
         
         <div className="space-y-1 sm:space-y-2">
+          <Label htmlFor="wallet" className="text-sm">Pi Wallet Address</Label>
+          {isLoading ? (
+            <Skeleton className="h-9 w-full" />
+          ) : (
+            <Input 
+              id="wallet" 
+              placeholder="Not provided" 
+              value={user?.walletAddress || ''} 
+              readOnly 
+              className="bg-gray-100 h-9" 
+            />
+          )}
+          <p className="text-xs text-muted-foreground mt-1">
+            Wallet address is provided by Pi Network and cannot be changed.
+          </p>
+        </div>
+        
+        <div className="space-y-1 sm:space-y-2">
           <Label htmlFor="subscription" className="text-sm">Subscription Tier</Label>
           {isLoading ? (
             <Skeleton className="h-9 w-full" />

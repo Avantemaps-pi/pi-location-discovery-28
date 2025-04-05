@@ -13,6 +13,7 @@ export const updateUserData = async (userData: PiUser, setUser: (user: PiUser) =
         id: userData.uid,
         username: userData.username,
         email: userData.email || '',
+        wallet_address: userData.walletAddress || '',
         subscription: userData.subscriptionTier,
         last_login: new Date().toISOString()
       }, {

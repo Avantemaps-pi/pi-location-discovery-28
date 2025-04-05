@@ -1,9 +1,11 @@
+
 import { SubscriptionTier } from '@/utils/piNetwork';
 
 export interface PiUser {
   uid: string;
   username: string;
   email?: string;
+  walletAddress?: string;
   roles?: string[];
   accessToken: string;
   lastAuthenticated: number;

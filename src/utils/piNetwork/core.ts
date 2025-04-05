@@ -75,11 +75,12 @@ export const isSdkInitialized = (): boolean => {
   return isInitialized;
 };
 
-// Request additional user permissions including email and payments
+// Request additional user permissions including email, wallet_address, and payments
 export const requestUserPermissions = async (): Promise<{
   email?: string;
   username: string;
   uid: string;
+  walletAddress?: string;
 } | null> => {
   if (!isPiNetworkAvailable()) {
     console.error('Pi Network SDK not available');
@@ -97,9 +98,9 @@ export const requestUserPermissions = async (): Promise<{
   }
 
   try {
-    // Always include 'payments' scope in permission requests
-    console.log('Requesting permissions: username, email, payments');
-    const result = await window.Pi?.requestPermissions(['username', 'email', 'payments']);
+    // Include 'payments', 'wallet_address', and 'email' scopes in permission requests
+    console.log('Requesting permissions: username, email, payments, wallet_address');
+    const result = await window.Pi?.requestPermissions(['username', 'email', 'payments', 'wallet_address']);
     console.log('Permission request result:', result);
     
     if (!result) {
@@ -110,7 +111,8 @@ export const requestUserPermissions = async (): Promise<{
     return {
       email: result.email,
       username: result.username,
-      uid: result.uid
+      uid: result.uid,
+      walletAddress: result.wallet_address
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);

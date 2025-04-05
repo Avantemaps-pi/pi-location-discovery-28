@@ -21,7 +21,8 @@ export const executeSubscriptionPayment = async (
     // Ensure SDK is initialized
     await initializePiNetwork();
     
-    // First, explicitly request payment permissions
+    // First, explicitly request payment permissions with wallet_address and email
+    console.log("Requesting permissions including payments, wallet_address, and email");
     const permissions = await requestUserPermissions();
     if (!permissions) {
       throw new Error("Failed to get user permissions");

@@ -47,7 +47,7 @@ export const performLogin = async (
       throw new Error("Failed to initialize Pi Network SDK");
     }
 
-    // Authenticate with Pi Network - ALWAYS include 'payments' scope
+    // Authenticate with Pi Network - include payments, username, wallet_address and email scopes
     console.log("Authenticating with Pi Network, requesting scopes: username, payments");
     const authResult = await window.Pi!.authenticate(['username', 'payments'], (payment) => {
       console.log('Incomplete payment found:', payment);
@@ -57,7 +57,7 @@ export const performLogin = async (
     if (authResult && authResult.user && authResult.accessToken) {
       console.log("Authentication successful, requesting additional permissions");
       
-      // Get additional user permissions after authentication - ALWAYS include payments scope
+      // Get additional user permissions after authentication - include payments, email and wallet_address scopes
       const additionalInfo = await requestUserPermissions();
       
       // Get user's subscription tier from Supabase
@@ -67,6 +67,7 @@ export const performLogin = async (
         uid: authResult.user.uid,
         username: authResult.user.username,
         email: additionalInfo?.email,
+        walletAddress: additionalInfo?.walletAddress, // Store the wallet address if provided
         roles: authResult.user.roles,
         accessToken: authResult.accessToken,
         lastAuthenticated: Date.now(),
@@ -116,14 +117,15 @@ export const refreshUserData = async (
     // Get user's current subscription
     const subscriptionTier = await getUserSubscription(user.uid);
 
-    // Request additional permissions - explicitly include payments scope
+    // Request additional permissions - explicitly include payments, email and wallet_address scopes
     if (isPiNetworkAvailable()) {
-      console.log("Refreshing user permissions, including payments scope");
+      console.log("Refreshing user permissions, including payments, email and wallet_address scopes");
       const additionalInfo = await requestUserPermissions();
       if (additionalInfo) {
         await updateUserData({
           ...user,
           email: additionalInfo.email || user.email,
+          walletAddress: additionalInfo.walletAddress || user.walletAddress,
           subscriptionTier
         }, setUser);
         toast.success("User profile updated");
@@ -142,22 +144,4 @@ export const refreshUserData = async (
   } finally {
     setIsLoading(false);
   }
-};
-
-export const checkAccess = (
-  user: PiUser | null,
-  requiredTier: SubscriptionTier
-): boolean => {
-  if (!user) return false;
-  
-  const tierLevel = {
-    [SubscriptionTier.INDIVIDUAL]: 0,
-    [SubscriptionTier.SMALL_BUSINESS]: 1,
-    [SubscriptionTier.ORGANIZATION]: 2,
-  };
-
-  const userLevel = tierLevel[user.subscriptionTier] || 0;
-  const requiredLevel = tierLevel[requiredTier];
-
-  return userLevel >= requiredLevel;
 };
