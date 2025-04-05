@@ -88,7 +88,7 @@ export const requestUserPermissions = async (): Promise<{
   }
   
   if (!isInitialized) {
-    console.error('Pi Network SDK was not initialized. Call init() before any other method.');
+    console.log('Pi Network SDK was not initialized. Initializing now...');
     try {
       await initializePiNetwork();
     } catch (error) {
@@ -100,7 +100,7 @@ export const requestUserPermissions = async (): Promise<{
   try {
     // Include 'payments', 'wallet_address', and 'email' scopes in permission requests
     console.log('Requesting permissions: username, email, payments, wallet_address');
-    const result = await window.Pi?.requestPermissions(['username', 'email', 'payments', 'wallet_address']);
+    const result = await window.Pi?.requestPermissions(['username', 'payments', 'wallet_address', 'email']);
     console.log('Permission request result:', result);
     
     if (!result) {

@@ -37,6 +37,7 @@ export const useSubscriptionPayment = () => {
     
     try {
       // First refresh user data to ensure we have the latest permissions including wallet_address and email
+      console.log("Refreshing user data before payment...");
       await refreshUserData();
       
       // Get the subscription price
@@ -60,6 +61,9 @@ export const useSubscriptionPayment = () => {
           toast.error(result.message);
           toast.info("Attempting to refresh your permissions...");
           await login(); // Re-login to get fresh permissions
+        } else if (result.message.includes("Failed to get user permissions")) {
+          toast.error("Permission issue detected. Please log in again to grant all required permissions.");
+          await login();
         } else {
           toast.error(result.message);
         }
@@ -68,10 +72,16 @@ export const useSubscriptionPayment = () => {
       console.error("Subscription error:", error);
       
       // If it's a permissions error, prompt to login again
-      if (error instanceof Error && error.message.includes("permission not granted")) {
-        toast.error(error.message);
-        toast.info("Please try logging in again to grant payment permissions");
-        await login(); // Re-login to get fresh permissions
+      if (error instanceof Error) {
+        if (error.message.includes("permission not granted") || 
+            error.message.includes("Failed to get user permissions") ||
+            error.message.includes("wallet_address")) {
+          toast.error(error.message);
+          toast.info("Please try logging in again to grant all required permissions");
+          await login(); // Re-login to get fresh permissions
+        } else {
+          toast.error("Failed to process subscription payment: " + error.message);
+        }
       } else {
         toast.error("Failed to process subscription payment");
       }

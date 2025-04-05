@@ -28,6 +28,11 @@ export const executeSubscriptionPayment = async (
       throw new Error("Failed to get user permissions");
     }
     
+    // Verify we have the necessary permissions
+    if (!permissions.walletAddress) {
+      throw new Error("Wallet address permission not granted. Please login again to grant wallet_address permission.");
+    }
+    
     // Create a payment identifier
     const paymentId = `subscription_${tier}_${frequency}_${Date.now()}`;
     

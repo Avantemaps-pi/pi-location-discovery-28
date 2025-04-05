@@ -47,9 +47,9 @@ export const performLogin = async (
       throw new Error("Failed to initialize Pi Network SDK");
     }
 
-    // Authenticate with Pi Network - include payments, username, wallet_address and email scopes
-    console.log("Authenticating with Pi Network, requesting scopes: username, payments");
-    const authResult = await window.Pi!.authenticate(['username', 'payments'], (payment) => {
+    // Authenticate with Pi Network - explicitly include payments, username, wallet_address and email scopes
+    console.log("Authenticating with Pi Network, requesting scopes: username, payments, wallet_address, email");
+    const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address', 'email'], (payment) => {
       console.log('Incomplete payment found:', payment);
       // Handle incomplete payment if needed
     });
@@ -57,8 +57,11 @@ export const performLogin = async (
     if (authResult && authResult.user && authResult.accessToken) {
       console.log("Authentication successful, requesting additional permissions");
       
-      // Get additional user permissions after authentication - include payments, email and wallet_address scopes
+      // Get additional user permissions after authentication - explicitly include payments, email and wallet_address
       const additionalInfo = await requestUserPermissions();
+      if (!additionalInfo) {
+        throw new Error("Failed to get additional user permissions");
+      }
       
       // Get user's subscription tier from Supabase
       const subscriptionTier = await getUserSubscription(authResult.user.uid);
@@ -119,7 +122,7 @@ export const refreshUserData = async (
 
     // Request additional permissions - explicitly include payments, email and wallet_address scopes
     if (isPiNetworkAvailable()) {
-      console.log("Refreshing user permissions, including payments, email and wallet_address scopes");
+      console.log("Refreshing user permissions, requesting: payments, wallet_address, email");
       const additionalInfo = await requestUserPermissions();
       if (additionalInfo) {
         await updateUserData({
@@ -141,6 +144,7 @@ export const refreshUserData = async (
     }
   } catch (error) {
     console.error("Error refreshing user data:", error);
+    toast.error("Failed to refresh user data. Please try again.");
   } finally {
     setIsLoading(false);
   }
