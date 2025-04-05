@@ -1,33 +1,8 @@
+
 import { toast } from 'sonner';
-import { 
-  initializePiNetwork, 
-  isPiNetworkAvailable, 
-  requestUserPermissions, 
-  isSdkInitialized,
-  waitForSdkInitialization
-} from '../piNetwork';
+import { initializePiNetwork, isPiNetworkAvailable, requestUserPermissions } from '../piNetwork';
 import { PaymentResult, SubscriptionFrequency } from './types';
 import { SubscriptionTier } from '../piNetwork';
-
-// Helper to check if the payment methods are available
-const validatePaymentMethods = (): boolean => {
-  if (!window.Pi) {
-    console.error('Pi object is not available');
-    return false;
-  }
-  
-  if (typeof window.Pi.createPayment !== 'function') {
-    console.error('Pi.createPayment is not a function');
-    return false;
-  }
-  
-  if (typeof window.Pi.submitPayment !== 'function') {
-    console.error('Pi.submitPayment is not a function');
-    return false;
-  }
-  
-  return true;
-};
 
 /**
  * Executes a payment transaction for subscription upgrades
@@ -40,51 +15,16 @@ export const executeSubscriptionPayment = async (
   try {
     // Ensure Pi SDK is available
     if (!isPiNetworkAvailable()) {
-      toast.error("Pi Network SDK is not available. Please refresh the page and try again.");
       throw new Error("Pi Network SDK is not available");
     }
     
-    // Ensure SDK is initialized with proper error handling
-    try {
-      console.log("Initializing Pi Network SDK before payment...");
-      await initializePiNetwork();
-      
-      // Wait for SDK to fully initialize (up to 3 seconds)
-      if (!isSdkInitialized()) {
-        console.log("Waiting for SDK to initialize...");
-        try {
-          await waitForSdkInitialization(3000);
-        } catch (timeoutError) {
-          console.error("Timed out waiting for SDK initialization");
-          toast.error("Failed to initialize Pi Network. Please refresh and try again.");
-          throw new Error("Timed out waiting for SDK initialization");
-        }
-      }
-    } catch (error) {
-      console.error("Error initializing Pi SDK:", error);
-      toast.error("Failed to initialize Pi Network. Please refresh and try again.");
-      throw new Error("Failed to initialize Pi Network SDK");
-    }
+    // Ensure SDK is initialized
+    await initializePiNetwork();
     
-    // Verify payment methods are available
-    if (!validatePaymentMethods()) {
-      toast.error("Pi Network SDK not properly loaded. Please refresh the page and try again.");
-      throw new Error("Pi Network SDK not properly loaded. Please refresh the page and try again.");
-    }
-    
-    // First, explicitly request payment permissions with proper error handling
-    try {
-      console.log("Requesting payment permissions before transaction");
-      toast.info("Requesting payment permissions...");
-      const permissions = await requestUserPermissions();
-      if (!permissions) {
-        toast.error("Failed to get required payment permissions. Please try logging in again.");
-        throw new Error("Failed to get required payment permissions. Please try logging in again.");
-      }
-      console.log("Successfully obtained payment permissions");
-    } catch (error) {
-      console.error("Error requesting payment permissions:", error);
-      throw new Error("Payment permission not granted. Please log out and log in again to grant payment permissions.");
+    // First, explicitly request payment permissions
+    const permissions = await requestUserPermissions();
+    if (!permissions) {
+      throw new Error("Failed to get user permissions");
     }
     
     // Create a payment identifier
@@ -99,38 +39,33 @@ export const executeSubscriptionPayment = async (
     
     console.log("Creating payment with amount:", amount);
     
-    // Execute the payment with all required callbacks
+    // Check if we have the payments scope before proceeding
     try {
       // Define the callbacks for payment events
       const onReadyForServerApproval = (paymentId: string) => {
         console.log("Payment ready for server approval:", paymentId);
-        toast.info("Payment ready for server approval");
         // This is where you would make a server call to approve the payment
         // For testing, we'll just log it
       };
 
       const onReadyForServerCompletion = (paymentId: string, txid: string) => {
         console.log("Payment ready for server completion:", paymentId, txid);
-        toast.info("Payment ready for completion");
         // This is where you would make a server call to complete the payment
         // For testing, we'll just log it
       };
 
       const onCancel = (paymentId: string) => {
         console.log("Payment cancelled:", paymentId);
-        toast.info("Payment was cancelled");
         // Handle payment cancellation
       };
 
       const onError = (error: Error, payment?: any) => {
         console.error("Payment error:", error, payment);
-        toast.error(`Payment error: ${error.message}`);
         // Handle payment error
       };
       
       // Execute the payment with all required callbacks
-      toast.info("Creating payment...");
-      const payment = await window.Pi.createPayment({
+      const payment = await window.Pi?.createPayment({
         amount: amount,
         memo: `Avante Maps ${tier} subscription (${frequency})`,
         metadata: metadata,
@@ -142,14 +77,12 @@ export const executeSubscriptionPayment = async (
       });
       
       if (!payment) {
-        toast.error("Failed to create payment");
         throw new Error("Failed to create payment");
       }
       
       console.log("Payment created:", payment);
       
-      toast.info("Processing payment...");
-      const result = await window.Pi.submitPayment(payment.identifier);
+      const result = await window.Pi!.submitPayment(payment.identifier);
       
       console.log("Payment result:", result);
       
@@ -167,23 +100,15 @@ export const executeSubscriptionPayment = async (
       }
     } catch (error) {
       // Specific handling for permissions errors
-      if (error instanceof Error && error.message && error.message.includes("scope")) {
+      if (error.message && error.message.includes("scope")) {
         console.error("Payment scope error:", error);
-        toast.error("Payment permission not granted. Please log out and log in again to grant payment permissions.");
         throw new Error("Payment permission not granted. Please log out and log in again to grant payment permissions.");
       }
       
       // Handle callback errors
-      if (error instanceof Error && error.message && error.message.includes("callback")) {
+      if (error.message && error.message.includes("callback")) {
         console.error("Callback function error:", error);
-        toast.error("Payment setup failed due to missing callback functions. Please try again.");
         throw new Error("Payment setup failed due to missing callback functions. Please try again.");
-      }
-      
-      if (error instanceof Error) {
-        toast.error(`Payment error: ${error.message}`);
-      } else {
-        toast.error("Unknown payment error occurred");
       }
       
       throw error;

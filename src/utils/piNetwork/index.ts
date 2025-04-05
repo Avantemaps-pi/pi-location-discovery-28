@@ -4,17 +4,7 @@
  */
 
 // Export core SDK functionality
-export { 
-  initializePiNetwork, 
-  isSdkInitialized, 
-  waitForSdkInitialization,
-  validatePiSDK
-} from './initialization';
-
-export {
-  requestUserPermissions,
-  validatePermissionsRequest
-} from './permissions';
+export { initializePiNetwork, isSdkInitialized, requestUserPermissions } from './core';
 
 // Export helpers
 export { isPiNetworkAvailable, isSessionExpired } from './helpers';
@@ -24,6 +14,3 @@ export { hasFeatureAccess } from './subscription';
 
 // Export types
 export { SubscriptionTier } from './types';
-
-// Export all core utilities (for backwards compatibility)
-export * from './core';
