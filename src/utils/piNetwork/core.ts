@@ -75,9 +75,8 @@ export const isSdkInitialized = (): boolean => {
   return isInitialized;
 };
 
-// Request additional user permissions including email, wallet_address, and payments
+// Request additional user permissions including wallet_address, and payments
 export const requestUserPermissions = async (): Promise<{
-  email?: string;
   username: string;
   uid: string;
   walletAddress?: string;
@@ -98,9 +97,9 @@ export const requestUserPermissions = async (): Promise<{
   }
 
   try {
-    // Include 'payments', 'wallet_address', and 'email' scopes in permission requests
-    console.log('Requesting permissions: username, email, payments, wallet_address');
-    const result = await window.Pi?.requestPermissions(['username', 'payments', 'wallet_address', 'email']);
+    // Include 'payments' and 'wallet_address' scopes in permission requests, remove 'email'
+    console.log('Requesting permissions: username, payments, wallet_address');
+    const result = await window.Pi?.requestPermissions(['username', 'payments', 'wallet_address']);
     console.log('Permission request result:', result);
     
     if (!result) {
@@ -109,7 +108,6 @@ export const requestUserPermissions = async (): Promise<{
     }
 
     return {
-      email: result.email,
       username: result.username,
       uid: result.uid,
       walletAddress: result.wallet_address

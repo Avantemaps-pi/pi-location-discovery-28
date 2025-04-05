@@ -47,9 +47,9 @@ export const performLogin = async (
       throw new Error("Failed to initialize Pi Network SDK");
     }
 
-    // Authenticate with Pi Network - explicitly include payments, username, wallet_address and email scopes
-    console.log("Authenticating with Pi Network, requesting scopes: username, payments, wallet_address, email");
-    const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address', 'email'], (payment) => {
+    // Authenticate with Pi Network - explicitly include payments, username, and wallet_address scopes
+    console.log("Authenticating with Pi Network, requesting scopes: username, payments, wallet_address");
+    const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
       console.log('Incomplete payment found:', payment);
       // Handle incomplete payment if needed
     });
@@ -57,7 +57,7 @@ export const performLogin = async (
     if (authResult && authResult.user && authResult.accessToken) {
       console.log("Authentication successful, requesting additional permissions");
       
-      // Get additional user permissions after authentication - explicitly include payments, email and wallet_address
+      // Get additional user permissions after authentication - explicitly include payments and wallet_address
       const additionalInfo = await requestUserPermissions();
       if (!additionalInfo) {
         throw new Error("Failed to get additional user permissions");
@@ -69,7 +69,6 @@ export const performLogin = async (
       const userData: PiUser = {
         uid: authResult.user.uid,
         username: authResult.user.username,
-        email: additionalInfo?.email,
         walletAddress: additionalInfo?.walletAddress, // Store the wallet address if provided
         roles: authResult.user.roles,
         accessToken: authResult.accessToken,
@@ -120,14 +119,13 @@ export const refreshUserData = async (
     // Get user's current subscription
     const subscriptionTier = await getUserSubscription(user.uid);
 
-    // Request additional permissions - explicitly include payments, email and wallet_address scopes
+    // Request additional permissions - explicitly include payments and wallet_address scopes
     if (isPiNetworkAvailable()) {
-      console.log("Refreshing user permissions, requesting: payments, wallet_address, email");
+      console.log("Refreshing user permissions, requesting: payments, wallet_address");
       const additionalInfo = await requestUserPermissions();
       if (additionalInfo) {
         await updateUserData({
           ...user,
-          email: additionalInfo.email || user.email,
           walletAddress: additionalInfo.walletAddress || user.walletAddress,
           subscriptionTier
         }, setUser);

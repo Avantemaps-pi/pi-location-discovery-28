@@ -60,25 +60,6 @@ const ProfileSettings = ({
         </div>
         
         <div className="space-y-1 sm:space-y-2">
-          <Label htmlFor="email" className="text-sm">Email</Label>
-          {isLoading ? (
-            <Skeleton className="h-9 w-full" />
-          ) : (
-            <Input 
-              id="email" 
-              type="email" 
-              placeholder="Not provided" 
-              value={user?.email || ''} 
-              readOnly 
-              className="bg-gray-100 h-9" 
-            />
-          )}
-          <p className="text-xs text-muted-foreground mt-1">
-            Email address is provided by Pi Network and cannot be changed.
-          </p>
-        </div>
-        
-        <div className="space-y-1 sm:space-y-2">
           <Label htmlFor="wallet" className="text-sm">Pi Wallet Address</Label>
           {isLoading ? (
             <Skeleton className="h-9 w-full" />

@@ -36,7 +36,7 @@ export const useSubscriptionPayment = () => {
     setIsProcessingPayment(true);
     
     try {
-      // First refresh user data to ensure we have the latest permissions including wallet_address and email
+      // First refresh user data to ensure we have the latest permissions including wallet_address
       console.log("Refreshing user data before payment...");
       await refreshUserData();
       
