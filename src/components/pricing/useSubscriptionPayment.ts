@@ -36,7 +36,7 @@ export const useSubscriptionPayment = () => {
     setIsProcessingPayment(true);
     
     try {
-      // First refresh user data to ensure we have the latest permissions
+      // First refresh user data to ensure we have the latest permissions including wallet_address
       console.log("Refreshing user data before payment...");
       await refreshUserData();
       
@@ -75,7 +75,7 @@ export const useSubscriptionPayment = () => {
       if (error instanceof Error) {
         if (error.message.includes("permission not granted") || 
             error.message.includes("Failed to get user permissions") ||
-            error.message.includes("walletaddress")) {  // Updated to match the scope name
+            error.message.includes("wallet_address")) {
           toast.error(error.message);
           toast.info("Please try logging in again to grant all required permissions");
           await login(); // Re-login to get fresh permissions

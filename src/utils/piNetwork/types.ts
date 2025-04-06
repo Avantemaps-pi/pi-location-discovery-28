@@ -25,8 +25,7 @@ declare global {
         credentials: any[];
         accessToken: string;
         email?: string;
-        // Updated property name to match what the SDK returns
-        walletaddress?: string;
+        wallet_address?: string;
       }>;
       createPayment: (
         payment: {

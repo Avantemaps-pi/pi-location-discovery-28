@@ -47,10 +47,9 @@ export const performLogin = async (
       throw new Error("Failed to initialize Pi Network SDK");
     }
 
-    // Update: Use only officially supported scopes
-    // Changed 'wallet_address' to walletaddress based on SDK expectations
-    console.log("Authenticating with Pi Network, using approved scopes");
-    const authResult = await window.Pi!.authenticate(['username', 'payments'], (payment) => {
+    // Authenticate with Pi Network - explicitly include payment, username, and wallet_address scopes
+    console.log("Authenticating with Pi Network, requesting scopes: username, payment, wallet_address");
+    const authResult = await window.Pi!.authenticate(['username', 'payment', 'wallet_address'], (payment) => {
       console.log('Incomplete payment found:', payment);
       // Handle incomplete payment if needed
     });
@@ -58,7 +57,7 @@ export const performLogin = async (
     if (authResult && authResult.user && authResult.accessToken) {
       console.log("Authentication successful, requesting additional permissions");
       
-      // Get additional user permissions after authentication
+      // Get additional user permissions after authentication - explicitly include payment and wallet_address
       const additionalInfo = await requestUserPermissions();
       if (!additionalInfo) {
         throw new Error("Failed to get additional user permissions");
@@ -120,9 +119,9 @@ export const refreshUserData = async (
     // Get user's current subscription
     const subscriptionTier = await getUserSubscription(user.uid);
 
-    // Update: Use only officially supported scopes
+    // Request additional permissions - explicitly include payment and wallet_address scopes
     if (isPiNetworkAvailable()) {
-      console.log("Refreshing user permissions with approved scopes");
+      console.log("Refreshing user permissions, requesting: payment, wallet_address");
       const additionalInfo = await requestUserPermissions();
       if (additionalInfo) {
         await updateUserData({

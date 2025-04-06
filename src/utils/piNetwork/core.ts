@@ -75,8 +75,7 @@ export const isSdkInitialized = (): boolean => {
   return isInitialized;
 };
 
-// Request additional user permissions
-// Note: Check Pi's documentation for correct scope names
+// Request additional user permissions including wallet_address, and payment
 export const requestUserPermissions = async (): Promise<{
   username: string;
   uid: string;
@@ -98,10 +97,9 @@ export const requestUserPermissions = async (): Promise<{
   }
 
   try {
-    // Using directly supported scope names from Pi Network
-    // Changed 'wallet_address' to walletaddress as this may be the correct format
-    console.log('Requesting permissions with Pi Network approved scopes');
-    const result = await window.Pi?.requestPermissions(['username', 'payments', 'walletaddress']);
+    // Include 'payment' and 'wallet_address' scopes in permission requests
+    console.log('Requesting permissions: username, payment, wallet_address');
+    const result = await window.Pi?.requestPermissions(['username', 'payment', 'wallet_address']);
     console.log('Permission request result:', result);
     
     if (!result) {
@@ -109,11 +107,10 @@ export const requestUserPermissions = async (): Promise<{
       return null;
     }
 
-    // Adapt to the returned property names
     return {
       username: result.username,
       uid: result.uid,
-      walletAddress: result.walletaddress || result.wallet_address
+      walletAddress: result.wallet_address
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);

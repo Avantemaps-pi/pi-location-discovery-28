@@ -21,8 +21,8 @@ export const executeSubscriptionPayment = async (
     // Ensure SDK is initialized
     await initializePiNetwork();
     
-    // First, explicitly request payment permissions with walletaddress
-    console.log("Requesting permissions with approved Pi Network scopes");
+    // First, explicitly request payment permissions with wallet_address
+    console.log("Requesting permissions including payment and wallet_address");
     const permissions = await requestUserPermissions();
     if (!permissions) {
       throw new Error("Failed to get user permissions");
@@ -30,7 +30,7 @@ export const executeSubscriptionPayment = async (
     
     // Verify we have the necessary permissions
     if (!permissions.walletAddress) {
-      throw new Error("Wallet address permission not granted. Please login again to grant wallet address permission.");
+      throw new Error("Wallet address permission not granted. Please login again to grant wallet_address permission.");
     }
     
     // Create a payment identifier
