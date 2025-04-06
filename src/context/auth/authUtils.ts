@@ -12,10 +12,10 @@ export const updateUserData = async (userData: PiUser, setUser: (user: PiUser) =
       .upsert({
         id: userData.uid,
         username: userData.username,
-        // wallet_address field is causing errors - it must match the database schema
-        // Only include fields that exist in the database schema
+        // Required field in the schema
+        email: `${userData.username}@placeholder.com`, // Using placeholder email since Pi Network doesn't provide email
         subscription: userData.subscriptionTier,
-        last_login: new Date().toISOString()
+        created_at: new Date().toISOString() // Use created_at instead of last_login
       }, {
         onConflict: 'id'
       });
