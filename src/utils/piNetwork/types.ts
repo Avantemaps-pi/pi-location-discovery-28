@@ -66,3 +66,4 @@ export enum SubscriptionTier {
   SMALL_BUSINESS = 'small-business',
   ORGANIZATION = 'organization',
 }
+
