@@ -37,7 +37,8 @@ const Settings = () => {
   // Refresh user data when component mounts
   useEffect(() => {
     const loadUserData = async () => {
-      if (user && !user.email) {
+      // Remove reference to user.email which doesn't exist
+      if (user) {
         await refreshUserData();
       }
     };

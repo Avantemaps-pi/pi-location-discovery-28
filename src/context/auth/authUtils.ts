@@ -12,7 +12,8 @@ export const updateUserData = async (userData: PiUser, setUser: (user: PiUser) =
       .upsert({
         id: userData.uid,
         username: userData.username,
-        wallet_address: userData.walletAddress || '',
+        // wallet_address field is causing errors - it must match the database schema
+        // Only include fields that exist in the database schema
         subscription: userData.subscriptionTier,
         last_login: new Date().toISOString()
       }, {

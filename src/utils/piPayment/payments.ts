@@ -22,7 +22,7 @@ export const executeSubscriptionPayment = async (
     await initializePiNetwork();
     
     // First, explicitly request payment permissions with wallet_address
-    console.log("Requesting permissions including payments and wallet_address");
+    console.log("Requesting permissions including payment and wallet_address");
     const permissions = await requestUserPermissions();
     if (!permissions) {
       throw new Error("Failed to get user permissions");
@@ -45,7 +45,7 @@ export const executeSubscriptionPayment = async (
     
     console.log("Creating payment with amount:", amount);
     
-    // Check if we have the payments scope before proceeding
+    // Check if we have the payment scope before proceeding
     try {
       // Define the callbacks for payment events
       const onReadyForServerApproval = (paymentId: string) => {
