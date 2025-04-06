@@ -99,7 +99,7 @@ export const requestUserPermissions = async (): Promise<{
 
   try {
     // Using directly supported scope names from Pi Network
-    // Changed 'wallet_address' to walletaddress as this is the correct format
+    // Changed 'wallet_address' to walletaddress as this may be the correct format
     console.log('Requesting permissions with Pi Network approved scopes');
     const result = await window.Pi?.requestPermissions(['username', 'payments', 'walletaddress']);
     console.log('Permission request result:', result);
@@ -109,11 +109,11 @@ export const requestUserPermissions = async (): Promise<{
       return null;
     }
 
-    // Updated to only use the walletaddress property (removed wallet_address reference)
+    // Adapt to the returned property names
     return {
       username: result.username,
       uid: result.uid,
-      walletAddress: result.walletaddress
+      walletAddress: result.walletaddress || result.wallet_address
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);
