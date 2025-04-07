@@ -6,7 +6,7 @@ import { SubscriptionTier, PaymentDTO, PaymentData, PaymentCallbacks } from '../
 
 /**
  * Executes a payment transaction for subscription upgrades
- * This implementation follows the Pi Network SDK reference
+ * This implementation follows the Pi Network payment flow as documented
  */
 export const executeSubscriptionPayment = async (
   amount: number,
@@ -40,32 +40,59 @@ export const executeSubscriptionPayment = async (
         
         // Define the callbacks for payment events according to SDK reference
         const callbacks: PaymentCallbacks = {
+          // Phase I - Payment creation and Server-Side Approval
           onReadyForServerApproval: (paymentId: string) => {
             console.log("Payment ready for server approval:", paymentId);
-            // This is where you would make a server call to approve the payment
-            // For testing, we're just logging it
             
-            // In production, you would make an API call to your backend:
+            // In a production app, you would send the paymentId to your backend:
+            // Example implementation:
             // fetch('/api/payments/approve', {
             //   method: 'POST',
             //   body: JSON.stringify({ paymentId }),
             //   headers: { 'Content-Type': 'application/json' }
+            // }).then(response => {
+            //   if (!response.ok) {
+            //     console.error('Server approval failed');
+            //   } else {
+            //     console.log('Server approved payment');
+            //   }
+            // }).catch(error => {
+            //   console.error('Error during server approval:', error);
             // });
+            
+            // For development/demo purposes:
+            toast.info("Payment ready for server approval. In production, your server would approve this payment.");
           },
           
+          // Phase III - Server-Side Completion
           onReadyForServerCompletion: (paymentId: string, txid: string) => {
-            console.log("Payment ready for server completion:", paymentId, txid);
-            // This is where you would make a server call to complete the payment
-            // For testing, we'll just log it and resolve the promise
+            console.log("Payment ready for server completion. Payment ID:", paymentId, "Transaction ID:", txid);
             
-            // In production, you would make an API call to your backend:
+            // In a production app, you would send both IDs to your backend:
+            // Example implementation:
             // fetch('/api/payments/complete', {
             //   method: 'POST',
             //   body: JSON.stringify({ paymentId, txid }),
             //   headers: { 'Content-Type': 'application/json' }
+            // }).then(response => {
+            //   if (!response.ok) {
+            //     throw new Error('Server completion failed');
+            //   }
+            //   return response.json();
+            // }).then(data => {
+            //   // Resolve the promise with success status after server confirmation
+            //   resolve({
+            //     success: true,
+            //     transactionId: txid,
+            //     message: "Payment successful! Your subscription has been upgraded."
+            //   });
+            // }).catch(error => {
+            //   console.error('Error during server completion:', error);
+            //   reject(error);
             // });
             
-            // For this demo, we'll consider the payment successful when we reach this point
+            // For development/demo purposes:
+            toast.success("Transaction submitted! In production, your server would verify and complete this payment.");
             resolve({
               success: true,
               transactionId: txid,
@@ -89,7 +116,7 @@ export const executeSubscriptionPayment = async (
           }
         };
         
-        // Execute the payment with all required callbacks
+        // Execute the payment with all required callbacks as per SDK reference
         window.Pi?.createPayment(paymentData, callbacks);
       } catch (error) {
         console.error("Error creating payment:", error);
