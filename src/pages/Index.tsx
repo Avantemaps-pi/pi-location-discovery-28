@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
@@ -8,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { allPlaces } from '@/data/mockPlaces';
 import { useSessionTimeout } from '@/hooks/useSessionTimeout';
 import { useAuth } from '@/context/auth';
+import { initializePiNetwork, isPiNetworkAvailable } from '@/utils/piNetwork';
+import { toast } from 'sonner';
 
 const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
@@ -18,6 +21,25 @@ const Index = () => {
   
   // Use the session timeout hook
   useSessionTimeout();
+
+  // Initialize Pi Network SDK on initial load
+  useEffect(() => {
+    const setupPiNetwork = async () => {
+      try {
+        if (isPiNetworkAvailable()) {
+          await initializePiNetwork();
+          console.log('Pi Network SDK initialized successfully');
+        } else {
+          console.log('Pi Network SDK not available - app will work with limited functionality');
+        }
+      } catch (error) {
+        console.error('Failed to initialize Pi Network SDK:', error);
+        toast.error('Failed to initialize Pi Network features');
+      }
+    };
+    
+    setupPiNetwork();
+  }, []);
 
   // Attempt to refresh user data on initial load
   useEffect(() => {
