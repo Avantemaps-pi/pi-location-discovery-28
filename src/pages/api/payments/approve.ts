@@ -1,9 +1,24 @@
 
-import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/integrations/supabase/client';
 
 // Pi Network API base URL
 const PI_API_URL = 'https://api.minepi.com';
+
+// Define NextApiRequest and NextApiResponse manually since we can't modify the Next.js types
+type NextApiRequest = {
+  method?: string;
+  body: any;
+  headers: {
+    [key: string]: string | string[] | undefined;
+    authorization?: string;
+  };
+};
+
+type NextApiResponse = {
+  status: (code: number) => NextApiResponse;
+  json: (data: any) => void;
+  end: () => void;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {

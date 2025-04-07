@@ -1,9 +1,24 @@
 
-import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/integrations/supabase/client';
 
 // Pi Network API base URL
 const PI_API_URL = 'https://api.minepi.com';
+
+// Define NextApiRequest and NextApiResponse manually since we can't modify the Next.js types
+type NextApiRequest = {
+  method?: string;
+  body: any;
+  headers: {
+    [key: string]: string | string[] | undefined;
+    authorization?: string;
+  };
+};
+
+type NextApiResponse = {
+  status: (code: number) => NextApiResponse;
+  json: (data: any) => void;
+  end: () => void;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -12,26 +27,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const { paymentId, txid } = req.body;
-    
+
     if (!paymentId || !txid) {
-      return res.status(400).json({ error: 'Payment ID and transaction ID are required' });
-    }
-    
-    console.log('Completing payment:', paymentId, 'with transaction:', txid);
-    
-    // Update payment record with txid
-    const { data: paymentData, error: dbError } = await supabase.rpc('update_payment_txid', {
-      p_payment_id: paymentId,
-      p_txid: txid
-    });
-    
-    if (dbError) {
-      console.error('Database error:', dbError);
-      return res.status(500).json({ error: 'Failed to update payment' });
+      return res.status(400).json({ 
+        error: 'Payment ID and transaction ID are required' 
+      });
     }
 
-    // In production, you would fetch a server-side access token here.
-    // For now, we'll assume the Pi access token is sent from the client
+    // Use stored procedure to find the payment
+    const { data: paymentExists, error: findError } = await supabase
+      .rpc('find_payment', { p_payment_id: paymentId });
+
+    if (findError || !paymentExists) {
+      console.error('Error finding payment:', findError);
+      return res.status(404).json({ error: 'Payment not found' });
+    }
+
+    // In production, you should use a server-side access token
     const accessToken = req.headers.authorization?.split(' ')[1];
     
     if (!accessToken) {
@@ -50,15 +62,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!completeRes.ok) {
       const errorData = await completeRes.json();
-      console.error('Pi API error:', errorData);
+      console.error('Pi API error (completion):', errorData);
       
-      // Update payment status
+      // Update payment status using RPC
       await supabase.rpc('update_payment_status', {
-        p_payment_id: paymentId,
+        p_payment_id: paymentId, 
         p_status: 'completion_failed',
         p_error_data: errorData
       });
-        
+      
       return res.status(completeRes.status).json({ 
         error: 'Failed to complete payment with Pi Network', 
         details: errorData 
@@ -67,47 +79,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const completeData = await completeRes.json();
     
-    // Update payment status
+    // Update payment status using RPC
     await supabase.rpc('update_payment_completion', {
       p_payment_id: paymentId,
       p_status: 'completed',
-      p_pi_completion_data: completeData,
-      p_completed_at: new Date().toISOString()
+      p_txid: txid,
+      p_pi_payment_data: completeData
     });
 
-    // Now let's get the payment data to extract user information
-    const { data: payment, error: fetchError } = await supabase.rpc('get_payment_by_id', {
-      p_payment_id: paymentId
-    });
-    
-    if (fetchError || !payment) {
-      console.error('Error fetching payment:', fetchError);
-    } else {
-      // Update user's subscription based on payment metadata
-      try {
-        const paymentDetails = payment.pi_payment_data;
+    // After successful completion, check if this is a subscription payment
+    // and update the user's subscription if needed
+    try {
+      const paymentResult = await supabase.rpc('get_payment', { p_payment_id: paymentId });
+      
+      if (paymentResult.data && 
+          paymentResult.data.metadata && 
+          paymentResult.data.metadata.type === 'subscription') {
         
-        if (paymentDetails && paymentDetails.metadata && 
-            paymentDetails.metadata.subscriptionTier) {
-          
-          const userId = payment.user_id;
-          const tier = paymentDetails.metadata.subscriptionTier;
-          
-          if (userId) {
-            // Update the user's subscription tier
-            await supabase.rpc('update_user_subscription', {
-              p_user_id: userId,
-              p_subscription: tier,
-              p_updated_at: new Date().toISOString()
-            });
-            
-            console.log(`Updated user ${userId} subscription to ${tier}`);
-          }
-        }
-      } catch (subError) {
-        console.error('Error updating subscription:', subError);
-        // Don't fail the request if subscription update fails
+        // Update the user's subscription tier
+        await supabase.rpc('update_user_subscription', { 
+          p_user_id: paymentResult.data.user_uid,
+          p_subscription_tier: paymentResult.data.metadata.tier,
+          p_payment_id: paymentId
+        });
       }
+    } catch (subError) {
+      console.error('Error updating subscription:', subError);
+      // Don't fail the API call if subscription update fails
+      // The payment was still completed successfully
     }
 
     return res.status(200).json({ success: true, data: completeData });
