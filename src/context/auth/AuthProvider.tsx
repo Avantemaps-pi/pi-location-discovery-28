@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { initializePiNetwork } from '@/utils/piNetwork';
@@ -13,6 +14,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<PiUser | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isSdkInitialized, setIsSdkInitialized] = useState<boolean>(false);
   const pendingAuthRef = useRef<boolean>(false);
   const initAttempted = useRef<boolean>(false);
@@ -58,7 +60,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoading,
       setAuthError,
       (pending) => { pendingAuthRef.current = pending; },
-      setUser
+      setUser,
+      setAccessToken
     );
   }, [isSdkInitialized]);
 
@@ -86,6 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = (): void => {
     localStorage.removeItem(STORAGE_KEY);
     setUser(null);
+    setAccessToken(null);
     toast.info("You've been logged out");
   };
 
@@ -95,20 +99,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return checkAccess(user.subscriptionTier, requiredTier);
   }, [user]);
 
+  const contextValue: AuthContextType = {
+    user,
+    isAuthenticated: !!user,
+    isLoading,
+    isOffline,
+    accessToken,
+    login,
+    logout,
+    authError,
+    hasAccess,
+    refreshUserData
+  };
+  
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        isOffline,
-        login,
-        logout,
-        authError,
-        hasAccess,
-        refreshUserData
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

@@ -8,6 +8,7 @@ import DangerZone from '@/components/settings/DangerZone';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/context/auth';
 import { useSessionTimeout } from '@/hooks/useSessionTimeout';
+import { PiUser } from '@/context/auth/types';
 
 const Settings = () => {
   const isMobile = useIsMobile();
@@ -37,7 +38,6 @@ const Settings = () => {
   // Refresh user data when component mounts
   useEffect(() => {
     const loadUserData = async () => {
-      // Remove reference to user.email which doesn't exist
       if (user) {
         await refreshUserData();
       }
@@ -115,7 +115,7 @@ const Settings = () => {
             language={language} 
             setLanguage={setLanguage} 
             isMobile={isMobile}
-            user={user}
+            user={user as PiUser | null}
             isLoading={isLoading}
           />
 

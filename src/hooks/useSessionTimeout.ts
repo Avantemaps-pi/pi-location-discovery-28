@@ -22,7 +22,9 @@ export const useSessionTimeout = () => {
   useEffect(() => {
     // Only set up timeouts if the user is logged in
     if (user) {
-      const timeUntilExpiry = (user.lastAuthenticated + SESSION_TIMEOUT) - Date.now();
+      // Make sure lastAuthenticated exists before using it
+      const lastAuth = user.lastAuthenticated || Date.now();
+      const timeUntilExpiry = (lastAuth + SESSION_TIMEOUT) - Date.now();
       const timeUntilWarning = timeUntilExpiry - WARNING_BEFORE_TIMEOUT;
 
       // Clear any existing timeouts

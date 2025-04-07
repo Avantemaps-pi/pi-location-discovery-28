@@ -16,28 +16,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!paymentId || !txid) {
       return res.status(400).json({ error: 'Payment ID and transaction ID are required' });
     }
-
+    
     console.log('Completing payment:', paymentId, 'with transaction:', txid);
     
-    // Update payment in our database
-    const { data: paymentData, error: dbError } = await supabase
-      .from('pi_payments')
-      .update({ 
-        txid: txid,
-        status: 'completing' 
-      })
-      .eq('payment_id', paymentId)
-      .select()
-      .single();
+    // Update payment record with txid
+    const { data: paymentData, error: dbError } = await supabase.rpc('update_payment_txid', {
+      p_payment_id: paymentId,
+      p_txid: txid
+    });
     
     if (dbError) {
       console.error('Database error:', dbError);
       return res.status(500).json({ error: 'Failed to update payment' });
     }
 
-    // In production, you would fetch a server-side access token here
+    // In production, you would fetch a server-side access token here.
     // For now, we'll assume the Pi access token is sent from the client
-    // NOTE: In a real production app, you should NEVER accept tokens from the client
     const accessToken = req.headers.authorization?.split(' ')[1];
     
     if (!accessToken) {
@@ -58,11 +52,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const errorData = await completeRes.json();
       console.error('Pi API error:', errorData);
       
-      // Update payment status in database
-      await supabase
-        .from('pi_payments')
-        .update({ status: 'completion_failed', error_data: errorData })
-        .eq('payment_id', paymentId);
+      // Update payment status
+      await supabase.rpc('update_payment_status', {
+        p_payment_id: paymentId,
+        p_status: 'completion_failed',
+        p_error_data: errorData
+      });
         
       return res.status(completeRes.status).json({ 
         error: 'Failed to complete payment with Pi Network', 
@@ -72,30 +67,46 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const completeData = await completeRes.json();
     
-    // Update payment status in database
-    await supabase
-      .from('pi_payments')
-      .update({ 
-        status: 'completed',
-        completed_at: new Date().toISOString(),
-        pi_completion_data: completeData
-      })
-      .eq('payment_id', paymentId);
+    // Update payment status
+    await supabase.rpc('update_payment_completion', {
+      p_payment_id: paymentId,
+      p_status: 'completed',
+      p_pi_completion_data: completeData,
+      p_completed_at: new Date().toISOString()
+    });
 
-    // Update user subscription status based on payment metadata
-    // This would typically trigger subscription logic in your system
-    if (paymentData?.pi_payment_data?.metadata?.subscriptionTier) {
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .update({
-          subscription: paymentData.pi_payment_data.metadata.subscriptionTier,
-          subscription_updated_at: new Date().toISOString()
-        })
-        .eq('id', paymentData.user_id)
-        .select();
-      
-      if (userError) {
-        console.error('Error updating user subscription:', userError);
+    // Now let's get the payment data to extract user information
+    const { data: payment, error: fetchError } = await supabase.rpc('get_payment_by_id', {
+      p_payment_id: paymentId
+    });
+    
+    if (fetchError || !payment) {
+      console.error('Error fetching payment:', fetchError);
+    } else {
+      // Update user's subscription based on payment metadata
+      try {
+        const paymentDetails = payment.pi_payment_data;
+        
+        if (paymentDetails && paymentDetails.metadata && 
+            paymentDetails.metadata.subscriptionTier) {
+          
+          const userId = payment.user_id;
+          const tier = paymentDetails.metadata.subscriptionTier;
+          
+          if (userId) {
+            // Update the user's subscription tier
+            await supabase.rpc('update_user_subscription', {
+              p_user_id: userId,
+              p_subscription: tier,
+              p_updated_at: new Date().toISOString()
+            });
+            
+            console.log(`Updated user ${userId} subscription to ${tier}`);
+          }
+        }
+      } catch (subError) {
+        console.error('Error updating subscription:', subError);
+        // Don't fail the request if subscription update fails
       }
     }
 

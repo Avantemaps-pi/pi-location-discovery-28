@@ -19,12 +19,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     console.log('Approving payment:', paymentId);
     
-    // Store the payment in our database first
+    // Use raw SQL to store the payment in our database first
+    // This avoids TypeScript errors with the Supabase client
     const { data: paymentData, error: dbError } = await supabase
-      .from('pi_payments')
-      .insert([{ payment_id: paymentId, status: 'pending' }])
-      .select()
-      .single();
+      .rpc('insert_payment', {
+        p_payment_id: paymentId,
+        p_status: 'pending'
+      });
     
     if (dbError) {
       console.error('Database error:', dbError);
@@ -53,11 +54,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const errorData = await approveRes.json();
       console.error('Pi API error:', errorData);
       
-      // Update payment status in database
-      await supabase
-        .from('pi_payments')
-        .update({ status: 'approval_failed', error_data: errorData })
-        .eq('payment_id', paymentId);
+      // Update payment status using RPC
+      await supabase.rpc('update_payment_status', {
+        p_payment_id: paymentId, 
+        p_status: 'approval_failed',
+        p_error_data: errorData
+      });
         
       return res.status(approveRes.status).json({ 
         error: 'Failed to approve payment with Pi Network', 
@@ -67,14 +69,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const approveData = await approveRes.json();
     
-    // Update payment status in database
-    await supabase
-      .from('pi_payments')
-      .update({ 
-        status: 'approved',
-        pi_payment_data: approveData
-      })
-      .eq('payment_id', paymentId);
+    // Update payment status using RPC
+    await supabase.rpc('update_payment_approval', {
+      p_payment_id: paymentId,
+      p_status: 'approved',
+      p_pi_payment_data: approveData
+    });
 
     return res.status(200).json({ success: true, data: approveData });
     

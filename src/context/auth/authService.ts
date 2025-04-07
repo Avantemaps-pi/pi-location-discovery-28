@@ -14,7 +14,8 @@ export const performLogin = async (
   setIsLoading: (loading: boolean) => void,
   setAuthError: (error: string | null) => void,
   setPendingAuth: (pending: boolean) => void,
-  setUser: (user: PiUser | null) => void
+  setUser: (user: PiUser | null) => void,
+  setAccessToken: (token: string | null) => void
 ): Promise<void> => {
   // Don't attempt login if SDK is not initialized yet
   if (!isSdkInitialized) {
@@ -77,6 +78,9 @@ export const performLogin = async (
 
       // Update Supabase and localStorage
       await updateUserData(userData, setUser);
+      
+      // Set the access token
+      setAccessToken(authResult.accessToken);
       
       toast.success(`Welcome back, ${userData.username}!`);
     } else {
