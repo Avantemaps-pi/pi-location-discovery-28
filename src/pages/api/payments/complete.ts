@@ -90,17 +90,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // After successful completion, check if this is a subscription payment
     // and update the user's subscription if needed
     try {
-      const paymentDataResult = await supabase.rpc('get_payment_by_id', { p_payment_id: paymentId });
+      const paymentData = await supabase.rpc('get_payment_by_id', { p_payment_id: paymentId });
       
-      if (paymentDataResult && 
-          typeof paymentDataResult === 'object' && 
-          paymentDataResult.metadata && 
-          paymentDataResult.metadata.type === 'subscription') {
+      if (paymentData && 
+          typeof paymentData === 'object' && 
+          'metadata' in paymentData && 
+          paymentData.metadata && 
+          typeof paymentData.metadata === 'object' &&
+          'type' in paymentData.metadata &&
+          paymentData.metadata.type === 'subscription') {
         
         // Update the user's subscription tier
         await supabase.rpc('update_user_subscription', { 
-          p_user_id: paymentDataResult.user_uid,
-          p_subscription: paymentDataResult.metadata.tier,
+          p_user_id: 'user_uid' in paymentData ? String(paymentData.user_uid) : '',
+          p_subscription: 'metadata' in paymentData && 
+                         paymentData.metadata && 
+                         typeof paymentData.metadata === 'object' && 
+                         'tier' in paymentData.metadata ? 
+                         String(paymentData.metadata.tier) : '',
           p_updated_at: new Date().toISOString()
         });
       }
