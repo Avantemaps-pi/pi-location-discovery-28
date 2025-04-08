@@ -12,7 +12,7 @@ import { PiUser } from '@/context/auth/types';
 
 const Settings = () => {
   const isMobile = useIsMobile();
-  const { user, refreshUserData, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   useSessionTimeout();
   
   const [language, setLanguage] = useState(() => {
@@ -35,16 +35,7 @@ const Settings = () => {
     return false;
   });
 
-  // Refresh user data when component mounts
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (user) {
-        await refreshUserData();
-      }
-    };
-    
-    loadUserData();
-  }, [user, refreshUserData]);
+  // Removed the automatic refreshUserData call to avoid authentication loop
 
   useEffect(() => {
     if (isDarkMode) {

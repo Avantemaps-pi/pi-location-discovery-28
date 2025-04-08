@@ -18,6 +18,7 @@ const Index = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
   const { refreshUserData } = useAuth();
+  const initialLoadDone = useRef(false);
   
   // Use the session timeout hook
   useSessionTimeout();
@@ -41,9 +42,12 @@ const Index = () => {
     setupPiNetwork();
   }, []);
 
-  // Attempt to refresh user data on initial load
+  // Only refresh user data once on initial load
   useEffect(() => {
-    refreshUserData();
+    if (!initialLoadDone.current) {
+      refreshUserData();
+      initialLoadDone.current = true;
+    }
   }, [refreshUserData]);
 
   useEffect(() => {

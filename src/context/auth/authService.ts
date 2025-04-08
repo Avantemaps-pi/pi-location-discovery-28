@@ -1,6 +1,6 @@
 
 import { toast } from 'sonner';
-import { PiUser } from './types';
+import { PiUser, SESSION_TIMEOUT } from './types';
 import { 
   isPiNetworkAvailable, 
   initializePiNetwork,
@@ -8,6 +8,10 @@ import {
   requestUserPermissions
 } from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from './authUtils';
+
+// Track last authentication timestamp to prevent too frequent calls
+let lastAuthAttempt = 0;
+const AUTH_THROTTLE_MS = 10000; // 10 seconds between auth attempts
 
 export const performLogin = async (
   isSdkInitialized: boolean,
@@ -17,6 +21,15 @@ export const performLogin = async (
   setUser: (user: PiUser | null) => void,
   setAccessToken: (token: string | null) => void
 ): Promise<void> => {
+  // Throttle authentication attempts
+  const now = Date.now();
+  if (now - lastAuthAttempt < AUTH_THROTTLE_MS) {
+    console.log('Throttling auth attempt, last attempt was', (now - lastAuthAttempt)/1000, 'seconds ago');
+    return;
+  }
+  
+  lastAuthAttempt = now;
+  
   // Don't attempt login if SDK is not initialized yet
   if (!isSdkInitialized) {
     setPendingAuth(true);
@@ -101,6 +114,10 @@ export const performLogin = async (
   }
 };
 
+// Track last refresh timestamp to prevent too frequent calls
+let lastRefreshAttempt = 0;
+const REFRESH_THROTTLE_MS = 60000; // 60 seconds between refresh attempts
+
 export const refreshUserData = async (
   user: PiUser | null,
   setUser: (user: PiUser) => void,
@@ -108,50 +125,49 @@ export const refreshUserData = async (
 ): Promise<void> => {
   if (!user) return;
 
+  // Throttle refresh attempts
+  const now = Date.now();
+  if (now - lastRefreshAttempt < REFRESH_THROTTLE_MS) {
+    console.log('Throttling refresh attempt, last attempt was', (now - lastRefreshAttempt)/1000, 'seconds ago');
+    return;
+  }
+  
+  lastRefreshAttempt = now;
+  
+  // Check if session is still valid
+  const sessionAge = now - user.lastAuthenticated;
+  if (sessionAge > SESSION_TIMEOUT) {
+    console.log('Session expired during refresh, session age:', sessionAge/1000/60, 'minutes');
+    return; // Let the session timeout handler deal with this
+  }
+  
+  // Skip refresh if session is very new (less than 5 minutes)
+  if (sessionAge < 300000) { // 5 minutes
+    console.log('Session is fresh (less than 5 minutes old), skipping unnecessary refresh');
+    return;
+  }
+
   try {
     setIsLoading(true);
+    console.log('Refreshing user data for', user.username);
     
-    // Ensure SDK is initialized before proceeding
-    try {
-      await initializePiNetwork();
-    } catch (error) {
-      console.error("Failed to initialize Pi Network SDK:", error);
-      return;
-    }
-    
-    // Get user's current subscription
+    // Get user's current subscription without triggering auth
     const subscriptionTier = await getUserSubscription(user.uid);
-
-    // Request permissions again to ensure all required ones are granted
-    if (isPiNetworkAvailable()) {
-      console.log("Refreshing user permissions with authenticate");
-      const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
-        console.log('Incomplete payment found during refresh:', payment);
-      });
-      
-      if (authResult) {
-        // Extract wallet address if available
-        const walletAddress = (authResult as any).user.wallet_address;
-        
-        await updateUserData({
-          ...user,
-          walletAddress: walletAddress || user.walletAddress,
-          subscriptionTier
-        }, setUser);
-        toast.success("User profile updated");
-      }
+    
+    // Only update the user if subscription has changed to avoid triggering re-renders
+    if (user.subscriptionTier !== subscriptionTier) {
+      console.log('Subscription changed from', user.subscriptionTier, 'to', subscriptionTier);
+      await updateUserData({
+        ...user,
+        subscriptionTier,
+        lastAuthenticated: user.lastAuthenticated // preserve original timestamp
+      }, setUser);
     } else {
-      // Just update the subscription
-      if (user.subscriptionTier !== subscriptionTier) {
-        await updateUserData({
-          ...user,
-          subscriptionTier
-        }, setUser);
-      }
+      console.log('No subscription changes detected');
     }
   } catch (error) {
     console.error("Error refreshing user data:", error);
-    toast.error("Failed to refresh user data. Please try again.");
+    // Don't show error toast for refresh failures to avoid user confusion
   } finally {
     setIsLoading(false);
   }

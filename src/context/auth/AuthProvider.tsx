@@ -1,10 +1,10 @@
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { initializePiNetwork } from '@/utils/piNetwork';
 import { PiUser, AuthContextType, STORAGE_KEY } from './types';
 import { checkAccess, } from './authUtils';
-import { performLogin, refreshUserData as refreshUserDataService } from './authService';
+import { performLogin, refreshUserData } from './authService';
 import { useNetworkStatus } from './networkStatusService';
 import { useSessionCheck } from './useSessionCheck';
 import AuthContext from './useAuth';
@@ -41,8 +41,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initSdk();
   }, []);
 
-  // Login function - using useCallback to avoid infinite loops
-  const login = useCallback(async (): Promise<void> => {
+  // Login function 
+  const login = React.useCallback(async (): Promise<void> => {
     if (!isSdkInitialized) {
       try {
         console.log("Attempting to initialize SDK before login...");
@@ -71,20 +71,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Check for stored session on mount and validate it
   useSessionCheck(isSdkInitialized, login, setUser, setIsLoading);
 
-  // Refresh user data without full login
-  const refreshUserData = useCallback(async (): Promise<void> => {
-    if (!isSdkInitialized) {
-      try {
-        const result = await initializePiNetwork();
-        setIsSdkInitialized(result);
-      } catch (error) {
-        console.error("Failed to initialize Pi Network SDK during refresh:", error);
-        return;
-      }
-    }
-    
-    await refreshUserDataService(user, setUser, setIsLoading);
-  }, [user, isSdkInitialized]);
+  // Wrapped refreshUserData function to avoid re-authentication loops
+  const refreshUserDataSafe = React.useCallback(async (): Promise<void> => {
+    if (!user) return;
+    await refreshUserData(user, setUser, setIsLoading);
+  }, [user]);
 
   const logout = (): void => {
     localStorage.removeItem(STORAGE_KEY);
@@ -94,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Check if user has access to a feature based on their subscription
-  const hasAccess = useCallback((requiredTier: SubscriptionTier): boolean => {
+  const hasAccess = React.useCallback((requiredTier: SubscriptionTier): boolean => {
     if (!user) return false;
     return checkAccess(user.subscriptionTier, requiredTier);
   }, [user]);
@@ -109,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     logout,
     authError,
     hasAccess,
-    refreshUserData
+    refreshUserData: refreshUserDataSafe
   };
   
   return (
