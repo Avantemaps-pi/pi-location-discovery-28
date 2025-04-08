@@ -34,9 +34,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    // Use stored procedure to find the payment
+    // Use stored procedure to find the payment with explicit type casting
     const { data: paymentExists, error: findError } = await supabase
-      .rpc('get_payment_by_id', { p_payment_id: paymentId });
+      .rpc('get_payment_by_id', { p_payment_id: paymentId } as any);
 
     if (findError || !paymentExists) {
       console.error('Error finding payment:', findError);
@@ -64,12 +64,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const errorData = await completeRes.json();
       console.error('Pi API error (completion):', errorData);
       
-      // Update payment status using RPC
+      // Update payment status using RPC with explicit type casting
       await supabase.rpc('update_payment_status', {
         p_payment_id: paymentId, 
         p_status: 'completion_failed',
         p_error_data: errorData
-      });
+      } as any);
       
       return res.status(completeRes.status).json({ 
         error: 'Failed to complete payment with Pi Network', 
@@ -79,18 +79,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const completeData = await completeRes.json();
     
-    // Update payment completion using RPC
+    // Update payment completion using RPC with explicit type casting
     await supabase.rpc('update_payment_completion', {
       p_payment_id: paymentId,
       p_status: 'completed',
       p_pi_completion_data: completeData,
       p_completed_at: new Date().toISOString()
-    });
+    } as any);
 
     // After successful completion, check if this is a subscription payment
     // and update the user's subscription if needed
     try {
-      const paymentData = await supabase.rpc('get_payment_by_id', { p_payment_id: paymentId });
+      const paymentData = await supabase.rpc('get_payment_by_id', { p_payment_id: paymentId } as any);
       
       if (paymentData && 
           typeof paymentData === 'object' && 
@@ -100,7 +100,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           'type' in paymentData.metadata &&
           paymentData.metadata.type === 'subscription') {
         
-        // Update the user's subscription tier
+        // Update the user's subscription tier with explicit type casting
         await supabase.rpc('update_user_subscription', { 
           p_user_id: 'user_uid' in paymentData ? String(paymentData.user_uid) : '',
           p_subscription: 'metadata' in paymentData && 
@@ -109,7 +109,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                          'tier' in paymentData.metadata ? 
                          String(paymentData.metadata.tier) : '',
           p_updated_at: new Date().toISOString()
-        });
+        } as any);
       }
     } catch (subError) {
       console.error('Error updating subscription:', subError);
