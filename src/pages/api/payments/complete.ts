@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Use stored procedure to find the payment
     const { data: paymentExists, error: findError } = await supabase
-      .rpc('find_payment', { p_payment_id: paymentId });
+      .rpc('get_payment_by_id', { p_payment_id: paymentId });
 
     if (findError || !paymentExists) {
       console.error('Error finding payment:', findError);
@@ -79,28 +79,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const completeData = await completeRes.json();
     
-    // Update payment status using RPC
+    // Update payment completion using RPC
     await supabase.rpc('update_payment_completion', {
       p_payment_id: paymentId,
       p_status: 'completed',
-      p_txid: txid,
-      p_pi_payment_data: completeData
+      p_pi_completion_data: completeData,
+      p_completed_at: new Date().toISOString()
     });
 
     // After successful completion, check if this is a subscription payment
     // and update the user's subscription if needed
     try {
-      const paymentResult = await supabase.rpc('get_payment', { p_payment_id: paymentId });
+      const paymentDataResult = await supabase.rpc('get_payment_by_id', { p_payment_id: paymentId });
       
-      if (paymentResult.data && 
-          paymentResult.data.metadata && 
-          paymentResult.data.metadata.type === 'subscription') {
+      if (paymentDataResult && 
+          typeof paymentDataResult === 'object' && 
+          paymentDataResult.metadata && 
+          paymentDataResult.metadata.type === 'subscription') {
         
         // Update the user's subscription tier
         await supabase.rpc('update_user_subscription', { 
-          p_user_id: paymentResult.data.user_uid,
-          p_subscription_tier: paymentResult.data.metadata.tier,
-          p_payment_id: paymentId
+          p_user_id: paymentDataResult.user_uid,
+          p_subscription: paymentDataResult.metadata.tier,
+          p_updated_at: new Date().toISOString()
         });
       }
     } catch (subError) {

@@ -34,8 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     console.log('Approving payment:', paymentId);
     
-    // Use raw SQL to store the payment in our database first
-    // This avoids TypeScript errors with the Supabase client
+    // Use the RPC function instead of direct table access
     const { data: paymentData, error: dbError } = await supabase
       .rpc('insert_payment', {
         p_payment_id: paymentId,
