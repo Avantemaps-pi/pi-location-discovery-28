@@ -118,14 +118,12 @@ export const requestUserPermissions = async (): Promise<{
       return null;
     }
 
-    // Extract wallet address if available from user roles
-    // Note: According to SDK, wallet_address should be available 
-    // when requested as a scope
+    // Extract wallet address directly from the auth result
+    // This is the corrected way to access wallet_address from the SDK response
     return {
       username: authResult.user.username,
       uid: authResult.user.uid,
-      walletAddress: authResult.user.roles?.includes('wallet_address') ? 
-        (authResult as any).user.wallet_address : undefined
+      walletAddress: (authResult as any).user.wallet_address
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);

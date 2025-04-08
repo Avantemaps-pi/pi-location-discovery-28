@@ -66,23 +66,24 @@ export const performLogin = async (
     const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
       console.log('Incomplete payment found:', payment);
       // Handle incomplete payment when needed
-      // This would involve sending the payment to your server for completion
     });
     
     if (authResult && authResult.user && authResult.accessToken) {
       console.log("Authentication successful");
+      console.log("Auth result:", authResult);
       
       // Get user's subscription tier from Supabase
       const subscriptionTier = await getUserSubscription(authResult.user.uid);
       
-      // Extract wallet address if available from user properties
-      // Note: In real implementation, use your backend with Platform API to verify this
+      // Access wallet address directly from the auth result
+      // This is how the Pi SDK returns wallet_address in the response
       const walletAddress = (authResult as any).user.wallet_address;
+      console.log("Wallet address from auth:", walletAddress);
       
       const userData: PiUser = {
         uid: authResult.user.uid,
         username: authResult.user.username,
-        walletAddress: walletAddress, 
+        walletAddress: walletAddress,
         roles: authResult.user.roles,
         accessToken: authResult.accessToken,
         lastAuthenticated: Date.now(),
