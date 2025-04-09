@@ -6,7 +6,7 @@ import { SubscriptionTier } from '@/utils/piNetwork';
 import { toast } from 'sonner';
 
 export const useSubscriptionPayment = () => {
-  const { user, isAuthenticated, login, refreshUserData } = useAuth();
+  const { user, isAuthenticated, login, refreshUserData, accessToken } = useAuth();
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [selectedFrequency, setSelectedFrequency] = useState("monthly");
   
@@ -21,7 +21,7 @@ export const useSubscriptionPayment = () => {
     }
     
     // If not authenticated, prompt to login first
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !accessToken) {
       toast.info("Please log in to upgrade your subscription");
       await login();
       return;
@@ -39,6 +39,14 @@ export const useSubscriptionPayment = () => {
       // First refresh user data to ensure we have the latest permissions including wallet_address
       console.log("Refreshing user data before payment...");
       await refreshUserData();
+      
+      // Ensure we have wallet address
+      if (!user?.walletAddress) {
+        toast.error("Wallet address permission is required for payments");
+        await login(); // Re-login to get fresh permissions
+        setIsProcessingPayment(false);
+        return;
+      }
       
       // Get the subscription price
       const subscriptionTier = tier as SubscriptionTier;
