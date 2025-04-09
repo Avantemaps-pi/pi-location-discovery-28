@@ -6,7 +6,7 @@ import { SubscriptionTier } from '@/utils/piNetwork';
 import { toast } from 'sonner';
 
 export const useSubscriptionPayment = () => {
-  const { user, isAuthenticated, login, refreshUserData, accessToken } = useAuth();
+  const { user, isAuthenticated, login, refreshUserData } = useAuth();
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [selectedFrequency, setSelectedFrequency] = useState("monthly");
   
@@ -21,8 +21,17 @@ export const useSubscriptionPayment = () => {
     }
     
     // If not authenticated, prompt to login first
-    if (!isAuthenticated || !accessToken) {
+    if (!isAuthenticated) {
       toast.info("Please log in to upgrade your subscription");
+      await login();
+      return;
+    }
+    
+    // Get auth token from localStorage - this is a safer approach than directly accessing window
+    const accessToken = localStorage.getItem('pi_access_token');
+    
+    if (!accessToken) {
+      toast.error("Authentication required. Please log in again.");
       await login();
       return;
     }

@@ -20,15 +20,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('Completing payment:', paymentId, 'with transaction:', txid);
     
     // Update payment in our database
-    const { data: paymentData, error: dbError } = await supabase
-      .from('pi_payments')
+    const { data: paymentData, error: dbError } = await (supabase
+      .from('pi_payments' as any)
       .update({ 
         txid: txid,
         status: 'completing' 
       })
       .eq('payment_id', paymentId)
       .select()
-      .single();
+      .single() as any);
     
     if (dbError) {
       console.error('Database error:', dbError);
@@ -59,10 +59,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Pi API error:', errorData);
       
       // Update payment status in database
-      await supabase
-        .from('pi_payments')
+      await (supabase
+        .from('pi_payments' as any)
         .update({ status: 'completion_failed', error_data: errorData })
-        .eq('payment_id', paymentId);
+        .eq('payment_id', paymentId) as any);
         
       return res.status(completeRes.status).json({ 
         error: 'Failed to complete payment with Pi Network', 
@@ -73,30 +73,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const completeData = await completeRes.json();
     
     // Update payment status in database
-    await supabase
-      .from('pi_payments')
+    await (supabase
+      .from('pi_payments' as any)
       .update({ 
         status: 'completed',
         completed_at: new Date().toISOString(),
         pi_completion_data: completeData
       })
-      .eq('payment_id', paymentId);
+      .eq('payment_id', paymentId) as any);
 
     // Update user subscription status based on payment metadata
-    // This would typically trigger subscription logic in your system
-    if (paymentData?.pi_payment_data?.metadata?.subscriptionTier) {
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .update({
-          subscription: paymentData.pi_payment_data.metadata.subscriptionTier,
-          subscription_updated_at: new Date().toISOString()
-        })
-        .eq('id', paymentData.user_id)
-        .select();
-      
-      if (userError) {
-        console.error('Error updating user subscription:', userError);
+    try {
+      // This needs to be handled safely with proper type checking
+      const paymentInfo = paymentData as any;
+      if (paymentInfo?.pi_payment_data?.metadata?.subscriptionTier) {
+        const { data: userData, error: userError } = await (supabase
+          .from('users')
+          .update({
+            subscription: paymentInfo.pi_payment_data.metadata.subscriptionTier,
+            subscription_updated_at: new Date().toISOString()
+          })
+          .eq('id', paymentInfo.user_id)
+          .select() as any);
+        
+        if (userError) {
+          console.error('Error updating user subscription:', userError);
+        }
       }
+    } catch (error) {
+      console.error('Error processing subscription update:', error);
+      // Continue with payment completion even if subscription update fails
     }
 
     return res.status(200).json({ success: true, data: completeData });

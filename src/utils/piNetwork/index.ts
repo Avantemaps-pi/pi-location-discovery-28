@@ -7,7 +7,7 @@
 export { initializePiNetwork, isSdkInitialized, requestUserPermissions } from './core';
 
 // Export helpers
-export { isPiNetworkAvailable, isSessionExpired } from './helpers';
+export { isPiNetworkAvailable, isSessionExpired, isRunningInPiBrowser } from './helpers';
 
 // Export subscription utilities
 export { hasFeatureAccess } from './subscription';

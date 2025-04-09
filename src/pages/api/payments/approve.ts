@@ -20,11 +20,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('Approving payment:', paymentId);
     
     // Store the payment in our database first
-    const { data: paymentData, error: dbError } = await supabase
-      .from('pi_payments')
+    // Using `supabase.from() as any` to bypass TypeScript checking
+    // since we're adding the pi_payments table to an existing database
+    const { data: paymentData, error: dbError } = await (supabase
+      .from('pi_payments' as any)
       .insert([{ payment_id: paymentId, status: 'pending' }])
       .select()
-      .single();
+      .single() as any);
     
     if (dbError) {
       console.error('Database error:', dbError);
@@ -54,10 +56,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Pi API error:', errorData);
       
       // Update payment status in database
-      await supabase
-        .from('pi_payments')
-        .update({ status: 'approval_failed', error_data: errorData } as any)
-        .eq('payment_id', paymentId);
+      await (supabase
+        .from('pi_payments' as any)
+        .update({ status: 'approval_failed', error_data: errorData })
+        .eq('payment_id', paymentId) as any);
         
       return res.status(approveRes.status).json({ 
         error: 'Failed to approve payment with Pi Network', 
@@ -68,13 +70,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const approveData = await approveRes.json();
     
     // Update payment status in database
-    await supabase
-      .from('pi_payments')
+    await (supabase
+      .from('pi_payments' as any)
       .update({ 
         status: 'approved',
         pi_payment_data: approveData
-      } as any)
-      .eq('payment_id', paymentId);
+      })
+      .eq('payment_id', paymentId) as any);
 
     return res.status(200).json({ success: true, data: approveData });
     

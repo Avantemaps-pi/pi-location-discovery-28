@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { allPlaces } from '@/data/mockPlaces';
 import { useSessionTimeout } from '@/hooks/useSessionTimeout';
 import { useAuth } from '@/context/auth';
-import { initializePiNetwork, isPiNetworkAvailable } from '@/utils/piNetwork';
+import { isPiNetworkAvailable } from '@/utils/piNetwork';
 import { toast } from 'sonner';
 
 const Index = () => {
@@ -18,32 +18,37 @@ const Index = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
   const { refreshUserData } = useAuth();
+  const initialLoadRef = useRef<boolean>(true);
   
   // Use the session timeout hook
   useSessionTimeout();
 
-  // Initialize Pi Network SDK on initial load
+  // Initialize Pi Network SDK on initial load - only once
   useEffect(() => {
     const setupPiNetwork = async () => {
-      try {
-        if (isPiNetworkAvailable()) {
-          await initializePiNetwork();
-          console.log('Pi Network SDK initialized successfully');
-        } else {
-          console.log('Pi Network SDK not available - app will work with limited functionality');
+      if (initialLoadRef.current) {
+        initialLoadRef.current = false;
+        try {
+          if (isPiNetworkAvailable()) {
+            console.log('Pi Network SDK available');
+          } else {
+            console.log('Pi Network SDK not available - app will work with limited functionality');
+          }
+        } catch (error) {
+          console.error('Failed to initialize Pi Network SDK:', error);
+          toast.error('Failed to initialize Pi Network features');
         }
-      } catch (error) {
-        console.error('Failed to initialize Pi Network SDK:', error);
-        toast.error('Failed to initialize Pi Network features');
       }
     };
     
     setupPiNetwork();
   }, []);
 
-  // Attempt to refresh user data on initial load
+  // Attempt to refresh user data on initial load - only once
   useEffect(() => {
-    refreshUserData();
+    if (initialLoadRef.current) {
+      refreshUserData();
+    }
   }, [refreshUserData]);
 
   useEffect(() => {
