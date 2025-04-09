@@ -5,7 +5,8 @@ import {
   isPiNetworkAvailable, 
   initializePiNetwork,
   SubscriptionTier,
-  requestUserPermissions
+  requestUserPermissions,
+  isRunningInPiBrowser
 } from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from './authUtils';
 
@@ -30,6 +31,13 @@ export const performLogin = async (
   
   lastAuthAttempt = now;
   
+  // Check if running in Pi Browser
+  const isPiBrowser = isRunningInPiBrowser();
+  if (!isPiBrowser) {
+    toast.warning("You are not using Pi Browser. Some features may not work correctly.");
+    console.log("Not running in Pi Browser, SDK features may be limited");
+  }
+  
   // Don't attempt login if SDK is not initialized yet
   if (!isSdkInitialized) {
     setPendingAuth(true);
@@ -51,7 +59,7 @@ export const performLogin = async (
 
     // Check if Pi SDK is available
     if (!isPiNetworkAvailable()) {
-      throw new Error("Pi Network SDK is not available");
+      throw new Error("Pi Network SDK is not available. Please use Pi Browser for full functionality.");
     }
 
     // Ensure SDK is initialized before authentication
@@ -79,6 +87,11 @@ export const performLogin = async (
       // This is how the Pi SDK returns wallet_address in the response
       const walletAddress = (authResult as any).user.wallet_address;
       console.log("Wallet address from auth:", walletAddress);
+      
+      if (!walletAddress && isPiBrowser) {
+        console.log("Wallet address permission was not granted by the user");
+        toast.warning("Wallet address permission not granted. Some features may be limited.");
+      }
       
       const userData: PiUser = {
         uid: authResult.user.uid,

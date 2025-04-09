@@ -2,7 +2,7 @@
 /**
  * Core utilities for interacting with the Pi Network SDK
  */
-import { isPiNetworkAvailable } from './helpers';
+import { isPiNetworkAvailable, isRunningInPiBrowser } from './helpers';
 import { Scope } from './types';
 
 // Flag to track SDK initialization
@@ -32,6 +32,11 @@ export const initializePiNetwork = async (): Promise<boolean> => {
           reject(error);
         });
       return;
+    }
+    
+    // If we're not in Pi Browser, provide a more specific message
+    if (!isRunningInPiBrowser()) {
+      console.log('Not running in Pi Browser - limited functionality available');
     }
     
     console.log('Loading Pi Network SDK from CDN...');

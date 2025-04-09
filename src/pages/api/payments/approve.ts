@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .rpc('insert_payment', {
         p_payment_id: paymentId,
         p_status: 'pending'
-      } as any);
+      }) as any;
     
     if (dbError) {
       console.error('Database error:', dbError);
@@ -73,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         p_payment_id: paymentId, 
         p_status: 'approval_failed',
         p_error_data: errorData
-      } as any);
+      }) as any;
         
       return res.status(approveRes.status).json({ 
         error: 'Failed to approve payment with Pi Network', 
@@ -88,7 +88,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       p_payment_id: paymentId,
       p_status: 'approved',
       p_pi_payment_data: approveData
-    } as any);
+    }) as any;
 
     return res.status(200).json({ success: true, data: approveData });
     
