@@ -34,12 +34,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     console.log('Approving payment:', paymentId);
     
-    // Use the RPC function with explicit type casting
+    // Use the RPC function with any type to avoid TypeScript errors
     const { data: paymentData, error: dbError } = await supabase
       .rpc('insert_payment', {
         p_payment_id: paymentId,
         p_status: 'pending'
-      }) as any;
+      } as any);
     
     if (dbError) {
       console.error('Database error:', dbError);
@@ -68,12 +68,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const errorData = await approveRes.json();
       console.error('Pi API error:', errorData);
       
-      // Update payment status using RPC with explicit type casting
+      // Update payment status using RPC with any type to avoid TypeScript errors
       await supabase.rpc('update_payment_status', {
         p_payment_id: paymentId, 
         p_status: 'approval_failed',
         p_error_data: errorData
-      }) as any;
+      } as any);
         
       return res.status(approveRes.status).json({ 
         error: 'Failed to approve payment with Pi Network', 
@@ -83,12 +83,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const approveData = await approveRes.json();
     
-    // Update payment status using RPC with explicit type casting
+    // Update payment status using RPC with any type to avoid TypeScript errors
     await supabase.rpc('update_payment_approval', {
       p_payment_id: paymentId,
       p_status: 'approved',
       p_pi_payment_data: approveData
-    }) as any;
+    } as any);
 
     return res.status(200).json({ success: true, data: approveData });
     

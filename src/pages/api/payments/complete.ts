@@ -27,23 +27,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const { paymentId, txid } = req.body;
-
+    
     if (!paymentId || !txid) {
-      return res.status(400).json({ 
-        error: 'Payment ID and transaction ID are required' 
-      });
+      return res.status(400).json({ error: 'Payment ID and transaction ID are required' });
     }
 
-    // Use stored procedure to find the payment with explicit type casting
-    const { data: paymentExists, error: findError } = await supabase
-      .rpc('get_payment_by_id', { p_payment_id: paymentId } as any);
-
-    if (findError || !paymentExists) {
-      console.error('Error finding payment:', findError);
+    console.log('Completing payment:', paymentId, 'with transaction:', txid);
+    
+    // Use the RPC function with any type to avoid TypeScript errors
+    const { data: paymentData, error: dbError } = await supabase
+      .rpc('get_payment_by_id', { 
+        p_payment_id: paymentId 
+      } as any);
+    
+    if (dbError) {
+      console.error('Database error:', dbError);
+      return res.status(500).json({ error: 'Failed to retrieve payment' });
+    }
+    
+    if (!paymentData) {
       return res.status(404).json({ error: 'Payment not found' });
     }
 
-    // In production, you should use a server-side access token
+    // In production, you would fetch a server-side access token here.
+    // For now, we'll assume the Pi access token is sent from the client
+    // NOTE: In a real production app, you should NEVER accept tokens from the client.
     const accessToken = req.headers.authorization?.split(' ')[1];
     
     if (!accessToken) {
@@ -62,11 +70,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!completeRes.ok) {
       const errorData = await completeRes.json();
-      console.error('Pi API error (completion):', errorData);
+      console.error('Pi API error:', errorData);
       
-      // Update payment status using RPC with explicit type casting
+      // Update payment status using RPC with any type to avoid TypeScript errors
       await supabase.rpc('update_payment_status', {
-        p_payment_id: paymentId, 
+        p_payment_id: paymentId,
         p_status: 'completion_failed',
         p_error_data: errorData
       } as any);
@@ -79,42 +87,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const completeData = await completeRes.json();
     
-    // Update payment completion using RPC with explicit type casting
+    // Update payment in database with completion status
     await supabase.rpc('update_payment_completion', {
       p_payment_id: paymentId,
       p_status: 'completed',
-      p_pi_completion_data: completeData,
-      p_completed_at: new Date().toISOString()
+      p_transaction_id: txid,
+      p_completion_data: completeData
     } as any);
 
-    // After successful completion, check if this is a subscription payment
-    // and update the user's subscription if needed
-    try {
-      const paymentData = await supabase.rpc('get_payment_by_id', { p_payment_id: paymentId } as any);
+    // Credit the user account or deliver the product here
+    // This implementation depends on your business logic
+
+    // Update subscription if this was a subscription payment
+    if (paymentData.metadata && paymentData.metadata.subscription) {
+      const { userId, tier } = paymentData.metadata.subscription;
       
-      if (paymentData && 
-          typeof paymentData === 'object' && 
-          'metadata' in paymentData && 
-          paymentData.metadata && 
-          typeof paymentData.metadata === 'object' &&
-          'type' in paymentData.metadata &&
-          paymentData.metadata.type === 'subscription') {
-        
-        // Update the user's subscription tier with explicit type casting
-        await supabase.rpc('update_user_subscription', { 
-          p_user_id: 'user_uid' in paymentData ? String(paymentData.user_uid) : '',
-          p_subscription: 'metadata' in paymentData && 
-                         paymentData.metadata && 
-                         typeof paymentData.metadata === 'object' && 
-                         'tier' in paymentData.metadata ? 
-                         String(paymentData.metadata.tier) : '',
-          p_updated_at: new Date().toISOString()
-        } as any);
-      }
-    } catch (subError) {
-      console.error('Error updating subscription:', subError);
-      // Don't fail the API call if subscription update fails
-      // The payment was still completed successfully
+      // Update user subscription in database
+      await supabase.rpc('update_user_subscription', {
+        p_user_id: userId,
+        p_tier: tier,
+        p_payment_id: paymentId
+      } as any);
     }
 
     return res.status(200).json({ success: true, data: completeData });
