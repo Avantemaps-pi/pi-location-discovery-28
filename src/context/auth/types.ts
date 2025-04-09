@@ -9,7 +9,6 @@ export interface PiUser {
   accessToken: string;
   lastAuthenticated: number;
   subscriptionTier: SubscriptionTier;
-  lastRefresh?: number;
 }
 
 export interface AuthContextType {

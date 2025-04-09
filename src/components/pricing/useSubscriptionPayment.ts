@@ -27,15 +27,6 @@ export const useSubscriptionPayment = () => {
       return;
     }
     
-    // Get auth token from localStorage - this is a safer approach than directly accessing window
-    const accessToken = localStorage.getItem('pi_access_token');
-    
-    if (!accessToken) {
-      toast.error("Authentication required. Please log in again.");
-      await login();
-      return;
-    }
-    
     // Don't allow upgrading to the same tier
     if (user?.subscriptionTier === tier) {
       toast.info("You are already subscribed to this plan");
@@ -48,14 +39,6 @@ export const useSubscriptionPayment = () => {
       // First refresh user data to ensure we have the latest permissions including wallet_address
       console.log("Refreshing user data before payment...");
       await refreshUserData();
-      
-      // Ensure we have wallet address
-      if (!user?.walletAddress) {
-        toast.error("Wallet address permission is required for payments");
-        await login(); // Re-login to get fresh permissions
-        setIsProcessingPayment(false);
-        return;
-      }
       
       // Get the subscription price
       const subscriptionTier = tier as SubscriptionTier;

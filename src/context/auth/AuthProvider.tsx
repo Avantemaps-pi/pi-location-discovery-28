@@ -1,21 +1,13 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { initializePiNetwork } from '@/utils/piNetwork';
 import { PiUser, AuthContextType, STORAGE_KEY } from './types';
-import { checkAccess } from './authUtils';
+import { checkAccess, } from './authUtils';
 import { performLogin, refreshUserData as refreshUserDataService } from './authService';
 import { useNetworkStatus } from './networkStatusService';
 import { useSessionCheck } from './useSessionCheck';
-import { createContext } from 'react';
+import AuthContext from './useAuth';
 import { SubscriptionTier } from '@/utils/piNetwork';
-
-// Create the AuthContext here instead of importing it
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-export { AuthContext };
-
-// Time constants to control authentication frequency
-const AUTH_MIN_INTERVAL = 5 * 60 * 1000; // 5 minutes between auth attempts
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<PiUser | null>(null);
@@ -24,7 +16,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isSdkInitialized, setIsSdkInitialized] = useState<boolean>(false);
   const pendingAuthRef = useRef<boolean>(false);
   const initAttempted = useRef<boolean>(false);
-  const lastAuthTime = useRef<number>(0);
 
   // Initialize Pi Network SDK
   useEffect(() => {
@@ -50,13 +41,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Login function - using useCallback to avoid infinite loops
   const login = useCallback(async (): Promise<void> => {
-    // Prevent repetitive authentication attempts
-    const now = Date.now();
-    if (now - lastAuthTime.current < AUTH_MIN_INTERVAL && user) {
-      console.log("Skipping login - too soon since last authentication");
-      return;
-    }
-
     if (!isSdkInitialized) {
       try {
         console.log("Attempting to initialize SDK before login...");
@@ -69,18 +53,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     
-    const success = await performLogin(
+    await performLogin(
       isSdkInitialized,
       setIsLoading,
       setAuthError,
       (pending) => { pendingAuthRef.current = pending; },
       setUser
     );
-    
-    if (success) {
-      lastAuthTime.current = now;
-    }
-  }, [isSdkInitialized, user]);
+  }, [isSdkInitialized]);
 
   // Handle online/offline status
   const isOffline = useNetworkStatus(pendingAuthRef, login);
@@ -90,13 +70,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Refresh user data without full login
   const refreshUserData = useCallback(async (): Promise<void> => {
-    // Don't refresh too frequently
-    const now = Date.now();
-    if (now - lastAuthTime.current < AUTH_MIN_INTERVAL && user) {
-      console.log("Skipping refresh - too soon since last authentication");
-      return;
-    }
-    
     if (!isSdkInitialized) {
       try {
         const result = await initializePiNetwork();
@@ -107,15 +80,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     
-    const success = await refreshUserDataService(user, setUser, setIsLoading);
-    if (success) {
-      lastAuthTime.current = now;
-    }
+    await refreshUserDataService(user, setUser, setIsLoading);
   }, [user, isSdkInitialized]);
 
   const logout = (): void => {
     localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem('pi_access_token');
     setUser(null);
     toast.info("You've been logged out");
   };

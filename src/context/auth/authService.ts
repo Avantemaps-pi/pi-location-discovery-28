@@ -1,132 +1,154 @@
 
-import { isPiNetworkAvailable, isRunningInPiBrowser } from '@/utils/piNetwork';
-import { PiUser, STORAGE_KEY } from './types';
+import { toast } from 'sonner';
+import { PiUser } from './types';
+import { 
+  isPiNetworkAvailable, 
+  initializePiNetwork,
+  SubscriptionTier,
+  requestUserPermissions
+} from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from './authUtils';
 
-// Attempt to perform a login with Pi Network
 export const performLogin = async (
   isSdkInitialized: boolean,
   setIsLoading: (loading: boolean) => void,
   setAuthError: (error: string | null) => void,
   setPendingAuth: (pending: boolean) => void,
   setUser: (user: PiUser | null) => void
-): Promise<boolean> => {
-  if (!isPiNetworkAvailable() || !isSdkInitialized) {
-    console.error("Pi Network SDK not available or not initialized");
-    setAuthError("Pi Network SDK is not available. Please use Pi Browser.");
-    setIsLoading(false);
-    return false;
+): Promise<void> => {
+  // Don't attempt login if SDK is not initialized yet
+  if (!isSdkInitialized) {
+    setPendingAuth(true);
+    toast.warning("Pi Network SDK is initializing. Please try again in a moment.");
+    return;
   }
+  
+  setIsLoading(true);
+  setAuthError(null);
 
   try {
-    // Set loading state
-    setIsLoading(true);
-    setPendingAuth(true);
-    setAuthError(null);
-    
-    // Request all required scopes
-    console.log("Authenticating with Pi Network, requesting scopes: username, payments, wallet_address");
-    const authResult = await window.Pi.authenticate(
-      ["username", "payments", "wallet_address"], 
-      // Optional onIncompletePaymentFound callback
-      (payment) => {
-        console.log("Incomplete payment found:", payment);
-      }
-    );
-
-    console.log("Auth result:", authResult);
-
-    // Store access token in localStorage (this is a temporary solution for the demo)
-    localStorage.setItem('pi_access_token', authResult.accessToken);
-
-    // Check if we're in Pi Browser (for additional security checks in a production app)
-    const inPiBrowser = isRunningInPiBrowser();
-    
-    // Construct user object
-    const userData: PiUser = {
-      uid: authResult.user.uid,
-      username: authResult.user.username,
-      // Extract wallet address from the auth result if available
-      walletAddress: authResult.user.walletAddress,
-      accessToken: authResult.accessToken,
-      roles: authResult.user.roles,
-      inPiBrowser,
-      // Default to individual tier - will be updated from database if available
-      subscriptionTier: 'individual' as any,
-      lastAuthenticated: Date.now(),
-    };
-
-    // Get user's subscription from database if it exists
-    try {
-      const subscriptionTier = await getUserSubscription(userData.uid);
-      userData.subscriptionTier = subscriptionTier;
-    } catch (error) {
-      console.error("Error fetching subscription:", error);
-      // Continue with default individual tier
+    // Check if online
+    if (!navigator.onLine) {
+      setPendingAuth(true);
+      toast.warning("You're offline. Authentication will resume when you're back online.");
+      setIsLoading(false);
+      return;
     }
 
-    // Update user data in database and state
-    await updateUserData(userData, setUser);
+    // Check if Pi SDK is available
+    if (!isPiNetworkAvailable()) {
+      throw new Error("Pi Network SDK is not available");
+    }
+
+    // Ensure SDK is initialized before authentication
+    try {
+      await initializePiNetwork();
+    } catch (error) {
+      throw new Error("Failed to initialize Pi Network SDK");
+    }
+
+    // Authenticate with Pi Network with required scopes
+    console.log("Authenticating with Pi Network, requesting scopes: username, payments, wallet_address");
+    const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
+      console.log('Incomplete payment found:', payment);
+      // Handle incomplete payment when needed
+      // This would involve sending the payment to your server for completion
+    });
     
-    // Clear any previous errors
-    setAuthError(null);
-    setPendingAuth(false);
-    setIsLoading(false);
-    
-    return true;
+    if (authResult && authResult.user && authResult.accessToken) {
+      console.log("Authentication successful");
+      
+      // Get user's subscription tier from Supabase
+      const subscriptionTier = await getUserSubscription(authResult.user.uid);
+      
+      // Extract wallet address if available from user properties
+      // Note: In real implementation, use your backend with Platform API to verify this
+      const walletAddress = (authResult as any).user.wallet_address;
+      
+      const userData: PiUser = {
+        uid: authResult.user.uid,
+        username: authResult.user.username,
+        walletAddress: walletAddress, 
+        roles: authResult.user.roles,
+        accessToken: authResult.accessToken,
+        lastAuthenticated: Date.now(),
+        subscriptionTier
+      };
+
+      // Update Supabase and localStorage
+      await updateUserData(userData, setUser);
+      
+      toast.success(`Welcome back, ${userData.username}!`);
+    } else {
+      throw new Error("Authentication failed");
+    }
   } catch (error) {
-    console.error("Authentication error:", error);
-    let errorMessage = "Failed to authenticate";
+    let errorMessage = "Authentication failed";
     
     if (error instanceof Error) {
       errorMessage = error.message;
     }
     
     setAuthError(errorMessage);
-    setPendingAuth(false);
+    toast.error(errorMessage);
+    console.error("Auth error:", error);
+  } finally {
     setIsLoading(false);
-    
-    return false;
   }
 };
 
-// Refresh user data (lighter-weight than full login)
 export const refreshUserData = async (
-  currentUser: PiUser | null,
-  setUser: (user: PiUser | null) => void,
+  user: PiUser | null,
+  setUser: (user: PiUser) => void,
   setIsLoading: (loading: boolean) => void
-): Promise<boolean> => {
-  if (!currentUser) {
-    console.log("No user to refresh");
-    return false;
-  }
-  
-  if (!isPiNetworkAvailable()) {
-    console.log("Pi Network SDK not available, cannot refresh user data");
-    return false;
-  }
-  
+): Promise<void> => {
+  if (!user) return;
+
   try {
     setIsLoading(true);
     
-    // Get fresh subscription data
-    const subscriptionTier = await getUserSubscription(currentUser.uid);
+    // Ensure SDK is initialized before proceeding
+    try {
+      await initializePiNetwork();
+    } catch (error) {
+      console.error("Failed to initialize Pi Network SDK:", error);
+      return;
+    }
     
-    // Update our local user data
-    const updatedUser: PiUser = {
-      ...currentUser,
-      subscriptionTier,
-      lastRefresh: Date.now()
-    };
-    
-    // Update in database and state
-    await updateUserData(updatedUser, setUser);
-    
-    setIsLoading(false);
-    return true;
+    // Get user's current subscription
+    const subscriptionTier = await getUserSubscription(user.uid);
+
+    // Request permissions again to ensure all required ones are granted
+    if (isPiNetworkAvailable()) {
+      console.log("Refreshing user permissions with authenticate");
+      const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
+        console.log('Incomplete payment found during refresh:', payment);
+      });
+      
+      if (authResult) {
+        // Extract wallet address if available
+        const walletAddress = (authResult as any).user.wallet_address;
+        
+        await updateUserData({
+          ...user,
+          walletAddress: walletAddress || user.walletAddress,
+          subscriptionTier
+        }, setUser);
+        toast.success("User profile updated");
+      }
+    } else {
+      // Just update the subscription
+      if (user.subscriptionTier !== subscriptionTier) {
+        await updateUserData({
+          ...user,
+          subscriptionTier
+        }, setUser);
+      }
+    }
   } catch (error) {
     console.error("Error refreshing user data:", error);
+    toast.error("Failed to refresh user data. Please try again.");
+  } finally {
     setIsLoading(false);
-    return false;
   }
 };

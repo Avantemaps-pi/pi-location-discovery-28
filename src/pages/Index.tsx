@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
@@ -9,51 +8,21 @@ import { Button } from '@/components/ui/button';
 import { allPlaces } from '@/data/mockPlaces';
 import { useSessionTimeout } from '@/hooks/useSessionTimeout';
 import { useAuth } from '@/context/auth';
-import { isPiNetworkAvailable, initializePiNetwork } from '@/utils/piNetwork';
-import { toast } from 'sonner';
 
 const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
   const location = useLocation();
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
-  const { login, refreshUserData, isAuthenticated } = useAuth();
-  const initialLoadRef = useRef<boolean>(true);
-  const lastAuthAttemptRef = useRef<number>(0);
+  const { refreshUserData } = useAuth();
   
   // Use the session timeout hook
   useSessionTimeout();
 
-  // Initialize Pi Network SDK on initial load - only once
+  // Attempt to refresh user data on initial load
   useEffect(() => {
-    const setupPiNetwork = async () => {
-      if (initialLoadRef.current) {
-        initialLoadRef.current = false;
-        try {
-          if (isPiNetworkAvailable()) {
-            console.log('Pi Network SDK available');
-            await initializePiNetwork();
-            // Only attempt login if not already authenticated
-            if (!isAuthenticated) {
-              console.log('Attempting automatic login after SDK initialization');
-              const now = Date.now();
-              if (now - lastAuthAttemptRef.current > 5 * 60 * 1000) { // Only try every 5 minutes
-                lastAuthAttemptRef.current = now;
-                await login();
-              }
-            }
-          } else {
-            console.log('Pi Network SDK not available - app will work with limited functionality');
-          }
-        } catch (error) {
-          console.error('Failed to initialize Pi Network SDK:', error);
-          toast.error('Failed to initialize Pi Network features');
-        }
-      }
-    };
-    
-    setupPiNetwork();
-  }, [isAuthenticated, login]);
+    refreshUserData();
+  }, [refreshUserData]);
 
   useEffect(() => {
     if (location.state && location.state.selectedPlaceId) {
