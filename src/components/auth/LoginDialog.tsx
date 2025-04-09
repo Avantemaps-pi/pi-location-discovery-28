@@ -4,8 +4,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from '@/context/auth';
-import { isRunningInPiBrowser } from '@/utils/piNetwork/helpers';
 
 interface LoginDialogProps {
   open: boolean;
@@ -13,14 +11,6 @@ interface LoginDialogProps {
 }
 
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
-  const { login, isLoading } = useAuth();
-  const isPiBrowser = isRunningInPiBrowser();
-  
-  const handleLogin = async () => {
-    await login();
-    onOpenChange(false);
-  };
-
   const handleContinueBrowsing = () => {
     onOpenChange(false);
   };
@@ -42,21 +32,18 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
             Sign in to Avante Maps with <span className="text-purple-600 font-bold">Pi Network</span>
           </DialogTitle>
           
-          {!isPiBrowser && (
-            <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md">
-              <p className="text-sm text-amber-700">
-                For the best experience, please open Avante Maps in the Pi Browser app. 
-                Some features like wallet access may be limited in this browser.
-              </p>
+          <div className="flex items-center mt-6 mb-2">
+            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+              <img src="/placeholder.svg" alt="User" className="w-6 h-6" />
             </div>
-          )}
+            <div className="ml-3 text-left">
+              <p className="font-medium">John Doe</p>
+              <p className="text-sm text-gray-500">@johndoe_pi</p>
+            </div>
+          </div>
           
-          <Button 
-            className="w-full mt-4 bg-green-500 hover:bg-green-600"
-            onClick={handleLogin}
-            disabled={isLoading}
-          >
-            {isLoading ? "Authenticating..." : "Login with Pi Network"}
+          <Button className="w-full mt-4 bg-green-500 hover:bg-green-600">
+            Login as John
           </Button>
           
           <Button variant="outline" className="w-full mt-3 bg-gray-300 hover:bg-gray-400 text-gray-700" onClick={handleContinueBrowsing}>

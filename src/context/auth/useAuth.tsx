@@ -1,11 +1,11 @@
 
-import React, { createContext, useContext } from 'react';
+import { useContext, createContext } from 'react';
 import { AuthContextType } from './types';
 
 // Create the auth context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Export the hook
+// Custom hook to use the auth context
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
@@ -14,5 +14,4 @@ export const useAuth = (): AuthContextType => {
   return context;
 };
 
-// Export the context
 export default AuthContext;

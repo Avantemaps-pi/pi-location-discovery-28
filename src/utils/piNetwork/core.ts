@@ -2,7 +2,7 @@
 /**
  * Core utilities for interacting with the Pi Network SDK
  */
-import { isPiNetworkAvailable, isRunningInPiBrowser } from './helpers';
+import { isPiNetworkAvailable } from './helpers';
 import { Scope } from './types';
 
 // Flag to track SDK initialization
@@ -32,11 +32,6 @@ export const initializePiNetwork = async (): Promise<boolean> => {
           reject(error);
         });
       return;
-    }
-    
-    // If we're not in Pi Browser, provide a more specific message
-    if (!isRunningInPiBrowser()) {
-      console.log('Not running in Pi Browser - limited functionality available');
     }
     
     console.log('Loading Pi Network SDK from CDN...');
@@ -123,12 +118,14 @@ export const requestUserPermissions = async (): Promise<{
       return null;
     }
 
-    // Extract wallet address directly from the auth result
-    // This is the corrected way to access wallet_address from the SDK response
+    // Extract wallet address if available from user roles
+    // Note: According to SDK, wallet_address should be available 
+    // when requested as a scope
     return {
       username: authResult.user.username,
       uid: authResult.user.uid,
-      walletAddress: (authResult as any).user.wallet_address
+      walletAddress: authResult.user.roles?.includes('wallet_address') ? 
+        (authResult as any).user.wallet_address : undefined
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);

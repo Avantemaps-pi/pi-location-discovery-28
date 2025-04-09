@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { PiUser } from '@/context/auth/types';
+import { PiUser } from '@/context/AuthContext';
 
 interface ProfileSettingsProps {
   language: string;

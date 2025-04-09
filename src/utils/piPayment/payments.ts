@@ -3,7 +3,6 @@ import { toast } from 'sonner';
 import { initializePiNetwork, isPiNetworkAvailable } from '../piNetwork';
 import { PaymentResult, SubscriptionFrequency } from './types';
 import { SubscriptionTier, PaymentDTO, PaymentData, PaymentCallbacks } from '../piNetwork/types';
-import { useAuth } from '@/context/auth';
 
 /**
  * Executes a payment transaction for subscription upgrades
@@ -42,95 +41,63 @@ export const executeSubscriptionPayment = async (
         // Define the callbacks for payment events according to SDK reference
         const callbacks: PaymentCallbacks = {
           // Phase I - Payment creation and Server-Side Approval
-          onReadyForServerApproval: async (paymentId: string) => {
+          onReadyForServerApproval: (paymentId: string) => {
             console.log("Payment ready for server approval:", paymentId);
             
-            try {
-              // Get the current access token - in a production app, you'd use a more secure approach
-              // @ts-ignore - Accessing auth context directly is not ideal but works for this demo
-              const accessToken = window.piAuthToken || localStorage.getItem('pi_access_token');
-              
-              if (!accessToken) {
-                console.error('No access token available for payment approval');
-                toast.error("Authentication error. Please login again.");
-                reject(new Error("No access token available"));
-                return;
-              }
-              
-              // Call our backend API to approve the payment
-              const response = await fetch('/api/payments/approve', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${accessToken}`
-                },
-                body: JSON.stringify({ paymentId })
-              });
-              
-              if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Server approval failed:', errorData);
-                toast.error("Payment approval failed. Please try again.");
-                // We don't reject here as the Pi SDK will retry
-              } else {
-                console.log('Server approved payment');
-                toast.info("Payment approved! Waiting for you to confirm the transaction.");
-              }
-            } catch (error) {
-              console.error('Error during server approval:', error);
-              toast.error("Error during payment approval.");
-              // We don't reject here as the Pi SDK will retry
-            }
+            // In a production app, you would send the paymentId to your backend:
+            // Example implementation:
+            // fetch('/api/payments/approve', {
+            //   method: 'POST',
+            //   body: JSON.stringify({ paymentId }),
+            //   headers: { 'Content-Type': 'application/json' }
+            // }).then(response => {
+            //   if (!response.ok) {
+            //     console.error('Server approval failed');
+            //   } else {
+            //     console.log('Server approved payment');
+            //   }
+            // }).catch(error => {
+            //   console.error('Error during server approval:', error);
+            // });
+            
+            // For development/demo purposes:
+            toast.info("Payment ready for server approval. In production, your server would approve this payment.");
           },
           
           // Phase III - Server-Side Completion
-          onReadyForServerCompletion: async (paymentId: string, txid: string) => {
+          onReadyForServerCompletion: (paymentId: string, txid: string) => {
             console.log("Payment ready for server completion. Payment ID:", paymentId, "Transaction ID:", txid);
             
-            try {
-              // Get the current access token - in a production app, you'd use a more secure approach
-              // @ts-ignore - Accessing auth context directly is not ideal but works for this demo
-              const accessToken = window.piAuthToken || localStorage.getItem('pi_access_token');
-              
-              if (!accessToken) {
-                console.error('No access token available for payment completion');
-                toast.error("Authentication error. Please login again.");
-                reject(new Error("No access token available"));
-                return;
-              }
-              
-              // Call our backend API to complete the payment
-              const response = await fetch('/api/payments/complete', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${accessToken}`
-                },
-                body: JSON.stringify({ paymentId, txid })
-              });
-              
-              if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Server completion failed:', errorData);
-                toast.error("Payment completion failed. Please contact support.");
-                reject(new Error("Payment completion failed"));
-              } else {
-                const result = await response.json();
-                console.log('Server completed payment:', result);
-                toast.success("Payment successful! Your subscription has been upgraded.");
-                
-                // Resolve the promise with success status after server confirmation
-                resolve({
-                  success: true,
-                  transactionId: txid,
-                  message: "Payment successful! Your subscription has been upgraded."
-                });
-              }
-            } catch (error) {
-              console.error('Error during server completion:', error);
-              toast.error("Error during payment completion.");
-              reject(error);
-            }
+            // In a production app, you would send both IDs to your backend:
+            // Example implementation:
+            // fetch('/api/payments/complete', {
+            //   method: 'POST',
+            //   body: JSON.stringify({ paymentId, txid }),
+            //   headers: { 'Content-Type': 'application/json' }
+            // }).then(response => {
+            //   if (!response.ok) {
+            //     throw new Error('Server completion failed');
+            //   }
+            //   return response.json();
+            // }).then(data => {
+            //   // Resolve the promise with success status after server confirmation
+            //   resolve({
+            //     success: true,
+            //     transactionId: txid,
+            //     message: "Payment successful! Your subscription has been upgraded."
+            //   });
+            // }).catch(error => {
+            //   console.error('Error during server completion:', error);
+            //   reject(error);
+            // });
+            
+            // For development/demo purposes:
+            toast.success("Transaction submitted! In production, your server would verify and complete this payment.");
+            resolve({
+              success: true,
+              transactionId: txid,
+              message: "Payment successful! Your subscription has been upgraded."
+            });
           },
           
           onCancel: (paymentId: string) => {

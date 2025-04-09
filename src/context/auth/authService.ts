@@ -1,43 +1,21 @@
 
 import { toast } from 'sonner';
-import { PiUser, SESSION_TIMEOUT } from './types';
+import { PiUser } from './types';
 import { 
   isPiNetworkAvailable, 
   initializePiNetwork,
   SubscriptionTier,
-  requestUserPermissions,
-  isRunningInPiBrowser
+  requestUserPermissions
 } from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from './authUtils';
-
-// Track last authentication timestamp to prevent too frequent calls
-let lastAuthAttempt = 0;
-const AUTH_THROTTLE_MS = 10000; // 10 seconds between auth attempts
 
 export const performLogin = async (
   isSdkInitialized: boolean,
   setIsLoading: (loading: boolean) => void,
   setAuthError: (error: string | null) => void,
   setPendingAuth: (pending: boolean) => void,
-  setUser: (user: PiUser | null) => void,
-  setAccessToken: (token: string | null) => void
+  setUser: (user: PiUser | null) => void
 ): Promise<void> => {
-  // Throttle authentication attempts
-  const now = Date.now();
-  if (now - lastAuthAttempt < AUTH_THROTTLE_MS) {
-    console.log('Throttling auth attempt, last attempt was', (now - lastAuthAttempt)/1000, 'seconds ago');
-    return;
-  }
-  
-  lastAuthAttempt = now;
-  
-  // Check if running in Pi Browser
-  const isPiBrowser = isRunningInPiBrowser();
-  if (!isPiBrowser) {
-    toast.warning("You are not using Pi Browser. Some features may not work correctly.");
-    console.log("Not running in Pi Browser, SDK features may be limited");
-  }
-  
   // Don't attempt login if SDK is not initialized yet
   if (!isSdkInitialized) {
     setPendingAuth(true);
@@ -59,7 +37,7 @@ export const performLogin = async (
 
     // Check if Pi SDK is available
     if (!isPiNetworkAvailable()) {
-      throw new Error("Pi Network SDK is not available. Please use Pi Browser for full functionality.");
+      throw new Error("Pi Network SDK is not available");
     }
 
     // Ensure SDK is initialized before authentication
@@ -74,29 +52,23 @@ export const performLogin = async (
     const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
       console.log('Incomplete payment found:', payment);
       // Handle incomplete payment when needed
+      // This would involve sending the payment to your server for completion
     });
     
     if (authResult && authResult.user && authResult.accessToken) {
       console.log("Authentication successful");
-      console.log("Auth result:", authResult);
       
       // Get user's subscription tier from Supabase
       const subscriptionTier = await getUserSubscription(authResult.user.uid);
       
-      // Access wallet address directly from the auth result
-      // This is how the Pi SDK returns wallet_address in the response
+      // Extract wallet address if available from user properties
+      // Note: In real implementation, use your backend with Platform API to verify this
       const walletAddress = (authResult as any).user.wallet_address;
-      console.log("Wallet address from auth:", walletAddress);
-      
-      if (!walletAddress && isPiBrowser) {
-        console.log("Wallet address permission was not granted by the user");
-        toast.warning("Wallet address permission not granted. Some features may be limited.");
-      }
       
       const userData: PiUser = {
         uid: authResult.user.uid,
         username: authResult.user.username,
-        walletAddress: walletAddress,
+        walletAddress: walletAddress, 
         roles: authResult.user.roles,
         accessToken: authResult.accessToken,
         lastAuthenticated: Date.now(),
@@ -105,9 +77,6 @@ export const performLogin = async (
 
       // Update Supabase and localStorage
       await updateUserData(userData, setUser);
-      
-      // Set the access token
-      setAccessToken(authResult.accessToken);
       
       toast.success(`Welcome back, ${userData.username}!`);
     } else {
@@ -128,10 +97,6 @@ export const performLogin = async (
   }
 };
 
-// Track last refresh timestamp to prevent too frequent calls
-let lastRefreshAttempt = 0;
-const REFRESH_THROTTLE_MS = 60000; // 60 seconds between refresh attempts
-
 export const refreshUserData = async (
   user: PiUser | null,
   setUser: (user: PiUser) => void,
@@ -139,49 +104,50 @@ export const refreshUserData = async (
 ): Promise<void> => {
   if (!user) return;
 
-  // Throttle refresh attempts
-  const now = Date.now();
-  if (now - lastRefreshAttempt < REFRESH_THROTTLE_MS) {
-    console.log('Throttling refresh attempt, last attempt was', (now - lastRefreshAttempt)/1000, 'seconds ago');
-    return;
-  }
-  
-  lastRefreshAttempt = now;
-  
-  // Check if session is still valid
-  const sessionAge = now - user.lastAuthenticated;
-  if (sessionAge > SESSION_TIMEOUT) {
-    console.log('Session expired during refresh, session age:', sessionAge/1000/60, 'minutes');
-    return; // Let the session timeout handler deal with this
-  }
-  
-  // Skip refresh if session is very new (less than 5 minutes)
-  if (sessionAge < 300000) { // 5 minutes
-    console.log('Session is fresh (less than 5 minutes old), skipping unnecessary refresh');
-    return;
-  }
-
   try {
     setIsLoading(true);
-    console.log('Refreshing user data for', user.username);
     
-    // Get user's current subscription without triggering auth
+    // Ensure SDK is initialized before proceeding
+    try {
+      await initializePiNetwork();
+    } catch (error) {
+      console.error("Failed to initialize Pi Network SDK:", error);
+      return;
+    }
+    
+    // Get user's current subscription
     const subscriptionTier = await getUserSubscription(user.uid);
-    
-    // Only update the user if subscription has changed to avoid triggering re-renders
-    if (user.subscriptionTier !== subscriptionTier) {
-      console.log('Subscription changed from', user.subscriptionTier, 'to', subscriptionTier);
-      await updateUserData({
-        ...user,
-        subscriptionTier,
-        lastAuthenticated: user.lastAuthenticated // preserve original timestamp
-      }, setUser);
+
+    // Request permissions again to ensure all required ones are granted
+    if (isPiNetworkAvailable()) {
+      console.log("Refreshing user permissions with authenticate");
+      const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
+        console.log('Incomplete payment found during refresh:', payment);
+      });
+      
+      if (authResult) {
+        // Extract wallet address if available
+        const walletAddress = (authResult as any).user.wallet_address;
+        
+        await updateUserData({
+          ...user,
+          walletAddress: walletAddress || user.walletAddress,
+          subscriptionTier
+        }, setUser);
+        toast.success("User profile updated");
+      }
     } else {
-      console.log('No subscription changes detected');
+      // Just update the subscription
+      if (user.subscriptionTier !== subscriptionTier) {
+        await updateUserData({
+          ...user,
+          subscriptionTier
+        }, setUser);
+      }
     }
   } catch (error) {
     console.error("Error refreshing user data:", error);
-    // Don't show error toast for refresh failures to avoid user confusion
+    toast.error("Failed to refresh user data. Please try again.");
   } finally {
     setIsLoading(false);
   }
