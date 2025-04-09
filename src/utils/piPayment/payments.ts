@@ -1,9 +1,8 @@
 
 import { toast } from 'sonner';
-import { initializePiNetwork, isPiNetworkAvailable } from '../piNetwork';
+import { initializePiNetwork, isPiNetworkAvailable, SubscriptionTier } from '../piNetwork';
 import { PaymentResult, SubscriptionFrequency } from './types';
-import { SubscriptionTier, PaymentDTO, PaymentData, PaymentCallbacks } from '../piNetwork/types';
-import { useAuth } from '@/context/auth';
+import { PaymentDTO, PaymentData, PaymentCallbacks } from '../piNetwork/types';
 
 /**
  * Executes a payment transaction for subscription upgrades

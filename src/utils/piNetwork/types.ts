@@ -7,7 +7,17 @@
 export type Scope = 'username' | 'payments' | 'wallet_address';
 
 // Subscription tiers for feature access
-export type SubscriptionTier = 'individual' | 'business' | 'premium';
+export enum SubscriptionTier {
+  INDIVIDUAL = "individual",
+  SMALL_BUSINESS = "small-business", 
+  ORGANIZATION = "organization"
+}
+
+// Payment direction types
+export type Direction = 'user_to_app' | 'app_to_user';
+
+// Network type
+export type AppNetwork = 'Pi Network' | 'Pi Testnet';
 
 // Window augmentation to include Pi SDK
 declare global {
@@ -26,16 +36,10 @@ declare global {
           walletAddress?: string;
         };
       }>;
-      createPayment: (paymentData: any, callbacks: any) => void;
+      createPayment: (paymentData: PaymentData, callbacks: PaymentCallbacks) => void;
     };
   }
 }
-
-// Payment direction types
-export type Direction = 'user_to_app' | 'app_to_user';
-
-// Network type
-export type AppNetwork = 'Pi Network' | 'Pi Testnet';
 
 // Payment DTO interface
 export interface PaymentDTO {
@@ -61,4 +65,19 @@ export interface PaymentDTO {
     verified: boolean;
     _link: string;
   };
+}
+
+// Payment data for creating a payment
+export interface PaymentData {
+  amount: number;
+  memo: string;
+  metadata: Record<string, any>;
+}
+
+// Callbacks for payment status changes
+export interface PaymentCallbacks {
+  onReadyForServerApproval: (paymentId: string) => void;
+  onReadyForServerCompletion: (paymentId: string, txid: string) => void;
+  onCancel: (paymentId: string) => void;
+  onError: (error: Error, payment?: PaymentDTO) => void;
 }

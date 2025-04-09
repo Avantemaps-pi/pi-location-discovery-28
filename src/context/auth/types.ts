@@ -26,4 +26,3 @@ export interface AuthContextType {
 
 export const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 export const STORAGE_KEY = 'avante_maps_auth';
-
