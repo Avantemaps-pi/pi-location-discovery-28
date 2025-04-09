@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Update payment status in database
       await supabase
         .from('pi_payments')
-        .update({ status: 'approval_failed', error_data: errorData })
+        .update({ status: 'approval_failed', error_data: errorData } as any)
         .eq('payment_id', paymentId);
         
       return res.status(approveRes.status).json({ 
@@ -73,7 +73,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .update({ 
         status: 'approved',
         pi_payment_data: approveData
-      })
+      } as any)
       .eq('payment_id', paymentId);
 
     return res.status(200).json({ success: true, data: approveData });

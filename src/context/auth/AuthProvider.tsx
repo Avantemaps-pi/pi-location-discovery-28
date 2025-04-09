@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { initializePiNetwork } from '@/utils/piNetwork';
@@ -6,8 +7,12 @@ import { checkAccess, } from './authUtils';
 import { performLogin, refreshUserData as refreshUserDataService } from './authService';
 import { useNetworkStatus } from './networkStatusService';
 import { useSessionCheck } from './useSessionCheck';
-import AuthContext from './useAuth';
+import { createContext } from 'react';
 import { SubscriptionTier } from '@/utils/piNetwork';
+
+// Create the AuthContext here instead of importing it
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export { AuthContext };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<PiUser | null>(null);
