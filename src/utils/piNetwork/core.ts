@@ -1,7 +1,9 @@
+
 /**
  * Core utilities for interacting with the Pi Network SDK
  */
 import { isPiNetworkAvailable } from './helpers';
+import { Scope } from './types';
 
 // Flag to track SDK initialization
 let isInitialized = false;
@@ -74,7 +76,11 @@ export const isSdkInitialized = (): boolean => {
   return isInitialized;
 };
 
-// Request additional user permissions including wallet_address, and payment
+/**
+ * Request additional user permissions
+ * According to SDK documentation, this should request any scopes that may have been rejected 
+ * or not requested previously
+ */
 export const requestUserPermissions = async (): Promise<{
   username: string;
   uid: string;
@@ -96,20 +102,30 @@ export const requestUserPermissions = async (): Promise<{
   }
 
   try {
-    // Include 'payment' and 'wallet_address' scopes in permission requests
-    console.log('Requesting permissions: username, payment, wallet_address');
-    const result = await window.Pi?.requestPermissions(['username', 'payment', 'wallet_address']);
-    console.log('Permission request result:', result);
+    // Use authenticate to request the required scopes as per SDK reference
+    console.log('Requesting permissions with authenticate: username, payments, wallet_address');
+    const scopes: Scope[] = ['username', 'payments', 'wallet_address'];
     
-    if (!result) {
+    const authResult = await window.Pi?.authenticate(scopes, (payment) => {
+      console.log('Incomplete payment found during permission request:', payment);
+      // Handle incomplete payment if needed
+    });
+    
+    console.log('Permission request result:', authResult);
+    
+    if (!authResult) {
       console.error('Failed to get user permissions');
       return null;
     }
 
+    // Extract wallet address if available from user roles
+    // Note: According to SDK, wallet_address should be available 
+    // when requested as a scope
     return {
-      username: result.username,
-      uid: result.uid,
-      walletAddress: result.wallet_address
+      username: authResult.user.username,
+      uid: authResult.user.uid,
+      walletAddress: authResult.user.roles?.includes('wallet_address') ? 
+        (authResult as any).user.wallet_address : undefined
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);

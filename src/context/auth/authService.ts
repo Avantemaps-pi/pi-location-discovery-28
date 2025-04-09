@@ -4,8 +4,8 @@ import { PiUser } from './types';
 import { 
   isPiNetworkAvailable, 
   initializePiNetwork,
-  requestUserPermissions,
-  SubscriptionTier 
+  SubscriptionTier,
+  requestUserPermissions
 } from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from './authUtils';
 
@@ -47,29 +47,28 @@ export const performLogin = async (
       throw new Error("Failed to initialize Pi Network SDK");
     }
 
-    // Authenticate with Pi Network - explicitly include payment, username, and wallet_address scopes
-    console.log("Authenticating with Pi Network, requesting scopes: username, payment, wallet_address");
-    const authResult = await window.Pi!.authenticate(['username', 'payment', 'wallet_address'], (payment) => {
+    // Authenticate with Pi Network with required scopes
+    console.log("Authenticating with Pi Network, requesting scopes: username, payments, wallet_address");
+    const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
       console.log('Incomplete payment found:', payment);
-      // Handle incomplete payment if needed
+      // Handle incomplete payment when needed
+      // This would involve sending the payment to your server for completion
     });
     
     if (authResult && authResult.user && authResult.accessToken) {
-      console.log("Authentication successful, requesting additional permissions");
-      
-      // Get additional user permissions after authentication - explicitly include payment and wallet_address
-      const additionalInfo = await requestUserPermissions();
-      if (!additionalInfo) {
-        throw new Error("Failed to get additional user permissions");
-      }
+      console.log("Authentication successful");
       
       // Get user's subscription tier from Supabase
       const subscriptionTier = await getUserSubscription(authResult.user.uid);
       
+      // Extract wallet address if available from user properties
+      // Note: In real implementation, use your backend with Platform API to verify this
+      const walletAddress = (authResult as any).user.wallet_address;
+      
       const userData: PiUser = {
         uid: authResult.user.uid,
         username: authResult.user.username,
-        walletAddress: additionalInfo?.walletAddress, // Store the wallet address if provided
+        walletAddress: walletAddress, 
         roles: authResult.user.roles,
         accessToken: authResult.accessToken,
         lastAuthenticated: Date.now(),
@@ -119,14 +118,20 @@ export const refreshUserData = async (
     // Get user's current subscription
     const subscriptionTier = await getUserSubscription(user.uid);
 
-    // Request additional permissions - explicitly include payment and wallet_address scopes
+    // Request permissions again to ensure all required ones are granted
     if (isPiNetworkAvailable()) {
-      console.log("Refreshing user permissions, requesting: payment, wallet_address");
-      const additionalInfo = await requestUserPermissions();
-      if (additionalInfo) {
+      console.log("Refreshing user permissions with authenticate");
+      const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
+        console.log('Incomplete payment found during refresh:', payment);
+      });
+      
+      if (authResult) {
+        // Extract wallet address if available
+        const walletAddress = (authResult as any).user.wallet_address;
+        
         await updateUserData({
           ...user,
-          walletAddress: additionalInfo.walletAddress || user.walletAddress,
+          walletAddress: walletAddress || user.walletAddress,
           subscriptionTier
         }, setUser);
         toast.success("User profile updated");
