@@ -34,6 +34,8 @@ export const performLogin = async (
       }
     );
 
+    console.log("Auth result:", authResult);
+
     // Store access token in localStorage (this is a temporary solution for the demo)
     localStorage.setItem('pi_access_token', authResult.accessToken);
 
@@ -44,11 +46,14 @@ export const performLogin = async (
     const userData: PiUser = {
       uid: authResult.user.uid,
       username: authResult.user.username,
+      // Extract wallet address from the auth result if available
       walletAddress: authResult.user.walletAddress,
+      accessToken: authResult.accessToken,
+      roles: authResult.user.roles,
       inPiBrowser,
       // Default to individual tier - will be updated from database if available
-      subscriptionTier: 'individual',
-      lastLogin: new Date().toISOString(),
+      subscriptionTier: 'individual' as any,
+      lastAuthenticated: Date.now(),
     };
 
     // Get user's subscription from database if it exists
@@ -111,7 +116,7 @@ export const refreshUserData = async (
     const updatedUser: PiUser = {
       ...currentUser,
       subscriptionTier,
-      lastRefresh: new Date().toISOString()
+      lastRefresh: Date.now()
     };
     
     // Update in database and state

@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from '@/context/auth';
 
 interface LoginDialogProps {
   open: boolean;
@@ -11,6 +12,18 @@ interface LoginDialogProps {
 }
 
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
+  const { login, isLoading } = useAuth();
+  
+  const handleLogin = async () => {
+    try {
+      await login();
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Login failed:", error);
+      // Error is handled by the auth context
+    }
+  };
+
   const handleContinueBrowsing = () => {
     onOpenChange(false);
   };
@@ -37,16 +50,24 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
               <img src="/placeholder.svg" alt="User" className="w-6 h-6" />
             </div>
             <div className="ml-3 text-left">
-              <p className="font-medium">John Doe</p>
-              <p className="text-sm text-gray-500">@johndoe_pi</p>
+              <p className="font-medium">Pi Network User</p>
+              <p className="text-sm text-gray-500">Authenticate with Pi</p>
             </div>
           </div>
           
-          <Button className="w-full mt-4 bg-green-500 hover:bg-green-600">
-            Login as John
+          <Button 
+            className="w-full mt-4 bg-green-500 hover:bg-green-600"
+            onClick={handleLogin}
+            disabled={isLoading}
+          >
+            {isLoading ? "Authenticating..." : "Login with Pi Network"}
           </Button>
           
-          <Button variant="outline" className="w-full mt-3 bg-gray-300 hover:bg-gray-400 text-gray-700" onClick={handleContinueBrowsing}>
+          <Button 
+            variant="outline" 
+            className="w-full mt-3 bg-gray-300 hover:bg-gray-400 text-gray-700" 
+            onClick={handleContinueBrowsing}
+          >
             Continue Browsing
           </Button>
           

@@ -1,11 +1,22 @@
 
-import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/integrations/supabase/client';
+
+// Express-like type definitions
+interface Request {
+  method?: string;
+  body?: any;
+  headers?: any;
+}
+
+interface Response {
+  status: (code: number) => Response;
+  json: (data: any) => Response;
+}
 
 // Pi Network API base URL
 const PI_API_URL = 'https://api.minepi.com';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: Request, res: Response) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { allPlaces } from '@/data/mockPlaces';
 import { useSessionTimeout } from '@/hooks/useSessionTimeout';
 import { useAuth } from '@/context/auth';
-import { isPiNetworkAvailable } from '@/utils/piNetwork';
+import { isPiNetworkAvailable, initializePiNetwork } from '@/utils/piNetwork';
 import { toast } from 'sonner';
 
 const Index = () => {
@@ -17,8 +17,9 @@ const Index = () => {
   const location = useLocation();
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
-  const { refreshUserData } = useAuth();
+  const { login, refreshUserData, isAuthenticated } = useAuth();
   const initialLoadRef = useRef<boolean>(true);
+  const lastAuthAttemptRef = useRef<number>(0);
   
   // Use the session timeout hook
   useSessionTimeout();
@@ -31,6 +32,16 @@ const Index = () => {
         try {
           if (isPiNetworkAvailable()) {
             console.log('Pi Network SDK available');
+            await initializePiNetwork();
+            // Only attempt login if not already authenticated
+            if (!isAuthenticated) {
+              console.log('Attempting automatic login after SDK initialization');
+              const now = Date.now();
+              if (now - lastAuthAttemptRef.current > 5 * 60 * 1000) { // Only try every 5 minutes
+                lastAuthAttemptRef.current = now;
+                await login();
+              }
+            }
           } else {
             console.log('Pi Network SDK not available - app will work with limited functionality');
           }
@@ -42,14 +53,7 @@ const Index = () => {
     };
     
     setupPiNetwork();
-  }, []);
-
-  // Attempt to refresh user data on initial load - only once
-  useEffect(() => {
-    if (initialLoadRef.current) {
-      refreshUserData();
-    }
-  }, [refreshUserData]);
+  }, [isAuthenticated, login]);
 
   useEffect(() => {
     if (location.state && location.state.selectedPlaceId) {
