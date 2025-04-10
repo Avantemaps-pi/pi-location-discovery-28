@@ -118,6 +118,15 @@ export const performLogin = async (
     if (authResult && authResult.user && authResult.accessToken) {
       console.log("Authentication successful");
       
+      // Store the current user in the window.Pi object for later use
+      if (window.Pi) {
+        window.Pi.currentUser = {
+          uid: authResult.user.uid,
+          username: authResult.user.username,
+          roles: authResult.user.roles
+        };
+      }
+      
       // Get user's subscription tier from Supabase
       const subscriptionTier = await getUserSubscription(authResult.user.uid);
       
@@ -186,6 +195,15 @@ export const refreshUserData = async (
       });
       
       if (authResult) {
+        // Update the current user in the window.Pi object
+        if (window.Pi) {
+          window.Pi.currentUser = {
+            uid: authResult.user.uid,
+            username: authResult.user.username,
+            roles: authResult.user.roles
+          };
+        }
+        
         // Extract wallet address if available
         const walletAddress = (authResult as any).user.wallet_address;
         

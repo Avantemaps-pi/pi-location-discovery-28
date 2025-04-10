@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { initializePiNetwork, isPiNetworkAvailable } from '../piNetwork';
 import { PaymentResult, SubscriptionFrequency } from './types';
 import { SubscriptionTier, PaymentDTO, PaymentData, PaymentCallbacks } from '../piNetwork/types';
+import { approvePayment, completePayment } from '@/api/payments';
 
 /**
  * Executes a payment transaction for subscription upgrades
@@ -40,37 +41,64 @@ export const executeSubscriptionPayment = async (
         
         // Define the callbacks for payment events according to SDK reference
         const callbacks: PaymentCallbacks = {
-          onReadyForServerApproval: (paymentId: string) => {
+          onReadyForServerApproval: async (paymentId: string) => {
             console.log("Payment ready for server approval:", paymentId);
-            // This is where you would make a server call to approve the payment
-            // For testing, we're just logging it
             
-            // In production, you would make an API call to your backend:
-            // fetch('/api/payments/approve', {
-            //   method: 'POST',
-            //   body: JSON.stringify({ paymentId }),
-            //   headers: { 'Content-Type': 'application/json' }
-            // });
+            // Get the current authenticated user information
+            const piUser = window.Pi?.currentUser;
+            if (!piUser?.uid) {
+              console.error("User not authenticated");
+              return;
+            }
+            
+            // Call our server-side approval endpoint
+            const approvalResult = await approvePayment({
+              paymentId,
+              userId: piUser.uid,
+              amount: paymentData.amount,
+              memo: paymentData.memo,
+              metadata: paymentData.metadata
+            });
+            
+            if (!approvalResult.success) {
+              console.error("Payment approval failed:", approvalResult.message);
+              toast.error("Payment approval failed. Please try again.");
+            } else {
+              console.log("Payment approved:", paymentId);
+            }
           },
           
-          onReadyForServerCompletion: (paymentId: string, txid: string) => {
+          onReadyForServerCompletion: async (paymentId: string, txid: string) => {
             console.log("Payment ready for server completion:", paymentId, txid);
-            // This is where you would make a server call to complete the payment
-            // For testing, we'll just log it and resolve the promise
             
-            // In production, you would make an API call to your backend:
-            // fetch('/api/payments/complete', {
-            //   method: 'POST',
-            //   body: JSON.stringify({ paymentId, txid }),
-            //   headers: { 'Content-Type': 'application/json' }
-            // });
+            // Get the current authenticated user information
+            const piUser = window.Pi?.currentUser;
+            if (!piUser?.uid) {
+              console.error("User not authenticated");
+              return;
+            }
             
-            // For this demo, we'll consider the payment successful when we reach this point
-            resolve({
-              success: true,
-              transactionId: txid,
-              message: "Payment successful! Your subscription has been upgraded."
+            // Call our server-side completion endpoint
+            const completionResult = await completePayment({
+              paymentId,
+              txid,
+              userId: piUser.uid,
+              amount: paymentData.amount,
+              memo: paymentData.memo,
+              metadata: paymentData.metadata
             });
+            
+            if (!completionResult.success) {
+              console.error("Payment completion failed:", completionResult.message);
+              reject(new Error(completionResult.message));
+            } else {
+              console.log("Payment completed:", paymentId, txid);
+              resolve({
+                success: true,
+                transactionId: txid,
+                message: "Payment successful! Your subscription has been upgraded."
+              });
+            }
           },
           
           onCancel: (paymentId: string) => {

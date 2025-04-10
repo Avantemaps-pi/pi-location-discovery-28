@@ -16,6 +16,11 @@ declare global {
         paymentData: PaymentData,
         callbacks: PaymentCallbacks
       ) => void;
+      currentUser?: {
+        uid: string;
+        username: string;
+        roles?: string[];
+      };
     };
   }
 }
