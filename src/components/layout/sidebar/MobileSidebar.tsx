@@ -37,7 +37,7 @@ const MobileSidebar = ({
   const username = user?.username || 'Guest';
   const planType = user?.subscriptionTier ? user.subscriptionTier.charAt(0).toUpperCase() + user.subscriptionTier.slice(1) : 'Individual';
 
-  // Create a login button component
+  // Login button component with proper login flow
   const LoginButton = () => (
     <div className="px-2 mb-4">
       <Button 

@@ -3,8 +3,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { initializePiNetwork } from '@/utils/piNetwork';
 import { PiUser, AuthContextType, STORAGE_KEY } from './types';
-import { checkAccess, } from './authUtils';
-import { performLogin, refreshUserData as refreshUserDataService } from './authService';
+import { checkAccess } from './authUtils';
+import { performLogin, refreshUserData as refreshUserDataService, requestAuthPermissions } from './authService';
 import { useNetworkStatus } from './networkStatusService';
 import { SubscriptionTier } from '@/utils/piNetwork/types';
 import AuthContext from './useAuth'; // Import the AuthContext
@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initSdk();
   }, []);
 
-  // Login function - using useCallback to avoid infinite loops
+  // Two-step login process
   const login = useCallback(async (): Promise<void> => {
     if (!isSdkInitialized) {
       try {
@@ -52,6 +52,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     
+    // First step: Request permissions
+    const permissionsGranted = await requestAuthPermissions(
+      isSdkInitialized, 
+      setIsLoading, 
+      setAuthError
+    );
+    
+    if (!permissionsGranted) {
+      console.log("Permissions not granted. Authentication aborted.");
+      return;
+    }
+    
+    // Second step: Authenticate with Pi Network
     await performLogin(
       isSdkInitialized,
       setIsLoading,
