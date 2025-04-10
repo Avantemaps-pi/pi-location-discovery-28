@@ -7,6 +7,7 @@ import { checkAccess, } from './authUtils';
 import { performLogin, refreshUserData as refreshUserDataService } from './authService';
 import { useNetworkStatus } from './networkStatusService';
 import { SubscriptionTier } from '@/utils/piNetwork/types';
+import AuthContext from './useAuth'; // Import the AuthContext
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<PiUser | null>(null);
