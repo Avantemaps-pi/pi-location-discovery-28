@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+
+import React, { useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
@@ -6,25 +7,17 @@ import GoogleMap from '@/components/map/GoogleMap';
 import SearchBar from '@/components/map/SearchBar';
 import { Button } from '@/components/ui/button';
 import { allPlaces } from '@/data/mockPlaces';
-import { useSessionTimeout } from '@/hooks/useSessionTimeout';
-import { useAuth } from '@/context/auth';
 
 const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
   const location = useLocation();
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
-  const { refreshUserData } = useAuth();
   
-  // Use the session timeout hook
-  useSessionTimeout();
+  // Removed useSessionTimeout and refreshUserData
 
-  // Attempt to refresh user data on initial load
-  useEffect(() => {
-    refreshUserData();
-  }, [refreshUserData]);
-
-  useEffect(() => {
+  // Handle location.state if it contains selectedPlaceId
+  React.useEffect(() => {
     if (location.state && location.state.selectedPlaceId) {
       setSelectedPlace(location.state.selectedPlaceId);
     }

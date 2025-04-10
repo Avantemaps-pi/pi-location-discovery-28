@@ -4,9 +4,9 @@ import { PiUser } from './types';
 import { 
   isPiNetworkAvailable, 
   initializePiNetwork,
-  SubscriptionTier,
   requestUserPermissions
 } from '@/utils/piNetwork';
+import { SubscriptionTier } from '@/utils/piNetwork/types';
 import { getUserSubscription, updateUserData } from './authUtils';
 
 export const performLogin = async (

@@ -37,6 +37,24 @@ const MobileSidebar = ({
   const username = user?.username || 'Guest';
   const planType = user?.subscriptionTier ? user.subscriptionTier.charAt(0).toUpperCase() + user.subscriptionTier.slice(1) : 'Individual';
 
+  // Create a login button component
+  const LoginButton = () => (
+    <div className="px-2 mb-4">
+      <Button 
+        onClick={() => {
+          login();
+          onClose();
+        }} 
+        disabled={isLoading}
+        className="w-full flex items-center"
+        variant="outline"
+      >
+        <LogIn className="h-4 w-4 mr-2" />
+        {isLoading ? "Authenticating..." : "Login with Pi"}
+      </Button>
+    </div>
+  );
+
   return (
     <>
       {/* Overlay that appears when sidebar is open */}
@@ -73,6 +91,9 @@ const MobileSidebar = ({
           </div>
           
           <div className="flex-1 overflow-y-auto py-4">
+            {/* Show login button above nav items if not authenticated */}
+            {!isAuthenticated && <LoginButton />}
+            
             <nav>
               <ul className="space-y-1 px-2">
                 {navItems.map((item) => (
@@ -104,23 +125,6 @@ const MobileSidebar = ({
                 ))}
               </ul>
             </div>
-            
-            {!isAuthenticated && (
-              <div className="mt-6 px-4">
-                <Button 
-                  onClick={() => {
-                    login();
-                    onClose();
-                  }} 
-                  disabled={isLoading}
-                  className="w-full"
-                  variant="outline"
-                >
-                  <LogIn className="h-4 w-4 mr-2" />
-                  {isLoading ? "Authenticating..." : "Login with Pi"}
-                </Button>
-              </div>
-            )}
           </div>
           
           <div className="p-4 border-t border-sidebar-border text-xs text-muted-foreground">
