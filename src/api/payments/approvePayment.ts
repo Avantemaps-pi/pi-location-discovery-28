@@ -2,45 +2,33 @@
 /**
  * Payment approval endpoint
  * 
- * This endpoint handles the approval of Pi payments
- * It should be called when the onReadyForServerApproval callback is triggered
+ * This endpoint handles the approval of Pi payments by calling
+ * a Supabase Edge Function that securely communicates with the Pi Network API
  */
-import { PaymentRequest, PaymentResponse, StoredPayment, paymentStore } from './types';
+import { supabase } from '@/integrations/supabase/client';
+import { PaymentRequest, PaymentResponse } from './types';
 
 export const approvePayment = async (req: PaymentRequest): Promise<PaymentResponse> => {
   try {
-    console.log('Approving payment:', req.paymentId);
+    console.log('Calling payment approval edge function:', req.paymentId);
     
-    // In a production environment, this would make an API call to Pi Network
-    // using the Platform API to approve the payment
-    // Example: await axios.post(`https://api.minepi.com/v2/payments/${req.paymentId}/approve`, {}, { headers: { 'Authorization': `Key ${DEVELOPER_API_KEY}` } });
+    // Call the Supabase Edge Function for payment approval
+    const { data, error } = await supabase.functions.invoke('approve-payment', {
+      body: JSON.stringify(req)
+    });
     
-    // For this implementation, we'll simulate the approval
-    // and store the payment information in memory
+    if (error) {
+      console.error('Error calling payment approval edge function:', error);
+      return {
+        success: false,
+        message: `Failed to approve payment: ${error.message}`,
+        paymentId: req.paymentId
+      };
+    }
     
-    const paymentData: StoredPayment = {
-      id: req.paymentId,
-      userId: req.userId,
-      amount: req.amount,
-      memo: req.memo,
-      metadata: req.metadata,
-      status: {
-        verified: false,
-        completed: false,
-        cancelled: false
-      },
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    };
+    console.log('Payment approval edge function response:', data);
     
-    // Store the payment in memory
-    paymentStore[req.paymentId] = paymentData;
-    
-    return {
-      success: true,
-      message: 'Payment approved successfully',
-      paymentId: req.paymentId
-    };
+    return data as PaymentResponse;
   } catch (error) {
     console.error('Error approving payment:', error);
     return {

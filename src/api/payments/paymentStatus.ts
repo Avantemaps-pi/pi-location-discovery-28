@@ -2,40 +2,33 @@
 /**
  * Payment status endpoint
  * 
- * This endpoint retrieves the current status of a payment
+ * This endpoint retrieves the current status of a payment by calling
+ * a Supabase Edge Function that securely accesses the payment database
  */
-import { PaymentResponse, paymentStore } from './types';
+import { supabase } from '@/integrations/supabase/client';
+import { PaymentResponse } from './types';
 
 export const getPaymentStatus = async (paymentId: string): Promise<PaymentResponse> => {
   try {
-    console.log('Getting payment status:', paymentId);
+    console.log('Calling payment status edge function:', paymentId);
     
-    // Fetch payment from memory storage
-    const payment = paymentStore[paymentId];
+    // Call the Supabase Edge Function for payment status
+    const { data, error } = await supabase.functions.invoke('payment-status', {
+      body: JSON.stringify({ paymentId })
+    });
     
-    if (!payment) {
-      console.error('Payment not found:', paymentId);
+    if (error) {
+      console.error('Error calling payment status edge function:', error);
       return {
         success: false,
-        message: 'Payment not found',
+        message: `Failed to get payment status: ${error.message}`,
         paymentId
       };
     }
     
-    return {
-      success: true,
-      message: 'Payment status retrieved successfully',
-      paymentId,
-      txid: payment.txid,
-      status: {
-        paymentId,
-        txid: payment.txid,
-        verified: payment.status.verified,
-        completed: payment.status.completed,
-        cancelled: payment.status.cancelled,
-        error: payment.status.error
-      }
-    };
+    console.log('Payment status edge function response:', data);
+    
+    return data as PaymentResponse;
   } catch (error) {
     console.error('Error getting payment status:', error);
     return {

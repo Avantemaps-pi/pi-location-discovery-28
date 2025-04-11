@@ -2,58 +2,34 @@
 /**
  * Payment completion endpoint
  * 
- * This endpoint handles the completion of Pi payments
- * It should be called when the onReadyForServerCompletion callback is triggered
+ * This endpoint handles the completion of Pi payments by calling
+ * a Supabase Edge Function that securely communicates with the Pi Network API
  */
 import { supabase } from '@/integrations/supabase/client';
-import { PaymentRequest, PaymentResponse, paymentStore } from './types';
+import { PaymentRequest, PaymentResponse } from './types';
 
 export const completePayment = async (req: PaymentRequest & { txid: string }): Promise<PaymentResponse> => {
   try {
-    console.log('Completing payment:', req.paymentId, 'with txid:', req.txid);
+    console.log('Calling payment completion edge function:', req.paymentId, 'with txid:', req.txid);
     
-    // In a production environment, this would make an API call to Pi Network
-    // using the Platform API to complete the payment
-    // Example: await axios.post(`https://api.minepi.com/v2/payments/${req.paymentId}/complete`, { txid: req.txid }, { headers: { 'Authorization': `Key ${DEVELOPER_API_KEY}` } });
+    // Call the Supabase Edge Function for payment completion
+    const { data, error } = await supabase.functions.invoke('complete-payment', {
+      body: JSON.stringify(req)
+    });
     
-    // Get the current payment from memory
-    const existingPayment = paymentStore[req.paymentId];
-    
-    if (!existingPayment) {
-      console.error('Payment not found:', req.paymentId);
+    if (error) {
+      console.error('Error calling payment completion edge function:', error);
       return {
         success: false,
-        message: 'Failed to complete payment: Payment not found',
-        paymentId: req.paymentId
+        message: `Failed to complete payment: ${error.message}`,
+        paymentId: req.paymentId,
+        txid: req.txid
       };
     }
     
-    // Update the payment with transaction ID and mark as completed
-    const updatedPayment = {
-      ...existingPayment,
-      txid: req.txid,
-      status: {
-        verified: true,
-        completed: true,
-        cancelled: false
-      },
-      updatedAt: Date.now()
-    };
+    console.log('Payment completion edge function response:', data);
     
-    // Store the updated payment
-    paymentStore[req.paymentId] = updatedPayment;
-    
-    // Process subscription update if this is a subscription payment
-    if (req.metadata?.subscriptionTier) {
-      await updateUserSubscription(req.userId, req.metadata.subscriptionTier);
-    }
-    
-    return {
-      success: true,
-      message: 'Payment completed successfully',
-      paymentId: req.paymentId,
-      txid: req.txid
-    };
+    return data as PaymentResponse;
   } catch (error) {
     console.error('Error completing payment:', error);
     return {
@@ -64,23 +40,3 @@ export const completePayment = async (req: PaymentRequest & { txid: string }): P
     };
   }
 };
-
-// Helper function to update user subscription
-async function updateUserSubscription(userId: string, subscriptionTier: string) {
-  try {
-    // Update user's subscription tier in Supabase
-    const { error } = await supabase
-      .from('users')
-      .update({
-        subscription: subscriptionTier,
-        created_at: new Date().toISOString()
-      })
-      .eq('id', userId);
-    
-    if (error) {
-      console.error('Error updating user subscription:', error);
-    }
-  } catch (error) {
-    console.error('Error updating user subscription:', error);
-  }
-}

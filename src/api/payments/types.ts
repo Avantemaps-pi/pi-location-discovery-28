@@ -45,5 +45,6 @@ export interface StoredPayment {
   updatedAt: number;
 }
 
-// In-memory payment storage since we don't have a payments table in Supabase
+// In-memory store kept for backward compatibility during transition
+// Will be deprecated once database integration is complete
 export const paymentStore: Record<string, StoredPayment> = {};
