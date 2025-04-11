@@ -5,8 +5,7 @@
  * This endpoint handles the approval of Pi payments
  * It should be called when the onReadyForServerApproval callback is triggered
  */
-import { supabase } from '@/integrations/supabase/client';
-import { PaymentRequest, PaymentResponse, StoredPayment } from './types';
+import { PaymentRequest, PaymentResponse, StoredPayment, paymentStore } from './types';
 
 export const approvePayment = async (req: PaymentRequest): Promise<PaymentResponse> => {
   try {
@@ -17,7 +16,7 @@ export const approvePayment = async (req: PaymentRequest): Promise<PaymentRespon
     // Example: await axios.post(`https://api.minepi.com/v2/payments/${req.paymentId}/approve`, {}, { headers: { 'Authorization': `Key ${DEVELOPER_API_KEY}` } });
     
     // For this implementation, we'll simulate the approval
-    // and store the payment information in Supabase
+    // and store the payment information in memory
     
     const paymentData: StoredPayment = {
       id: req.paymentId,
@@ -34,19 +33,8 @@ export const approvePayment = async (req: PaymentRequest): Promise<PaymentRespon
       updatedAt: Date.now()
     };
     
-    // Store the payment in Supabase
-    const { error } = await supabase
-      .from('payments')
-      .insert(paymentData);
-    
-    if (error) {
-      console.error('Error storing payment:', error);
-      return {
-        success: false,
-        message: 'Failed to approve payment: Database error',
-        paymentId: req.paymentId
-      };
-    }
+    // Store the payment in memory
+    paymentStore[req.paymentId] = paymentData;
     
     return {
       success: true,

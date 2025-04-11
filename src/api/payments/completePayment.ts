@@ -6,7 +6,7 @@
  * It should be called when the onReadyForServerCompletion callback is triggered
  */
 import { supabase } from '@/integrations/supabase/client';
-import { PaymentRequest, PaymentResponse } from './types';
+import { PaymentRequest, PaymentResponse, paymentStore } from './types';
 
 export const completePayment = async (req: PaymentRequest & { txid: string }): Promise<PaymentResponse> => {
   try {
@@ -16,18 +16,11 @@ export const completePayment = async (req: PaymentRequest & { txid: string }): P
     // using the Platform API to complete the payment
     // Example: await axios.post(`https://api.minepi.com/v2/payments/${req.paymentId}/complete`, { txid: req.txid }, { headers: { 'Authorization': `Key ${DEVELOPER_API_KEY}` } });
     
-    // For this implementation, we'll simulate the completion
-    // and update the payment information in Supabase
+    // Get the current payment from memory
+    const existingPayment = paymentStore[req.paymentId];
     
-    // Get the current payment
-    const { data: existingPayment, error: fetchError } = await supabase
-      .from('payments')
-      .select('*')
-      .eq('id', req.paymentId)
-      .single();
-    
-    if (fetchError || !existingPayment) {
-      console.error('Error fetching payment:', fetchError);
+    if (!existingPayment) {
+      console.error('Payment not found:', req.paymentId);
       return {
         success: false,
         message: 'Failed to complete payment: Payment not found',
@@ -36,28 +29,19 @@ export const completePayment = async (req: PaymentRequest & { txid: string }): P
     }
     
     // Update the payment with transaction ID and mark as completed
-    const { error } = await supabase
-      .from('payments')
-      .update({
-        txid: req.txid,
-        status: {
-          verified: true,
-          completed: true,
-          cancelled: false
-        },
-        updatedAt: Date.now()
-      })
-      .eq('id', req.paymentId);
+    const updatedPayment = {
+      ...existingPayment,
+      txid: req.txid,
+      status: {
+        verified: true,
+        completed: true,
+        cancelled: false
+      },
+      updatedAt: Date.now()
+    };
     
-    if (error) {
-      console.error('Error updating payment:', error);
-      return {
-        success: false,
-        message: 'Failed to complete payment: Database error',
-        paymentId: req.paymentId,
-        txid: req.txid
-      };
-    }
+    // Store the updated payment
+    paymentStore[req.paymentId] = updatedPayment;
     
     // Process subscription update if this is a subscription payment
     if (req.metadata?.subscriptionTier) {
@@ -88,10 +72,10 @@ async function updateUserSubscription(userId: string, subscriptionTier: string) 
     const { error } = await supabase
       .from('users')
       .update({
-        subscriptionTier,
-        subscriptionUpdatedAt: Date.now()
+        subscription: subscriptionTier,
+        created_at: new Date().toISOString()
       })
-      .eq('uid', userId);
+      .eq('id', userId);
     
     if (error) {
       console.error('Error updating user subscription:', error);

@@ -4,22 +4,17 @@
  * 
  * This endpoint retrieves the current status of a payment
  */
-import { supabase } from '@/integrations/supabase/client';
-import { PaymentResponse } from './types';
+import { PaymentResponse, paymentStore } from './types';
 
 export const getPaymentStatus = async (paymentId: string): Promise<PaymentResponse> => {
   try {
     console.log('Getting payment status:', paymentId);
     
-    // Fetch payment from Supabase
-    const { data: payment, error } = await supabase
-      .from('payments')
-      .select('*')
-      .eq('id', paymentId)
-      .single();
+    // Fetch payment from memory storage
+    const payment = paymentStore[paymentId];
     
-    if (error || !payment) {
-      console.error('Error fetching payment status:', error);
+    if (!payment) {
+      console.error('Payment not found:', paymentId);
       return {
         success: false,
         message: 'Payment not found',

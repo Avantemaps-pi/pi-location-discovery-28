@@ -8,3 +8,4 @@
 export { approvePayment } from './approvePayment';
 export { completePayment } from './completePayment';
 export { getPaymentStatus } from './paymentStatus';
+export { paymentStore } from './types';
