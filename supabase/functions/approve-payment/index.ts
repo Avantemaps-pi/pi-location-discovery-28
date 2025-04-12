@@ -17,6 +17,23 @@ interface PaymentResponse {
   txid?: string;
 }
 
+// Determine subscription tier based on payment amount
+function determineSubscriptionTier(amount: number, metadata: Record<string, any>): string {
+  // First check if metadata explicitly defines the subscription tier
+  if (metadata && metadata.subscriptionTier) {
+    return metadata.subscriptionTier;
+  }
+
+  // If no explicit tier in metadata, determine based on amount
+  if (amount < 1) {
+    return 'individual'; // Free tier
+  } else if (amount < 10) {
+    return 'small-business'; // Basic tier
+  } else {
+    return 'organization'; // Premium tier
+  }
+}
+
 // Create a Supabase client with the Auth context of the function
 const supabaseClient = createClient(
   Deno.env.get('SUPABASE_URL') ?? '',
@@ -151,6 +168,67 @@ Deno.serve(async (req) => {
           updated_at: new Date().toISOString()
         })
         .eq('payment_id', paymentRequest.paymentId);
+      
+      // Now, update the user's subscription tier based on the payment
+      const subscriptionTier = determineSubscriptionTier(
+        paymentRequest.amount, 
+        paymentRequest.metadata
+      );
+      
+      console.log(`Updating user ${paymentRequest.userId} to subscription tier: ${subscriptionTier}`);
+      
+      // Verify if the user exists first to avoid errors
+      const { data: userData, error: userError } = await supabaseClient
+        .from('users')
+        .select('id, subscription')
+        .eq('id', paymentRequest.userId)
+        .maybeSingle();
+        
+      if (userError) {
+        console.error('Error checking user existence:', userError);
+      }
+      
+      // If user exists, update their subscription
+      if (userData) {
+        // Only update if the new tier is higher than the current one
+        const shouldUpdate = !userData.subscription || 
+                            (subscriptionTier === 'organization') || 
+                            (subscriptionTier === 'small-business' && userData.subscription === 'individual');
+        
+        if (shouldUpdate) {
+          const { error: updateError } = await supabaseClient
+            .from('users')
+            .update({ subscription: subscriptionTier })
+            .eq('id', paymentRequest.userId);
+            
+          if (updateError) {
+            console.error('Error updating user subscription:', updateError);
+          } else {
+            console.log(`Successfully updated user ${paymentRequest.userId} to tier ${subscriptionTier}`);
+            
+            // Also record the subscription in the subscriptions table for history
+            const { error: subError } = await supabaseClient
+              .from('subscriptions')
+              .insert({
+                user_id: paymentRequest.userId,
+                plan: subscriptionTier,
+                start_date: new Date().toISOString(),
+                // If metadata has subscription duration info, calculate end date
+                end_date: paymentRequest.metadata?.duration ? 
+                  new Date(Date.now() + (paymentRequest.metadata.duration * 86400000)).toISOString() : 
+                  null
+              });
+              
+            if (subError) {
+              console.error('Error recording subscription history:', subError);
+            }
+          }
+        } else {
+          console.log(`User already has equal or better subscription. Not downgrading.`);
+        }
+      } else {
+        console.log(`User ${paymentRequest.userId} not found in database. Cannot update subscription.`);
+      }
       
       // Payment approved successfully
       return new Response(
