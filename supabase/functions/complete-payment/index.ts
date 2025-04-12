@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
       );
     }
     
-    // Update the payment in the database
+    // First update the payment in the database
     const { data, error } = await supabaseClient
       .from('payments')
       .update({
@@ -92,20 +92,90 @@ Deno.serve(async (req) => {
       );
     }
     
-    // In a production implementation, you would make a call to the Pi Network API
-    // to complete the payment using the piApiKey
-    // For now, we'll simulate a successful completion
-    
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: 'Payment completed successfully',
-        paymentId: paymentRequest.paymentId,
-        txid: paymentRequest.txid
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
-    
+    // Call the Pi Network API to complete the payment
+    try {
+      // The Pi Network API endpoint for completing a payment
+      const piNetworkApiUrl = 'https://api.minepi.com/v2/payments';
+      
+      console.log('Calling Pi Network API to complete payment:', paymentRequest.paymentId);
+      
+      const completeResponse = await fetch(`${piNetworkApiUrl}/${paymentRequest.paymentId}/complete`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Key ${piApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          txid: paymentRequest.txid,
+        })
+      });
+      
+      const completeResult = await completeResponse.json();
+      console.log('Pi Network API complete payment response:', completeResult);
+      
+      if (!completeResponse.ok) {
+        console.error('Pi Network API error:', completeResult);
+        
+        // Update the payment status to reflect the error
+        await supabaseClient
+          .from('payments')
+          .update({
+            status: {
+              ...data.status,
+              completed: false,
+              error: `Pi Network API error: ${JSON.stringify(completeResult)}`
+            },
+            updated_at: new Date().toISOString()
+          })
+          .eq('payment_id', paymentRequest.paymentId);
+          
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            message: `Pi Network API error: ${completeResult.message || 'Unknown error'}`,
+            paymentId: paymentRequest.paymentId,
+            txid: paymentRequest.txid
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 502 }
+        );
+      }
+      
+      // Payment completed successfully
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: 'Payment completed successfully',
+          paymentId: paymentRequest.paymentId,
+          txid: paymentRequest.txid
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    } catch (apiError) {
+      console.error('Error calling Pi Network API:', apiError);
+      
+      // Update the payment status to reflect the error
+      await supabaseClient
+        .from('payments')
+        .update({
+          status: {
+            ...data.status,
+            completed: false,
+            error: `API call error: ${apiError.message}`
+          },
+          updated_at: new Date().toISOString()
+        })
+        .eq('payment_id', paymentRequest.paymentId);
+        
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          message: `Error calling Pi Network API: ${apiError.message}`,
+          paymentId: paymentRequest.paymentId,
+          txid: paymentRequest.txid
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 502 }
+      );
+    }
   } catch (error) {
     console.error('Error in complete-payment function:', error);
     

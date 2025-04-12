@@ -61,7 +61,7 @@ Deno.serve(async (req) => {
       );
     }
     
-    // Record the payment in the database
+    // First record the payment in the database
     const { data, error } = await supabaseClient
       .from('payments')
       .insert({
@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
         memo: paymentRequest.memo,
         metadata: paymentRequest.metadata,
         status: {
-          approved: true,
+          approved: false,
           verified: false,
           completed: false,
           cancelled: false
@@ -92,19 +92,102 @@ Deno.serve(async (req) => {
       );
     }
     
-    // In a production implementation, you would make a call to the Pi Network API
-    // to approve the payment using the piApiKey
-    // For now, we'll simulate a successful approval
-    
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: 'Payment approved successfully',
-        paymentId: paymentRequest.paymentId
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
-    
+    // Call the Pi Network API to approve the payment
+    try {
+      // The Pi Network API endpoint for approving a payment
+      const piNetworkApiUrl = 'https://api.minepi.com/v2/payments';
+      
+      console.log('Calling Pi Network API to approve payment:', paymentRequest.paymentId);
+      
+      const approveResponse = await fetch(`${piNetworkApiUrl}/${paymentRequest.paymentId}/approve`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Key ${piApiKey}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const approveResult = await approveResponse.json();
+      console.log('Pi Network API approve payment response:', approveResult);
+      
+      if (!approveResponse.ok) {
+        console.error('Pi Network API error:', approveResult);
+        
+        // Update the payment status to reflect the error
+        await supabaseClient
+          .from('payments')
+          .update({
+            status: {
+              approved: false,
+              verified: false,
+              completed: false,
+              cancelled: true,
+              error: `Pi Network API error: ${JSON.stringify(approveResult)}`
+            },
+            updated_at: new Date().toISOString()
+          })
+          .eq('payment_id', paymentRequest.paymentId);
+          
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            message: `Pi Network API error: ${approveResult.message || 'Unknown error'}`,
+            paymentId: paymentRequest.paymentId
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 502 }
+        );
+      }
+      
+      // Update the payment status to approved
+      await supabaseClient
+        .from('payments')
+        .update({
+          status: {
+            approved: true,
+            verified: false,
+            completed: false,
+            cancelled: false
+          },
+          updated_at: new Date().toISOString()
+        })
+        .eq('payment_id', paymentRequest.paymentId);
+      
+      // Payment approved successfully
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: 'Payment approved successfully',
+          paymentId: paymentRequest.paymentId
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    } catch (apiError) {
+      console.error('Error calling Pi Network API:', apiError);
+      
+      // Update the payment status to reflect the error
+      await supabaseClient
+        .from('payments')
+        .update({
+          status: {
+            approved: false,
+            verified: false,
+            completed: false,
+            cancelled: true,
+            error: `API call error: ${apiError.message}`
+          },
+          updated_at: new Date().toISOString()
+        })
+        .eq('payment_id', paymentRequest.paymentId);
+        
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          message: `Error calling Pi Network API: ${apiError.message}`,
+          paymentId: paymentRequest.paymentId
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 502 }
+      );
+    }
   } catch (error) {
     console.error('Error in approve-payment function:', error);
     
