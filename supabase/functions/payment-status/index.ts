@@ -16,6 +16,7 @@ interface PaymentResponse {
     verified: boolean;
     completed: boolean;
     cancelled: boolean;
+    voided?: boolean;
     error?: string;
   };
 }
@@ -25,6 +26,21 @@ const supabaseClient = createClient(
   Deno.env.get('SUPABASE_URL') ?? '',
   Deno.env.get('SUPABASE_ANON_KEY') ?? '',
 );
+
+// Helper function to check if a payment is likely voided due to timeout
+function checkIfPaymentVoided(payment: any): boolean {
+  // If a payment was created more than 10 minutes ago and hasn't been completed,
+  // it's likely voided by the Pi Network system
+  const createdAt = new Date(payment.created_at).getTime();
+  const now = Date.now();
+  const tenMinutesInMs = 10 * 60 * 1000;
+  
+  return (
+    !payment.status.completed && 
+    !payment.status.cancelled && 
+    now - createdAt > tenMinutesInMs
+  );
+}
 
 Deno.serve(async (req) => {
   // Handle CORS preflight request
@@ -82,6 +98,26 @@ Deno.serve(async (req) => {
       );
     }
     
+    // Check if payment might be voided due to timeout
+    let paymentStatus = { ...data.status };
+    
+    if (checkIfPaymentVoided(data)) {
+      console.log('Payment appears to be voided due to timeout:', statusRequest.paymentId);
+      paymentStatus.voided = true;
+      
+      // Update the payment status in the database
+      await supabaseClient
+        .from('payments')
+        .update({
+          status: {
+            ...data.status,
+            voided: true,
+            error: 'Payment voided due to timeout. No Pi was transferred.'
+          }
+        })
+        .eq('payment_id', statusRequest.paymentId);
+    }
+    
     // Return the payment status
     return new Response(
       JSON.stringify({ 
@@ -89,7 +125,7 @@ Deno.serve(async (req) => {
         message: 'Payment status retrieved successfully',
         paymentId: statusRequest.paymentId,
         txid: data.txid,
-        status: data.status
+        status: paymentStatus
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
