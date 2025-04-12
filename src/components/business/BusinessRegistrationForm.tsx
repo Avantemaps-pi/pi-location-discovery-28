@@ -6,6 +6,9 @@ import { Form } from '@/components/ui/form';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/context/auth';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 // Import the form schema and components
 import { formSchema, FormValues } from './registration/formSchema';
@@ -23,14 +26,17 @@ interface BusinessRegistrationFormProps {
 
 const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) => {
   const isMobile = useIsMobile();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
       businessName: '',
       phone: '',
-      email: '',
+      email: user?.email || '',
       website: '',
       streetAddress: '',
       apartment: '',
@@ -72,12 +78,54 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
     }
   };
 
-  const onSubmit = (values: FormValues) => {
-    console.log('Form values:', values);
-    console.log('Selected image:', selectedImage);
-    
-    toast.success('Business registration submitted successfully!');
-    if (onSuccess) onSuccess();
+  const onSubmit = async (values: FormValues) => {
+    try {
+      // Prepare the data to be submitted to Supabase
+      const businessData = {
+        name: values.businessName,
+        owner_id: user?.id, // Link the business to the authenticated user
+        location: `${values.streetAddress}, ${values.state}, ${values.zipCode}`,
+        description: values.businessDescription,
+        // Convert the array to a single category string for now
+        category: values.businessTypes.length > 0 ? values.businessTypes[0] : 'Other',
+      };
+      
+      // Insert the business data into the businesses table
+      const { data, error } = await supabase
+        .from('businesses')
+        .insert(businessData)
+        .select();
+        
+      if (error) {
+        throw error;
+      }
+      
+      console.log('Business registered successfully:', data);
+      toast.success('Business registration submitted successfully!');
+      
+      // If an image was selected, upload it to storage
+      if (selectedImage && data[0]?.id) {
+        const businessId = data[0].id;
+        const filePath = `businesses/${businessId}/${selectedImage.name}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('business-images')
+          .upload(filePath, selectedImage);
+          
+        if (uploadError) {
+          console.error('Error uploading image:', uploadError);
+          toast.error('Business registered, but image upload failed.');
+        }
+      }
+      
+      if (onSuccess) onSuccess();
+      
+      // Navigate to the index page after successful registration
+      navigate('/');
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast.error('Failed to register business. Please try again.');
+    }
   };
 
   return (

@@ -10,19 +10,22 @@ import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
 import MarkerList from './MarkerList';
 import PlaceCardPopup from './PlaceCardPopup';
+import { Loader2 } from 'lucide-react';
 
 interface GoogleMapProps {
   places?: Place[];
   selectedPlaceId?: string | null;
   onMarkerClick?: (placeId: string) => void;
   detailCardRef?: React.RefObject<HTMLDivElement>;
+  isLoading?: boolean;
 }
 
 const GoogleMap: React.FC<GoogleMapProps> = ({ 
   places = [], 
   selectedPlaceId = null,
   onMarkerClick,
-  detailCardRef
+  detailCardRef,
+  isLoading = false
 }) => {
   const navigate = useNavigate();
   const [zoom, setZoom] = useState(defaultZoom);
@@ -31,7 +34,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
   const [showPopover, setShowPopover] = useState(false);
 
   // Use provided places or default locations
-  const displayPlaces = places.length > 0 ? places : defaultLocations;
+  const displayPlaces = isLoading ? [] : places.length > 0 ? places : defaultLocations;
 
   // Find the selected place to center the map if needed
   useEffect(() => {
@@ -93,6 +96,15 @@ const GoogleMap: React.FC<GoogleMapProps> = ({
 
   return (
     <div className="w-full h-full relative">
+      {isLoading && (
+        <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center">
+            <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+            <p className="text-lg font-medium">Loading businesses...</p>
+          </div>
+        </div>
+      )}
+      
       <Wrapper 
         apiKey={GOOGLE_MAPS_API_KEY} 
         render={renderMap}
