@@ -2,13 +2,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
 
-interface PaymentStatus {
+interface StatusRequest {
   paymentId: string;
-  txid?: string;
-  verified: boolean;
-  completed: boolean;
-  cancelled: boolean;
-  error?: string;
 }
 
 interface PaymentResponse {
@@ -16,7 +11,13 @@ interface PaymentResponse {
   message: string;
   paymentId?: string;
   txid?: string;
-  status?: PaymentStatus;
+  status?: {
+    approved: boolean;
+    verified: boolean;
+    completed: boolean;
+    cancelled: boolean;
+    error?: string;
+  };
 }
 
 // Create a Supabase client with the Auth context of the function
@@ -33,13 +34,13 @@ Deno.serve(async (req) => {
   
   try {
     // Get request body
-    const { paymentId } = await req.json();
+    const statusRequest: StatusRequest = await req.json();
     
     // Log the request for debugging
-    console.log('Payment status request received for ID:', paymentId);
+    console.log('Payment status request received for payment ID:', statusRequest.paymentId);
     
     // Validate the request
-    if (!paymentId) {
+    if (!statusRequest.paymentId) {
       return new Response(
         JSON.stringify({ 
           success: false, 
@@ -49,23 +50,23 @@ Deno.serve(async (req) => {
       );
     }
     
-    // Get payment status from the database
+    // Get the payment from the database
     const { data, error } = await supabaseClient
       .from('payments')
-      .select('payment_id, txid, status')
-      .eq('payment_id', paymentId)
+      .select('*')
+      .eq('payment_id', statusRequest.paymentId)
       .single();
       
     if (error) {
       console.error('Database error:', error);
       
       if (error.code === 'PGRST116') {
-        // No payment found with this ID
+        // Payment not found
         return new Response(
           JSON.stringify({ 
             success: false, 
             message: 'Payment not found',
-            paymentId
+            paymentId: statusRequest.paymentId
           }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 404 }
         );
@@ -75,40 +76,20 @@ Deno.serve(async (req) => {
         JSON.stringify({ 
           success: false, 
           message: `Database error: ${error.message}`,
-          paymentId
+          paymentId: statusRequest.paymentId
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
       );
     }
     
-    if (!data) {
-      return new Response(
-        JSON.stringify({ 
-          success: false, 
-          message: 'Payment not found',
-          paymentId
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 404 }
-      );
-    }
-    
-    // Format the response
-    const paymentStatus: PaymentStatus = {
-      paymentId: data.payment_id,
-      txid: data.txid,
-      verified: data.status?.verified || false,
-      completed: data.status?.completed || false,
-      cancelled: data.status?.cancelled || false,
-      error: data.status?.error
-    };
-    
+    // Return the payment status
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: 'Payment status retrieved',
-        paymentId,
+        message: 'Payment status retrieved successfully',
+        paymentId: statusRequest.paymentId,
         txid: data.txid,
-        status: paymentStatus
+        status: data.status
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

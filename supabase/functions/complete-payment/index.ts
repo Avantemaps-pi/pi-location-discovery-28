@@ -4,11 +4,11 @@ import { corsHeaders } from '../_shared/cors.ts';
 
 interface PaymentRequest {
   paymentId: string;
-  txid: string;
   userId: string;
   amount: number;
   memo: string;
   metadata: Record<string, any>;
+  txid: string;
 }
 
 interface PaymentResponse {
