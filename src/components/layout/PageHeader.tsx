@@ -28,51 +28,55 @@ const PageHeader = ({ title = "Avante Maps", hideSidebar = false }: PageHeaderPr
   return (
     <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-full items-center px-4">
-        {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && !isIndexPage && <MobileMenuButton />}
-        {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && !isIndexPage && <DesktopMenuButton onClick={() => console.log('Desktop menu clicked')} />}
+        <div className="flex-none">
+          {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && !isIndexPage && <MobileMenuButton />}
+          {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && !isIndexPage && <DesktopMenuButton onClick={() => console.log('Desktop menu clicked')} />}
+          
+          {isIndexPage && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleMenuClick}
+              className="mr-2"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          )}
+          
+          {isAnalyticsPage && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate('/registered-business')}
+              className="mr-2"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          )}
+          
+          {isRegistrationPage && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate('/')}
+              className="mr-2"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          )}
+        </div>
         
-        {isIndexPage && (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={handleMenuClick}
-            className="mr-2"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        )}
+        <div className="flex-1 flex justify-center">
+          <Link to="/" className="flex items-center gap-2">
+            <img 
+              src="/lovable-uploads/b0daa374-9909-4cf8-a2ae-e08e2184c3fc.png" 
+              alt="Avante Maps" 
+              className="h-8"
+            />
+          </Link>
+        </div>
         
-        {isAnalyticsPage && (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => navigate('/registered-business')}
-            className="mr-2"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        )}
-        
-        {isRegistrationPage && (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => navigate('/')}
-            className="mr-2"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        )}
-        
-        <Link to="/" className={`${(!isAnalyticsPage && !hideSidebar && !isRegistrationPage && !isIndexPage) ? 'ml-4' : ''} flex items-center gap-2`}>
-          <img 
-            src="/lovable-uploads/b0daa374-9909-4cf8-a2ae-e08e2184c3fc.png" 
-            alt="Avante Maps" 
-            className="h-8"
-          />
-        </Link>
-        
-        <div className="ml-auto flex items-center space-x-4">
+        <div className="flex-none ml-auto">
           <AuthStatus />
         </div>
       </div>
