@@ -1,7 +1,7 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/context/auth';
 
 interface NavItemProps {
   to: string;
@@ -12,63 +12,25 @@ interface NavItemProps {
   badge?: number | null;
 }
 
-const NavItem = ({ to, icon: Icon, label, isActive, onClick, badge }: NavItemProps) => {
-  const { logout } = useAuth();
-  
-  const handleClick = () => {
-    if (to === "/logout") {
-      logout();
-    } else if (onClick) {
-      onClick();
-    }
-  };
-  
-  const buttonContent = (
-    <>
-      <Icon className="h-5 w-5" />
-      <span className="ml-3">{label}</span>
-      {badge !== undefined && badge > 0 && (
-        <div className="ml-auto bg-primary rounded-full min-w-[1.5rem] h-6 flex items-center justify-center px-1.5">
-          <span className="text-xs font-medium text-primary-foreground">{badge}</span>
-        </div>
+const NavItem = ({ to, icon: Icon, label, isActive, onClick, badge }: NavItemProps) => (
+  <li>
+    <Link 
+      to={to} 
+      className={cn(
+        "flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-sidebar-accent/80 hover:text-sidebar-accent-foreground relative",
+        isActive ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium" : "text-sidebar-foreground"
       )}
-    </>
-  );
-  
-  if (to === "/logout") {
-    return (
-      <li>
-        <button
-          onClick={handleClick}
-          className={cn(
-            "flex items-center w-full rounded-md px-3 py-2 text-sm font-medium transition-colors",
-            isActive 
-              ? "bg-accent text-accent-foreground" 
-              : "hover:bg-accent hover:text-accent-foreground"
-          )}
-        >
-          {buttonContent}
-        </button>
-      </li>
-    );
-  }
-  
-  return (
-    <li>
-      <Link
-        to={to}
-        onClick={handleClick}
-        className={cn(
-          "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
-          isActive 
-            ? "bg-accent text-accent-foreground" 
-            : "hover:bg-accent hover:text-accent-foreground"
-        )}
-      >
-        {buttonContent}
-      </Link>
-    </li>
-  );
-};
+      onClick={onClick}
+    >
+      <Icon className="h-5 w-5" />
+      <span>{label}</span>
+      {badge && (
+        <span className="absolute right-4 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
+          {badge}
+        </span>
+      )}
+    </Link>
+  </li>
+);
 
 export default NavItem;

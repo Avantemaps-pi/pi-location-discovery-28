@@ -1,72 +1,85 @@
-import { LayoutDashboard, Map, Bell, Award, Book, Phone, Shield, FileText, LucideIcon, Settings, LogOut } from 'lucide-react';
 
-interface NavItem {
-  to: string;
-  icon: LucideIcon;
-  label: string;
-  badge?: number | null;
-}
+import {
+  Map,
+  LayoutGrid,
+  Bookmark,
+  Bell,
+  Building,
+  MessageSquare,
+  Settings,
+  Info,
+  Lock,
+  FileText,
+  Phone,
+  Cookie
+} from 'lucide-react';
 
-// Add logout as the first item in the navigation
-export const navItems: NavItem[] = [
+// Create a function to dynamically get the notification count
+import { getUnreadNotificationsCount } from '@/utils/notificationUtils';
+
+export const navItems = [
   {
-    to: "/logout", // Special route that will be handled by the NavItem component
-    icon: LogOut,
-    label: "Logout",
-  },
-  {
-    to: "/",
+    to: '/',
     icon: Map,
-    label: "Map",
+    label: 'Map',
   },
   {
-    to: "/notifications",
+    to: '/recommendations',
+    icon: LayoutGrid,
+    label: 'Recommendations',
+  },
+  {
+    to: '/bookmarks',
+    icon: Bookmark,
+    label: 'Bookmarks',
+  },
+  {
+    to: '/notifications',
     icon: Bell,
-    label: "Notifications",
-    badge: 3, // Example badge count
+    label: 'Notifications',
+    badge: getUnreadNotificationsCount(),
   },
   {
-    to: "/analytics",
-    icon: LayoutDashboard,
-    label: "Analytics",
+    to: '/registered-business',
+    icon: Building,
+    label: 'Registered Business',
   },
   {
-    to: "/rewards",
-    icon: Award,
-    label: "Rewards",
+    to: '/communicon',
+    icon: MessageSquare,
+    label: 'CommuniCon',
+  },
+  {
+    to: '/settings',
+    icon: Settings,
+    label: 'Settings',
+  },
+  {
+    to: '/contact',
+    icon: Phone,
+    label: 'Contact Us',
+  },
+  {
+    to: '/about',
+    icon: Info,
+    label: 'About Us',
   },
 ];
 
-interface LegalItem {
-  to: string;
-  icon: LucideIcon;
-  label: string;
-}
-
-export const legalItems: LegalItem[] = [
+export const legalItems = [
   {
-    to: "/terms",
+    to: '/privacy-policy',
+    icon: Lock,
+    label: 'Privacy Policy',
+  },
+  {
+    to: '/terms-of-service',
     icon: FileText,
-    label: "Terms",
+    label: 'Terms of Service',
   },
   {
-    to: "/privacy",
-    icon: Shield,
-    label: "Privacy",
-  },
-  {
-    to: "/contact",
-    icon: Phone,
-    label: "Contact",
-  },
-  {
-    to: "/settings",
-    icon: Settings,
-    label: "Settings",
-  },
-  {
-    to: "/about",
-    icon: Book,
-    label: "About",
+    to: '/cookies',
+    icon: Cookie,
+    label: 'Cookie Policy',
   },
 ];

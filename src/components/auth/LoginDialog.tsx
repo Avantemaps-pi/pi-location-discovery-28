@@ -1,10 +1,9 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/context/auth";
 
 interface LoginDialogProps {
   open: boolean;
@@ -12,61 +11,51 @@ interface LoginDialogProps {
 }
 
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
-  const { login } = useAuth();
-  
-  const handleLogin = () => {
-    login();
-    onOpenChange(false);
-  };
-
   const handleContinueBrowsing = () => {
     onOpenChange(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md rounded-lg border-none shadow-lg">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-center">Welcome to Avante Maps</DialogTitle>
+      <DialogContent className="max-w-md p-0 overflow-hidden rounded-lg">
+        <div className="p-6 flex flex-col items-center">
           <DialogClose className="absolute right-4 top-4 opacity-70 hover:opacity-100">
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </DialogClose>
-        </DialogHeader>
-        
-        <div className="flex flex-col items-center p-6 gap-6">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-            <img src="/lovable-uploads/816179f9-d16d-46a7-9d6e-169846c0d0da.png" alt="Pi Logo" className="w-12 h-12" />
+          
+          <div className="w-16 h-16 rounded-full bg-yellow-300 flex items-center justify-center mb-4">
+            <img src="/lovable-uploads/816179f9-d16d-46a7-9d6e-169846c0d0da.png" alt="Pi Logo" className="w-10 h-10" />
           </div>
           
-          <div className="text-center space-y-2">
-            <h3 className="text-lg font-semibold">You need to sign in first</h3>
-            <p className="text-muted-foreground">Please login with your Pi Network account to register a business</p>
+          <DialogTitle className="text-xl mb-1 text-center">
+            Sign in to Avante Maps with <span className="text-purple-600 font-bold">Pi Network</span>
+          </DialogTitle>
+          
+          <div className="flex items-center mt-6 mb-2">
+            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+              <img src="/placeholder.svg" alt="User" className="w-6 h-6" />
+            </div>
+            <div className="ml-3 text-left">
+              <p className="font-medium">John Doe</p>
+              <p className="text-sm text-gray-500">@johndoe_pi</p>
+            </div>
           </div>
           
-          <div className="grid w-full gap-4">
-            <Button 
-              className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700" 
-              onClick={handleLogin}
-            >
-              Login with Pi Network
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="w-full" 
-              onClick={handleContinueBrowsing}
-            >
-              Continue Browsing
-            </Button>
-          </div>
+          <Button className="w-full mt-4 bg-green-500 hover:bg-green-600">
+            Login as John
+          </Button>
           
-          <div className="text-center text-sm text-muted-foreground">
+          <Button variant="outline" className="w-full mt-3 bg-gray-300 hover:bg-gray-400 text-gray-700" onClick={handleContinueBrowsing}>
+            Continue Browsing
+          </Button>
+          
+          <div className="mt-6 text-center text-sm text-gray-500">
             <p>
-              By logging in, you agree to our{' '}
-              <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>
+              To continue, Pi Network will share your username and profile picture with this site. See this site's{' '}
+              <Link to="/privacy" className="text-blue-500 hover:underline">privacy policy</Link>
               {' '}and{' '}
-              <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+              <Link to="/terms" className="text-blue-500 hover:underline">terms of service</Link>
             </p>
           </div>
         </div>
