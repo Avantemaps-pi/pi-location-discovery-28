@@ -24,6 +24,7 @@ export const navItems = [
     icon: LogOut,
     label: 'Logout',
     isLogout: true,
+    requiresAuth: true, // Only show for authenticated users
   },
   {
     to: '/',

@@ -67,7 +67,7 @@ const PageHeader = ({ title = "Avante Maps", hideSidebar = false }: PageHeaderPr
         </div>
         
         <div className="flex-1 flex justify-center">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 mx-auto">
             <img 
               src="/lovable-uploads/b0daa374-9909-4cf8-a2ae-e08e2184c3fc.png" 
               alt="Avante Maps" 

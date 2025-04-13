@@ -31,10 +31,20 @@ const SearchBar: React.FC<SearchBarProps> = ({
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSearch) {
+    if (onSearch && searchTerm.trim()) {
       onSearch(searchTerm);
     }
-    console.log('Search for:', searchTerm);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    
+    // If the user clears the input, trigger search with empty string
+    // to reset the map view
+    if (value === '' && onSearch) {
+      onSearch('');
+    }
   };
 
   return (
@@ -43,7 +53,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         type="text"
         placeholder={placeholders[currentPlaceholderIndex]}
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={handleInputChange}
         className="w-full pl-10 h-12 shadow-md transition-all duration-300"
       />
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

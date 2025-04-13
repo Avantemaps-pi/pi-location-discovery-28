@@ -46,7 +46,7 @@ const UpdateDetailsTab: React.FC<UpdateDetailsTabProps> = ({ onPrevious, selecte
           type="submit" 
           className="bg-avante-blue hover:bg-avante-blue/90 min-w-40"
         >
-          Update Information
+          Submit
         </Button>
       </CardFooter>
     </Card>

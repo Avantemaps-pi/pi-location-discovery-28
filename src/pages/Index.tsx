@@ -13,7 +13,9 @@ import { toast } from 'sonner';
 const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
+  const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const location = useLocation();
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
@@ -62,6 +64,7 @@ const Index = () => {
         });
         
         setPlaces(transformedPlaces);
+        setFilteredPlaces(transformedPlaces);
       } catch (error) {
         console.error('Error fetching businesses:', error);
         toast.error('Failed to load businesses');
@@ -80,8 +83,32 @@ const Index = () => {
     }
   }, [location.state]);
 
+  // Function to handle search
   const handleSearch = (searchTerm: string) => {
-    console.log('Search for:', searchTerm);
+    setSearchTerm(searchTerm);
+    
+    if (!searchTerm.trim()) {
+      // If search is cleared, show all places
+      setFilteredPlaces(places);
+      return;
+    }
+    
+    // Filter places based on search term (case insensitive)
+    const normalizedSearch = searchTerm.toLowerCase();
+    const filtered = places.filter(place => 
+      place.name.toLowerCase().includes(normalizedSearch) ||
+      place.address.toLowerCase().includes(normalizedSearch) ||
+      place.category.toLowerCase().includes(normalizedSearch) ||
+      place.description.toLowerCase().includes(normalizedSearch)
+    );
+    
+    setFilteredPlaces(filtered);
+    
+    if (filtered.length > 0) {
+      toast.success(`Found ${filtered.length} matching businesses`);
+    } else {
+      toast.info("No matching businesses found");
+    }
   };
   
   const handlePlaceClick = (placeId: string) => {
@@ -98,7 +125,7 @@ const Index = () => {
     >
       <div className="absolute inset-0 top-16 w-full" ref={mapRef}>
         <GoogleMap 
-          places={places} 
+          places={filteredPlaces} 
           selectedPlaceId={selectedPlace} 
           onMarkerClick={handlePlaceClick}
           detailCardRef={detailCardRef}

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth';
 
@@ -12,15 +12,32 @@ interface NavItemProps {
   onClick?: () => void;
   badge?: number | null;
   isLogout?: boolean;
+  requiresAuth?: boolean;
 }
 
-const NavItem = ({ to, icon: Icon, label, isActive, onClick, badge, isLogout }: NavItemProps) => {
-  const { logout } = useAuth();
+const NavItem = ({ 
+  to, 
+  icon: Icon, 
+  label, 
+  isActive, 
+  onClick, 
+  badge, 
+  isLogout,
+  requiresAuth = false 
+}: NavItemProps) => {
+  const { logout, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  
+  // If this is an auth-required item (like logout) and user is not authenticated, don't render
+  if (requiresAuth && !isAuthenticated) {
+    return null;
+  }
   
   const handleClick = (e: React.MouseEvent) => {
     if (isLogout) {
       e.preventDefault();
       logout();
+      navigate('/');
     }
     
     if (onClick) {
