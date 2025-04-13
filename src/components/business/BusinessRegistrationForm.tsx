@@ -32,11 +32,11 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
+      firstName: '',
+      lastName: '',
       businessName: '',
       phone: '',
-      email: user?.email || '',
+      email: '',
       website: '',
       streetAddress: '',
       apartment: '',
@@ -44,7 +44,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
       zipCode: '',
       businessTypes: [], // Initialize as empty array, not undefined
       businessDescription: '',
-      piWalletAddress: '',
+      piWalletAddress: user?.walletAddress || '',
       mondayOpen: '09:00',
       mondayClose: '17:00',
       mondayClosed: false,
@@ -83,7 +83,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
       // Prepare the data to be submitted to Supabase
       const businessData = {
         name: values.businessName,
-        owner_id: user?.id, // Link the business to the authenticated user
+        owner_id: user?.uid, // Use uid instead of id
         location: `${values.streetAddress}, ${values.state}, ${values.zipCode}`,
         description: values.businessDescription,
         // Convert the array to a single category string for now
