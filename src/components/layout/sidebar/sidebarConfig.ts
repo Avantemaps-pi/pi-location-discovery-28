@@ -12,20 +12,12 @@ import {
   FileText,
   Phone,
   Cookie,
-  LogOut
 } from 'lucide-react';
 
 // Create a function to dynamically get the notification count
 import { getUnreadNotificationsCount } from '@/utils/notificationUtils';
 
 export const navItems = [
-  {
-    to: '/logout',
-    icon: LogOut,
-    label: 'Logout',
-    isLogout: true,
-    requiresAuth: true, // Only show for authenticated users
-  },
   {
     to: '/',
     icon: Map,

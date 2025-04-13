@@ -28,7 +28,7 @@ const NavItem = ({
   const { logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
-  // If this is an auth-required item (like logout) and user is not authenticated, don't render
+  // If this is an auth-required item and user is not authenticated, don't render
   if (requiresAuth && !isAuthenticated) {
     return null;
   }

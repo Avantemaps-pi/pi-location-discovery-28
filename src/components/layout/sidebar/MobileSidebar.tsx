@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { X, UserRound, LogIn } from 'lucide-react';
+import { X, UserRound, LogIn, LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import NavItem from './NavItem';
 import { useAuth } from '@/context/auth';
@@ -33,27 +33,19 @@ const MobileSidebar = ({
   onClose,
   onLinkClick
 }: MobileSidebarProps) => {
-  const { user, isAuthenticated, login, isLoading } = useAuth();
+  const { user, isAuthenticated, login, logout, isLoading } = useAuth();
   const username = user?.username || 'Guest';
   const planType = user?.subscriptionTier ? user.subscriptionTier.charAt(0).toUpperCase() + user.subscriptionTier.slice(1) : 'Individual';
 
-  // Login button component with proper login flow
-  const LoginButton = () => (
-    <div className="px-2 mb-4">
-      <Button 
-        onClick={() => {
-          login();
-          onClose();
-        }} 
-        disabled={isLoading}
-        className="w-full flex items-center"
-        variant="outline"
-      >
-        <LogIn className="h-4 w-4 mr-2" />
-        {isLoading ? "Authenticating..." : "Login with Pi"}
-      </Button>
-    </div>
-  );
+  // Function to handle authentication actions
+  const handleAuthAction = () => {
+    if (isAuthenticated) {
+      logout();
+    } else {
+      login();
+    }
+    onClose();
+  };
 
   return (
     <>
@@ -91,8 +83,27 @@ const MobileSidebar = ({
           </div>
           
           <div className="flex-1 overflow-y-auto py-4">
-            {/* Show login button above nav items if not authenticated */}
-            {!isAuthenticated && <LoginButton />}
+            {/* Authentication button at the top of the sidebar */}
+            <div className="px-2 mb-4">
+              <Button 
+                onClick={handleAuthAction} 
+                disabled={isLoading}
+                className="w-full flex items-center"
+                variant="outline"
+              >
+                {isAuthenticated ? (
+                  <>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="h-4 w-4 mr-2" />
+                    {isLoading ? "Authenticating..." : "Login with Pi"}
+                  </>
+                )}
+              </Button>
+            </div>
             
             <nav>
               <ul className="space-y-1 px-2">

@@ -11,7 +11,7 @@ import {
 import NavItem from './NavItem';
 import { useAuth } from '@/context/auth';
 import { Button } from '@/components/ui/button';
-import { LogIn } from 'lucide-react';
+import { LogIn, LogOut } from 'lucide-react';
 
 interface DesktopSidebarProps {
   className?: string;
@@ -37,7 +37,17 @@ const DesktopSidebar = ({
   currentPath, 
   onLinkClick 
 }: DesktopSidebarProps) => {
-  const { isAuthenticated, login, isLoading } = useAuth();
+  const { isAuthenticated, login, logout, isLoading } = useAuth();
+  
+  // Function to handle authentication actions
+  const handleAuthAction = () => {
+    if (isAuthenticated) {
+      logout();
+    } else {
+      login();
+    }
+    onLinkClick();
+  };
   
   return (
     <Sidebar className={cn("hidden md:flex", className)}>
@@ -59,6 +69,28 @@ const DesktopSidebar = ({
 
       <SidebarContent>
         <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-8">
+          {/* Authentication Button - appears at the top */}
+          <div className="mb-2">
+            <Button 
+              onClick={handleAuthAction}
+              disabled={isLoading}
+              className="w-full"
+              variant="outline"
+            >
+              {isAuthenticated ? (
+                <>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </>
+              ) : (
+                <>
+                  <LogIn className="h-4 w-4 mr-2" />
+                  {isLoading ? "Authenticating..." : "Login with Pi"}
+                </>
+              )}
+            </Button>
+          </div>
+
           <nav>
             <ul className="space-y-1">
               {navItems.map((item) => (
@@ -90,20 +122,6 @@ const DesktopSidebar = ({
               ))}
             </ul>
           </div>
-          
-          {!isAuthenticated && (
-            <div className="mt-4">
-              <Button 
-                onClick={login} 
-                disabled={isLoading}
-                className="w-full"
-                variant="outline"
-              >
-                <LogIn className="h-4 w-4 mr-2" />
-                {isLoading ? "Authenticating..." : "Login with Pi"}
-              </Button>
-            </div>
-          )}
         </div>
       </SidebarContent>
 
