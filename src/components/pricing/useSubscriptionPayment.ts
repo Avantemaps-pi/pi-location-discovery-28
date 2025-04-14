@@ -14,6 +14,25 @@ export const useSubscriptionPayment = () => {
     setSelectedFrequency(frequency);
   };
   
+  // New function to update user subscription without payment
+  const updateUserSubscription = async (tier: string) => {
+    if (!isAuthenticated) {
+      toast.info("Please log in to change your subscription");
+      await login();
+      return;
+    }
+    
+    try {
+      // In a real app, you would make an API call to update the subscription in the backend
+      // For now, we'll simulate this by refreshing user data
+      toast.success(`Successfully updated to ${tier} subscription`);
+      await refreshUserData();
+    } catch (error) {
+      console.error("Subscription update error:", error);
+      toast.error("Failed to update subscription");
+    }
+  };
+  
   const handleSubscribe = async (tier: string) => {
     // Skip if it's the free tier or if it's marked as coming soon
     if (tier === "individual" || tier.includes("coming-soon")) {
@@ -95,6 +114,7 @@ export const useSubscriptionPayment = () => {
     selectedFrequency,
     handleFrequencyChange,
     handleSubscribe,
+    updateUserSubscription,
     userSubscriptionTier: user?.subscriptionTier
   };
 };

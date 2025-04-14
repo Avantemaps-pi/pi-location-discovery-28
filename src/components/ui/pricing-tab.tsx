@@ -7,23 +7,24 @@ interface TabProps {
   selected: boolean
   setSelected: (value: string) => void
   discount?: boolean
+  discountAmount?: string
 }
 
-export function Tab({ text, selected, setSelected, discount = false }: TabProps) {
+export function Tab({ text, selected, setSelected, discount = false, discountAmount = "20%" }: TabProps) {
   return (
     <button
       onClick={() => setSelected(text)}
       className={cn(
-        "relative flex h-10 items-center justify-center rounded-full px-4 text-sm transition",
+        "relative flex h-10 items-center justify-center rounded-full px-6 text-sm font-medium transition",
         selected
           ? "bg-background text-foreground shadow-sm"
           : "text-muted-foreground hover:text-foreground"
       )}
     >
       {text}
-      {discount && (
-        <span className="absolute -right-2 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-medium text-white shadow-sm ring-1 ring-green-400 animate-pulse">
-          -20%
+      {discount && selected && (
+        <span className="absolute -right-12 flex h-6 items-center justify-center rounded-full bg-green-600 px-2 text-[10px] font-medium text-white shadow-sm">
+          Save {discountAmount}
         </span>
       )}
     </button>

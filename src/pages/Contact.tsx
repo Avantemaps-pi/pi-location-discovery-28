@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -25,7 +24,7 @@ const Contact = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm">hello@avantemaps.com</p>
+              <p className="text-sm">inquiries@avantemaps.com</p>
               <p className="text-xs text-muted-foreground mt-1">For general inquiries</p>
             </CardContent>
           </Card>

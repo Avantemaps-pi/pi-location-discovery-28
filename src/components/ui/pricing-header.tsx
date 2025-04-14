@@ -23,14 +23,15 @@ export function PricingHeader({
         <h1 className="text-4xl font-medium md:text-5xl">{title}</h1>
         <p className="text-muted-foreground">{subtitle}</p>
       </div>
-      <div className="mx-auto flex w-fit rounded-full bg-muted p-1">
-        {frequencies.map((freq) => (
+      <div className="mx-auto flex w-fit rounded-full bg-muted p-1.5">
+        {frequencies.map((freq, index) => (
           <Tab
             key={freq}
-            text={freq}
+            text={freq.charAt(0).toUpperCase() + freq.slice(1)}
             selected={selectedFrequency === freq}
             setSelected={onFrequencyChange}
             discount={freq === "yearly"}
+            discountAmount="35%"
           />
         ))}
       </div>
