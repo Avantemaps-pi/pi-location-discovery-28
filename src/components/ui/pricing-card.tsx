@@ -3,7 +3,6 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Check } from "lucide-react"
-import { useUsdtPrice } from "@/hooks/useUsdtPrice"
 
 export interface PricingTier {
   id: string
@@ -39,12 +38,6 @@ export function PricingCard({
 }: PricingCardProps) {
   const price = tier.price[paymentFrequency as keyof typeof tier.price]
   const isCustom = typeof price === "string"
-  const { convertUsdToPi } = useUsdtPrice();
-
-  // Calculate Pi price only for numeric prices
-  const piPrice = !isCustom && typeof price === "number" 
-    ? convertUsdToPi(price)
-    : null;
 
   return (
     <div
@@ -80,11 +73,6 @@ export function PricingCard({
             <span className="text-sm text-muted-foreground">/{paymentFrequency}</span>
           )}
         </div>
-        {piPrice !== null && (
-          <div className="mt-1 text-xs text-muted-foreground">
-            Live USDT-based pricing via CoinGecko
-          </div>
-        )}
       </div>
 
       <div className="mt-6 space-y-4">
