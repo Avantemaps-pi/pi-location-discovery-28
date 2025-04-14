@@ -10,7 +10,7 @@ const PrivacyPolicy = () => {
       <div className="max-w-5xl mx-auto space-y-8 p-4 sm:p-6 animate-fade-in">
         <div className="space-y-4">
           <h1 className="text-3xl font-bold tracking-tight">Privacy Policy</h1>
-          <p className="text-muted-foreground">Last updated: May 1, 2023</p>
+          <p className="text-muted-foreground"><strong>Effective Date:</strong> April 13, 2025</p>
         </div>
 
         <Card className="material-card">
@@ -28,61 +28,72 @@ const PrivacyPolicy = () => {
                 </p>
 
                 <h3 className="text-lg font-medium">1. Information We Collect</h3>
-                <p>
-                  We may collect information about you in a variety of ways. The information we may collect includes:
-                </p>
+                <p>We may collect the following types of information:</p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li><strong>Personal Data:</strong> Personally identifiable information, such as your name, email address, and phone number, that you voluntarily give to us when you register with the Service or when you choose to participate in various activities related to the Service.</li>
-                  <li><strong>Derivative Data:</strong> Information our servers automatically collect when you access the Service, such as your IP address, browser type, operating system, access times, and the pages you have viewed.</li>
-                  <li><strong>Financial Data:</strong> Financial information, such as data related to your payment method, that we may collect when you purchase, order, or use the Service.</li>
-                  <li><strong>Mobile Device Data:</strong> Device information, such as your mobile device ID, model, and manufacturer, and information about the location of your device, if you access the Service from a mobile device.</li>
+                  <li><strong>Personal Identification Information:</strong> Name, email address, phone number, and Pi Network username when you register or update your profile.</li>
+                  <li><strong>Business Information:</strong> If you register a business, we collect business name, address, operating hours, description, and other related details.</li>
+                  <li><strong>Location Data:</strong> With your permission, we collect precise location data to show nearby businesses and provide mapping functionality.</li>
+                  <li><strong>Usage Information:</strong> Data about how you interact with our app, including pages visited, features used, search queries, and time spent on the app.</li>
+                  <li><strong>Device Information:</strong> Information about your device, including IP address, browser type, operating system, and mobile device identifiers.</li>
+                  <li><strong>Transaction Data:</strong> Records of Pi payments, subscriptions, or other financial transactions conducted through our platform.</li>
                 </ul>
 
-                <h3 className="text-lg font-medium">2. Use of Your Information</h3>
-                <p>
-                  Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the Service to:
-                </p>
+                <h3 className="text-lg font-medium">2. How We Use Your Information</h3>
+                <p>We use the information we collect to:</p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>Create and manage your account.</li>
-                  <li>Process payments and refunds.</li>
-                  <li>Facilitate business registrations and transactions.</li>
-                  <li>Increase the efficiency and operation of the Service.</li>
-                  <li>Monitor and analyze usage and trends to improve your experience with the Service.</li>
-                  <li>Notify you of updates to the Service.</li>
-                  <li>Resolve disputes and troubleshoot problems.</li>
-                  <li>Prevent fraudulent transactions, monitor against theft, and protect against criminal activity.</li>
+                  <li>Provide, maintain, and improve our services</li>
+                  <li>Process transactions and send related information</li>
+                  <li>Verify business listings and Pi payment acceptance</li>
+                  <li>Display relevant business recommendations based on your location and preferences</li>
+                  <li>Generate analytics and insights about how users interact with our platform</li>
+                  <li>Send notifications about new features, businesses, or relevant updates</li>
+                  <li>Respond to your comments, questions, and customer service requests</li>
+                  <li>Protect against fraudulent or unauthorized transactions</li>
+                  <li>Develop new features and services based on user feedback and behavior</li>
                 </ul>
 
-                <h3 className="text-lg font-medium">3. Disclosure of Your Information</h3>
-                <p>
-                  We may share information we have collected about you in certain situations. Your information may be disclosed as follows:
-                </p>
+                <h3 className="text-lg font-medium">3. Sharing Your Information</h3>
+                <p>We may share your information in the following situations:</p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li><strong>By Law or to Protect Rights:</strong> If we believe the release of information about you is necessary to respond to legal process, to investigate or remedy potential violations of our policies, or to protect the rights, property, and safety of others, we may share your information as permitted or required by any applicable law, rule, or regulation.</li>
-                  <li><strong>Third-Party Service Providers:</strong> We may share your information with third parties that perform services for us or on our behalf, including payment processing, data analysis, email delivery, hosting services, customer service, and marketing assistance.</li>
-                  <li><strong>Business Transfers:</strong> If we or our subsidiaries are involved in a merger, acquisition, or sale of all or a portion of our assets, your information may be transferred as part of that transaction.</li>
+                  <li><strong>With Service Providers:</strong> Third-party vendors who perform services on our behalf, such as payment processing, data analysis, email delivery, and hosting services.</li>
+                  <li><strong>Business Partners:</strong> We may share data with Pi Network and other business partners to facilitate transactions and provide integrated services.</li>
+                  <li><strong>For Legal Compliance:</strong> We may disclose information where required by law or if we believe disclosure is necessary to protect our rights or the safety of others.</li>
+                  <li><strong>With Your Consent:</strong> We may share your information with third parties when you have given us your consent to do so.</li>
+                  <li><strong>Business Transfers:</strong> In connection with any merger, sale of company assets, financing, or acquisition of all or a portion of our business.</li>
                 </ul>
 
                 <h3 className="text-lg font-medium">4. Security of Your Information</h3>
                 <p>
-                  We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse.
+                  We implement appropriate technical and organizational measures to protect the security of your personal information. However, please recognize that no method of transmission over the internet or electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security.
                 </p>
 
-                <h3 className="text-lg font-medium">5. Your Rights and Choices</h3>
-                <p>
-                  You may at any time review or change the information in your account by:
-                </p>
+                <h3 className="text-lg font-medium">5. Your Privacy Rights</h3>
+                <p>Depending on your location, you may have the following rights:</p>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>Logging into your account settings and updating your account.</li>
-                  <li>Contacting us using the contact information provided below.</li>
+                  <li><strong>Access:</strong> You can request copies of your personal information we hold.</li>
+                  <li><strong>Rectification:</strong> You can ask us to correct inaccurate information or complete incomplete information.</li>
+                  <li><strong>Erasure:</strong> You can ask us to delete your personal information in certain circumstances.</li>
+                  <li><strong>Restrict Processing:</strong> You can ask us to restrict the processing of your information in certain circumstances.</li>
+                  <li><strong>Data Portability:</strong> You can ask us to transfer your information to another organization or directly to you.</li>
+                  <li><strong>Objection:</strong> You can object to our processing of your personal information.</li>
                 </ul>
                 <p>
-                  Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, some information may be retained in our files to prevent fraud, troubleshoot problems, assist with any investigations, enforce our Terms of Use and/or comply with legal requirements.
+                  To exercise any of these rights, please contact us at privacy@avantemaps.com.
                 </p>
 
-                <h3 className="text-lg font-medium">6. Contact Us</h3>
+                <h3 className="text-lg font-medium">6. Children's Privacy</h3>
                 <p>
-                  If you have questions or comments about this Privacy Policy, please contact us at:
+                  Our Service is not directed to children under the age of 13. We do not knowingly collect personally identifiable information from children under 13. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact us.
+                </p>
+
+                <h3 className="text-lg font-medium">7. Changes to This Privacy Policy</h3>
+                <p>
+                  We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Effective Date" at the top. You are advised to review this Privacy Policy periodically for any changes.
+                </p>
+
+                <h3 className="text-lg font-medium">8. Contact Us</h3>
+                <p>
+                  If you have any questions about this Privacy Policy, please contact us at:
                 </p>
                 <p>
                   privacy@avantemaps.com<br />

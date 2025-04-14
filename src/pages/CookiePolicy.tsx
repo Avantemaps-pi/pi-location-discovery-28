@@ -12,7 +12,7 @@ const CookiePolicy = () => {
           <CardTitle className="text-3xl">Cookie Policy</CardTitle>
         </CardHeader>
         <CardContent className="prose prose-slate max-w-none">
-          <p className="text-muted-foreground">Last updated: May 1, 2023</p>
+          <p className="text-muted-foreground"><strong>Effective Date:</strong> April 13, 2025</p>
           
           <Separator className="my-6" />
           
@@ -51,12 +51,18 @@ const CookiePolicy = () => {
                 <p>
                   These cookies are strictly necessary to provide you with services available through our Service and to use some of its features, such as access to secure areas. Because these cookies are strictly necessary to deliver the Service, you cannot refuse them without impacting how our Service functions.
                 </p>
+                <p className="mt-2">
+                  Examples include cookies used to authenticate users, maintain sessions, and remember your preferences for map display and business searches.
+                </p>
               </div>
               
               <div>
                 <h3 className="font-bold">Performance and Functionality Cookies</h3>
                 <p>
                   These cookies are used to enhance the performance and functionality of our Service but are non-essential to their use. However, without these cookies, certain functionality may become unavailable.
+                </p>
+                <p className="mt-2">
+                  Examples include cookies that remember your location permissions, display preferences, and recently viewed businesses.
                 </p>
               </div>
               
@@ -65,6 +71,9 @@ const CookiePolicy = () => {
                 <p>
                   These cookies collect information that is used either in aggregate form to help us understand how our Service is being used or how effective our marketing campaigns are, or to help us customize our Service for you.
                 </p>
+                <p className="mt-2">
+                  We use analytics cookies to gather information about how users interact with our maps, what businesses they view most often, and which features they use most frequently.
+                </p>
               </div>
               
               <div>
@@ -72,12 +81,18 @@ const CookiePolicy = () => {
                 <p>
                   These cookies are used to make advertising messages more relevant to you. They perform functions like preventing the same ad from continuously reappearing, ensuring that ads are properly displayed, and in some cases selecting advertisements that are based on your interests.
                 </p>
+                <p className="mt-2">
+                  We may use these cookies to promote premium business listings and to help businesses reach potential customers more effectively.
+                </p>
               </div>
               
               <div>
                 <h3 className="font-bold">Social Media Cookies</h3>
                 <p>
                   These cookies are used to enable you to share pages and content that you find interesting on our Service through third-party social networking and other websites. These cookies may also be used for advertising purposes.
+                </p>
+                <p className="mt-2">
+                  They help you share business information, reviews, and recommendations with your network.
                 </p>
               </div>
             </div>
@@ -92,8 +107,16 @@ const CookiePolicy = () => {
               You can set or amend your web browser controls to accept or refuse cookies. If you choose to reject cookies, you may still use our Service though your access to some functionality and areas of our Service may be restricted. As the means by which you can refuse cookies through your web browser controls vary from browser to browser, you should visit your browser's help menu for more information.
             </p>
             <p className="mt-4">
-              In addition, most advertising networks offer you a way to opt out of targeted advertising. If you would like to find out more information, please visit <a href="http://www.aboutads.info/choices/" className="text-avante-blue hover:underline">http://www.aboutads.info/choices/</a> or <a href="http://www.youronlinechoices.com" className="text-avante-blue hover:underline">http://www.youronlinechoices.com</a>.
+              Most modern browsers allow you to:
             </p>
+            <ul className="list-disc pl-6 space-y-2 mt-2">
+              <li>View your cookies</li>
+              <li>Delete specific cookies</li>
+              <li>Block third party cookies</li>
+              <li>Block cookies from particular sites</li>
+              <li>Block all cookies</li>
+              <li>Delete all cookies when you close your browser</li>
+            </ul>
           </section>
           
           <section className="mb-8">
@@ -120,6 +143,9 @@ const CookiePolicy = () => {
             </p>
             <p className="mt-2">
               <strong>Address:</strong> 123 Pi Street, Suite 456, San Francisco, CA 94103
+            </p>
+            <p className="mt-2">
+              <strong>Phone:</strong> (555) 123-4567
             </p>
           </section>
         </CardContent>
