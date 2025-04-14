@@ -10,7 +10,7 @@ interface TabProps {
   discountAmount?: string
 }
 
-export function Tab({ text, selected, setSelected, discount = false, discountAmount = "20%" }: TabProps) {
+export function Tab({ text, selected, setSelected, discount = false, discountAmount = "25%" }: TabProps) {
   return (
     <button
       onClick={() => setSelected(text)}
