@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -32,7 +31,6 @@ const queryClient = new QueryClient();
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Set up the initial theme on mount
   useEffect(() => {
     const savedScheme = localStorage.getItem('colorScheme');
     
@@ -43,7 +41,6 @@ const App = () => {
       document.documentElement.classList.remove('dark');
       setIsDarkMode(false);
     } else {
-      // Default to light mode instead of system preference
       document.documentElement.classList.remove('dark');
       setIsDarkMode(false);
       localStorage.setItem('colorScheme', 'light');

@@ -68,12 +68,12 @@ export const navItems = [
 
 export const legalItems = [
   {
-    to: '/privacy-policy',
+    to: '/privacy', // Updated from '/privacy-policy'
     icon: Lock,
     label: 'Privacy Policy',
   },
   {
-    to: '/terms-of-service',
+    to: '/terms', // Updated from '/terms-of-service'
     icon: FileText,
     label: 'Terms of Service',
   },
