@@ -44,10 +44,9 @@ const Pricing = () => {
     ...tier,
     onSubscribe: () => handleSubscribe(tier.id),
     isLoading: isProcessingPayment,
-    disabled: tier.id === "individual" || // Free tier
-             tier.comingSoon || // Coming soon
-             userSubscriptionTier === tier.id, // Already subscribed
-    cta: userSubscriptionTier === tier.id 
+    disabled: tier.comingSoon || // Coming soon
+             (tier.id !== "individual" && userSubscriptionTier === tier.id), // Already subscribed (except for free tier)
+    cta: userSubscriptionTier === tier.id && tier.id !== "individual"
          ? "Current Plan" 
          : tier.cta
   }));

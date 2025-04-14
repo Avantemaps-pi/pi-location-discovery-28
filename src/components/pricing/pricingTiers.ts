@@ -14,7 +14,7 @@ export const TIERS = [
       "AI chat support",
       "1 business listing",
     ],
-    cta: "Current Plan",
+    cta: "Select Plan",
   },
   {
     id: "small-business",

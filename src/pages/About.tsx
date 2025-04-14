@@ -4,8 +4,11 @@ import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PiSquare, Heart, Mail, Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const About = () => {
+  const navigate = useNavigate();
+
   return (
     <AppLayout title="About Us">
       <div className="max-w-5xl mx-auto space-y-8 p-4 sm:p-6 animate-fade-in">
@@ -51,7 +54,7 @@ const About = () => {
                 <li>Free business listing and promotion</li>
                 <li>Join the future of digital payments</li>
               </ul>
-              <Button className="w-full mt-4" variant="outline">
+              <Button className="w-full mt-4" variant="outline" onClick={() => navigate('/registration')}>
                 Register Your Business
               </Button>
             </CardContent>
@@ -71,7 +74,7 @@ const About = () => {
                 <li>Get notifications about new businesses</li>
                 <li>Support the growing Pi economy</li>
               </ul>
-              <Button className="w-full mt-4">
+              <Button className="w-full mt-4" onClick={() => navigate('/')}>
                 Explore the Map
               </Button>
             </CardContent>
