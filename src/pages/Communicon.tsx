@@ -23,6 +23,7 @@ const Communicon = () => {
     message,
     setMessage,
     messages,
+    setMessages,
     chatMode,
     handleChatModeChange,
     handleSendMessage,
@@ -44,11 +45,35 @@ const Communicon = () => {
     handleSendMessage(event);
   };
   
-  // Create a wrapper for handleAttachmentOption that doesn't take any parameters
+  // Create a wrapper for handleAttachmentOption that shows attachment options
   const handleAttachmentOptionWrapper = () => {
-    if (handleAttachmentOption) {
-      handleAttachmentOption('default');
-    }
+    // Add a system message showing attachment options
+    const systemMessage = {
+      id: messages.length + 1,
+      text: "Please select an attachment type:",
+      sender: "system",
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    
+    const optionsMessage = {
+      id: messages.length + 2,
+      text: "[Image] [Video]",
+      sender: "attachment-options",
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    
+    setMessages([...messages, systemMessage, optionsMessage]);
+    
+    // For demo purposes, we'll set a message that shows the user what would happen
+    setTimeout(() => {
+      const responseMessage = {
+        id: messages.length + 3,
+        text: "Attachment options are shown for demonstration. In a full implementation, clicking these options would open a file picker.",
+        sender: "system",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages(prev => [...prev, responseMessage]);
+    }, 1000);
   };
 
   // Handle the chat mode change
@@ -92,7 +117,7 @@ const Communicon = () => {
       >
         <DialogContent 
           className="sm:max-w-md max-h-[90vh] overflow-y-auto z-[100]"
-          container={document.getElementById('root')} // Move container prop here
+          container={document.getElementById('root')}
         >
           <div className="p-6 flex flex-col items-center space-y-6">
             <div className="bg-primary/10 p-4 rounded-full">

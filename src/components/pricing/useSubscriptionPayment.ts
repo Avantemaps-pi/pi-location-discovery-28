@@ -14,7 +14,7 @@ export const useSubscriptionPayment = () => {
     setSelectedFrequency(frequency);
   };
   
-  // New function to update user subscription without payment
+  // Update user subscription without payment
   const updateUserSubscription = async (tier: string) => {
     if (!isAuthenticated) {
       toast.info("Please log in to change your subscription");
@@ -23,13 +23,21 @@ export const useSubscriptionPayment = () => {
     }
     
     try {
+      setIsProcessingPayment(true);
+      
+      // Simulate API call to update subscription
       // In a real app, you would make an API call to update the subscription in the backend
-      // For now, we'll simulate this by refreshing user data
-      toast.success(`Successfully updated to ${tier} subscription`);
+      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate network delay
+      
+      toast.success(`Successfully updated to ${tier.charAt(0).toUpperCase() + tier.slice(1)} subscription`);
+      
+      // Refresh user data to update subscription info in the UI
       await refreshUserData();
     } catch (error) {
       console.error("Subscription update error:", error);
       toast.error("Failed to update subscription");
+    } finally {
+      setIsProcessingPayment(false);
     }
   };
   

@@ -37,12 +37,17 @@ export function PricingSection({
     }
   }
 
+  // Filter to only include monthly and yearly frequencies
+  const filteredFrequencies = frequencies.filter(freq => 
+    freq === 'monthly' || freq === 'yearly'
+  );
+
   return (
     <section className="flex flex-col items-center gap-10 py-10">
       <PricingHeader
         title={title}
         subtitle={subtitle}
-        frequencies={frequencies}
+        frequencies={filteredFrequencies}
         selectedFrequency={selectedFrequency}
         onFrequencyChange={handleFrequencyChange}
       />

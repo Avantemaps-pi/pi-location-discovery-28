@@ -58,8 +58,8 @@ const Pricing = () => {
     if (userSubscriptionTier && userSubscriptionTier !== 'individual') {
       setPreviousPlan(userSubscriptionTier);
       setShowDialog(true);
-    } else {
-      handleSubscribe('individual');
+    } else if (userSubscriptionTier !== 'individual') {
+      updateUserSubscription('individual');
     }
   };
 
