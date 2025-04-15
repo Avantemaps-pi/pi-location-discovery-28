@@ -34,17 +34,31 @@ const Settings = () => {
     return false;
   });
 
-  // Refresh user data when component mounts
+  // Track initial values to compare for changes
+  const [initialValues, setInitialValues] = useState({
+    language: language,
+    notifications: notifications,
+    colorScheme: colorScheme
+  });
+
+  // Refresh user data only when component mounts, not on every render
   useEffect(() => {
     const loadUserData = async () => {
-      // Remove reference to user.email which doesn't exist
-      if (user) {
+      if (user && !isLoading) {
+        console.log("Initial user data load");
         await refreshUserData();
+        // After initial load, save the values to compare against later
+        setInitialValues({
+          language,
+          notifications,
+          colorScheme
+        });
       }
     };
     
     loadUserData();
-  }, [user, refreshUserData]);
+    // Only run this effect once when the component mounts and user is available
+  }, []);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -84,10 +98,27 @@ const Settings = () => {
   };
 
   const handleSaveSettings = () => {
-    localStorage.setItem('language', language);
-    localStorage.setItem('notifications', String(notifications));
+    // Check if any values have actually changed before saving
+    const hasChanges = 
+      initialValues.language !== language ||
+      initialValues.notifications !== notifications ||
+      initialValues.colorScheme !== colorScheme;
     
-    toast.success('Settings saved successfully!');
+    if (hasChanges) {
+      localStorage.setItem('language', language);
+      localStorage.setItem('notifications', String(notifications));
+      
+      // Update the initial values to the new ones
+      setInitialValues({
+        language,
+        notifications,
+        colorScheme
+      });
+      
+      toast.success('Settings saved successfully!');
+    } else {
+      toast.info('No changes detected');
+    }
   };
 
   const handleDeleteAccount = () => {
