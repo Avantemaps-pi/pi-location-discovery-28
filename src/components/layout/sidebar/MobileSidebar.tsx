@@ -35,7 +35,14 @@ const MobileSidebar = ({
 }: MobileSidebarProps) => {
   const { user, isAuthenticated, login, logout, isLoading } = useAuth();
   const username = user?.username || 'Guest';
-  const planType = user?.subscriptionTier ? user.subscriptionTier.charAt(0).toUpperCase() + user.subscriptionTier.slice(1) : 'Individual';
+  
+  // Format the subscription tier for display
+  const formatPlanType = (tier?: string) => {
+    if (!tier) return 'Individual';
+    return tier.charAt(0).toUpperCase() + tier.slice(1).replace('-', ' ');
+  };
+  
+  const planType = formatPlanType(user?.subscriptionTier);
 
   // Function to handle authentication actions
   const handleAuthAction = () => {

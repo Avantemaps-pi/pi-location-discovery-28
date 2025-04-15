@@ -34,6 +34,11 @@ const ProfileSettings = ({
     // In a real app, this would involve i18n library integration
   }, [language]);
 
+  // Format subscription tier for display (capitalize first letter and replace hyphens with spaces)
+  const formatSubscriptionTier = (tier: string = 'individual') => {
+    return tier.charAt(0).toUpperCase() + tier.slice(1).replace('-', ' ');
+  };
+
   return (
     <Card className="overflow-hidden">
       <CardHeader className="p-4 sm:p-6">
@@ -85,7 +90,7 @@ const ProfileSettings = ({
             <Input 
               id="subscription" 
               placeholder="Individual" 
-              value={user?.subscriptionTier?.charAt(0).toUpperCase() + user?.subscriptionTier?.slice(1).replace('-', ' ') || 'Individual'} 
+              value={formatSubscriptionTier(user?.subscriptionTier)} 
               readOnly 
               className="bg-gray-100 h-9" 
             />

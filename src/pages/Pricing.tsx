@@ -54,18 +54,20 @@ const Pricing = () => {
   }, [location.state]);
 
   // Handle individual plan selection
-  const handleIndividualPlanClick = () => {
+  const handleIndividualPlanClick = async () => {
     if (userSubscriptionTier && userSubscriptionTier !== 'individual') {
       setPreviousPlan(userSubscriptionTier);
       setShowDialog(true);
     } else if (userSubscriptionTier !== 'individual') {
-      updateUserSubscription('individual');
+      // Update the subscription tier and refresh the UI
+      await updateUserSubscription('individual');
     }
   };
 
   // Handle dialog confirmation
-  const handleConfirmDowngrade = () => {
-    updateUserSubscription('individual');
+  const handleConfirmDowngrade = async () => {
+    // Update the subscription tier and refresh the UI
+    await updateUserSubscription('individual');
     toast.success('Your subscription has been updated to the Individual plan.');
     setShowDialog(false);
   };

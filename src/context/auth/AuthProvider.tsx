@@ -89,7 +89,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     
-    await refreshUserDataService(user, setUser, setIsLoading);
+    if (!user) {
+      console.log("No user to refresh data for");
+      return;
+    }
+    
+    console.log("Refreshing user data...");
+    setIsLoading(true);
+    try {
+      await refreshUserDataService(user, setUser, setIsLoading);
+      console.log("User data refreshed successfully");
+    } catch (error) {
+      console.error("Failed to refresh user data:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [user, isSdkInitialized]);
 
   const logout = (): void => {

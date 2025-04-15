@@ -33,9 +33,15 @@ export const useSubscriptionPayment = () => {
       
       // Refresh user data to update subscription info in the UI
       await refreshUserData();
+      
+      console.log('User subscription updated to:', tier);
+      
+      // Return the updated tier for any component that needs it
+      return tier;
     } catch (error) {
       console.error("Subscription update error:", error);
       toast.error("Failed to update subscription");
+      return null;
     } finally {
       setIsProcessingPayment(false);
     }
