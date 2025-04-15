@@ -23,7 +23,6 @@ const Communicon = () => {
     message,
     setMessage,
     messages,
-    setMessages,
     chatMode,
     handleChatModeChange,
     handleSendMessage,
