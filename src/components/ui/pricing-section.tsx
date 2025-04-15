@@ -28,7 +28,9 @@ export function PricingSection({
   organizationTierId,
   onFrequencyChange,
 }: PricingSectionProps) {
-  const [selectedFrequency, setSelectedFrequency] = React.useState(frequencies[0])
+  // Only use the first two frequencies (monthly and yearly)
+  const limitedFrequencies = frequencies.slice(0, 2);
+  const [selectedFrequency, setSelectedFrequency] = React.useState(limitedFrequencies[0])
 
   const handleFrequencyChange = (frequency: string) => {
     setSelectedFrequency(frequency)
@@ -42,7 +44,7 @@ export function PricingSection({
       <PricingHeader
         title={title}
         subtitle={subtitle}
-        frequencies={frequencies}
+        frequencies={limitedFrequencies}
         selectedFrequency={selectedFrequency}
         onFrequencyChange={handleFrequencyChange}
       />

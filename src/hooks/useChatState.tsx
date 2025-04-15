@@ -82,21 +82,31 @@ export function useChatState() {
 
   const handleAttachmentOption = (type: string) => {
     console.log(`Attachment type selected: ${type}`);
-    // Implement actual attachment handling logic here
     
-    const requestMessage = {
+    // Send options message
+    const optionsMessage = {
       id: messages.length + 1,
+      text: "Select attachment type: Image or Video",
+      sender: "system",
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    
+    setMessages(prev => [...prev, optionsMessage]);
+    
+    // Add a user request message
+    const requestMessage = {
+      id: messages.length + 2,
       text: "Requesting to attach a file",
       sender: "user",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
     
-    setMessages([...messages, requestMessage]);
+    setMessages(prev => [...prev, requestMessage]);
     
     // Add a response
     setTimeout(() => {
       const responseMessage = {
-        id: messages.length + 2,
+        id: messages.length + 3,
         text: "File attachment is currently unavailable in the demo version.",
         sender: "support",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })

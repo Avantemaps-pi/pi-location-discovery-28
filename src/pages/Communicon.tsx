@@ -44,9 +44,21 @@ const Communicon = () => {
     handleSendMessage(event);
   };
   
-  // Create a wrapper for handleAttachmentOption that doesn't take any parameters
+  // Enhanced wrapper for handleAttachmentOption that shows attachment options
   const handleAttachmentOptionWrapper = () => {
     if (handleAttachmentOption) {
+      // First, add a system message about attachment options
+      const systemMessage = {
+        id: Math.random(),
+        text: "Please choose attachment type: Image or Video",
+        sender: "system",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      
+      // Add the message to chat
+      setMessages(prev => [...prev, systemMessage]);
+      
+      // Then handle the default attachment option
       handleAttachmentOption('default');
     }
   };
@@ -91,8 +103,8 @@ const Communicon = () => {
         onOpenChange={setShowUpgradePrompt}
       >
         <DialogContent 
-          className="sm:max-w-md max-h-[90vh] overflow-y-auto z-[100]"
-          container={document.getElementById('root')} // Move container prop here
+          className="sm:max-w-md max-h-[90vh] overflow-y-auto z-[100] transform translate-x-4 -translate-y-4"
+          container={document.getElementById('root')}
         >
           <div className="p-6 flex flex-col items-center space-y-6">
             <div className="bg-primary/10 p-4 rounded-full">

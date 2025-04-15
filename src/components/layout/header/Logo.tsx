@@ -9,17 +9,17 @@ interface LogoProps {
 
 const Logo = ({ title = "Avante Maps" }: LogoProps) => {
   return (
-    <Link to="/" className="flex items-center gap-2">
-      <div className="bg-gradient-to-r from-avante-blue to-avante-purple p-2 rounded-md">
-        <PiSquare className="h-5 w-5 text-white" />
+    <Link to="/" className="flex items-center gap-3">
+      <div className="bg-gradient-to-r from-avante-blue to-avante-purple p-2.5 rounded-md">
+        <PiSquare className="h-6 w-6 text-white" />
       </div>
       <div className="hidden md:flex flex-col">
-        <span className="font-bold text-lg bg-gradient-to-r from-avante-blue to-avante-purple bg-clip-text text-transparent">
+        <span className="font-bold text-xl bg-gradient-to-r from-avante-blue to-avante-purple bg-clip-text text-transparent">
           {title}
         </span>
-        <span className="text-xs text-muted-foreground">Pi Payment Finder</span>
+        <span className="text-sm text-muted-foreground">Pi Payment Finder</span>
       </div>
-      <span className="md:hidden font-bold text-lg">
+      <span className="md:hidden font-bold text-xl">
         {title}
       </span>
     </Link>

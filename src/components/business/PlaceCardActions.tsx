@@ -21,6 +21,7 @@ const PlaceCardActions: React.FC<PlaceCardActionsProps> = ({
         size="icon" 
         className="rounded-full w-8 h-8 bg-white/80 backdrop-blur-sm text-gray-800 hover:bg-white"
         onClick={onBookmarkToggle}
+        aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
       >
         <Bookmark 
           className={`h-4 w-4 ${isBookmarked ? 'text-primary fill-primary' : 'text-gray-600'}`}

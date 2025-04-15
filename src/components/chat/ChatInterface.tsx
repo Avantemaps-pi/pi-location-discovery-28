@@ -3,7 +3,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import ChatModeToggle from './ChatModeToggle';
 import ChatMessage from './ChatMessage';
-import { Menu, X, Send } from 'lucide-react';
+import { Menu, X, Send, Image, Video } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
@@ -89,10 +89,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 <PopoverContent className="w-64 p-0 bg-[#1e2732] text-white" sideOffset={5}>
                   <div className="flex flex-col divide-y divide-gray-700">
                     <button 
-                      onClick={() => handleMenuOptionClick('/attach')}
+                      onClick={() => {
+                        handleMenuOptionClick('/attach');
+                        if (handleAttachmentOption) handleAttachmentOption();
+                      }}
                       className="flex justify-between items-center p-3 hover:bg-gray-700 transition-colors"
                     >
-                      <span className="text-lg">Attach</span>
+                      <div className="flex items-center gap-2">
+                        <Image size={16} />
+                        <span className="text-lg">Attach</span>
+                      </div>
                       <span className="text-gray-400">/attach</span>
                     </button>
                     <button 
