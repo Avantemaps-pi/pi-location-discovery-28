@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -46,7 +47,7 @@ const Recommendations = () => {
 
   return (
     <AppLayout>
-      <div className="w-full mx-auto recommendations-container">
+      <div className="w-full mx-auto recommendations-container mt-8">
         <div className="space-y-1 mb-3 sm:mb-4 px-2 sm:px-4">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Recommendations</h1>
           <p className="text-sm text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency.</p>

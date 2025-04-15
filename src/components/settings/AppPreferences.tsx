@@ -80,6 +80,11 @@ const AppPreferences = ({
             </Select>
           </div>
         </div>
+
+        {/* Save Preferences Button moved above Business Verification Requirements */}
+        <div className="pt-4 flex justify-start">
+          <Button onClick={onSaveSettings}>Save Preferences</Button>
+        </div>
         
         <div className="pt-4">
           <h3 className="font-medium">Business Verification Requirements</h3>
@@ -134,8 +139,8 @@ const AppPreferences = ({
           </div>
         </div>
       </CardContent>
+      {/* Remove the Button from CardFooter */}
       <CardFooter>
-        <Button onClick={onSaveSettings}>Save Preferences</Button>
       </CardFooter>
     </Card>
   );

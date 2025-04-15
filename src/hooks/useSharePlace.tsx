@@ -7,18 +7,24 @@ export const useSharePlace = (placeName: string, placeId: string) => {
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
     
+    // Build share URL - use recommendations/:id for recommendations page
+    const isRecommendationsPage = window.location.pathname === '/recommendations';
+    const shareUrl = isRecommendationsPage 
+      ? `${window.location.origin}/recommendations/${placeId}`
+      : `${window.location.origin}?place=${placeId}`;
+    
     // Web Share API - falls back to copy to clipboard
     if (navigator.share) {
       navigator.share({
         title: placeName,
         text: `Check out ${placeName} on Avante Maps`,
-        url: window.location.origin + '?place=' + placeId
+        url: shareUrl
       }).catch(err => {
         console.error('Error sharing', err);
       });
     } else {
       // Fallback - copy link to clipboard
-      navigator.clipboard.writeText(window.location.origin + '?place=' + placeId);
+      navigator.clipboard.writeText(shareUrl);
       toast({
         title: 'Success',
         description: 'Link copied to clipboard!',

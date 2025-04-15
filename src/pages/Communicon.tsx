@@ -72,7 +72,7 @@ const Communicon = () => {
 
   return (
     <AppLayout title="Avante Maps">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto mt-6">
         <UserProfileCard />
         <ChatInterface 
           chatMode={chatMode}
@@ -87,7 +87,7 @@ const Communicon = () => {
       </div>
 
       <Dialog open={showUpgradePrompt} onOpenChange={setShowUpgradePrompt}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
           <div className="p-6 flex flex-col items-center space-y-6">
             <div className="bg-primary/10 p-4 rounded-full">
               <svg

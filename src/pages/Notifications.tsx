@@ -49,7 +49,7 @@ const Notifications = () => {
 
   return (
     <AppLayout title="Avante Maps">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto mt-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold mb-3">Notifications</h1>
           <Button 
