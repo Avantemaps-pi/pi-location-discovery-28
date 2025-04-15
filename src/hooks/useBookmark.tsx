@@ -1,6 +1,5 @@
 
-import { useState, useEffect } from 'react';
-import { useBusinessBookmarks } from '@/hooks/useBusinessBookmarks';
+import { useState } from 'react';
 
 interface UseBookmarkProps {
   initialIsBookmarked: boolean;
@@ -9,29 +8,13 @@ interface UseBookmarkProps {
 }
 
 export const useBookmark = ({ initialIsBookmarked, onRemove, id }: UseBookmarkProps) => {
-  const { isBookmarked: isBookmarkedInDB, toggleBookmark: toggleBookmarkInDB } = useBusinessBookmarks();
-  const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked || isBookmarkedInDB(id));
-  
-  // Sync state with database when component mounts
-  useEffect(() => {
-    setIsBookmarked(initialIsBookmarked || isBookmarkedInDB(id));
-  }, [id, initialIsBookmarked, isBookmarkedInDB]);
+  const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
 
-  const handleBookmarkToggle = async (e: React.MouseEvent) => {
+  const handleBookmarkToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
-    // Toggle bookmark in database
-    const success = await toggleBookmarkInDB(id);
-    
-    if (success) {
-      // Update local state if database update was successful
-      const newIsBookmarked = !isBookmarked;
-      setIsBookmarked(newIsBookmarked);
-      
-      // If onRemove callback exists and we're unbookmarking, call it
-      if (onRemove && newIsBookmarked === false) {
-        onRemove(id);
-      }
+    setIsBookmarked(!isBookmarked);
+    if (onRemove && !isBookmarked === false) {
+      onRemove(id);
     }
   };
 
