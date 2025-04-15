@@ -89,9 +89,11 @@ const Communicon = () => {
       <Dialog 
         open={showUpgradePrompt} 
         onOpenChange={setShowUpgradePrompt}
-        container={document.getElementById('root')} // Ensure dialog is mounted to root
       >
-        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto z-[100]">
+        <DialogContent 
+          className="sm:max-w-md max-h-[90vh] overflow-y-auto z-[100]"
+          container={document.getElementById('root')} // Move container prop here
+        >
           <div className="p-6 flex flex-col items-center space-y-6">
             <div className="bg-primary/10 p-4 rounded-full">
               <svg
