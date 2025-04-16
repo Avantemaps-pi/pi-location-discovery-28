@@ -35,7 +35,7 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
               <div className="text-center">Closing</div>
             </div>
             {daysOfWeek.map((day) => (
-              <div key={day.name} className="grid grid-cols-[1fr_60px_1fr_1fr] gap-3 items-center">
+              <div key={day.name} className="grid grid-cols-[1fr_60px_1fr_1fr] gap-4 sm:grid-cols-2 items-center">
                 <div className="font-medium">{day.name}</div>
                 
                 <FormField
