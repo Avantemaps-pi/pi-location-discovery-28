@@ -18,10 +18,18 @@ export const useSessionTimeout = () => {
   // Function to update the last activity timestamp
   const updateActivity = () => {
     setLastActivity(Date.now());
+    // Store last activity in localStorage for persistence across page reloads
+    localStorage.setItem('avante_last_activity', Date.now().toString());
   };
 
   // Set up activity monitoring
   useEffect(() => {
+    // Check if there's a stored last activity timestamp
+    const storedLastActivity = localStorage.getItem('avante_last_activity');
+    if (storedLastActivity) {
+      setLastActivity(parseInt(storedLastActivity, 10));
+    }
+
     // Add event listeners for user activity
     ACTIVITY_EVENTS.forEach(event => {
       window.addEventListener(event, updateActivity);
@@ -56,6 +64,8 @@ export const useSessionTimeout = () => {
               onClick: () => {
                 refreshUserData();
                 toast.success("Session extended");
+                // Update the authentication timestamp in localStorage
+                localStorage.setItem('avante_last_authenticated', Date.now().toString());
               }
             },
             duration: 10000,
@@ -83,6 +93,7 @@ export const useSessionTimeout = () => {
           console.log("Detected inactivity, refreshing session silently");
           refreshUserData();
           setLastActivity(Date.now()); // Reset inactivity timer
+          localStorage.setItem('avante_last_activity', Date.now().toString());
         }
       }, 60000); // Check every minute
     }
