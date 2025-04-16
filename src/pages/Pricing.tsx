@@ -4,11 +4,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/components/layout/AppLayout';
-import { PricingGrid } from '@/components/ui/pricing-grid';
 import { PricingSection } from '@/components/ui/pricing-section';
 import { toast } from 'sonner';
-import { pricingTiers } from '@/components/pricing/pricingTiers';
-import { PricingHeader } from '@/components/pricing/PricingHeader';
+import { TIERS } from '@/components/pricing/pricingTiers';
+import PricingHeader from '@/components/pricing/PricingHeader';
 import { useAuth } from '@/context/auth';
 import { useSubscriptionPayment } from '@/components/pricing/useSubscriptionPayment';
 
@@ -68,34 +67,34 @@ const Pricing = () => {
   
   return (
     <AppLayout title="Pricing">
-      <PricingSection>
-        <PricingHeader
-          title="Simple, transparent pricing"
-          description="Choose the plan that's right for you and explore Avante Maps with premium features."
-          billingOptions={["monthly", "yearly"]}
-          selectedBilling={selectedFrequency}
-          onBillingChange={handleBillingChange}
-        />
-        
-        <PricingGrid 
-          pricingTiers={pricingTiers} 
-          frequency={selectedFrequency}
-          currentTier={userSubscriptionTier}
-          onSelectPlan={(tier) => {
-            if (tier === 'individual') {
+      <PricingSection 
+        title="Simple, transparent pricing"
+        subtitle="Choose the plan that's right for you and explore Avante Maps with premium features."
+        tiers={TIERS.map(tier => ({
+          ...tier,
+          onSubscribe: () => {
+            if (tier.id === 'individual') {
               handleIndividualPlanClick();
             } else {
-              handleSubscribe(tier);
+              handleSubscribe(tier.id);
             }
-          }}
-          isLoading={isProcessingPayment}
-          isAuthenticated={isAuthenticated}
-          onLoginRequired={() => {
-            toast.info("Please login first to select a plan");
-            navigate("/");
-          }}
-        />
-
+          },
+          isLoading: isProcessingPayment,
+          disabled: tier.comingSoon
+        }))}
+        frequencies={["monthly", "yearly"]}
+        onFrequencyChange={handleBillingChange}
+      >
+        <div className="mb-8">
+          <PricingHeader 
+            title="Simple, transparent pricing"
+            description="Choose the plan that's right for you and explore Avante Maps with premium features."
+            billingOptions={["monthly", "yearly"]}
+            selectedBilling={selectedFrequency}
+            onBillingChange={handleBillingChange}
+          />
+        </div>
+        
         {/* Downgrade Confirmation Dialog */}
         <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
           <AlertDialogContent>
