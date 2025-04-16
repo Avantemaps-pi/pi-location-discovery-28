@@ -94,24 +94,24 @@ const Pricing = () => {
             onBillingChange={handleBillingChange}
           />
         </div>
-        
-        {/* Downgrade Confirmation Dialog */}
-        <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Confirm Plan Change</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to change from your current {previousPlan ? previousPlan.charAt(0).toUpperCase() + previousPlan.slice(1).replace('-', ' ') : ''} plan to the Individual plan? 
-                You'll lose access to premium features.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
-              <Button onClick={handleConfirmDowngrade}>Confirm Change</Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </PricingSection>
+      
+      {/* Downgrade Confirmation Dialog */}
+      <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Plan Change</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to change from your current {previousPlan ? previousPlan.charAt(0).toUpperCase() + previousPlan.slice(1).replace('-', ' ') : ''} plan to the Individual plan? 
+              You'll lose access to premium features.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
+            <Button onClick={handleConfirmDowngrade}>Confirm Change</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   );
 };

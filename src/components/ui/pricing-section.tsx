@@ -18,6 +18,7 @@ interface PricingSectionProps {
   frequencies: string[]
   organizationTierId?: string
   onFrequencyChange?: (frequency: string) => void
+  children?: React.ReactNode // Add children as an optional prop
 }
 
 export function PricingSection({
@@ -27,6 +28,7 @@ export function PricingSection({
   frequencies,
   organizationTierId,
   onFrequencyChange,
+  children, // Include children in the destructured props
 }: PricingSectionProps) {
   const [selectedFrequency, setSelectedFrequency] = React.useState(frequencies[0])
 
@@ -44,6 +46,9 @@ export function PricingSection({
 
   return (
     <section className="flex flex-col items-center gap-10 py-10">
+      {/* Render children before the header if provided */}
+      {children}
+
       <PricingHeader
         title={title}
         subtitle={subtitle}
