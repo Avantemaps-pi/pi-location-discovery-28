@@ -5,7 +5,7 @@ import BusinessOwnerTab from '../BusinessOwnerTab';
 import ContactTab from '../ContactTab';
 import AddressTab from '../AddressTab';
 import HoursTab from '../HoursTab';
-import UpdateDetailsTab from '../UpdateDetailsTab';
+import DetailsTab from '../DetailsTab';
 
 interface TabContentProps {
   selectedImage: File | null;
@@ -19,7 +19,7 @@ const TabContent: React.FC<TabContentProps> = ({
   setSelectedTab 
 }) => {
   return (
-    <div className="w-full">
+    <div className="w-full min-h-[500px]">
       <TabsContent value="business-owner" className="space-y-4 w-full">
         <BusinessOwnerTab onNext={() => setSelectedTab('contact')} />
       </TabsContent>
@@ -46,7 +46,7 @@ const TabContent: React.FC<TabContentProps> = ({
       </TabsContent>
 
       <TabsContent value="details" className="space-y-4 w-full">
-        <UpdateDetailsTab 
+        <DetailsTab 
           onPrevious={() => setSelectedTab('hours')} 
           selectedImage={selectedImage}
           handleImageUpload={handleImageUpload}

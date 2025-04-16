@@ -41,3 +41,8 @@
   overflow-x: auto;
 }
 
+/* Registration form container consistency */
+.form-container {
+  min-height: 700px;
+}
+

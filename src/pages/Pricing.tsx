@@ -1,55 +1,49 @@
 
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { PricingSection } from '@/components/ui/pricing-section';
-import PricingHeader from '@/components/pricing/PricingHeader';
-import { useSubscriptionPayment } from '@/components/pricing/useSubscriptionPayment';
-import { PAYMENT_FREQUENCIES, TIERS } from '@/components/pricing/pricingTiers';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription,
-  DialogFooter
-} from '@/components/ui/dialog';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import AppLayout from '@/components/layout/AppLayout';
+import { PricingGrid } from '@/components/ui/pricing-grid';
+import { PricingSection } from '@/components/ui/pricing-section';
 import { toast } from 'sonner';
+import { pricingTiers } from '@/components/pricing/pricingTiers';
+import { PricingHeader } from '@/components/pricing/PricingHeader';
+import { useAuth } from '@/context/auth';
+import { useSubscriptionPayment } from '@/components/pricing/useSubscriptionPayment';
 
 const Pricing = () => {
+  const { user, isAuthenticated } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [previousPlan, setPreviousPlan] = useState("");
+  const [showDialog, setShowDialog] = useState(false);
+  
+  // Get subscription payment utilities
   const { 
-    isProcessingPayment, 
-    selectedFrequency, 
-    handleFrequencyChange, 
-    handleSubscribe,
     userSubscriptionTier,
-    updateUserSubscription 
+    selectedFrequency, 
+    handleFrequencyChange,
+    handleSubscribe,
+    updateUserSubscription,
+    isProcessingPayment 
   } = useSubscriptionPayment();
   
-  const [showDialog, setShowDialog] = useState(false);
-  const [previousPlan, setPreviousPlan] = useState<string | null>(null);
+  // Handle frequency change
+  const handleBillingChange = (frequency: string) => {
+    handleFrequencyChange(frequency);
+  };
 
+  // Check if user was directed here from another page for subscription upgrade
   useEffect(() => {
-    // Check if we're redirected from LIVE chat
-    if (location.state?.fromLiveChat) {
-      // Use setTimeout to ensure the DOM is fully rendered
-      setTimeout(() => {
-        // Find the organization tier element by ID
-        const organizationTier = document.getElementById('tier-organization');
-        if (organizationTier) {
-          // Scroll to the organization tier with a smooth animation
-          organizationTier.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'center'
-          });
-          // Add a subtle highlight animation
-          organizationTier.classList.add('animate-pulse-subtle');
-          setTimeout(() => {
-            organizationTier.classList.remove('animate-pulse-subtle');
-          }, 2000);
-        }
-      }, 100);
+    if (location.state && location.state.upgradeNeeded) {
+      toast("Premium subscription required for this feature", {
+        description: "Please subscribe to a paid plan to access this feature.",
+        action: {
+          label: "Dismiss",
+          onClick: () => console.log("Dismissed"),
+        },
+      });
     }
   }, [location.state]);
 
@@ -72,60 +66,54 @@ const Pricing = () => {
     setShowDialog(false);
   };
   
-  // Create custom pricing tiers with click handlers
-  const customTiers = TIERS.map(tier => ({
-    ...tier,
-    onSubscribe: tier.id === 'individual' 
-      ? handleIndividualPlanClick 
-      : () => handleSubscribe(tier.id),
-    isLoading: isProcessingPayment,
-    disabled: tier.comingSoon || // Coming soon
-             (tier.id !== "individual" && userSubscriptionTier === tier.id), // Already subscribed (except for free tier)
-    cta: userSubscriptionTier === tier.id 
-         ? "Current Plan" 
-         : tier.cta
-  }));
-  
   return (
-    <div className="flex flex-col min-h-screen bg-background overflow-y-auto">
-      <PricingHeader />
-      <div className="flex flex-1 overflow-y-auto">
-        <main className="flex-1 overflow-y-auto">
-          <div className="relative w-full">
-            <div className="absolute inset-0 -z-10">
-              <div className="h-full w-full bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:35px_35px] opacity-30 [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
-            </div>
-            
-            <div className="container mx-auto px-4 py-8">
-              <PricingSection
-                title="Unlock Premium Features with Pi"
-                subtitle="Choose the plan that's right for you"
-                frequencies={PAYMENT_FREQUENCIES}
-                tiers={customTiers}
-                organizationTierId="organization"
-                onFrequencyChange={handleFrequencyChange}
-              />
-            </div>
-          </div>
-        </main>
-      </div>
+    <AppLayout title="Pricing">
+      <PricingSection>
+        <PricingHeader
+          title="Simple, transparent pricing"
+          description="Choose the plan that's right for you and explore Avante Maps with premium features."
+          billingOptions={["monthly", "yearly"]}
+          selectedBilling={selectedFrequency}
+          onBillingChange={handleBillingChange}
+        />
+        
+        <PricingGrid 
+          pricingTiers={pricingTiers} 
+          frequency={selectedFrequency}
+          currentTier={userSubscriptionTier}
+          onSelectPlan={(tier) => {
+            if (tier === 'individual') {
+              handleIndividualPlanClick();
+            } else {
+              handleSubscribe(tier);
+            }
+          }}
+          isLoading={isProcessingPayment}
+          isAuthenticated={isAuthenticated}
+          onLoginRequired={() => {
+            toast.info("Please login first to select a plan");
+            navigate("/");
+          }}
+        />
 
-      {/* Confirmation Dialog */}
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Change Subscription Plan?</DialogTitle>
-            <DialogDescription className="pt-2">
-              Are you sure you want to select this subscription plan? Reminder: You will retain the features from the {previousPlan === 'small-business' ? 'Small Business' : 'Organization'} Subscription until the expiry date of the Subscription.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="pt-4">
-            <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
-            <Button onClick={handleConfirmDowngrade}>Confirm</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+        {/* Downgrade Confirmation Dialog */}
+        <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirm Plan Change</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to change from your current {previousPlan ? previousPlan.charAt(0).toUpperCase() + previousPlan.slice(1).replace('-', ' ') : ''} plan to the Individual plan? 
+                You'll lose access to premium features.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
+              <Button onClick={handleConfirmDowngrade}>Confirm Change</Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </PricingSection>
+    </AppLayout>
   );
 };
 
