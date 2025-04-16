@@ -146,7 +146,7 @@ const MobileSidebar = ({
           </div>
           
           <div className="p-4 border-t border-sidebar-border text-xs text-muted-foreground">
-            <p>© 2023 Avante Maps</p>
+            <p>© 2025 Avante Maps</p>
             <p>Architectured by Avante Maps Pty Ltd</p>
           </div>
         </div>

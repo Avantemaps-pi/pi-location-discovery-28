@@ -135,7 +135,7 @@ const Contact = () => {
 
         <div className="flex flex-col items-center justify-center space-y-4 py-8">
           <p className="text-sm text-muted-foreground">
-            © 2023 Avante Maps. All rights reserved.
+            © 2025 Avante Maps. All rights reserved.
           </p>
         </div>
       </div>
