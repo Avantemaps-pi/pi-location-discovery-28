@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { toast } from 'sonner';
@@ -41,23 +40,27 @@ const Settings = () => {
     colorScheme: colorScheme
   });
 
-  // Refresh user data only when component mounts, not on every render
+  // Only refresh user data on first render if we don't have user data
+  // This prevents unnecessary API calls when navigating to Settings repeatedly
   useEffect(() => {
-    const loadUserData = async () => {
-      if (user && !isLoading) {
-        console.log("Initial user data load");
-        await refreshUserData();
-        // After initial load, save the values to compare against later
-        setInitialValues({
-          language,
-          notifications,
-          colorScheme
-        });
-      }
-    };
+    // Check for last refresh timestamp in localStorage
+    const lastUserRefresh = localStorage.getItem('last_user_refresh');
+    const refreshThreshold = 30 * 60 * 1000; // 30 minutes
+    const shouldRefresh = !lastUserRefresh || 
+      (Date.now() - parseInt(lastUserRefresh, 10) > refreshThreshold);
     
-    loadUserData();
-    // Only run this effect once when the component mounts and user is available
+    // Only attempt refresh if needed and if we have a user
+    if (user && shouldRefresh && !isLoading) {
+      refreshUserData();
+      localStorage.setItem('last_user_refresh', Date.now().toString());
+    }
+    
+    // Save the current values to compare against later
+    setInitialValues({
+      language,
+      notifications,
+      colorScheme
+    });
   }, []);
 
   useEffect(() => {
@@ -93,7 +96,9 @@ const Settings = () => {
     } else if (scheme === 'light') {
       setIsDarkMode(false);
     } else {
-      setIsDarkMode(false);
+      // For system theme, check the media query
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDarkMode(prefersDark);
     }
   };
 

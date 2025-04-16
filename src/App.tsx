@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/auth";
+import { useSessionRestoration } from "@/hooks/useSessionRestoration";
 import Index from "./pages/Index";
 import Recommendations from "./pages/Recommendations";
 import Bookmarks from "./pages/Bookmarks";
@@ -28,6 +29,12 @@ import Pricing from "./pages/Pricing";
 import Analytics from "./pages/Analytics";
 
 const queryClient = new QueryClient();
+
+// Create a component to use the session restoration hook
+const SessionManager = () => {
+  useSessionRestoration();
+  return null;
+};
 
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -53,6 +60,7 @@ const App = () => {
       <TooltipProvider>
         <AuthProvider>
           <SidebarProvider>
+            <SessionManager />
             <Toaster />
             <Sonner />
             <BrowserRouter>

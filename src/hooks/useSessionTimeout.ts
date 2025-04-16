@@ -1,41 +1,62 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/auth';
 import { toast } from 'sonner';
 
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 const WARNING_BEFORE_TIMEOUT = 30 * 60 * 1000; // 30 minutes before timeout
+const ACTIVITY_EVENTS = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+const INACTIVITY_THRESHOLD = 60 * 60 * 1000; // 1 hour of inactivity
 
 export const useSessionTimeout = () => {
-  const { user, logout, login } = useAuth();
+  const { user, logout, login, refreshUserData } = useAuth();
+  const [lastActivity, setLastActivity] = useState<number>(Date.now());
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const warningRef = useRef<NodeJS.Timeout | null>(null);
+  const inactivityRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Function to update the last activity timestamp
+  const updateActivity = () => {
+    setLastActivity(Date.now());
+  };
+
+  // Set up activity monitoring
   useEffect(() => {
-    // Clear any existing timeouts when the component unmounts or when the user changes
+    // Add event listeners for user activity
+    ACTIVITY_EVENTS.forEach(event => {
+      window.addEventListener(event, updateActivity);
+    });
+
+    // Cleanup
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      if (warningRef.current) clearTimeout(warningRef.current);
+      ACTIVITY_EVENTS.forEach(event => {
+        window.removeEventListener(event, updateActivity);
+      });
     };
   }, []);
 
+  // Handle session timeout and inactivity checks
   useEffect(() => {
     // Only set up timeouts if the user is logged in
     if (user) {
       const timeUntilExpiry = (user.lastAuthenticated + SESSION_TIMEOUT) - Date.now();
       const timeUntilWarning = timeUntilExpiry - WARNING_BEFORE_TIMEOUT;
-
+      
       // Clear any existing timeouts
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (warningRef.current) clearTimeout(warningRef.current);
+      if (inactivityRef.current) clearTimeout(inactivityRef.current);
 
       // Set a warning before the session expires
       if (timeUntilWarning > 0) {
         warningRef.current = setTimeout(() => {
-          toast.warning("Your session will expire soon. Would you like to stay logged in?", {
+          toast.warning("Your session will expire soon.", {
             action: {
               label: "Stay logged in",
-              onClick: () => login()
+              onClick: () => {
+                refreshUserData();
+                toast.success("Session extended");
+              }
             },
             duration: 10000,
           });
@@ -52,8 +73,27 @@ export const useSessionTimeout = () => {
         // Session has already expired
         logout();
       }
+
+      // Check for inactivity
+      inactivityRef.current = setInterval(() => {
+        const inactiveTime = Date.now() - lastActivity;
+        
+        // If user has been inactive for too long, refresh token silently
+        if (inactiveTime > INACTIVITY_THRESHOLD) {
+          console.log("Detected inactivity, refreshing session silently");
+          refreshUserData();
+          setLastActivity(Date.now()); // Reset inactivity timer
+        }
+      }, 60000); // Check every minute
     }
-  }, [user, logout, login]);
+
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (warningRef.current) clearTimeout(warningRef.current);
+      if (inactivityRef.current) clearInterval(inactivityRef.current);
+    };
+  }, [user, logout, login, refreshUserData, lastActivity]);
 
   return null; // This hook doesn't return anything
 };
