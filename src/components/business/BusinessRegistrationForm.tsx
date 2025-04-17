@@ -82,24 +82,21 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
   const geocodeAddress = async (address: string): Promise<google.maps.LatLngLiteral | null> => {
     try {
       const geocoder = new google.maps.Geocoder();
-      const response = await new Promise<google.maps.GeocoderResponse>((resolve, reject) => {
+      
+      // Fix TypeScript type error by properly handling the Promise with correct types
+      return new Promise((resolve, reject) => {
         geocoder.geocode({ address }, (results, status) => {
-          if (status === google.maps.GeocoderStatus.OK) {
-            resolve(results);
+          if (status === google.maps.GeocoderStatus.OK && results && results[0] && results[0].geometry) {
+            const location = results[0].geometry.location;
+            resolve({
+              lat: location.lat(),
+              lng: location.lng()
+            });
           } else {
             reject(new Error(`Geocoding failed: ${status}`));
           }
         });
       });
-      
-      if (response && response.results && response.results[0] && response.results[0].geometry) {
-        const location = response.results[0].geometry.location;
-        return {
-          lat: location.lat(),
-          lng: location.lng()
-        };
-      }
-      return null;
     } catch (error) {
       console.error('Error geocoding address:', error);
       return null;

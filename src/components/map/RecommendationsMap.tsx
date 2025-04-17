@@ -8,11 +8,13 @@ import { GOOGLE_MAPS_API_KEY } from './mapConfig';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
+// Update the Place interface to include isUserBusiness property
 interface Place {
   id: string;
   name: string;
   position: google.maps.LatLngLiteral;
   category: string;
+  isUserBusiness?: boolean;
 }
 
 interface RecommendationsMapProps {
@@ -51,13 +53,23 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
         // Transform the data into the Place format
         const formattedBusinesses = data
           .filter(business => business.coordinates) // Filter out any without coordinates
-          .map(business => ({
-            id: business.id.toString(),
-            name: business.name,
-            category: business.category,
-            position: JSON.parse(business.coordinates),
-            isUserBusiness: true
-          }));
+          .map(business => {
+            try {
+              // Parse coordinates from JSON string
+              const coords = JSON.parse(business.coordinates || '{}');
+              return {
+                id: business.id.toString(),
+                name: business.name,
+                category: business.category,
+                position: coords,
+                isUserBusiness: true
+              };
+            } catch (e) {
+              console.error("Failed to parse coordinates for business:", business.id);
+              return null;
+            }
+          })
+          .filter(Boolean) as Place[]; // Filter out any nulls from parsing errors
         
         setUserBusinesses(formattedBusinesses);
       } catch (error) {
