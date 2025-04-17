@@ -2,10 +2,17 @@
 import React from 'react';
 import Marker from './Marker';
 import { createMarkerIcon } from './markerUtils';
-import { Place } from '@/data/mockPlaces';
+
+interface MarkerPlace {
+  id: string;
+  name: string;
+  position: google.maps.LatLngLiteral;
+  category: string;
+  isUserBusiness?: boolean;
+}
 
 interface MarkerListProps {
-  places: Place[];
+  places: MarkerPlace[];
   activeMarker: string | null;
   showPopover: boolean;
   onMarkerClick: (id: string) => void;
@@ -26,7 +33,7 @@ const MarkerList: React.FC<MarkerListProps> = ({
           <Marker
             position={place.position}
             title={place.name}
-            icon={createMarkerIcon(place.id === activeMarker)}
+            icon={createMarkerIcon(place.id === activeMarker, place.isUserBusiness)}
             onClick={() => onMarkerClick(place.id)}
             animation={place.id === activeMarker ? 1 : undefined}
             map={map}

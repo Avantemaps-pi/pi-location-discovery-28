@@ -47,31 +47,46 @@ export type Database = {
       }
       businesses: {
         Row: {
+          business_types: string[] | null
           category: string | null
+          contact_info: Json | null
+          coordinates: string | null
           created_at: string | null
           description: string | null
+          hours: Json | null
           id: number
           location: string | null
           name: string
           owner_id: string | null
+          pi_wallet_address: string | null
         }
         Insert: {
+          business_types?: string[] | null
           category?: string | null
+          contact_info?: Json | null
+          coordinates?: string | null
           created_at?: string | null
           description?: string | null
+          hours?: Json | null
           id?: number
           location?: string | null
           name: string
           owner_id?: string | null
+          pi_wallet_address?: string | null
         }
         Update: {
+          business_types?: string[] | null
           category?: string | null
+          contact_info?: Json | null
+          coordinates?: string | null
           created_at?: string | null
           description?: string | null
+          hours?: Json | null
           id?: number
           location?: string | null
           name?: string
           owner_id?: string | null
+          pi_wallet_address?: string | null
         }
         Relationships: [
           {
