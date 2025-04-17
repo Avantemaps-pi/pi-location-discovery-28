@@ -2,10 +2,8 @@
 import React from 'react';
 import Marker from './Marker';
 import { createMarkerIcon } from './markerUtils';
-import { Place } from '@/data/mockPlaces';
 
-// Update the Place interface here to match the one in RecommendationsMap
-interface Place {
+interface MarkerPlace {
   id: string;
   name: string;
   position: google.maps.LatLngLiteral;
@@ -14,7 +12,7 @@ interface Place {
 }
 
 interface MarkerListProps {
-  places: Place[];
+  places: MarkerPlace[];
   activeMarker: string | null;
   showPopover: boolean;
   onMarkerClick: (id: string) => void;
