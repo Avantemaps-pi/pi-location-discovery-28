@@ -104,10 +104,8 @@ const Index = () => {
     
     setFilteredPlaces(filtered);
     
-    if (filtered.length > 0) {
-      toast.success(`Found ${filtered.length} matching businesses`);
-    } else {
-      toast.info("No matching businesses found");
+    if (filtered.length === 0) {
+      toast.info("No businesses found. Try a different name, address, or keyword.");
     }
   };
 

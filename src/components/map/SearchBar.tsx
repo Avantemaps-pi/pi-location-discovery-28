@@ -1,7 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import debounce from 'lodash/debounce';
 
 interface SearchBarProps {
   onSearch?: (searchTerm: string) => void;
@@ -14,13 +15,23 @@ const SearchBar: React.FC<SearchBarProps> = ({
   placeholders = [
     "Search for business name",
     "Search by location",
-    "Search by category",
     "Search by keywords (e.g., coffee, haircut)",
+    "Search by description"
   ],
   cycleInterval = 3000,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0);
+  
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      if (onSearch) {
+        onSearch(value);
+      }
+    }, 300),
+    [onSearch]
+  );
   
   // Effect to cycle through placeholders
   useEffect(() => {
@@ -30,7 +41,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
       );
     }, cycleInterval);
     
-    // Clean up interval on component unmount
     return () => clearInterval(intervalId);
   }, [placeholders.length, cycleInterval]);
   
@@ -44,12 +54,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
-    
-    // If the user clears the input, trigger search with empty string
-    // to reset the map view
-    if (value === '' && onSearch) {
-      onSearch('');
-    }
+    debouncedSearch(value);
   };
 
   return (

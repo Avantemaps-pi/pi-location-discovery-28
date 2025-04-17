@@ -2,33 +2,60 @@
 import React from 'react';
 import { FormItem, FormLabel, FormControl, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import ImageUploadCounter from './ImageUploadCounter';
+import ImageCarousel from '../../ImageCarousel';
 
 interface BusinessImageUploadProps {
-  selectedImage: File | null;
+  selectedImages: File[];
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleImageRemove?: (index: number) => void;
+  maxImages?: number;
 }
 
 const BusinessImageUpload: React.FC<BusinessImageUploadProps> = ({ 
-  selectedImage, 
-  handleImageUpload 
+  selectedImages, 
+  handleImageUpload,
+  handleImageRemove,
+  maxImages = 3
 }) => {
+  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
+  
+  const imageUrls = selectedImages.map(file => URL.createObjectURL(file));
+  
+  React.useEffect(() => {
+    // Cleanup URLs when component unmounts
+    return () => {
+      imageUrls.forEach(URL.revokeObjectURL);
+    };
+  }, []);
+
   return (
     <FormItem>
-      <FormLabel className="text-base mb-1.5">Business Image</FormLabel>
+      <FormLabel className="text-base mb-1.5">Business Images</FormLabel>
       <FormControl>
         <Input 
           type="file" 
           accept="image/*" 
           onChange={handleImageUpload}
+          disabled={selectedImages.length >= maxImages}
           className="cursor-pointer"
         />
       </FormControl>
-      <FormDescription className="text-sm mt-1.5">
-        Upload an image of your business or logo
+      <FormDescription className="text-sm mt-1.5 flex items-center justify-between">
+        <span>Upload images of your business (max {maxImages})</span>
+        <ImageUploadCounter 
+          currentCount={selectedImages.length} 
+          maxCount={maxImages} 
+        />
       </FormDescription>
-      {selectedImage && (
-        <div className="mt-2">
-          <p className="text-sm">Selected: {selectedImage.name}</p>
+      
+      {selectedImages.length > 0 && (
+        <div className="mt-4">
+          <ImageCarousel
+            images={imageUrls}
+            currentIndex={currentImageIndex}
+            onImageChange={setCurrentImageIndex}
+          />
         </div>
       )}
     </FormItem>
