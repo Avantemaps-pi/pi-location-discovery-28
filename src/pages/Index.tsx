@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
@@ -20,7 +19,6 @@ const Index = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
   
-  // Fetch businesses from Supabase
   useEffect(() => {
     const fetchBusinesses = async () => {
       setIsLoading(true);
@@ -33,15 +31,10 @@ const Index = () => {
           throw error;
         }
         
-        // Transform the businesses data to match the Place interface
         const transformedPlaces: Place[] = data.map((business, index) => {
-          // Extract lat/lng from location string or use default coordinates if parsing fails
           let position = { lat: 37.7749 + (Math.random() * 0.2 - 0.1), lng: -122.4194 + (Math.random() * 0.2 - 0.1) };
           
           try {
-            // In a real implementation, you would store actual coordinates or geocode the address
-            // This is a simplified example using random coordinates near San Francisco
-            // You can replace this with actual geocoding logic
           } catch (e) {
             console.error("Failed to parse location:", e);
           }
@@ -51,11 +44,11 @@ const Index = () => {
             name: business.name,
             position: position,
             address: business.location || "No address provided",
-            rating: 4.5, // Default rating
-            totalReviews: 0, // Default reviews
+            rating: 4.5,
+            totalReviews: 0,
             description: business.description || "No description provided",
             category: business.category || "Other",
-            image: "/placeholder.svg", // Default image
+            image: "/placeholder.svg",
             website: "",
             phone: "",
             hours: {},
@@ -76,31 +69,38 @@ const Index = () => {
     fetchBusinesses();
   }, []);
 
-  // Handle location.state if it contains selectedPlaceId
   useEffect(() => {
     if (location.state && location.state.selectedPlaceId) {
       setSelectedPlace(location.state.selectedPlaceId);
     }
   }, [location.state]);
 
-  // Function to handle search
   const handleSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm);
     
     if (!searchTerm.trim()) {
-      // If search is cleared, show all places
       setFilteredPlaces(places);
       return;
     }
     
-    // Filter places based on search term (case insensitive)
     const normalizedSearch = searchTerm.toLowerCase();
-    const filtered = places.filter(place => 
-      place.name.toLowerCase().includes(normalizedSearch) ||
-      place.address.toLowerCase().includes(normalizedSearch) ||
-      place.category.toLowerCase().includes(normalizedSearch) ||
-      place.description.toLowerCase().includes(normalizedSearch)
-    );
+    
+    const filtered = places.filter(place => {
+      const basicMatch = place.name.toLowerCase().includes(normalizedSearch) ||
+        place.address.toLowerCase().includes(normalizedSearch) ||
+        place.category.toLowerCase().includes(normalizedSearch) ||
+        place.description.toLowerCase().includes(normalizedSearch);
+
+      const typeMatch = place.business_types?.some(type => 
+        type.toLowerCase().includes(normalizedSearch)
+      );
+
+      const keywordMatch = place.keywords?.some(keyword =>
+        keyword.toLowerCase().includes(normalizedSearch)
+      );
+
+      return basicMatch || typeMatch || keywordMatch;
+    });
     
     setFilteredPlaces(filtered);
     
@@ -110,7 +110,7 @@ const Index = () => {
       toast.info("No matching businesses found");
     }
   };
-  
+
   const handlePlaceClick = (placeId: string) => {
     setSelectedPlace(placeId === "" ? null : placeId);
   };

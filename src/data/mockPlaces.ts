@@ -1,18 +1,22 @@
-
 export interface Place {
   id: string;
   name: string;
-  address: string;
-  description: string;
-  rating: number;
-  category: string;
-  image: string;
-  dateAdded?: string;
-  website?: string; // Adding the website property
   position: {
     lat: number;
     lng: number;
   };
+  address: string;
+  rating?: number;
+  totalReviews?: number;
+  description?: string;
+  category: string;
+  image?: string;
+  website?: string;
+  phone?: string;
+  hours?: Record<string, string>;
+  isVerified?: boolean;
+  business_types?: string[];
+  keywords?: string[];
 }
 
 // Mock data for different categories

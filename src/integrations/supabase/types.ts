@@ -55,6 +55,7 @@ export type Database = {
           description: string | null
           hours: Json | null
           id: number
+          keywords: string[] | null
           location: string | null
           name: string
           owner_id: string | null
@@ -69,6 +70,7 @@ export type Database = {
           description?: string | null
           hours?: Json | null
           id?: number
+          keywords?: string[] | null
           location?: string | null
           name: string
           owner_id?: string | null
@@ -83,6 +85,7 @@ export type Database = {
           description?: string | null
           hours?: Json | null
           id?: number
+          keywords?: string[] | null
           location?: string | null
           name?: string
           owner_id?: string | null
