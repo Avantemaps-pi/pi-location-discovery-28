@@ -67,7 +67,7 @@ const Pricing = () => {
   
   return (
     <AppLayout title="Pricing">
-      <PricingSection 
+      {/* <PricingSection 
         title="Simple, transparent pricing"
         subtitle="Choose the plan that's right for you and explore Avante Maps with premium features."
         tiers={TIERS.map(tier => ({
@@ -84,8 +84,8 @@ const Pricing = () => {
         }))}
         frequencies={["monthly", "yearly"]}
         onFrequencyChange={handleBillingChange}
-      >
-        {/* <div className="mb-8">
+      > */}
+        <div className="mb-8">
           <PricingHeader 
             title="Simple, transparent pricing"
             description="Choose the plan that's right for you and explore Avante Maps with premium features."
@@ -93,7 +93,7 @@ const Pricing = () => {
             selectedBilling={selectedFrequency}
             onBillingChange={handleBillingChange}
           />
-        </div> */}
+        </div>
       </PricingSection>
       
       {/* Downgrade Confirmation Dialog */}
