@@ -50,6 +50,11 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
           return;
         }
         
+        if (!data) {
+          console.error('No data returned from Supabase');
+          return;
+        }
+        
         // Transform the data into the Place format
         const formattedBusinesses = data
           .filter(business => business.coordinates) // Filter out any without coordinates

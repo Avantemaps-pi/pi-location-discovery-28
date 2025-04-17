@@ -4,6 +4,15 @@ import Marker from './Marker';
 import { createMarkerIcon } from './markerUtils';
 import { Place } from '@/data/mockPlaces';
 
+// Update the Place interface here to match the one in RecommendationsMap
+interface Place {
+  id: string;
+  name: string;
+  position: google.maps.LatLngLiteral;
+  category: string;
+  isUserBusiness?: boolean;
+}
+
 interface MarkerListProps {
   places: Place[];
   activeMarker: string | null;
@@ -26,7 +35,7 @@ const MarkerList: React.FC<MarkerListProps> = ({
           <Marker
             position={place.position}
             title={place.name}
-            icon={createMarkerIcon(place.id === activeMarker)}
+            icon={createMarkerIcon(place.id === activeMarker, place.isUserBusiness)}
             onClick={() => onMarkerClick(place.id)}
             animation={place.id === activeMarker ? 1 : undefined}
             map={map}
