@@ -1,8 +1,8 @@
 
 import { useState } from 'react';
-import { useForm, FormValues } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { formSchema } from '@/components/business/registration/formSchema';
+import { formSchema, FormValues } from '@/components/business/registration/formSchema';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
