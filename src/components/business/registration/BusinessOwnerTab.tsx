@@ -1,37 +1,38 @@
 
 import React from 'react';
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { useFormContext } from 'react-hook-form';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useFormContext } from 'react-hook-form';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { FormValues } from './formSchema';
 
 interface BusinessOwnerTabProps {
   onNext: () => void;
+  disabled?: boolean;
 }
 
-const BusinessOwnerTab: React.FC<BusinessOwnerTabProps> = ({ onNext }) => {
+const BusinessOwnerTab: React.FC<BusinessOwnerTabProps> = ({ onNext, disabled }) => {
   const form = useFormContext<FormValues>();
-
+  
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-xl">Business Owner Information</CardTitle>
-        <CardDescription>
-          Enter the details of the business owner or manager.
+    <Card className="border shadow-sm">
+      <CardHeader className="pb-4 space-y-2">
+        <CardTitle className="text-2xl sm:text-xl">Business Owner Information</CardTitle>
+        <CardDescription className="text-base sm:text-sm">
+          Tell us about yourself as the business owner.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
             name="firstName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>First Name</FormLabel>
+                <FormLabel className="text-base mb-1.5">First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John" {...field} />
+                  <Input placeholder="Your first name" {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -42,9 +43,9 @@ const BusinessOwnerTab: React.FC<BusinessOwnerTabProps> = ({ onNext }) => {
             name="lastName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Last Name</FormLabel>
+                <FormLabel className="text-base mb-1.5">Last Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Doe" {...field} />
+                  <Input placeholder="Your last name" {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -56,20 +57,21 @@ const BusinessOwnerTab: React.FC<BusinessOwnerTabProps> = ({ onNext }) => {
           name="businessName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Business Name</FormLabel>
+              <FormLabel className="text-base mb-1.5">Business Name</FormLabel>
               <FormControl>
-                <Input placeholder="Pi Tech Store" {...field} />
+                <Input placeholder="Your business name" {...field} disabled={disabled} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex justify-end pt-2">
         <Button 
           type="button" 
-          className="ml-auto bg-avante-blue hover:bg-avante-blue/90"
           onClick={onNext}
+          className="bg-avante-blue hover:bg-avante-blue/90 min-w-24"
+          disabled={disabled}
         >
           Next
         </Button>

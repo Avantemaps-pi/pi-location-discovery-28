@@ -4,19 +4,23 @@ import { FormItem, FormLabel, FormControl, FormDescription } from '@/components/
 import { Input } from '@/components/ui/input';
 import ImageUploadCounter from './ImageUploadCounter';
 import ImageCarousel from '../../ImageCarousel';
+import { Button } from '@/components/ui/button';
+import { X } from 'lucide-react';
 
 interface BusinessImageUploadProps {
   selectedImages: File[];
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleImageRemove?: (index: number) => void;
   maxImages?: number;
+  disabled?: boolean;
 }
 
-const BusinessImageUpload: React.FC<BusinessImageUploadProps> = ({ 
+const BusinessImageUpload: React.FC<BusinessImageUploadProps> = ({
   selectedImages, 
   handleImageUpload,
   handleImageRemove,
-  maxImages = 3
+  maxImages = 3,
+  disabled = false
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
   
@@ -37,7 +41,7 @@ const BusinessImageUpload: React.FC<BusinessImageUploadProps> = ({
           type="file" 
           accept="image/*" 
           onChange={handleImageUpload}
-          disabled={selectedImages.length >= maxImages}
+          disabled={selectedImages.length >= maxImages || disabled}
           className="cursor-pointer"
         />
       </FormControl>
@@ -51,11 +55,25 @@ const BusinessImageUpload: React.FC<BusinessImageUploadProps> = ({
       
       {selectedImages.length > 0 && (
         <div className="mt-4">
-          <ImageCarousel
-            images={imageUrls}
-            currentIndex={currentImageIndex}
-            onImageChange={setCurrentImageIndex}
-          />
+          <div className="relative">
+            <ImageCarousel
+              images={imageUrls}
+              currentIndex={currentImageIndex}
+              onImageChange={setCurrentImageIndex}
+            />
+            
+            {handleImageRemove && !disabled && (
+              <Button
+                type="button"
+                size="icon"
+                variant="destructive"
+                className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
+                onClick={() => handleImageRemove(currentImageIndex)}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            )}
+          </div>
         </div>
       )}
     </FormItem>

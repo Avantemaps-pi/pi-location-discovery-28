@@ -14,7 +14,11 @@ import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const BusinessTypeSelector = () => {
+interface BusinessTypeSelectorProps {
+  disabled?: boolean;
+}
+
+const BusinessTypeSelector: React.FC<BusinessTypeSelectorProps> = ({ disabled }) => {
   const form = useFormContext<FormValues>();
   const [selectedTypes, setSelectedTypes] = React.useState<string[]>([]);
   
@@ -62,13 +66,16 @@ const BusinessTypeSelector = () => {
                       className="px-2 py-1.5 gap-1 text-sm"
                     >
                       {type}
-                      <button
-                        type="button"
-                        className="ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary"
-                        onClick={() => handleRemoveType(type)}
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
+                      {!disabled && (
+                        <button
+                          type="button"
+                          className="ml-1 rounded-full outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary"
+                          onClick={() => handleRemoveType(type)}
+                          disabled={disabled}
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      )}
                     </Badge>
                   ))}
                 </div>
@@ -76,7 +83,7 @@ const BusinessTypeSelector = () => {
               
               {/* Type selector dropdown */}
               <FormControl>
-                <Select onValueChange={handleSelectType}>
+                <Select onValueChange={handleSelectType} disabled={disabled}>
                   <SelectTrigger 
                     className={cn(
                       "w-full",
@@ -97,7 +104,7 @@ const BusinessTypeSelector = () => {
                         <SelectItem
                           key={type}
                           value={type}
-                          disabled={selectedTypes.includes(type)}
+                          disabled={selectedTypes.includes(type) || disabled}
                         >
                           {type}
                         </SelectItem>

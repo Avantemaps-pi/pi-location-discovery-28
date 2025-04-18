@@ -7,26 +7,33 @@ import { motion } from '@/components/ui/motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/context/auth';
 import LoginDialog from '@/components/auth/LoginDialog';
+import { toast } from 'sonner';
 
 const Registration = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   
   // Check if user is authenticated when the component mounts
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       setShowLoginDialog(true);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authLoading]);
 
   const handleLoginDialogClose = (open: boolean) => {
     setShowLoginDialog(open);
     if (!open && !isAuthenticated) {
+      toast.error("You must be logged in to register a business");
       // If the dialog is closed and the user is still not authenticated, navigate back
       navigate('/');
     }
+  };
+
+  const handleFormSuccess = () => {
+    toast.success("Business registered successfully!");
+    navigate('/');
   };
   
   return (
@@ -38,7 +45,7 @@ const Registration = () => {
         transition={{ duration: 0.4 }}
         skipMobileAnimations={isMobile}
       >
-        <BusinessRegistrationForm />
+        <BusinessRegistrationForm onSuccess={handleFormSuccess} />
       </motion.div>
       
       {/* Login Dialog */}

@@ -5,7 +5,11 @@ import { Input } from '@/components/ui/input';
 import { useFormContext } from 'react-hook-form';
 import { FormValues } from '../formSchema';
 
-const WalletAddressField = () => {
+interface WalletAddressFieldProps {
+  disabled?: boolean;
+}
+
+const WalletAddressField: React.FC<WalletAddressFieldProps> = ({ disabled }) => {
   const form = useFormContext<FormValues>();
   
   return (
@@ -19,6 +23,7 @@ const WalletAddressField = () => {
             <Input 
               placeholder="Your Pi wallet address" 
               {...field} 
+              disabled={disabled}
             />
           </FormControl>
           <FormMessage />

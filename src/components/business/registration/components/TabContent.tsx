@@ -8,26 +8,34 @@ import HoursTab from '../HoursTab';
 import DetailsTab from '../DetailsTab';
 
 interface TabContentProps {
-  selectedImage: File | null;
+  selectedImages: File[];
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleImageRemove?: (index: number) => void;
   setSelectedTab: (tab: string) => void;
+  isSubmitting?: boolean;
 }
 
 const TabContent: React.FC<TabContentProps> = ({ 
-  selectedImage, 
-  handleImageUpload, 
-  setSelectedTab 
+  selectedImages, 
+  handleImageUpload,
+  handleImageRemove,
+  setSelectedTab,
+  isSubmitting
 }) => {
   return (
     <div className="w-full min-h-[500px]">
       <TabsContent value="business-owner" className="space-y-4 w-full">
-        <BusinessOwnerTab onNext={() => setSelectedTab('contact')} />
+        <BusinessOwnerTab 
+          onNext={() => setSelectedTab('contact')}
+          disabled={isSubmitting} 
+        />
       </TabsContent>
 
       <TabsContent value="contact" className="space-y-4 w-full">
         <ContactTab 
           onNext={() => setSelectedTab('address')} 
           onPrevious={() => setSelectedTab('business-owner')} 
+          disabled={isSubmitting}
         />
       </TabsContent>
 
@@ -35,6 +43,7 @@ const TabContent: React.FC<TabContentProps> = ({
         <AddressTab 
           onNext={() => setSelectedTab('hours')} 
           onPrevious={() => setSelectedTab('contact')} 
+          disabled={isSubmitting}
         />
       </TabsContent>
 
@@ -42,14 +51,17 @@ const TabContent: React.FC<TabContentProps> = ({
         <HoursTab 
           onNext={() => setSelectedTab('details')} 
           onPrevious={() => setSelectedTab('address')} 
+          disabled={isSubmitting}
         />
       </TabsContent>
 
       <TabsContent value="details" className="space-y-4 w-full">
         <DetailsTab 
-          onPrevious={() => setSelectedTab('hours')} 
-          selectedImage={selectedImage}
+          onPrevious={() => setSelectedTab('hours')}
+          selectedImages={selectedImages}
           handleImageUpload={handleImageUpload}
+          handleImageRemove={handleImageRemove}
+          disabled={isSubmitting}
         />
       </TabsContent>
     </div>

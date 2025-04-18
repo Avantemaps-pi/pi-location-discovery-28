@@ -8,18 +8,24 @@ import BusinessImageUpload from './components/BusinessImageUpload';
 import BusinessDescriptionField from './components/BusinessDescriptionField';
 import WalletAddressField from './components/WalletAddressField';
 import BusinessTypeSelector from './components/BusinessTypeSelector';
+import { Loader2 } from 'lucide-react';
 
 interface DetailsTabProps {
   onPrevious: () => void;
-  selectedImage: File | null;
+  selectedImages: File[];
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleImageRemove?: (index: number) => void;
+  disabled?: boolean;
 }
 
-const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, handleImageUpload }) => {
+const DetailsTab: React.FC<DetailsTabProps> = ({ 
+  onPrevious, 
+  selectedImages, 
+  handleImageUpload,
+  handleImageRemove,
+  disabled
+}) => {
   const form = useFormContext<FormValues>();
-  
-  // Convert single selectedImage to array for BusinessImageUpload
-  const selectedImages = selectedImage ? [selectedImage] : [];
   
   return (
     <Card className="border shadow-sm">
@@ -30,13 +36,16 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <BusinessTypeSelector />
+        <BusinessTypeSelector disabled={disabled} />
         <BusinessImageUpload 
           selectedImages={selectedImages}
           handleImageUpload={handleImageUpload}
+          handleImageRemove={handleImageRemove}
+          maxImages={3}
+          disabled={disabled}
         />
-        <BusinessDescriptionField />
-        <WalletAddressField />
+        <BusinessDescriptionField disabled={disabled} />
+        <WalletAddressField disabled={disabled} />
       </CardContent>
       <CardFooter className="flex justify-between pt-2">
         <Button 
@@ -44,14 +53,23 @@ const DetailsTab: React.FC<DetailsTabProps> = ({ onPrevious, selectedImage, hand
           variant="outline" 
           onClick={onPrevious}
           className="min-w-24"
+          disabled={disabled}
         >
           Back
         </Button>
         <Button 
           type="submit" 
           className="bg-avante-blue hover:bg-avante-blue/90 min-w-40"
+          disabled={disabled}
         >
-          Submit
+          {disabled ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            'Submit'
+          )}
         </Button>
       </CardFooter>
     </Card>

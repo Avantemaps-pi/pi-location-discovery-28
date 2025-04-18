@@ -7,7 +7,11 @@ import { FormValues } from '../formSchema';
 
 const MAX_WORD_COUNT = 150;
 
-const BusinessDescriptionField = () => {
+interface BusinessDescriptionFieldProps {
+  disabled?: boolean;
+}
+
+const BusinessDescriptionField: React.FC<BusinessDescriptionFieldProps> = ({ disabled }) => {
   const form = useFormContext<FormValues>();
   const [wordCount, setWordCount] = useState(0);
   
@@ -45,6 +49,7 @@ const BusinessDescriptionField = () => {
               className="min-h-[120px] resize-none text-base md:text-sm"
               {...field}
               onChange={handleTextChange}
+              disabled={disabled}
             />
           </FormControl>
           <FormDescription className="flex justify-end text-xs mt-1">

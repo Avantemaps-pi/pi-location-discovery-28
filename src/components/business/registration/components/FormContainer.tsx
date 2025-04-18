@@ -8,9 +8,10 @@ interface FormContainerProps {
   form: UseFormReturn<FormValues>;
   onSubmit: (values: FormValues) => Promise<void>;
   children: React.ReactNode;
+  isSubmitting?: boolean;
 }
 
-const FormContainer = ({ form, onSubmit, children }: FormContainerProps) => {
+const FormContainer = ({ form, onSubmit, children, isSubmitting }: FormContainerProps) => {
   return (
     <FormProvider {...form}>
       <Form {...form}>
