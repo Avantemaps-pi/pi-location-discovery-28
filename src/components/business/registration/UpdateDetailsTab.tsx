@@ -17,6 +17,9 @@ interface UpdateDetailsTabProps {
 const UpdateDetailsTab: React.FC<UpdateDetailsTabProps> = ({ onPrevious, selectedImage, handleImageUpload }) => {
   const form = useFormContext<FormValues>();
   
+  // Convert single selectedImage to array for BusinessImageUpload
+  const selectedImages = selectedImage ? [selectedImage] : [];
+  
   return (
     <Card className="border shadow-sm">
       <CardHeader className="pb-4 space-y-2">
@@ -27,7 +30,7 @@ const UpdateDetailsTab: React.FC<UpdateDetailsTabProps> = ({ onPrevious, selecte
       </CardHeader>
       <CardContent className="space-y-6">
         <BusinessImageUpload 
-          selectedImage={selectedImage}
+          selectedImages={selectedImages}
           handleImageUpload={handleImageUpload}
         />
         <BusinessDescriptionField />

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,7 +8,7 @@ import { toast } from 'sonner';
 import { useAuth } from '@/context/auth';
 
 export const useBusinessRegistration = (onSuccess?: () => void) => {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const { user } = useAuth();
   const navigate = useNavigate();
   
@@ -55,7 +54,11 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setSelectedImage(e.target.files[0]);
+      const newImage = e.target.files[0];
+      setSelectedImages(prev => {
+        const updatedImages = [...prev, newImage].slice(0, 3);
+        return updatedImages;
+      });
     }
   };
 
@@ -118,17 +121,21 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
         
       if (error) throw error;
       
-      if (selectedImage && data[0]?.id) {
+      if (selectedImages.length > 0 && data[0]?.id) {
         const businessId = data[0].id;
-        const filePath = `businesses/${businessId}/${selectedImage.name}`;
         
-        const { error: uploadError } = await supabase.storage
-          .from('business-images')
-          .upload(filePath, selectedImage);
+        for (let i = 0; i < selectedImages.length; i++) {
+          const image = selectedImages[i];
+          const filePath = `businesses/${businessId}/${image.name}`;
           
-        if (uploadError) {
-          console.error('Error uploading image:', uploadError);
-          toast.error('Business registered, but image upload failed.');
+          const { error: uploadError } = await supabase.storage
+            .from('business-images')
+            .upload(filePath, image);
+            
+          if (uploadError) {
+            console.error(`Error uploading image ${i+1}:`, uploadError);
+            toast.error(`Business registered, but image ${i+1} upload failed.`);
+          }
         }
       }
 
@@ -157,7 +164,7 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
 
   return {
     form,
-    selectedImage,
+    selectedImages,
     handleImageUpload,
     onSubmit
   };

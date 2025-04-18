@@ -19,19 +19,23 @@ interface BusinessUpdateFormProps {
 export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormProps) => {
   const isMobile = useIsMobile();
   const [selectedTab, setSelectedTab] = useState('business-owner');
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const form = useBusinessFormInit(business);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setSelectedImage(e.target.files[0]);
+      const newImage = e.target.files[0];
+      setSelectedImages(prev => [...prev, newImage].slice(0, 3)); // Keep only up to 3 images
     }
   };
+
+  // Get the first image to maintain compatibility with existing TabContent
+  const selectedImage = selectedImages.length > 0 ? selectedImages[0] : null;
 
   const onSubmit = (values: FormValues) => {
     // In a real app, this would send the form data along with the image to a backend service
     console.log('Updated form values:', values);
-    console.log('Selected image:', selectedImage);
+    console.log('Selected images:', selectedImages);
     
     toast.success('Business information updated successfully!');
     if (onSuccess) onSuccess();

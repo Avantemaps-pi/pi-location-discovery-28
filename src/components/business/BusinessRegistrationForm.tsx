@@ -13,8 +13,11 @@ interface BusinessRegistrationFormProps {
 
 const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) => {
   const isMobile = useIsMobile();
-  const { form, selectedImage, handleImageUpload, onSubmit } = useBusinessRegistration(onSuccess);
+  const { form, selectedImages, handleImageUpload, onSubmit } = useBusinessRegistration(onSuccess);
   const [selectedTab, setSelectedTab] = React.useState('business-owner');
+
+  // Get the first image to maintain compatibility with existing code
+  const selectedImage = selectedImages.length > 0 ? selectedImages[0] : null;
 
   return (
     <div className="w-full py-2 min-h-[600px]">
