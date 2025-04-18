@@ -85,15 +85,13 @@ const Pricing = () => {
         frequencies={["monthly", "yearly"]}
         onFrequencyChange={handleBillingChange}
       >
-        <div className="mb-8">
-          <PricingHeader 
-            title="Simple, transparent pricing"
-            description="Choose the plan that's right for you and explore Avante Maps with premium features."
-            billingOptions={["monthly", "yearly"]}
-            selectedBilling={selectedFrequency}
-            onBillingChange={handleBillingChange}
-          />
-        </div>
+        <PricingHeader 
+          title="Simple, transparent pricing"
+          description="Choose the plan that's right for you and explore Avante Maps with premium features."
+          billingOptions={["monthly", "yearly"]}
+          selectedBilling={selectedFrequency}
+          onBillingChange={handleBillingChange}
+        />
       </PricingSection>
       
       {/* Downgrade Confirmation Dialog */}
