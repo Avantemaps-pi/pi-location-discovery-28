@@ -10,15 +10,20 @@ import WalletAddressField from './components/WalletAddressField';
 
 interface UpdateDetailsTabProps {
   onPrevious: () => void;
-  selectedImage: File | null;
+  selectedImages: File[];
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleImageRemove?: (index: number) => void;
+  disabled?: boolean;
 }
 
-const UpdateDetailsTab: React.FC<UpdateDetailsTabProps> = ({ onPrevious, selectedImage, handleImageUpload }) => {
+const UpdateDetailsTab: React.FC<UpdateDetailsTabProps> = ({ 
+  onPrevious, 
+  selectedImages, 
+  handleImageUpload, 
+  handleImageRemove,
+  disabled 
+}) => {
   const form = useFormContext<FormValues>();
-  
-  // Convert single selectedImage to array for BusinessImageUpload
-  const selectedImages = selectedImage ? [selectedImage] : [];
   
   return (
     <Card className="border shadow-sm">
@@ -32,9 +37,11 @@ const UpdateDetailsTab: React.FC<UpdateDetailsTabProps> = ({ onPrevious, selecte
         <BusinessImageUpload 
           selectedImages={selectedImages}
           handleImageUpload={handleImageUpload}
+          handleImageRemove={handleImageRemove}
+          disabled={disabled}
         />
-        <BusinessDescriptionField />
-        <WalletAddressField />
+        <BusinessDescriptionField disabled={disabled} />
+        <WalletAddressField disabled={disabled} />
       </CardContent>
       <CardFooter className="flex justify-between pt-2">
         <Button 
@@ -42,12 +49,14 @@ const UpdateDetailsTab: React.FC<UpdateDetailsTabProps> = ({ onPrevious, selecte
           variant="outline" 
           onClick={onPrevious}
           className="min-w-24"
+          disabled={disabled}
         >
           Back
         </Button>
         <Button 
           type="submit" 
           className="bg-avante-blue hover:bg-avante-blue/90 min-w-40"
+          disabled={disabled}
         >
           Submit
         </Button>

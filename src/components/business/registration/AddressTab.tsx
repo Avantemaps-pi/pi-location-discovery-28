@@ -11,6 +11,7 @@ import { GOOGLE_MAPS_API_KEY } from '@/components/map/mapConfig';
 interface AddressTabProps {
   onNext: () => void;
   onPrevious: () => void;
+  disabled?: boolean;
 }
 
 declare global {
@@ -19,7 +20,7 @@ declare global {
   }
 }
 
-const AddressTab: React.FC<AddressTabProps> = ({ onNext, onPrevious }) => {
+const AddressTab: React.FC<AddressTabProps> = ({ onNext, onPrevious, disabled }) => {
   const form = useFormContext<FormValues>();
   const autocompleteRef = useRef<HTMLInputElement>(null);
   
@@ -118,6 +119,7 @@ const AddressTab: React.FC<AddressTabProps> = ({ onNext, onPrevious }) => {
                     placeholder="123 Business Street" 
                     {...field} 
                     ref={autocompleteRef}
+                    disabled={disabled}
                   />
                 </FormControl>
                 <FormMessage />
@@ -132,7 +134,7 @@ const AddressTab: React.FC<AddressTabProps> = ({ onNext, onPrevious }) => {
             <FormItem>
               <FormLabel>Apartment / Complex (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="Suite 101" {...field} />
+                <Input placeholder="Suite 101" {...field} disabled={disabled} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -146,7 +148,7 @@ const AddressTab: React.FC<AddressTabProps> = ({ onNext, onPrevious }) => {
               <FormItem>
                 <FormLabel>State / Province</FormLabel>
                 <FormControl>
-                  <Input placeholder="California" {...field} />
+                  <Input placeholder="California" {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -159,7 +161,7 @@ const AddressTab: React.FC<AddressTabProps> = ({ onNext, onPrevious }) => {
               <FormItem>
                 <FormLabel>Postal / Zip Code</FormLabel>
                 <FormControl>
-                  <Input placeholder="94103" {...field} />
+                  <Input placeholder="94103" {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -172,6 +174,7 @@ const AddressTab: React.FC<AddressTabProps> = ({ onNext, onPrevious }) => {
           type="button" 
           variant="outline" 
           onClick={onPrevious}
+          disabled={disabled}
         >
           Back
         </Button>
@@ -179,6 +182,7 @@ const AddressTab: React.FC<AddressTabProps> = ({ onNext, onPrevious }) => {
           type="button" 
           className="bg-avante-blue hover:bg-avante-blue/90"
           onClick={onNext}
+          disabled={disabled}
         >
           Next
         </Button>

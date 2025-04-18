@@ -29,8 +29,9 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
     }
   };
 
-  // Get the first image to maintain compatibility with existing TabContent
-  const selectedImage = selectedImages.length > 0 ? selectedImages[0] : null;
+  const handleImageRemove = (index: number) => {
+    setSelectedImages(prev => prev.filter((_, i) => i !== index));
+  };
 
   const onSubmit = (values: FormValues) => {
     // In a real app, this would send the form data along with the image to a backend service
@@ -57,8 +58,9 @@ export const BusinessUpdateForm = ({ business, onSuccess }: BusinessUpdateFormPr
               onValueChange={setSelectedTab} 
             />
             <TabContent 
-              selectedImage={selectedImage}
+              selectedImages={selectedImages}
               handleImageUpload={handleImageUpload}
+              handleImageRemove={handleImageRemove}
               setSelectedTab={setSelectedTab}
             />
           </form>

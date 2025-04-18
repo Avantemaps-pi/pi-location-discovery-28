@@ -45,9 +45,10 @@ const countryCodes = [
 interface ContactTabProps {
   onNext: () => void;
   onPrevious: () => void;
+  disabled?: boolean;
 }
 
-const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
+const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious, disabled }) => {
   const form = useFormContext<FormValues>();
   const [countryCode, setCountryCode] = React.useState('+1');
 
@@ -78,6 +79,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
                 <Select
                   value={countryCode}
                   onValueChange={setCountryCode}
+                  disabled={disabled}
                 >
                   <SelectTrigger className="w-[70px] flex-shrink-0">
                     <SelectValue placeholder="+1" />
@@ -100,6 +102,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
                     onChange={(e) => {
                       handlePhoneInput(e);
                     }}
+                    disabled={disabled}
                   />
                 </FormControl>
               </div>
@@ -114,7 +117,11 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
             <FormItem>
               <FormLabel>Email Address</FormLabel>
               <FormControl>
-                <Input placeholder="contact@business.com" {...field} />
+                <Input 
+                  placeholder="contact@business.com" 
+                  {...field} 
+                  disabled={disabled}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -127,7 +134,11 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
             <FormItem>
               <FormLabel>Pi Website URL (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="https://pi-network.example.com" {...field} />
+                <Input 
+                  placeholder="https://pi-network.example.com" 
+                  {...field} 
+                  disabled={disabled}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -139,6 +150,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
           type="button" 
           variant="outline" 
           onClick={onPrevious}
+          disabled={disabled}
         >
           Back
         </Button>
@@ -146,6 +158,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious }) => {
           type="button" 
           className="bg-avante-blue hover:bg-avante-blue/90"
           onClick={onNext}
+          disabled={disabled}
         >
           Next
         </Button>

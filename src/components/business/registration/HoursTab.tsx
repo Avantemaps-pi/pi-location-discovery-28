@@ -12,9 +12,10 @@ import { CheckedState } from "@radix-ui/react-checkbox";
 interface HoursTabProps {
   onNext: () => void;
   onPrevious: () => void;
+  disabled?: boolean;
 }
 
-const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
+const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious, disabled }) => {
   const form = useFormContext<FormValues>();
 
   return (
@@ -49,6 +50,7 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
                           onCheckedChange={(checked: CheckedState) => {
                             field.onChange(checked === true);
                           }}
+                          disabled={disabled}
                         />
                       </FormControl>
                     </FormItem>
@@ -64,7 +66,7 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
                         <Input
                           type="time"
                           {...field}
-                          disabled={form.watch(day.closed) === true}
+                          disabled={form.watch(day.closed) === true || disabled}
                           className="w-full"
                         />
                       </FormControl>
@@ -81,7 +83,7 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
                         <Input
                           type="time"
                           {...field}
-                          disabled={form.watch(day.closed) === true}
+                          disabled={form.watch(day.closed) === true || disabled}
                           className="w-full"
                         />
                       </FormControl>
@@ -98,6 +100,7 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
           type="button" 
           variant="outline" 
           onClick={onPrevious}
+          disabled={disabled}
         >
           Back
         </Button>
@@ -105,6 +108,7 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious }) => {
           type="button" 
           className="bg-primary hover:bg-primary/90"
           onClick={onNext}
+          disabled={disabled}
         >
           Next
         </Button>
