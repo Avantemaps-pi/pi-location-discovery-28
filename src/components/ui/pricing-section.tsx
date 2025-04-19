@@ -18,7 +18,7 @@ interface PricingSectionProps {
   frequencies: string[]
   organizationTierId?: string
   onFrequencyChange?: (frequency: string) => void
-  children?: React.ReactNode // Add children as an optional prop
+  children?: React.ReactNode
 }
 
 export function PricingSection({
@@ -28,7 +28,7 @@ export function PricingSection({
   frequencies,
   organizationTierId,
   onFrequencyChange,
-  children, // Include children in the destructured props
+  children,
 }: PricingSectionProps) {
   const [selectedFrequency, setSelectedFrequency] = React.useState(frequencies[0])
 
@@ -39,31 +39,31 @@ export function PricingSection({
     }
   }
 
-  // Filter to only include monthly and yearly frequencies
   const filteredFrequencies = frequencies.filter(freq => 
     freq === 'monthly' || freq === 'yearly'
-  );
+  )
 
   return (
-    <section className="flex flex-col items-center gap-10 py-10">
-      {/* Render children before the header if provided */}
-      {children}
+    <section className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
+      <div className="space-y-12">
+        {children}
 
-      <PricingHeader
-        title={title}
-        subtitle={subtitle}
-        frequencies={filteredFrequencies}
-        selectedFrequency={selectedFrequency}
-        onFrequencyChange={handleFrequencyChange}
-      />
+        <PricingHeader
+          title={title}
+          subtitle={subtitle}
+          frequencies={filteredFrequencies}
+          selectedFrequency={selectedFrequency}
+          onFrequencyChange={handleFrequencyChange}
+        />
 
-      <PricingGrid
-        tiers={tiers}
-        paymentFrequency={selectedFrequency}
-        organizationTierId={organizationTierId}
-      />
+        <PricingGrid
+          tiers={tiers}
+          paymentFrequency={selectedFrequency}
+          organizationTierId={organizationTierId}
+        />
 
-      <PricingFooter />
+        <PricingFooter />
+      </div>
     </section>
   )
 }

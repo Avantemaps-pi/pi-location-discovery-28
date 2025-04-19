@@ -18,7 +18,7 @@ export function PricingGrid({
   organizationTierId,
 }: PricingGridProps) {
   return (
-    <div className="grid w-full max-w-6xl gap-6 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid gap-8 lg:grid-cols-3 lg:gap-6">
       {tiers.map((tier) => (
         <PricingCard
           key={tier.name}
@@ -33,4 +33,3 @@ export function PricingGrid({
     </div>
   )
 }
-
