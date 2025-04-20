@@ -7,7 +7,6 @@ import AppLayout from '@/components/layout/AppLayout';
 import { PricingSection } from '@/components/ui/pricing-section';
 import { toast } from 'sonner';
 import { TIERS } from '@/components/pricing/pricingTiers';
-import PricingHeader from '@/components/pricing/PricingHeader';
 import { useAuth } from '@/context/auth';
 import { useSubscriptionPayment } from '@/components/pricing/useSubscriptionPayment';
 
@@ -84,15 +83,7 @@ const Pricing = () => {
         }))}
         frequencies={["monthly", "yearly"]}
         onFrequencyChange={handleBillingChange}
-      >
-        <PricingHeader 
-          title="Simple, transparent pricing"
-          description="Choose the plan that's right for you and explore Avante Maps with premium features."
-          billingOptions={["monthly", "yearly"]}
-          selectedBilling={selectedFrequency}
-          onBillingChange={handleBillingChange}
-        />
-      </PricingSection>
+      />
       
       {/* Downgrade Confirmation Dialog */}
       <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
