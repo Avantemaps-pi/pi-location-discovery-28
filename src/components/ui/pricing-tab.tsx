@@ -13,12 +13,12 @@ interface TabProps {
 export function Tab({ text, selected, setSelected, discount = false, discountAmount = "20%" }: TabProps) {
   return (
     <button
-      onClick={() => setSelected(text)}
+      onClick={() => setSelected(text.toLowerCase())}
       className={cn(
-        "relative flex h-10 items-center justify-center rounded-full px-6 text-sm font-medium transition",
+        "relative flex h-10 items-center justify-center rounded-full px-6 text-sm font-medium transition text-gray-600",
         selected
-          ? "bg-background text-foreground shadow-sm"
-          : "text-muted-foreground hover:text-foreground"
+          ? "bg-white text-black shadow-sm"
+          : "hover:text-black"
       )}
     >
       {text}
