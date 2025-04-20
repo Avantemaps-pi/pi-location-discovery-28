@@ -1,8 +1,8 @@
-
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Check } from "lucide-react"
+import { usePiPrice } from "@/hooks/usePiPrice"
 
 export interface PricingTier {
   id: string
@@ -24,7 +24,7 @@ interface PricingCardProps {
   paymentFrequency: string
   id?: string
   onSubscribe?: () => void
-  isLoading?: boolean
+  isLoading: boolean
   disabled?: boolean
 }
 
@@ -33,12 +33,15 @@ export function PricingCard({
   paymentFrequency, 
   id,
   onSubscribe,
-  isLoading,
+  isLoading: isSubscribing,
   disabled
 }: PricingCardProps) {
-  const price = tier.price[paymentFrequency as keyof typeof tier.price]
-  const isCustom = typeof price === "string"
-  const isComingSoon = tier.comingSoon
+  const { convertUsdToPi, isLoading: isPriceLoading } = usePiPrice();
+  const price = tier.price[paymentFrequency as keyof typeof tier.price];
+  const isCustom = typeof price === "string";
+  const isComingSoon = tier.comingSoon;
+
+  const piPrice = !isCustom && typeof price === 'number' ? convertUsdToPi(price) : null;
 
   return (
     <div
@@ -69,13 +72,26 @@ export function PricingCard({
           <p className="mt-2 text-gray-500">{tier.description}</p>
         </div>
         
-        <div className="flex items-baseline">
-          {!isCustom && <span className="text-3xl text-gray-900">π</span>}
-          <span className="text-5xl font-bold tracking-tight text-gray-900">{price}</span>
-          {!isCustom && paymentFrequency && (
-            <span className="ml-1 text-base font-normal text-gray-500">
-              /{paymentFrequency}
+        <div className="flex flex-col gap-1">
+          <div className="flex items-baseline">
+            {!isCustom && <span className="text-3xl text-gray-900">$</span>}
+            <span className="text-5xl font-bold tracking-tight text-gray-900">
+              {price}
             </span>
+            {!isCustom && paymentFrequency && (
+              <span className="ml-1 text-base font-normal text-gray-500">
+                /{paymentFrequency}
+              </span>
+            )}
+          </div>
+          {piPrice && (
+            <div className="flex items-baseline text-gray-600">
+              <span className="text-xl">π</span>
+              <span className="text-2xl font-medium ml-1">{piPrice}</span>
+              <span className="ml-1 text-sm">
+                /{paymentFrequency}
+              </span>
+            </div>
           )}
         </div>
 
@@ -96,9 +112,9 @@ export function PricingCard({
           tier.popular && "bg-blue-500 hover:bg-blue-600"
         )}
         onClick={onSubscribe}
-        disabled={isLoading || disabled || isComingSoon}
+        disabled={isSubscribing || disabled || isComingSoon}
       >
-        {isLoading ? "Processing..." : tier.cta}
+        {isSubscribing ? "Processing..." : tier.cta}
       </Button>
     </div>
   )
