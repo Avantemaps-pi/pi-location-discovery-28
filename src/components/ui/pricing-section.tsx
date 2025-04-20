@@ -1,6 +1,4 @@
 
-"use client"
-
 import * as React from "react"
 import { type PricingTier } from "@/components/ui/pricing-card"
 import { PricingHeader } from "@/components/ui/pricing-header"
@@ -44,23 +42,27 @@ export function PricingSection({
   )
 
   return (
-    <section className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
-      <div className="space-y-12">
-        {children}
+    <section className="py-24 sm:py-32">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          {children}
 
-        <PricingHeader
-          title={title}
-          subtitle={subtitle}
-          frequencies={filteredFrequencies}
-          selectedFrequency={selectedFrequency}
-          onFrequencyChange={handleFrequencyChange}
-        />
+          <PricingHeader
+            title={title}
+            subtitle={subtitle}
+            frequencies={filteredFrequencies}
+            selectedFrequency={selectedFrequency}
+            onFrequencyChange={handleFrequencyChange}
+          />
+        </div>
 
-        <PricingGrid
-          tiers={tiers}
-          paymentFrequency={selectedFrequency}
-          organizationTierId={organizationTierId}
-        />
+        <div className="mt-16">
+          <PricingGrid
+            tiers={tiers}
+            paymentFrequency={selectedFrequency}
+            organizationTierId={organizationTierId}
+          />
+        </div>
 
         <PricingFooter />
       </div>

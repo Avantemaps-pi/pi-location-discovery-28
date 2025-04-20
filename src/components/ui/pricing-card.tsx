@@ -44,20 +44,20 @@ export function PricingCard({
     <div
       id={id}
       className={cn(
-        "relative flex flex-col justify-between rounded-2xl bg-card p-8",
-        tier.highlighted && "bg-gradient-to-br from-blue-50 to-purple-50",
+        "relative flex flex-col rounded-2xl bg-white p-8 shadow-sm",
+        tier.highlighted && "bg-blue-50/50",
         tier.popular && "border-2 border-blue-500"
       )}
     >
       {tier.popular && (
-        <div className="absolute -top-3 left-8 rounded-full bg-blue-500 px-3 py-1 text-xs font-medium text-white">
+        <div className="absolute -top-3 left-8 rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold text-white">
           Most popular
         </div>
       )}
 
       {isComingSoon && (
         <div className="absolute inset-0 bg-gray-700/70 backdrop-blur-sm rounded-2xl flex items-center justify-center overflow-hidden z-10">
-          <div className="absolute transform rotate-[-35deg] bg-avante-purple/90 py-2 px-1 w-[150%] text-center">
+          <div className="absolute transform rotate-[-35deg] bg-secondary/90 py-2 px-1 w-[150%] text-center">
             <span className="text-white font-bold text-xl tracking-wider">Coming Soon</span>
           </div>
         </div>
@@ -65,15 +65,15 @@ export function PricingCard({
 
       <div className="space-y-6">
         <div>
-          <h3 className="text-2xl font-semibold">{tier.name}</h3>
-          <p className="mt-2 text-muted-foreground">{tier.description}</p>
+          <h3 className="text-2xl font-semibold text-gray-900">{tier.name}</h3>
+          <p className="mt-2 text-gray-500">{tier.description}</p>
         </div>
         
-        <div className="flex items-baseline text-4xl font-bold">
-          {!isCustom && <span className="text-3xl">π</span>}
-          <span>{price}</span>
-          {!isCustom && (
-            <span className="ml-1 text-base font-normal text-muted-foreground">
+        <div className="flex items-baseline">
+          {!isCustom && <span className="text-3xl text-gray-900">π</span>}
+          <span className="text-5xl font-bold tracking-tight text-gray-900">{price}</span>
+          {!isCustom && paymentFrequency && (
+            <span className="ml-1 text-base font-normal text-gray-500">
               /{paymentFrequency}
             </span>
           )}
@@ -83,7 +83,7 @@ export function PricingCard({
           {tier.features.map((feature) => (
             <li key={feature} className="flex items-center gap-3">
               <Check className="h-5 w-5 flex-shrink-0 text-blue-500" />
-              <span className="text-muted-foreground">{feature}</span>
+              <span className="text-gray-600">{feature}</span>
             </li>
           ))}
         </ul>
@@ -96,7 +96,7 @@ export function PricingCard({
           tier.popular && "bg-blue-500 hover:bg-blue-600"
         )}
         onClick={onSubscribe}
-        disabled={isLoading || disabled}
+        disabled={isLoading || disabled || isComingSoon}
       >
         {isLoading ? "Processing..." : tier.cta}
       </Button>

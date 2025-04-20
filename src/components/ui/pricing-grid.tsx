@@ -18,18 +18,20 @@ export function PricingGrid({
   organizationTierId,
 }: PricingGridProps) {
   return (
-    <div className="grid gap-8 lg:grid-cols-3 lg:gap-6">
-      {tiers.map((tier) => (
-        <PricingCard
-          key={tier.name}
-          tier={tier}
-          paymentFrequency={paymentFrequency}
-          id={tier.id === organizationTierId ? `tier-${tier.id}` : undefined}
-          onSubscribe={tier.onSubscribe}
-          isLoading={tier.isLoading}
-          disabled={tier.disabled}
-        />
-      ))}
+    <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-8">
+        {tiers.map((tier) => (
+          <PricingCard
+            key={tier.name}
+            tier={tier}
+            paymentFrequency={paymentFrequency}
+            id={tier.id === organizationTierId ? `tier-${tier.id}` : undefined}
+            onSubscribe={tier.onSubscribe}
+            isLoading={tier.isLoading}
+            disabled={tier.disabled}
+          />
+        ))}
+      </div>
     </div>
   )
 }
