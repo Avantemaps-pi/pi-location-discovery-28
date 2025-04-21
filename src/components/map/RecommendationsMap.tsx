@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { MARKER_COLORS, defaultCenter, defaultZoom } from './mapConfig';
+import { MARKER_COLORS, defaultCenter, defaultZoom, OSM_TILE_LAYER } from './mapConfig';  // <- added OSM_TILE_LAYER import
 import 'leaflet/dist/leaflet.css';
 import { Place } from '@/data/mockPlaces';
 
@@ -173,3 +173,4 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
 };
 
 export default RecommendationsMap;
+
