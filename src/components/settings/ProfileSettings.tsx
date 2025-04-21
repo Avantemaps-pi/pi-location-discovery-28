@@ -11,7 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useNavigate } from 'react-router-dom';
 import { PiUser } from '@/context/AuthContext';
+import { Button } from '@/components/ui/button';
 
 interface ProfileSettingsProps {
   language: string;
@@ -28,6 +30,8 @@ const ProfileSettings = ({
   user,
   isLoading 
 }: ProfileSettingsProps) => {
+  const navigate = useNavigate();
+
   // Apply language change effect (in a real app, this would change the UI language)
   useEffect(() => {
     console.log(`Language changed to: ${language}`);
@@ -37,6 +41,10 @@ const ProfileSettings = ({
   // Format subscription tier for display (capitalize first letter and replace hyphens with spaces)
   const formatSubscriptionTier = (tier: string = 'individual') => {
     return tier.charAt(0).toUpperCase() + tier.slice(1).replace('-', ' ');
+  };
+
+  const handleTierClick = () => {
+    navigate('/pricing');
   };
 
   return (
@@ -87,13 +95,21 @@ const ProfileSettings = ({
           {isLoading ? (
             <Skeleton className="h-9 w-full" />
           ) : (
-            <Input 
-              id="subscription" 
-              placeholder="Individual" 
-              value={formatSubscriptionTier(user?.subscriptionTier)} 
-              readOnly 
-              className="bg-gray-100 h-9" 
-            />
+            <div className="flex gap-2">
+              <Input 
+                id="subscription" 
+                placeholder="Individual" 
+                value={formatSubscriptionTier(user?.subscriptionTier)} 
+                readOnly 
+                className="bg-gray-100 h-9 cursor-pointer hover:ring-2 hover:ring-blue-400 transition"
+                onClick={handleTierClick}
+                tabIndex={0}
+                aria-label="Change subscription tier"
+              />
+              <Button variant="outline" className="h-9" onClick={handleTierClick}>
+                Change Plan
+              </Button>
+            </div>
           )}
         </div>
         
@@ -117,3 +133,4 @@ const ProfileSettings = ({
 };
 
 export default ProfileSettings;
+

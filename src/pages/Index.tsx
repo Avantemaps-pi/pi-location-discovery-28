@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
@@ -53,6 +54,8 @@ const Index = () => {
             phone: "",
             hours: {},
             isVerified: true,
+            business_types: business.business_types || [],
+            keywords: business.keywords || [],
           };
         });
         
@@ -86,20 +89,22 @@ const Index = () => {
     const normalizedSearch = searchTerm.toLowerCase();
     
     const filtered = places.filter(place => {
-      const basicMatch = place.name.toLowerCase().includes(normalizedSearch) ||
-        place.address.toLowerCase().includes(normalizedSearch) ||
-        place.category.toLowerCase().includes(normalizedSearch) ||
-        place.description.toLowerCase().includes(normalizedSearch);
-
+      const nameMatch = place.name && place.name.toLowerCase().includes(normalizedSearch);
+      const addressMatch = place.address && place.address.toLowerCase().includes(normalizedSearch);
+      const categoryMatch = place.category && place.category.toLowerCase().includes(normalizedSearch);
       const typeMatch = place.business_types?.some(type => 
-        type.toLowerCase().includes(normalizedSearch)
+        type && type.toLowerCase().includes(normalizedSearch)
       );
-
       const keywordMatch = place.keywords?.some(keyword =>
-        keyword.toLowerCase().includes(normalizedSearch)
+        keyword && keyword.toLowerCase().includes(normalizedSearch)
       );
+      
+      // Add explicit include for any string in 'business_types'
+      const businessTypeMatch = Array.isArray(place.business_types)
+        ? place.business_types.some(type => type && type.toLowerCase().includes(normalizedSearch))
+        : false;
 
-      return basicMatch || typeMatch || keywordMatch;
+      return nameMatch || addressMatch || categoryMatch || typeMatch || keywordMatch || businessTypeMatch;
     });
     
     setFilteredPlaces(filtered);
@@ -134,7 +139,7 @@ const Index = () => {
           <div className="max-w-md mx-auto">
             <SearchBar 
               onSearch={handleSearch}
-              placeholders={["Search for Address", "Search for Business name", "Search for Keywords"]}
+              placeholders={["Search for Address", "Search for Business name", "Search for Business Type", "Search for Keywords"]}
               cycleInterval={3000}
             />
           </div>
@@ -156,3 +161,4 @@ const Index = () => {
 };
 
 export default Index;
+
