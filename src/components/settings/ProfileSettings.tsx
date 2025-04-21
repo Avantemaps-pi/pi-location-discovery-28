@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/select';
 import { useNavigate } from 'react-router-dom';
 import { PiUser } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button';
 
 interface ProfileSettingsProps {
   language: string;
@@ -23,22 +22,19 @@ interface ProfileSettingsProps {
   isLoading: boolean;
 }
 
-const ProfileSettings = ({ 
-  language, 
-  setLanguage, 
+const ProfileSettings = ({
+  language,
+  setLanguage,
   isMobile,
   user,
-  isLoading 
+  isLoading
 }: ProfileSettingsProps) => {
   const navigate = useNavigate();
 
-  // Apply language change effect (in a real app, this would change the UI language)
   useEffect(() => {
     console.log(`Language changed to: ${language}`);
-    // In a real app, this would involve i18n library integration
   }, [language]);
 
-  // Format subscription tier for display (capitalize first letter and replace hyphens with spaces)
   const formatSubscriptionTier = (tier: string = 'individual') => {
     return tier.charAt(0).toUpperCase() + tier.slice(1).replace('-', ' ');
   };
@@ -59,60 +55,55 @@ const ProfileSettings = ({
           {isLoading ? (
             <Skeleton className="h-9 w-full" />
           ) : (
-            <Input 
-              id="username" 
-              placeholder="username" 
-              value={user?.username || ''} 
-              readOnly 
-              className="bg-gray-100 h-9" 
+            <Input
+              id="username"
+              placeholder="username"
+              value={user?.username || ''}
+              readOnly
+              className="bg-gray-100 h-9"
             />
           )}
           <p className="text-xs text-muted-foreground mt-1">
             Username is provided by Pi Network and cannot be changed.
           </p>
         </div>
-        
+
         <div className="space-y-1 sm:space-y-2">
           <Label htmlFor="wallet" className="text-sm">Pi Wallet Address</Label>
           {isLoading ? (
             <Skeleton className="h-9 w-full" />
           ) : (
-            <Input 
-              id="wallet" 
-              placeholder="Not provided" 
-              value={user?.walletAddress || ''} 
-              readOnly 
-              className="bg-gray-100 h-9" 
+            <Input
+              id="wallet"
+              placeholder="Not provided"
+              value={user?.walletAddress || ''}
+              readOnly
+              className="bg-gray-100 h-9"
             />
           )}
           <p className="text-xs text-muted-foreground mt-1">
             Wallet address is provided by Pi Network and cannot be changed.
           </p>
         </div>
-        
+
         <div className="space-y-1 sm:space-y-2">
           <Label htmlFor="subscription" className="text-sm">Subscription Tier</Label>
           {isLoading ? (
             <Skeleton className="h-9 w-full" />
           ) : (
-            <div className="flex gap-2">
-              <Input 
-                id="subscription" 
-                placeholder="Individual" 
-                value={formatSubscriptionTier(user?.subscriptionTier)} 
-                readOnly 
-                className="bg-gray-100 h-9 cursor-pointer hover:ring-2 hover:ring-blue-400 transition"
-                onClick={handleTierClick}
-                tabIndex={0}
-                aria-label="Change subscription tier"
-              />
-              <Button variant="outline" className="h-9" onClick={handleTierClick}>
-                Change Plan
-              </Button>
-            </div>
+            <Input
+              id="subscription"
+              placeholder="Individual"
+              value={formatSubscriptionTier(user?.subscriptionTier)}
+              readOnly
+              className="bg-gray-100 h-9 cursor-pointer hover:ring-2 hover:ring-blue-400 transition"
+              onClick={handleTierClick}
+              tabIndex={0}
+              aria-label="Change subscription tier"
+            />
           )}
         </div>
-        
+
         <div className="space-y-1 sm:space-y-2">
           <Label htmlFor="language" className="text-sm">Language Preference</Label>
           <Select value={language} onValueChange={setLanguage}>
@@ -133,4 +124,3 @@ const ProfileSettings = ({
 };
 
 export default ProfileSettings;
-

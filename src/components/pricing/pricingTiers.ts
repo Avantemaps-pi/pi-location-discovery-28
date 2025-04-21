@@ -11,10 +11,7 @@ export const TIERS: PricingTier[] = [
       yearly: "0"
     },
     features: [
-      "Basic business search",
-      "Business bookmarking",
-      "Pi payment support",
-      "Basic notifications",
+      "1 business listing",
     ],
     cta: "Get Started Free",
   },
