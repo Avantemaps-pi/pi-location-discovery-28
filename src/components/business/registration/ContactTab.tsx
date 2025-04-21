@@ -50,7 +50,17 @@ interface ContactTabProps {
 
 const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious, disabled }) => {
   const form = useFormContext<FormValues>();
-  const [countryCode, setCountryCode] = React.useState('+1');
+  
+  // Initialize countryCode from form or default to +1
+  const [countryCode, setCountryCode] = React.useState(() => {
+    return form.getValues("countryCode") || "+1";
+  });
+
+  // Update countryCode in the form when it changes
+  const handleCountryCodeChange = (value: string) => {
+    setCountryCode(value);
+    form.setValue("countryCode", value);
+  };
 
   // Handle phone input to only allow numbers
   const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +88,7 @@ const ContactTab: React.FC<ContactTabProps> = ({ onNext, onPrevious, disabled })
               <div className="flex space-x-2">
                 <Select
                   value={countryCode}
-                  onValueChange={setCountryCode}
+                  onValueChange={handleCountryCodeChange}
                   disabled={disabled}
                 >
                   <SelectTrigger className="w-[70px] flex-shrink-0">

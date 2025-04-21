@@ -1,95 +1,43 @@
 
-import * as z from 'zod';
+import * as z from "zod";
 
-// Define the schema for business registration form
 export const formSchema = z.object({
-  // Business Owner
-  firstName: z.string().min(2, { message: 'First name is required' }),
-  lastName: z.string().min(2, { message: 'Last name is required' }),
-  businessName: z.string().min(2, { message: 'Business name is required' }),
-  
-  // Contact Details
-  phone: z.string().min(10, { message: 'Valid phone number is required' }),
-  email: z.string().email({ message: 'Valid email address is required' }),
-  website: z.string()
-    .url({ message: 'Valid URL is required' })
-    .refine(
-      (val) => val === '' || val.includes('pi-') || val.includes('pi.') || val.includes('.pi.'), 
-      { message: 'Website must contain a Pi Network subdomain (e.g., pi-, pi., .pi.)' }
-    )
-    .optional()
-    .or(z.literal('')),
-  
-  // Physical Address
-  streetAddress: z.string().min(5, { message: 'Street address is required' }),
+  firstName: z.string().min(1, { message: "First name is required" }),
+  lastName: z.string().min(1, { message: "Last name is required" }),
+  businessName: z.string().min(1, { message: "Business name is required" }),
+  countryCode: z.string().default('+1'),
+  phone: z.string().min(1, { message: "Phone number is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  website: z.string().optional(),
+  streetAddress: z.string().min(1, { message: "Street address is required" }),
   apartment: z.string().optional(),
-  state: z.string().min(2, { message: 'State is required' }),
-  zipCode: z.string().min(5, { message: 'Valid zip/postal code is required' }),
-  
-  // Additional Details
-  businessTypes: z.array(z.string()).default([]),
-  businessDescription: z.string().min(10, { message: 'Please provide a short description' }),
-  piWalletAddress: z.string().min(5, { message: 'Pi wallet address is required' }),
-  
-  // Trading Hours
-  mondayOpen: z.string().optional(),
-  mondayClose: z.string().optional(),
-  mondayClosed: z.boolean().optional(),
-  
-  tuesdayOpen: z.string().optional(),
-  tuesdayClose: z.string().optional(),
-  tuesdayClosed: z.boolean().optional(),
-  
-  wednesdayOpen: z.string().optional(),
-  wednesdayClose: z.string().optional(),
-  wednesdayClosed: z.boolean().optional(),
-  
-  thursdayOpen: z.string().optional(),
-  thursdayClose: z.string().optional(),
-  thursdayClosed: z.boolean().optional(),
-  
-  fridayOpen: z.string().optional(),
-  fridayClose: z.string().optional(),
-  fridayClosed: z.boolean().optional(),
-  
-  saturdayOpen: z.string().optional(),
-  saturdayClose: z.string().optional(),
-  saturdayClosed: z.boolean().optional(),
-  
-  sundayOpen: z.string().optional(),
-  sundayClose: z.string().optional(),
-  sundayClosed: z.boolean().optional(),
+  city: z.string().min(1, { message: "City is required" }),
+  state: z.string().min(1, { message: "State is required" }),
+  zipCode: z.string().min(1, { message: "ZIP code is required" }),
+  businessTypes: z.array(z.string()).min(1, { message: "Choose at least one business type" }),
+  businessDescription: z.string().min(10, { message: "Description must be at least 10 characters" }),
+  piWalletAddress: z.string().min(1, { message: "Pi wallet address is required" }),
+  mondayOpen: z.string(),
+  mondayClose: z.string(),
+  mondayClosed: z.boolean(),
+  tuesdayOpen: z.string(),
+  tuesdayClose: z.string(),
+  tuesdayClosed: z.boolean(),
+  wednesdayOpen: z.string(),
+  wednesdayClose: z.string(),
+  wednesdayClosed: z.boolean(),
+  thursdayOpen: z.string(),
+  thursdayClose: z.string(),
+  thursdayClosed: z.boolean(),
+  fridayOpen: z.string(),
+  fridayClose: z.string(),
+  fridayClosed: z.boolean(),
+  saturdayOpen: z.string(),
+  saturdayClose: z.string(),
+  saturdayClosed: z.boolean(),
+  sundayOpen: z.string(),
+  sundayClose: z.string(),
+  sundayClosed: z.boolean(),
 });
 
 export type FormValues = z.infer<typeof formSchema>;
-
-// Define the business types
-export const businessTypes = [
-  'Restaurant/Cafe',
-  'Retail Store',
-  'Technology',
-  'Professional Services',
-  'Health & Wellness',
-  'Entertainment',
-  'Education',
-  'Accommodation',
-  'Transportation',
-  'Financial Services',
-  'Arts & Crafts',
-  'Agriculture',
-  'Construction',
-  'Manufacturing',
-  'Real Estate',
-  'Other',
-];
-
-// Define days of the week with type-safe field names
-export const daysOfWeek = [
-  { name: 'Monday', open: 'mondayOpen' as const, close: 'mondayClose' as const, closed: 'mondayClosed' as const },
-  { name: 'Tuesday', open: 'tuesdayOpen' as const, close: 'tuesdayClose' as const, closed: 'tuesdayClosed' as const },
-  { name: 'Wednesday', open: 'wednesdayOpen' as const, close: 'wednesdayClose' as const, closed: 'wednesdayClosed' as const },
-  { name: 'Thursday', open: 'thursdayOpen' as const, close: 'thursdayClose' as const, closed: 'thursdayClosed' as const },
-  { name: 'Friday', open: 'fridayOpen' as const, close: 'fridayClose' as const, closed: 'fridayClosed' as const },
-  { name: 'Saturday', open: 'saturdayOpen' as const, close: 'saturdayClose' as const, closed: 'saturdayClosed' as const },
-  { name: 'Sunday', open: 'sundayOpen' as const, close: 'sundayClose' as const, closed: 'sundayClosed' as const },
-];

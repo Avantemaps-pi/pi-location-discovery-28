@@ -11,11 +11,13 @@ export const useBusinessFormInit = (business: Business) => {
       firstName: 'John', // Mock data
       lastName: 'Doe', // Mock data
       businessName: business.name,
+      countryCode: '+1', // Default country code
       phone: '(123) 456-7890', // Mock data
       email: 'contact@example.com', // Mock data
       website: 'https://example.com', // Mock data
       streetAddress: business.address.split(',')[0] || '',
       apartment: '',
+      city: business.address.split(',')[1]?.trim() || '',
       state: business.address.split(',')[1]?.trim() || '',
       zipCode: business.address.split(',')[2]?.trim() || '',
       businessTypes: ['Restaurant/Cafe'], // Mock data
