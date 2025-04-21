@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
-import GoogleMap from '@/components/map/GoogleMap';
+import LeafletMap from '@/components/map/LeafletMap';
 import SearchBar from '@/components/map/SearchBar';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -127,7 +127,7 @@ const Index = () => {
       hideSidebar={false}
     >
       <div className="absolute inset-0 top-16 w-full" ref={mapRef}>
-        <GoogleMap 
+        <LeafletMap 
           places={filteredPlaces} 
           selectedPlaceId={selectedPlace} 
           onMarkerClick={handlePlaceClick}
@@ -161,4 +161,3 @@ const Index = () => {
 };
 
 export default Index;
-
