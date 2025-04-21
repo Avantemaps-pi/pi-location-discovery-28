@@ -1,21 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { Wrapper } from '@googlemaps/react-wrapper';
-import MapComponent from './MapComponent';
-import Marker from './Marker';
-import { renderMap } from './MapLoadingStates';
-import { GOOGLE_MAPS_API_KEY } from './mapConfig';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Icon } from 'leaflet';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-
-// Update the Place interface to include isUserBusiness property
-interface Place {
-  id: string;
-  name: string;
-  position: google.maps.LatLngLiteral;
-  category: string;
-  isUserBusiness?: boolean;
-}
+import { MARKER_COLORS, defaultCenter, defaultZoom } from './mapConfig';
+import 'leaflet/dist/leaflet.css';
+import { Place } from '@/data/mockPlaces';
 
 interface RecommendationsMapProps {
   places: Place[];
@@ -32,8 +23,8 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
   detailCardRef,
   newBusinessData
 }) => {
-  const [center, setCenter] = useState<google.maps.LatLngLiteral>({ lat: 37.7749, lng: -122.4194 });
-  const [zoom, setZoom] = useState(13);
+  const [center, setCenter] = useState<{lat: number, lng: number}>(defaultCenter);
+  const [zoom, setZoom] = useState(defaultZoom);
   const [userBusinesses, setUserBusinesses] = useState<Place[]>([]);
   
   // Fetch user businesses from Supabase
@@ -65,8 +56,9 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
               return {
                 id: business.id.toString(),
                 name: business.name,
-                category: business.category,
+                category: business.category || '',
                 position: coords,
+                address: '',
                 isUserBusiness: true
               };
             } catch (e) {
@@ -90,12 +82,9 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
   
   // Add new business if provided
   useEffect(() => {
-    if (newBusinessData) {
-      // Center the map on the new business
-      if (newBusinessData.position) {
-        setCenter(newBusinessData.position);
-        setZoom(15);
-      }
+    if (newBusinessData && newBusinessData.position) {
+      setCenter(newBusinessData.position);
+      setZoom(15);
     }
   }, [newBusinessData]);
 
@@ -116,80 +105,69 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
     }
   }, [selectedPlaceId, allPlaces]);
 
-  const handleIdle = (map: google.maps.Map) => {
-    setZoom(map.getZoom() || 13);
-    const mapCenter = map.getCenter();
-    if (mapCenter) {
-      setCenter({ lat: mapCenter.lat(), lng: mapCenter.lng() });
-    }
+  // Create marker icon based on marker state
+  const createMarkerIcon = (isActive: boolean, isUserBusiness?: boolean) => {
+    const fillColor = isActive 
+      ? MARKER_COLORS.active  
+      : isUserBusiness 
+        ? MARKER_COLORS.user  
+        : MARKER_COLORS.default;
+        
+    const iconUrl = `data:image/svg+xml,
+      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="${fillColor}" stroke="%23FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="10" r="3"/>
+        <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
+      </svg>`;
+
+    return new Icon({
+      iconUrl,
+      iconSize: [36, 36],
+      iconAnchor: [18, 36],
+      popupAnchor: [0, -36]
+    });
   };
 
   return (
     <div className="w-full h-full relative">
-      <Wrapper
-        apiKey={GOOGLE_MAPS_API_KEY}
-        render={renderMap}
-        libraries={['places']}
+      <MapContainer 
+        center={[center.lat, center.lng]} 
+        zoom={zoom} 
+        style={{ height: '100%', width: '100%', zIndex: 1 }}
+        zoomControl={true}
+        minZoom={3}
+        maxZoom={18}
       >
-        <MapComponent
-          center={center}
-          zoom={zoom}
-          minZoom={3}
-          maxZoom={18}
-          mapId="avante_map_id"
-          onIdle={handleIdle}
-          mapTypeControl={false}
-          fullscreenControl={false}
-          streetViewControl={false}
-          zoomControl={true}
-        >
-          {allPlaces.map((place) => (
-            <Marker
-              key={place.id}
-              position={place.position}
-              title={place.name}
-              icon={{
-                url: `data:image/svg+xml,
-                  <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="${
-                    place.id === selectedPlaceId 
-                      ? '%23047857' 
-                      : place.isUserBusiness 
-                        ? '%23EF4444' // Red for user businesses
-                        : '%238B5CF6'  // Default purple
-                  }" stroke="%23FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="10" r="3"/>
-                    <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
-                  </svg>`,
-                scaledSize: { width: 36, height: 36 },
-              }}
-              onClick={() => onMarkerClick(place.id)}
-              animation={place.id === selectedPlaceId ? 1 : undefined}
-            />
-          ))}
-          
-          {/* If there's a new business being added, show it with a special marker */}
-          {newBusinessData && newBusinessData.position && (
-            <Marker
-              position={newBusinessData.position}
-              title={newBusinessData.name || "New Business"}
-              icon={{
-                url: `data:image/svg+xml,
-                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="%23059669" stroke="%23FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="10" r="3"/>
-                    <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
-                  </svg>`,
-                scaledSize: { width: 40, height: 40 },
-              }}
-              onClick={() => {
+        <TileLayer
+          attribution={OSM_TILE_LAYER.attribution}
+          url={OSM_TILE_LAYER.url}
+        />
+        
+        {allPlaces.map((place) => (
+          <Marker
+            key={place.id}
+            position={[place.position.lat, place.position.lng]}
+            icon={createMarkerIcon(place.id === selectedPlaceId, place.isUserBusiness)}
+            eventHandlers={{
+              click: () => onMarkerClick(place.id)
+            }}
+          />
+        ))}
+        
+        {/* If there's a new business being added, show it with a special marker */}
+        {newBusinessData && newBusinessData.position && (
+          <Marker
+            position={[newBusinessData.position.lat, newBusinessData.position.lng]}
+            icon={createMarkerIcon(true, true)}
+            eventHandlers={{
+              click: () => {
                 if (newBusinessData.id) {
                   onMarkerClick(newBusinessData.id.toString());
                 }
-              }}
-              animation={2} // Bounce animation
-            />
-          )}
-        </MapComponent>
-      </Wrapper>
+              }
+            }}
+          />
+        )}
+      </MapContainer>
     </div>
   );
 };

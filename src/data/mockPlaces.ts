@@ -1,3 +1,4 @@
+
 export interface Place {
   id: string;
   name: string;
@@ -17,6 +18,7 @@ export interface Place {
   isVerified?: boolean;
   business_types?: string[];
   keywords?: string[];
+  isUserBusiness?: boolean;
 }
 
 // Mock data for different categories

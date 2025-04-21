@@ -10,6 +10,23 @@ import { supabase } from '@/integrations/supabase/client';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
 
+// Define the type for our Supabase business return value
+interface SupabaseBusiness {
+  id: number;
+  name: string;
+  owner_id: string;
+  created_at: string;
+  contact_info: any;
+  hours: any;
+  coordinates: string;
+  business_types: string[];
+  pi_wallet_address: string;
+  keywords: string[];
+  description: string;
+  location: string;
+  category: string;
+}
+
 const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
@@ -32,7 +49,7 @@ const Index = () => {
           throw error;
         }
         
-        const transformedPlaces: Place[] = data.map((business, index) => {
+        const transformedPlaces: Place[] = (data as SupabaseBusiness[]).map((business) => {
           let position = { lat: 37.7749 + (Math.random() * 0.2 - 0.1), lng: -122.4194 + (Math.random() * 0.2 - 0.1) };
           
           try {
@@ -47,6 +64,19 @@ const Index = () => {
             console.error("Failed to parse location:", e);
           }
           
+          // Extract website and phone from contact_info or set defaults
+          const contactInfo = typeof business.contact_info === 'object' ? business.contact_info : {};
+          const website = contactInfo?.website || "";
+          const phone = contactInfo?.phone || "";
+
+          // Create a properly formatted hours object
+          const hoursRecord: Record<string, string> = {};
+          if (typeof business.hours === 'object' && business.hours !== null) {
+            Object.entries(business.hours).forEach(([day, time]) => {
+              hoursRecord[day] = String(time);
+            });
+          }
+          
           return {
             id: business.id.toString(),
             name: business.name,
@@ -57,13 +87,13 @@ const Index = () => {
             description: business.description || "No description provided",
             category: business.category || "Other",
             image: "/placeholder.svg",
-            website: business.website || "",
-            phone: business.phone || "",
-            hours: business.hours || {},
-            isVerified: business.is_verified || false,
+            website: website,
+            phone: phone,
+            hours: hoursRecord,
+            isVerified: false,
             business_types: business.business_types || [],
             keywords: business.keywords || [],
-            isUserBusiness: business.user_id === (business.user_id || false),
+            isUserBusiness: business.owner_id === business.owner_id || false,
           };
         });
         
