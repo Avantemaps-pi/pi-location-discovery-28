@@ -8,3 +8,10 @@ export const OSM_TILE_LAYER = {
   url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 };
+
+// Map marker configuration
+export const MARKER_COLORS = {
+  active: '#047857',     // Green for active markers
+  user: '#EF4444',       // Red for user businesses
+  default: '#8B5CF6'     // Default purple for other markers
+};

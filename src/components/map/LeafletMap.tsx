@@ -6,13 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
+import { createMarkerIcon } from './markerUtils';
+import { defaultCenter, defaultZoom, OSM_TILE_LAYER } from './mapConfig';
 import PlaceCardPopup from './PlaceCardPopup';
 import { Loader2 } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
-
-// Default center coordinates (same as in mapConfig.ts)
-const DEFAULT_CENTER: LatLngExpression = [37.7749, -122.4194];
-const DEFAULT_ZOOM = 13;
 
 interface LeafletMapProps {
   places?: Place[];
@@ -35,28 +33,6 @@ const ChangeMapView = ({
   return null;
 };
 
-// Create marker icons to match the original styling
-const createMarkerIcon = (isActive: boolean, isUserBusiness?: boolean) => {
-  const fillColor = isActive 
-    ? '#047857'  // Green for active
-    : isUserBusiness 
-      ? '#EF4444'  // Red for user businesses
-      : '#8B5CF6'; // Default purple
-  
-  const iconUrl = `data:image/svg+xml,
-    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="${fillColor}" stroke="%23FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="10" r="3"/>
-      <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
-    </svg>`;
-
-  return new Icon({
-    iconUrl,
-    iconSize: [36, 36],
-    iconAnchor: [18, 36],
-    popupAnchor: [0, -36],
-  });
-};
-
 const LeafletMap: React.FC<LeafletMapProps> = ({ 
   places = [], 
   selectedPlaceId = null,
@@ -67,8 +43,8 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
   const navigate = useNavigate();
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
   const [showPopover, setShowPopover] = useState(false);
-  const [mapCenter, setMapCenter] = useState<LatLngExpression>(DEFAULT_CENTER);
-  const [zoom, setZoom] = useState(DEFAULT_ZOOM);
+  const [mapCenter, setMapCenter] = useState<LatLngExpression>([defaultCenter.lat, defaultCenter.lng]);
+  const [zoom, setZoom] = useState(defaultZoom);
 
   // Use provided places or default locations
   const displayPlaces = isLoading ? [] : places.length > 0 ? places : defaultLocations;
@@ -151,8 +127,8 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         maxZoom={18}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution={OSM_TILE_LAYER.attribution}
+          url={OSM_TILE_LAYER.url}
         />
         
         {/* Update map view when center or zoom changes */}

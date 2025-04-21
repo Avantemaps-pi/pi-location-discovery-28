@@ -1,13 +1,14 @@
 
 import { Icon } from 'leaflet';
+import { MARKER_COLORS } from './mapConfig';
 
 // Function to create marker icon based on active state and business type for Leaflet
 export const createMarkerIcon = (isActive: boolean, isUserBusiness?: boolean) => {
   const fillColor = isActive 
-    ? '#047857'  // Green for active
+    ? MARKER_COLORS.active  // Green for active
     : isUserBusiness 
-      ? '#EF4444'  // Red for user businesses
-      : '#8B5CF6'; // Default purple
+      ? MARKER_COLORS.user  // Red for user businesses
+      : MARKER_COLORS.default; // Default purple
   
   const iconUrl = `data:image/svg+xml,
     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="${fillColor}" stroke="%23FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

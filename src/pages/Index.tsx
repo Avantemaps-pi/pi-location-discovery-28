@@ -36,6 +36,13 @@ const Index = () => {
           let position = { lat: 37.7749 + (Math.random() * 0.2 - 0.1), lng: -122.4194 + (Math.random() * 0.2 - 0.1) };
           
           try {
+            // Parse location if available
+            if (business.coordinates) {
+              const coordinates = JSON.parse(business.coordinates);
+              if (coordinates.lat && coordinates.lng) {
+                position = coordinates;
+              }
+            }
           } catch (e) {
             console.error("Failed to parse location:", e);
           }
@@ -50,12 +57,13 @@ const Index = () => {
             description: business.description || "No description provided",
             category: business.category || "Other",
             image: "/placeholder.svg",
-            website: "",
-            phone: "",
-            hours: {},
-            isVerified: true,
+            website: business.website || "",
+            phone: business.phone || "",
+            hours: business.hours || {},
+            isVerified: business.is_verified || false,
             business_types: business.business_types || [],
             keywords: business.keywords || [],
+            isUserBusiness: business.user_id === (business.user_id || false),
           };
         });
         
