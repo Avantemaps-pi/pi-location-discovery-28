@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tabs } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -8,6 +7,9 @@ import TabNavigation from './registration/components/TabNavigation';
 import TabContent from './registration/components/TabContent';
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/auth';
+import { toast } from 'sonner';
 
 interface BusinessRegistrationFormProps {
   onSuccess?: () => void;
@@ -15,15 +17,34 @@ interface BusinessRegistrationFormProps {
 
 const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const { 
     form, 
     selectedImages, 
     handleImageUpload, 
     handleImageRemove,
     onSubmit, 
-    isSubmitting 
+    isSubmitting,
+    businessCount = 0 
   } = useBusinessRegistration(onSuccess);
   const [selectedTab, setSelectedTab] = React.useState('business-owner');
+
+  React.useEffect(() => {
+    if (businessCount > 0 && user?.subscriptionTier === 'individual') {
+      toast.error(
+        "Upgrade Required", 
+        {
+          description: "Multiple business registrations require a Business subscription. Please upgrade to continue.",
+          action: {
+            label: "Upgrade Now",
+            onClick: () => navigate('/pricing')
+          }
+        }
+      );
+      navigate('/registered-business');
+    }
+  }, [businessCount, user?.subscriptionTier, navigate]);
 
   return (
     <div className="w-full py-2 min-h-[600px]">

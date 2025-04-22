@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import BusinessCard from '@/components/business/BusinessCard';
@@ -8,9 +7,11 @@ import BusinessHeader from '@/components/business/BusinessHeader';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Business } from '@/types/business';
+import { useAuth } from '@/hooks/auth';
 
 const RegisteredBusiness = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const businesses: Business[] = [
     {
       id: 1,
@@ -45,6 +46,31 @@ const RegisteredBusiness = () => {
       });
     }
   };
+
+  if (!isAuthenticated) {
+    return (
+      <AppLayout title="Avante Maps">
+        <div className="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Login Required
+            </h2>
+            <p className="mt-4 text-lg leading-6 text-gray-600">
+              Please login to view and manage your registered businesses.
+            </p>
+            <div className="mt-8">
+              <Button 
+                onClick={() => navigate('/')}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Return Home
+              </Button>
+            </div>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout title="Avante Maps">

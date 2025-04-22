@@ -122,9 +122,10 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         center={mapCenter} 
         zoom={zoom} 
         style={{ height: '100%', width: '100%', zIndex: 1 }}
-        zoomControl={true}
+        zoomControl={false} // Removed zoom controls
         minZoom={3}
         maxZoom={18}
+        bounds={places.length > 0 ? places.map(place => [place.position.lat, place.position.lng]) : undefined}
       >
         <TileLayer
           attribution={OSM_TILE_LAYER.attribution}

@@ -67,7 +67,7 @@ const Pricing = () => {
   return (
     <AppLayout title="Pricing">
       <PricingSection 
-        title="Simple, transparent pricing"
+        title={<h2 className="text-3xl font-bold tracking-tight sm:text-4xl max-w-2xl mx-auto">Simple, transparent pricing</h2>}
         subtitle="Choose the plan that's right for you and explore Avante Maps with premium features."
         tiers={TIERS.map(tier => ({
           ...tier,

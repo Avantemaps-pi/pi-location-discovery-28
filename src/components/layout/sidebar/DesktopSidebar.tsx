@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -39,7 +38,6 @@ const DesktopSidebar = ({
 }: DesktopSidebarProps) => {
   const { isAuthenticated, login, logout, isLoading } = useAuth();
   
-  // Function to handle authentication actions
   const handleAuthAction = () => {
     if (isAuthenticated) {
       logout();
@@ -69,13 +67,14 @@ const DesktopSidebar = ({
 
       <SidebarContent>
         <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-8">
-          {/* Authentication Button - appears at the top */}
           <div className="mb-2">
             <Button 
               onClick={handleAuthAction}
               disabled={isLoading}
-              className="w-full"
-              variant="outline"
+              className={cn(
+                "w-full",
+                isAuthenticated ? "bg-red-500 hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"
+              )}
             >
               {isAuthenticated ? (
                 <>
