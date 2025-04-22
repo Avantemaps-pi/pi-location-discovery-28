@@ -1,6 +1,35 @@
 
 import * as z from "zod";
 
+export const businessTypes = [
+  "Restaurant/Cafe",
+  "Retail Store",
+  "Service Provider",
+  "Entertainment Venue",
+  "Health & Wellness",
+  "Education",
+  "Professional Services",
+  "Accommodation",
+  "Transportation",
+  "Technology",
+  "Arts & Crafts",
+  "Construction",
+  "Agriculture",
+  "Manufacturing",
+  "Wholesale",
+  "Other"
+];
+
+export const daysOfWeek = [
+  { name: "Monday", open: "mondayOpen", close: "mondayClose", closed: "mondayClosed" },
+  { name: "Tuesday", open: "tuesdayOpen", close: "tuesdayClose", closed: "tuesdayClosed" },
+  { name: "Wednesday", open: "wednesdayOpen", close: "wednesdayClose", closed: "wednesdayClosed" },
+  { name: "Thursday", open: "thursdayOpen", close: "thursdayClose", closed: "thursdayClosed" },
+  { name: "Friday", open: "fridayOpen", close: "fridayClose", closed: "fridayClosed" },
+  { name: "Saturday", open: "saturdayOpen", close: "saturdayClose", closed: "saturdayClosed" },
+  { name: "Sunday", open: "sundayOpen", close: "sundayClose", closed: "sundayClosed" }
+];
+
 export const formSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required" }),
   lastName: z.string().min(1, { message: "Last name is required" }),
