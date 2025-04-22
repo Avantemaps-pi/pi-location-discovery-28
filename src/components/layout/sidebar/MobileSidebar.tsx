@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,7 @@ import { X, UserRound, LogIn, LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import NavItem from './NavItem';
 import { useAuth } from '@/context/auth';
+import { cn } from '@/lib/utils';
 
 interface MobileSidebarProps {
   isOpen: boolean;

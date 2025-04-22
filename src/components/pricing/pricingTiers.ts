@@ -1,4 +1,6 @@
 
+import { PricingTier } from "@/components/ui/pricing-card";
+
 export const TIERS: PricingTier[] = [
   {
     id: "individual",
