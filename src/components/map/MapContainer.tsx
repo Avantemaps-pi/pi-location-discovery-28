@@ -7,7 +7,7 @@ interface MapContainerProps {
   places: Place[];
   filteredPlaces: Place[];
   selectedPlace: string | null;
-  detailCardRef: React.RefRef<HTMLDivElement>;
+  detailCardRef: React.RefObject<HTMLDivElement>;
   isLoading: boolean;
   onMarkerClick: (placeId: string) => void;
 }

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import BusinessCard from '@/components/business/BusinessCard';
@@ -6,8 +7,8 @@ import EmptyBusinessState from '@/components/business/EmptyBusinessState';
 import BusinessHeader from '@/components/business/BusinessHeader';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/auth';
 import { Business } from '@/types/business';
-import { useAuth } from '@/hooks/auth';
 
 const RegisteredBusiness = () => {
   const navigate = useNavigate();
