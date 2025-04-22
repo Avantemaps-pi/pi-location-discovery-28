@@ -1,16 +1,15 @@
 
-import React, { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
-import { Icon, LatLngExpression } from 'leaflet';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
-import { createMarkerIcon } from './markerUtils';
 import { defaultCenter, defaultZoom, OSM_TILE_LAYER } from './mapConfig';
-import PlaceCardPopup from './PlaceCardPopup';
-import { Loader2 } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
+import MapMarkers from './map-components/MapMarkers';
+import MapViewUpdater from './map-components/MapViewUpdater';
+import PlaceOverlay from './map-components/PlaceOverlay';
+import LoadingOverlay from './map-components/LoadingOverlay';
 
 interface LeafletMapProps {
   places?: Place[];
@@ -20,19 +19,6 @@ interface LeafletMapProps {
   isLoading?: boolean;
 }
 
-// Component to update the map center when selectedPlace changes
-const ChangeMapView = ({ 
-  center, 
-  zoom 
-}: { 
-  center: LatLngExpression; 
-  zoom: number 
-}) => {
-  const map = useMap();
-  map.setView(center, zoom);
-  return null;
-};
-
 const LeafletMap: React.FC<LeafletMapProps> = ({ 
   places = [], 
   selectedPlaceId = null,
@@ -40,10 +26,9 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
   detailCardRef,
   isLoading = false
 }) => {
-  const navigate = useNavigate();
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
   const [showPopover, setShowPopover] = useState(false);
-  const [mapCenter, setMapCenter] = useState<LatLngExpression>([defaultCenter.lat, defaultCenter.lng]);
+  const [mapCenter, setMapCenter] = useState([defaultCenter.lat, defaultCenter.lng]);
   const [zoom, setZoom] = useState(defaultZoom);
 
   // Use provided places or default locations
@@ -82,18 +67,6 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
     }
   };
 
-  const handleRatingClick = (businessId: string) => {
-    // Find business details by ID
-    const businessDetails = displayPlaces.find(loc => loc.id === businessId);
-    
-    // Navigate to the review page with the business details
-    navigate(`/review/${businessId}`, { 
-      state: { 
-        businessDetails: businessDetails 
-      }
-    });
-  };
-
   const handleOverlayClick = () => {
     setActiveMarker(null);
     setShowPopover(false);
@@ -109,14 +82,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
 
   return (
     <div className="w-full h-full relative">
-      {isLoading && (
-        <div className="absolute inset-0 bg-background/80 flex items-center justify-center z-50">
-          <div className="flex flex-col items-center">
-            <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
-            <p className="text-lg font-medium">Loading businesses...</p>
-          </div>
-        </div>
-      )}
+      {isLoading && <LoadingOverlay />}
       
       <MapContainer 
         center={mapCenter} 
@@ -132,36 +98,16 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
           url={OSM_TILE_LAYER.url}
         />
         
-        {/* Update map view when center or zoom changes */}
-        <ChangeMapView center={mapCenter} zoom={zoom} />
-        
-        {/* Render all markers */}
-        {displayPlaces.map(place => (
-          <Marker
-            key={place.id}
-            position={[place.position.lat, place.position.lng]}
-            icon={createMarkerIcon(place.id === activeMarker, place.isUserBusiness)}
-            eventHandlers={{
-              click: () => handleMarkerClick(place.id)
-            }}
-          />
-        ))}
+        <MapViewUpdater center={mapCenter} zoom={zoom} />
+        <MapMarkers places={displayPlaces} activeMarkerId={activeMarker} onMarkerClick={handleMarkerClick} />
       </MapContainer>
       
-      {/* Greyish transparent overlay that appears when a place is selected */}
-      {selectedPlace && showPopover && (
-        <div 
-          className="fixed inset-0 bg-black/40 z-40 backdrop-blur-[2px]"
-          onClick={handleOverlayClick}
-        />
-      )}
-      
-      {/* Popup card overlay for selected place */}
-      {selectedPlace && showPopover && (
-        <div className="fixed top-28 left-1/2 transform -translate-x-1/2 z-50 place-popup">
-          <PlaceCardPopup location={selectedPlace} detailCardRef={detailCardRef} />
-        </div>
-      )}
+      <PlaceOverlay 
+        selectedPlace={selectedPlace} 
+        showPopover={showPopover} 
+        onOverlayClick={handleOverlayClick}
+        detailCardRef={detailCardRef}
+      />
     </div>
   );
 };
