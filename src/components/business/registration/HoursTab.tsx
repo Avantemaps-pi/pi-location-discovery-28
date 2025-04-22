@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useFormContext } from 'react-hook-form';
 import { FormValues, daysOfWeek } from './formSchema';
-import { CheckedState } from "@radix-ui/react-checkbox";
 
 interface HoursTabProps {
   onNext: () => void;
@@ -41,13 +40,13 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious, disabled }) => 
                 
                 <FormField
                   control={form.control}
-                  name={day.closed}
+                  name={day.closed as keyof FormValues}
                   render={({ field }) => (
                     <FormItem className="flex items-center justify-center space-x-2 space-y-0 m-0">
                       <FormControl>
                         <Checkbox
-                          checked={field.value}
-                          onCheckedChange={(checked: CheckedState) => {
+                          checked={field.value as boolean}
+                          onCheckedChange={(checked) => {
                             field.onChange(checked === true);
                           }}
                           disabled={disabled}
@@ -59,15 +58,16 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious, disabled }) => 
                 
                 <FormField
                   control={form.control}
-                  name={day.open}
+                  name={day.open as keyof FormValues}
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <Input
                           type="time"
                           {...field}
-                          disabled={form.watch(day.closed) === true || disabled}
+                          disabled={form.watch(day.closed as keyof FormValues) === true || disabled}
                           className="w-full"
+                          value={field.value as string}
                         />
                       </FormControl>
                     </FormItem>
@@ -76,15 +76,16 @@ const HoursTab: React.FC<HoursTabProps> = ({ onNext, onPrevious, disabled }) => 
                 
                 <FormField
                   control={form.control}
-                  name={day.close}
+                  name={day.close as keyof FormValues}
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <Input
                           type="time"
                           {...field}
-                          disabled={form.watch(day.closed) === true || disabled}
+                          disabled={form.watch(day.closed as keyof FormValues) === true || disabled}
                           className="w-full"
+                          value={field.value as string}
                         />
                       </FormControl>
                     </FormItem>

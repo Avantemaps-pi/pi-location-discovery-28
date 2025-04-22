@@ -49,7 +49,7 @@ export const TIERS: PricingTier[] = [
       "Dedicated support team",
       "Custom business integration",
     ],
-    cta: "Contact Us",
+    cta: "Upgrade to Organization",
     highlighted: true
   }
 ];
