@@ -49,7 +49,7 @@ const DesktopSidebar = ({
   
   return (
     <Sidebar className={cn("hidden md:flex", className)}>
-      <SidebarHeader className="p-4 border-b border-sidebar-border">
+      <SidebarHeader>
         <Link to="/" className="flex items-center gap-2">
           <img 
             src="/lovable-uploads/b0daa374-9909-4cf8-a2ae-e08e2184c3fc.png" 
@@ -73,12 +73,14 @@ const DesktopSidebar = ({
               disabled={isLoading}
               className={cn(
                 "w-full",
-                isAuthenticated ? "bg-red-500 hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"
+                isAuthenticated 
+                  ? "bg-white hover:bg-gray-100 border border-red-500 text-red-500" 
+                  : "bg-blue-500 hover:bg-blue-600 text-white"
               )}
             >
               {isAuthenticated ? (
                 <>
-                  <LogOut className="h-4 w-4 mr-2" />
+                  <LogOut className="h-4 w-4 mr-2 text-red-500" />
                   Logout
                 </>
               ) : (

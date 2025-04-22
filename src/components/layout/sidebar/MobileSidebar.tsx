@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -36,7 +35,6 @@ const MobileSidebar = ({
   const { user, isAuthenticated, login, logout, isLoading } = useAuth();
   const username = user?.username || 'Guest';
   
-  // Format the subscription tier for display
   const formatPlanType = (tier?: string) => {
     if (!tier) return 'Individual';
     return tier.charAt(0).toUpperCase() + tier.slice(1).replace('-', ' ');
@@ -44,7 +42,6 @@ const MobileSidebar = ({
   
   const planType = formatPlanType(user?.subscriptionTier);
 
-  // Function to handle authentication actions
   const handleAuthAction = () => {
     if (isAuthenticated) {
       logout();
@@ -56,7 +53,6 @@ const MobileSidebar = ({
 
   return (
     <>
-      {/* Overlay that appears when sidebar is open */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
@@ -90,17 +86,20 @@ const MobileSidebar = ({
           </div>
           
           <div className="flex-1 overflow-y-auto py-4">
-            {/* Authentication button at the top of the sidebar */}
             <div className="px-2 mb-4">
               <Button 
                 onClick={handleAuthAction} 
                 disabled={isLoading}
-                className="w-full flex items-center"
-                variant="outline"
+                className={cn(
+                  "w-full flex items-center",
+                  isAuthenticated 
+                    ? "bg-white hover:bg-gray-100 border border-red-500 text-red-500" 
+                    : "bg-blue-500 hover:bg-blue-600 text-white"
+                )}
               >
                 {isAuthenticated ? (
                   <>
-                    <LogOut className="h-4 w-4 mr-2" />
+                    <LogOut className="h-4 w-4 mr-2 text-red-500" />
                     Logout
                   </>
                 ) : (

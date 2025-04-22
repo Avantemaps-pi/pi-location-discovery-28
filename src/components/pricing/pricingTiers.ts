@@ -1,6 +1,4 @@
 
-import { PricingTier } from "@/components/ui/pricing-card";
-
 export const TIERS: PricingTier[] = [
   {
     id: "individual",
@@ -39,8 +37,8 @@ export const TIERS: PricingTier[] = [
     name: "Organization",
     description: "For larger organizations with multiple locations.",
     price: {
-      monthly: "Coming Soon",
-      yearly: "Coming Soon"
+      monthly: "19.99",
+      yearly: "199.90"
     },
     features: [
       "All Small Business features",
@@ -50,6 +48,6 @@ export const TIERS: PricingTier[] = [
       "Custom business integration",
     ],
     cta: "Contact Us",
-    comingSoon: true
+    highlighted: true
   }
 ];
