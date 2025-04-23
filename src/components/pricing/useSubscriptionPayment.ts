@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/auth';
@@ -73,19 +72,9 @@ export const useSubscriptionPayment = () => {
     setIsProcessingPayment(true);
     
     try {
-      // First refresh user data to ensure we have the latest permissions including wallet_address
+      // First refresh user data to ensure we have the latest permissions
       console.log("Refreshing user data before payment...");
       await refreshUserData();
-      
-      // Check if user has wallet_address permission - this is critical for payments
-      if (!user?.walletAddress) {
-        console.warn("Wallet address permission not detected");
-        
-        // Show the permissions dialog with query parameter
-        setIsProcessingPayment(false);
-        navigate('?permissionsNeeded=true');
-        return;
-      }
       
       // Get the subscription price
       const subscriptionTier = tier as SubscriptionTier;
@@ -118,7 +107,6 @@ export const useSubscriptionPayment = () => {
     } catch (error) {
       console.error("Subscription error:", error);
       
-      // Provide more helpful error messages for specific error types
       if (error instanceof Error) {
         const errorMessage = error.message;
         
