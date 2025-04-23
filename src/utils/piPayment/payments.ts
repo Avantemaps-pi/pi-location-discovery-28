@@ -17,6 +17,7 @@ export const executeSubscriptionPayment = async (
   try {
     // Ensure Pi SDK is available
     if (!isPiNetworkAvailable()) {
+      toast.error("Pi Network SDK is not available");
       throw new Error("Pi Network SDK is not available");
     }
     
@@ -43,11 +44,14 @@ export const executeSubscriptionPayment = async (
         const callbacks: PaymentCallbacks = {
           onReadyForServerApproval: async (paymentId: string) => {
             console.log("Payment ready for server approval:", paymentId);
+            toast.info("Processing payment...");
             
             // Get the current authenticated user information
             const piUser = window.Pi?.currentUser;
             if (!piUser?.uid) {
               console.error("User not authenticated");
+              toast.error("Authentication error. Please login again.");
+              reject(new Error("User not authenticated"));
               return;
             }
             
@@ -63,18 +67,22 @@ export const executeSubscriptionPayment = async (
             if (!approvalResult.success) {
               console.error("Payment approval failed:", approvalResult.message);
               toast.error("Payment approval failed. Please try again.");
+              reject(new Error(approvalResult.message));
             } else {
               console.log("Payment approved:", paymentId);
+              toast.success("Payment approved! Completing transaction...");
             }
           },
           
           onReadyForServerCompletion: async (paymentId: string, txid: string) => {
             console.log("Payment ready for server completion:", paymentId, txid);
+            toast.info("Finalizing transaction...");
             
             // Get the current authenticated user information
             const piUser = window.Pi?.currentUser;
             if (!piUser?.uid) {
               console.error("User not authenticated");
+              reject(new Error("User not authenticated"));
               return;
             }
             
@@ -104,6 +112,7 @@ export const executeSubscriptionPayment = async (
           onCancel: (paymentId: string) => {
             console.log("Payment cancelled:", paymentId);
             // Handle payment cancellation
+            toast.warning("Payment was cancelled by user");
             resolve({
               success: false,
               message: "Payment was cancelled."
@@ -112,13 +121,25 @@ export const executeSubscriptionPayment = async (
           
           onError: (error: Error, payment?: PaymentDTO) => {
             console.error("Payment error:", error, payment);
+            toast.error(`Payment error: ${error.message}`);
             // Handle payment error
             reject(error);
           }
         };
         
+        console.log("About to call Pi.createPayment...");
+        
         // Execute the payment with all required callbacks
-        window.Pi?.createPayment(paymentData, callbacks);
+        try {
+          if (!window.Pi) {
+            throw new Error("Pi SDK not available");
+          }
+          window.Pi.createPayment(paymentData, callbacks);
+          console.log("Pi.createPayment called successfully");
+        } catch (error) {
+          console.error("Error calling createPayment:", error);
+          reject(error);
+        }
       } catch (error) {
         console.error("Error creating payment:", error);
         reject(error);
