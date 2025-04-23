@@ -20,6 +20,17 @@ export const executeSubscriptionPayment = async (
     // Ensure SDK is initialized
     await initializePiNetwork();
     
+    // Request necessary permissions first
+    console.log("Requesting user permissions before payment...");
+    const userInfo = await requestUserPermissions();
+    
+    if (!userInfo || !userInfo.walletAddress) {
+      console.error("Wallet address permission not granted");
+      throw new Error("Failed to get wallet address permission");
+    }
+    
+    console.log("Permissions granted, proceeding with payment...");
+    
     // Create a promise that will be resolved when the payment is processed
     return new Promise((resolve, reject) => {
       try {
