@@ -9,9 +9,10 @@ import { toast } from 'sonner';
 import { TIERS } from '@/components/pricing/pricingTiers';
 import { useAuth } from '@/context/auth';
 import { useSubscriptionPayment } from '@/components/pricing/useSubscriptionPayment';
+import { requestWalletPermission } from '@/utils/piNetwork';
 
 const Pricing = () => {
-  const { user, isAuthenticated, login } = useAuth();
+  const { user, isAuthenticated, login, refreshUserData } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [previousPlan, setPreviousPlan] = useState("");
@@ -74,8 +75,37 @@ const Pricing = () => {
   // Handle wallet permissions
   const handleGrantPermissions = async () => {
     setShowPermissionsDialog(false);
-    await login();
-    toast.info("Please try making a payment after granting wallet address permissions");
+    
+    toast.info("Requesting wallet address permission...");
+    
+    try {
+      // First try to refresh user data through a full login
+      await login();
+      await refreshUserData();
+      
+      // If user still doesn't have wallet address, make a specific wallet request
+      if (!user?.walletAddress) {
+        const walletAddress = await requestWalletPermission();
+        
+        if (walletAddress) {
+          toast.success("Wallet permission granted successfully");
+          await refreshUserData(); // Make sure we have the latest user data
+          
+          // Clear the URL parameter
+          navigate(location.pathname);
+        } else {
+          toast.error("Failed to get wallet address permission. Please try again.");
+        }
+      } else {
+        toast.success("All required permissions granted");
+        
+        // Clear the URL parameter
+        navigate(location.pathname);
+      }
+    } catch (error) {
+      console.error("Error granting permissions:", error);
+      toast.error("Error requesting permissions. Please try again.");
+    }
   };
   
   return (
@@ -127,7 +157,10 @@ const Pricing = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <Button variant="outline" onClick={() => setShowPermissionsDialog(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => {
+              setShowPermissionsDialog(false);
+              navigate(location.pathname); // Clear URL parameters
+            }}>Cancel</Button>
             <Button onClick={handleGrantPermissions}>Grant Permissions</Button>
           </AlertDialogFooter>
         </AlertDialogContent>

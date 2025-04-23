@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/auth';
 import { executeSubscriptionPayment, getSubscriptionPrice } from '@/utils/piPayment';
 import { SubscriptionTier } from '@/utils/piNetwork';
@@ -9,6 +10,7 @@ export const useSubscriptionPayment = () => {
   const { user, isAuthenticated, login, refreshUserData } = useAuth();
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [selectedFrequency, setSelectedFrequency] = useState("monthly");
+  const navigate = useNavigate();
   
   const handleFrequencyChange = (frequency: string) => {
     setSelectedFrequency(frequency);
@@ -75,21 +77,14 @@ export const useSubscriptionPayment = () => {
       console.log("Refreshing user data before payment...");
       await refreshUserData();
       
-      // Check if user has wallet_address permission
+      // Check if user has wallet_address permission - this is critical for payments
       if (!user?.walletAddress) {
-        console.warn("User does not have wallet_address permission");
-        toast.warning("Additional permissions needed for payment processing");
+        console.warn("Wallet address permission not detected");
         
-        // Force a new login to request permissions again with emphasis on wallet address
-        await login();
-        await refreshUserData();
-        
-        // Check again after login attempt
-        if (!user?.walletAddress) {
-          toast.error("Wallet address permission required for payments");
-          setIsProcessingPayment(false);
-          return;
-        }
+        // Show the permissions dialog with query parameter
+        setIsProcessingPayment(false);
+        navigate('?permissionsNeeded=true');
+        return;
       }
       
       // Get the subscription price
@@ -97,7 +92,6 @@ export const useSubscriptionPayment = () => {
       const price = getSubscriptionPrice(subscriptionTier, selectedFrequency);
       
       console.log(`Processing payment of ${price} Pi for ${subscriptionTier} subscription (${selectedFrequency})`);
-      toast.info(`Initiating payment of ${price} Pi`);
       
       // Execute the payment
       const result = await executeSubscriptionPayment(
@@ -111,15 +105,12 @@ export const useSubscriptionPayment = () => {
         // Refresh user data to update subscription info
         await refreshUserData();
       } else {
-        // Handle permission errors with a prompt to login again
+        // Handle permission errors with targeted approach
         if (result.message.includes("permission") || result.message.includes("wallet_address")) {
           toast.error(result.message);
-          toast.info("Attempting to refresh your permissions...");
-          await login(); // Re-login to get fresh permissions
-          await refreshUserData();
-        } else if (result.message.includes("Failed to get user permissions")) {
-          toast.error("Permission issue detected. Please log in again to grant all required permissions.");
-          await login();
+          
+          // Show the permissions dialog with query parameter
+          navigate('?permissionsNeeded=true');
         } else {
           toast.error(result.message);
         }
@@ -127,16 +118,19 @@ export const useSubscriptionPayment = () => {
     } catch (error) {
       console.error("Subscription error:", error);
       
-      // If it's a permissions error, prompt to login again
+      // Provide more helpful error messages for specific error types
       if (error instanceof Error) {
-        if (error.message.includes("permission") || 
-            error.message.includes("Failed to get user permissions") ||
-            error.message.includes("wallet_address")) {
-          toast.error(error.message);
-          toast.info("Please try logging in again to grant all required permissions");
-          await login(); // Re-login to get fresh permissions
+        const errorMessage = error.message;
+        
+        if (errorMessage.includes("permission") || 
+            errorMessage.includes("Failed to get user permissions") ||
+            errorMessage.includes("wallet_address")) {
+          toast.error("Additional permissions are needed to process this payment");
+          
+          // Show the permissions dialog
+          navigate('?permissionsNeeded=true');
         } else {
-          toast.error("Failed to process subscription payment: " + error.message);
+          toast.error("Failed to process subscription payment: " + errorMessage);
         }
       } else {
         toast.error("Failed to process subscription payment");

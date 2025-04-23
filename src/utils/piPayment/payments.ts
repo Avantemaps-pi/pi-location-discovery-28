@@ -1,6 +1,6 @@
 
 import { toast } from 'sonner';
-import { initializePiNetwork, isPiNetworkAvailable, requestUserPermissions } from '../piNetwork';
+import { initializePiNetwork, isPiNetworkAvailable, requestUserPermissions, requestWalletPermission } from '../piNetwork';
 import { PaymentResult, SubscriptionFrequency } from './types';
 import { SubscriptionTier, PaymentDTO, PaymentData, PaymentCallbacks } from '../piNetwork/types';
 import { approvePayment, completePayment } from '@/api/payments';
@@ -24,16 +24,37 @@ export const executeSubscriptionPayment = async (
     // Ensure SDK is initialized
     await initializePiNetwork();
     
-    // Ensure we have wallet address permission before proceeding
-    console.log("Verifying wallet address permission before payment...");
+    // Step 1: First verify permissions with a comprehensive check
+    console.log("Verifying all permissions before payment...");
     const userInfo = await requestUserPermissions();
     
-    if (!userInfo || !userInfo.walletAddress) {
-      console.error("Wallet address permission not granted");
+    if (!userInfo) {
+      console.error("Failed to get user permissions");
       return {
         success: false,
-        message: "Wallet address permission required for payments"
+        message: "Failed to get user permissions. Please try again."
       };
+    }
+    
+    // Step 2: If wallet address is missing, explicitly request it
+    if (!userInfo.walletAddress) {
+      console.log("Wallet address missing. Making explicit request for wallet_address permission");
+      toast.info("Requesting wallet address permission needed for payments");
+      
+      // Make a focused request just for wallet permission
+      const walletAddress = await requestWalletPermission();
+      
+      if (!walletAddress) {
+        console.error("Wallet address permission denied");
+        // Provide clear error message for the user
+        return {
+          success: false,
+          message: "Wallet address permission is required for processing payments. Please grant this permission when prompted."
+        };
+      }
+      
+      // At this point we have the wallet address, can proceed with payment
+      console.log("Successfully obtained wallet address permission");
     }
     
     // Create a promise that will be resolved when the payment is processed
@@ -51,6 +72,7 @@ export const executeSubscriptionPayment = async (
         };
         
         console.log("Creating payment with data:", paymentData);
+        toast.info(`Initiating payment of ${amount} Pi`);
         
         // Define the callbacks for payment events according to SDK reference
         const callbacks: PaymentCallbacks = {
@@ -133,7 +155,14 @@ export const executeSubscriptionPayment = async (
           
           onError: (error: Error, payment?: PaymentDTO) => {
             console.error("Payment error:", error, payment);
-            toast.error(`Payment error: ${error.message}`);
+            let errorMessage = error.message;
+            
+            // Provide more helpful error messages based on common issues
+            if (errorMessage.includes('wallet_address') || errorMessage.includes('permission')) {
+              errorMessage = "Wallet address permission is required. Please grant this permission when prompted.";
+            }
+            
+            toast.error(`Payment error: ${errorMessage}`);
             // Handle payment error
             reject(error);
           }
