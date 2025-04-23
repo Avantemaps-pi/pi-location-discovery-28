@@ -11,11 +11,12 @@ import { useAuth } from '@/context/auth';
 import { useSubscriptionPayment } from '@/components/pricing/useSubscriptionPayment';
 
 const Pricing = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, login } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [previousPlan, setPreviousPlan] = useState("");
   const [showDialog, setShowDialog] = useState(false);
+  const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
   
   // Get subscription payment utilities
   const { 
@@ -43,7 +44,13 @@ const Pricing = () => {
         },
       });
     }
-  }, [location.state]);
+    
+    // Check for wallet permission issues from URL parameters
+    const urlParams = new URLSearchParams(location.search);
+    if (urlParams.get('permissionsNeeded') === 'true') {
+      setShowPermissionsDialog(true);
+    }
+  }, [location.state, location.search]);
 
   // Handle individual plan selection
   const handleIndividualPlanClick = async () => {
@@ -62,6 +69,13 @@ const Pricing = () => {
     await updateUserSubscription('individual');
     toast.success('Your subscription has been updated to the Individual plan.');
     setShowDialog(false);
+  };
+  
+  // Handle wallet permissions
+  const handleGrantPermissions = async () => {
+    setShowPermissionsDialog(false);
+    await login();
+    toast.info("Please try making a payment after granting wallet address permissions");
   };
   
   return (
@@ -98,6 +112,23 @@ const Pricing = () => {
           <AlertDialogFooter>
             <Button variant="outline" onClick={() => setShowDialog(false)}>Cancel</Button>
             <Button onClick={handleConfirmDowngrade}>Confirm Change</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      
+      {/* Permissions Dialog */}
+      <AlertDialog open={showPermissionsDialog} onOpenChange={setShowPermissionsDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Additional Permissions Needed</AlertDialogTitle>
+            <AlertDialogDescription>
+              To process payments on Pi Network, your app needs permission to access your wallet address. 
+              Please grant this permission to continue with your subscription purchase.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button variant="outline" onClick={() => setShowPermissionsDialog(false)}>Cancel</Button>
+            <Button onClick={handleGrantPermissions}>Grant Permissions</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

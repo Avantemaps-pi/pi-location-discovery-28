@@ -1,6 +1,6 @@
 
 import { toast } from 'sonner';
-import { initializePiNetwork, isPiNetworkAvailable } from '../piNetwork';
+import { initializePiNetwork, isPiNetworkAvailable, requestUserPermissions } from '../piNetwork';
 import { PaymentResult, SubscriptionFrequency } from './types';
 import { SubscriptionTier, PaymentDTO, PaymentData, PaymentCallbacks } from '../piNetwork/types';
 import { approvePayment, completePayment } from '@/api/payments';
@@ -23,6 +23,18 @@ export const executeSubscriptionPayment = async (
     
     // Ensure SDK is initialized
     await initializePiNetwork();
+    
+    // Ensure we have wallet address permission before proceeding
+    console.log("Verifying wallet address permission before payment...");
+    const userInfo = await requestUserPermissions();
+    
+    if (!userInfo || !userInfo.walletAddress) {
+      console.error("Wallet address permission not granted");
+      return {
+        success: false,
+        message: "Wallet address permission required for payments"
+      };
+    }
     
     // Create a promise that will be resolved when the payment is processed
     return new Promise((resolve, reject) => {

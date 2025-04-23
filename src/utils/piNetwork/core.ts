@@ -125,12 +125,24 @@ export const requestUserPermissions = async (): Promise<{
       return null;
     }
 
-    // Extract wallet address if available from user roles
+    // Check if wallet_address permission was granted
+    const hasWalletPermission = authResult.user.roles?.includes('wallet_address');
+    console.log('Has wallet_address permission:', hasWalletPermission);
+
+    // Extract wallet address if available from user properties
+    const walletAddress = hasWalletPermission ? 
+      (authResult as any).user.wallet_address : undefined;
+    
+    if (walletAddress) {
+      console.log('Wallet address permission granted:', walletAddress);
+    } else {
+      console.warn('Wallet address permission not granted or address not available');
+    }
+
     return {
       username: authResult.user.username,
       uid: authResult.user.uid,
-      walletAddress: authResult.user.roles?.includes('wallet_address') ? 
-        (authResult as any).user.wallet_address : undefined
+      walletAddress: walletAddress
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);

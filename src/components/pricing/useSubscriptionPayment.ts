@@ -79,7 +79,10 @@ export const useSubscriptionPayment = () => {
       if (!user?.walletAddress) {
         console.warn("User does not have wallet_address permission");
         toast.warning("Additional permissions needed for payment processing");
-        await login(); // Re-login to get fresh permissions
+        
+        // Force a new login to request permissions again with emphasis on wallet address
+        await login();
+        await refreshUserData();
         
         // Check again after login attempt
         if (!user?.walletAddress) {
@@ -109,10 +112,11 @@ export const useSubscriptionPayment = () => {
         await refreshUserData();
       } else {
         // Handle permission errors with a prompt to login again
-        if (result.message.includes("permission not granted")) {
+        if (result.message.includes("permission") || result.message.includes("wallet_address")) {
           toast.error(result.message);
           toast.info("Attempting to refresh your permissions...");
           await login(); // Re-login to get fresh permissions
+          await refreshUserData();
         } else if (result.message.includes("Failed to get user permissions")) {
           toast.error("Permission issue detected. Please log in again to grant all required permissions.");
           await login();
@@ -125,7 +129,7 @@ export const useSubscriptionPayment = () => {
       
       // If it's a permissions error, prompt to login again
       if (error instanceof Error) {
-        if (error.message.includes("permission not granted") || 
+        if (error.message.includes("permission") || 
             error.message.includes("Failed to get user permissions") ||
             error.message.includes("wallet_address")) {
           toast.error(error.message);
