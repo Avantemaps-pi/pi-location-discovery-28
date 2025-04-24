@@ -104,11 +104,14 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
       }
 
       setIsSubmitting(true);
+      console.log('Starting business registration submission with values:', values);
 
       // Check if the business-images bucket exists, if not, handle gracefully
       const { data: buckets, error: bucketError } = await supabase
         .storage
         .listBuckets();
+      
+      console.log('Available storage buckets:', buckets);
       
       const businessBucketExists = buckets?.some(bucket => bucket.name === 'business-images');
       
@@ -117,6 +120,8 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
       }
 
       const fullAddress = `${values.streetAddress}, ${values.state}, ${values.zipCode}`;
+      console.log('Geocoding address:', fullAddress);
+      
       const coordinates = await geocodeAddress(fullAddress);
       
       if (!coordinates) {
@@ -125,9 +130,11 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
         return;
       }
       
+      console.log('Coordinates obtained:', coordinates);
+      
       const businessData = {
         name: values.businessName,
-        owner_id: user?.uid,
+        owner_id: user.uid,
         location: fullAddress,
         description: values.businessDescription,
         category: values.businessTypes.length > 0 ? values.businessTypes[0] : 'Other',
@@ -148,8 +155,10 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
         },
         business_types: values.businessTypes,
         pi_wallet_address: values.piWalletAddress,
-        keywords: [...values.businessTypes, values.businessName.split(' ')].flat(),
+        keywords: [...values.businessTypes, ...values.businessName.split(' ')].flat(),
       };
+      
+      console.log('Submitting business data to Supabase:', businessData);
       
       const { data, error } = await supabase
         .from('businesses')
@@ -163,27 +172,50 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
         return;
       }
       
+      console.log('Business successfully registered:', data);
+      
       // Upload images only if we have the bucket and images
-      if (selectedImages.length > 0 && data[0]?.id) {
+      if (selectedImages.length > 0 && data && data[0]?.id) {
         const businessId = data[0].id;
+        console.log('Uploading images for business ID:', businessId);
+        
+        if (!businessBucketExists) {
+          // If bucket doesn't exist, create it
+          console.log('Creating business-images bucket');
+          try {
+            const { data: newBucket, error: createBucketError } = await supabase
+              .storage
+              .createBucket('business-images', {
+                public: true
+              });
+              
+            if (createBucketError) {
+              console.error('Error creating bucket:', createBucketError);
+              toast.warning("Could not create storage bucket. Your business was registered but images couldn't be uploaded.");
+            } else {
+              console.log('Bucket created successfully:', newBucket);
+            }
+          } catch (bucketCreationError) {
+            console.error('Error creating bucket:', bucketCreationError);
+          }
+        }
         
         for (let i = 0; i < selectedImages.length; i++) {
           const image = selectedImages[i];
           const filePath = `businesses/${businessId}/${image.name}`;
           
-          if (!businessBucketExists) {
-            toast.warning("Image upload failed: Storage not configured. Your business was registered without images.");
-            break;
-          }
+          console.log(`Uploading image ${i+1}:`, filePath);
           
           try {
-            const { error: uploadError } = await supabase.storage
+            const { error: uploadError, data: uploadData } = await supabase.storage
               .from('business-images')
               .upload(filePath, image);
               
             if (uploadError) {
               console.error(`Error uploading image ${i+1}:`, uploadError);
               toast.error(`Business registered, but image ${i+1} upload failed.`);
+            } else {
+              console.log(`Image ${i+1} uploaded successfully:`, uploadData);
             }
           } catch (uploadError) {
             console.error(`Error uploading image ${i+1}:`, uploadError);
@@ -195,19 +227,16 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
       
       if (onSuccess) onSuccess();
       
-      if (coordinates) {
-        navigate('/', { 
-          state: { 
-            newBusiness: true,
-            businessData: {
-              ...data[0],
-              position: coordinates,
-            }
-          } 
-        });
-      } else {
-        navigate('/');
-      }
+      navigate('/', { 
+        state: { 
+          newBusiness: true,
+          businessData: {
+            ...data?.[0],
+            position: coordinates,
+          }
+        } 
+      });
+      
     } catch (error) {
       console.error('Registration error:', error);
       toast.error('Failed to register business. Please try again.');
