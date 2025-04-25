@@ -1,69 +1,74 @@
-# Welcome to your Lovable project
+# Avante Maps 🌍  
 
-## Project info
+**Avante Maps** is a business coverage and discovery web application designed to increase exposure for businesses accepting **Pi Coin**. By integrating with **Google Maps** and providing advanced search functionality, Avante Maps helps users discover businesses that support cryptocurrency payments while offering business owners valuable analytics and marketing opportunities.  
 
-**URL**: https://lovable.dev/projects/33a91989-4bfe-401a-852c-f32f01bab13f
+## 🚀 Features  
 
-## How can I edit this code?
+- **Business Discovery**: Easily find businesses that accept **Pi Coin** using an interactive map.  
+- **Google Maps Integration**: Seamless navigation and location-based search functionality.  
+- **Premium Business Subscriptions**: Unlock advanced features like business analytics, additional listing slots, and direct communication with the Avante Maps team.  
+- **Free Marketing & Exposure**: Business owners benefit from increased visibility without additional costs.  
+- **Future Business Card NFTs**: A unique digital identity solution for businesses in the Pi Network ecosystem.  
+- **Enhanced UI/UX**: Optimized for different screen sizes to ensure a seamless experience.  
 
-There are several ways of editing your application.
+## 🏆 Future Partnerships  
 
-**Use Lovable**
+Avante Maps collaborates with:  
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/33a91989-4bfe-401a-852c-f32f01bab13f) and start prompting.
+- **Map of Pi** 📍 - A trusted Pi Network business directory.  
+- **VCity** 🏙️ - Enhancing digital commerce within the Pi ecosystem.  
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🔧 Technical Stack  
 
-**Use your preferred IDE**
+- **Frontend**: HTML, CSS, JavaScript  
+- **Backend**: Python / Node.js  
+- **Database**: Firebase / MongoDB  
+- **Maps API**: Google Maps API  
+- **Hosting**: Firebase / AWS  
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🌐 Environment Configuration
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+The application supports both Pi Network Testnet and Mainnet environments. To switch between environments:
 
-Follow these steps:
+1. Open `src/config/environment.ts`
+2. Locate the `PI_CONFIG` object
+3. Set `isTestnet` to:
+   - `true` for Testnet environment
+   - `false` for Mainnet environment
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+Example:
+```typescript
+export const PI_CONFIG = {
+  isTestnet: true, // Set to false for mainnet
+  sdkVersion: "2.0",
+  sandbox: true, // Automatically set based on isTestnet
+};
 ```
 
-**Edit a file directly in GitHub**
+## 📌 Roadmap  
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### **2025 Goals**  
+✔ Improve mobile responsiveness for different screen types.  
+✔ Implement **Premium Subscriptions** for businesses.  
+✔ Introduce **Business Analytics & Insights**.  
+✔ Expand **marketing & outreach** for businesses listed on Avante Maps.  
+✔ Develop **NFT-based business cards** for digital identity.  
 
-**Use GitHub Codespaces**
+## 📜 License  
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+This project is **open-source** under the [MIT License](LICENSE).  
 
-## What technologies are used for this project?
+## 💬 Get Involved  
 
-This project is built with .
+👥 **Join the Community**  
+- Follow our updates on [Pi Network forums](#) and social media.  
+- Share your feedback and feature requests by opening an **issue**.  
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+🤝 **Contribute**  
+- Fork this repository.  
+- Create a new feature branch (`git checkout -b feature-branch`).  
+- Commit your changes (`git commit -m "Add feature"`).  
+- Push the branch (`git push origin feature-branch`).  
+- Open a **Pull Request** for review.  
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/33a91989-4bfe-401a-852c-f32f01bab13f) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+🚀 **Let's build the future of decentralized business discovery together!**

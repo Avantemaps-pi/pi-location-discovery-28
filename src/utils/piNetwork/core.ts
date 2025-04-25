@@ -1,9 +1,9 @@
-
 /**
  * Core utilities for interacting with the Pi Network SDK
  */
 import { isPiNetworkAvailable } from './helpers';
 import { Scope } from './types';
+import { PI_CONFIG } from '@/config/environment';
 
 // Flag to track SDK initialization
 let isInitialized = false;
@@ -21,11 +21,12 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     // If SDK is available but not initialized, initialize it
     if (isPiNetworkAvailable()) {
       console.log('Pi Network SDK is loaded, initializing...');
-      // Use v2 of the SDK for mainnet compatibility
-      const sdkVersion = "2.0";
-      console.log(`Initializing Pi SDK with version ${sdkVersion}`);
+      console.log(`Initializing Pi SDK with version ${PI_CONFIG.sdkVersion} in ${PI_CONFIG.isTestnet ? 'testnet' : 'mainnet'} mode`);
       
-      window.Pi!.init({ version: sdkVersion })
+      window.Pi!.init({ 
+        version: PI_CONFIG.sdkVersion,
+        sandbox: PI_CONFIG.isTestnet 
+      })
         .then(() => {
           console.log('Pi Network SDK initialized successfully');
           isInitialized = true;

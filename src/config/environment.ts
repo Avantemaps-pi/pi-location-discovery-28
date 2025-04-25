@@ -1,14 +1,9 @@
 
 /**
  * Environment configuration for the application
- * 
- * In a production environment, these values should be injected at build time
- * via environment variables or fetched from a secure backend service.
  */
 
 // Maps API configuration
-// Note: Google Maps JavaScript API keys are designed to be used in client-side code
-// and should be restricted by HTTP referrers in the Google Cloud Console
 export const MAPS_CONFIG = {
   apiKey: "AIzaSyAp6za1pf11Tvq80kIRBpqqunXg4AcYa8s",
   defaultCenter: {
@@ -16,6 +11,13 @@ export const MAPS_CONFIG = {
     lng: -122.4194,
   },
   defaultZoom: 13,
+};
+
+// Pi Network configuration
+export const PI_CONFIG = {
+  isTestnet: true, // Toggle this value to switch between testnet and mainnet
+  sdkVersion: "2.0",
+  sandbox: true, // This will be automatically set based on isTestnet
 };
 
 // Function to validate that required configuration exists
@@ -26,3 +28,4 @@ export const validateEnvConfig = (): boolean => {
   }
   return true;
 };
+
