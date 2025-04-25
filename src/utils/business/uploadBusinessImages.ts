@@ -3,11 +3,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 export const uploadBusinessImages = async (
-  businessId: string,
+  businessId: string | number,
   images: File[],
   bucketExists: boolean
 ) => {
   if (images.length === 0) return;
+
+  // Convert businessId to string if it's a number
+  const businessIdString = businessId.toString();
 
   if (!bucketExists) {
     console.log('Creating business-images bucket');
@@ -31,7 +34,7 @@ export const uploadBusinessImages = async (
 
   for (let i = 0; i < images.length; i++) {
     const image = images[i];
-    const filePath = `businesses/${businessId}/${image.name}`;
+    const filePath = `businesses/${businessIdString}/${image.name}`;
     
     console.log(`Uploading image ${i+1}:`, filePath);
     
