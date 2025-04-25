@@ -13,8 +13,9 @@ export const executeSubscriptionPayment = async (
   try {
     // Ensure Pi SDK is available
     if (!isPiNetworkAvailable()) {
-      toast.error("Pi Network SDK is not available");
-      throw new Error("Pi Network SDK is not available");
+      const errorMsg = "Pi Network SDK is not available";
+      toast.error(errorMsg);
+      throw new Error(errorMsg);
     }
     
     // Ensure SDK is initialized
@@ -24,9 +25,17 @@ export const executeSubscriptionPayment = async (
     console.log("Requesting user permissions before payment...");
     const userInfo = await requestUserPermissions();
     
-    if (!userInfo || !userInfo.walletAddress) {
-      console.error("Wallet address permission not granted");
-      throw new Error("Failed to get wallet address permission");
+    // Validate wallet permission was granted
+    if (!userInfo) {
+      const errorMsg = "Failed to authenticate with Pi Network";
+      toast.error(errorMsg);
+      throw new Error(errorMsg);
+    }
+    
+    if (!userInfo.walletAddress) {
+      const errorMsg = "Wallet address permission is required for payments";
+      toast.error(errorMsg);
+      throw new Error(errorMsg);
     }
     
     console.log("Permissions granted, proceeding with payment...");
@@ -57,9 +66,10 @@ export const executeSubscriptionPayment = async (
             // Get the current authenticated user information
             const piUser = window.Pi?.currentUser;
             if (!piUser?.uid) {
-              console.error("User not authenticated");
+              const errorMsg = "User not authenticated";
+              console.error(errorMsg);
               toast.error("Authentication error. Please login again.");
-              reject(new Error("User not authenticated"));
+              reject(new Error(errorMsg));
               return;
             }
             
@@ -94,8 +104,9 @@ export const executeSubscriptionPayment = async (
             // Get the current authenticated user information
             const piUser = window.Pi?.currentUser;
             if (!piUser?.uid) {
-              console.error("User not authenticated");
-              reject(new Error("User not authenticated"));
+              const errorMsg = "User not authenticated";
+              console.error(errorMsg);
+              reject(new Error(errorMsg));
               return;
             }
             

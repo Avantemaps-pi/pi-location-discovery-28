@@ -1,3 +1,4 @@
+
 /**
  * Core utilities for interacting with the Pi Network SDK
  */
@@ -60,7 +61,7 @@ export const initializePiNetwork = async (): Promise<boolean> => {
             resolve(true);
           })
           .catch(error => {
-            console.error('Failed to initialize Pi Network SDK:', error);
+            console.error('Failed to initialize Pi SDK:', error);
             reject(error);
           });
       } else {
@@ -121,22 +122,22 @@ export const requestUserPermissions = async (): Promise<{
     
     console.log('Permission request result:', authResult);
     
+    // Validate authentication result
     if (!authResult) {
-      console.error('Failed to get user permissions');
+      console.error('Failed to get user permissions - authentication was null or undefined');
       return null;
     }
 
-    // Check if wallet_address permission was granted
+    // Safely extract wallet address if permission was granted
+    let walletAddress: string | undefined = undefined;
+    
+    // Check if wallet_address permission was granted (using roles array)
     const hasWalletPermission = authResult.user.roles?.includes('wallet_address');
     console.log('Has wallet_address permission:', hasWalletPermission);
 
-    // Extract wallet address if available from user properties
-    // The SDK documentation shows wallet_address should be accessible at authResult.user.wallet_address
-    // when the wallet_address scope is granted
-    const walletAddress = hasWalletPermission ? 
-      (authResult as any).user.wallet_address : undefined;
-    
-    if (walletAddress) {
+    // Extract wallet address using safe property access
+    if (hasWalletPermission && 'wallet_address' in authResult.user) {
+      walletAddress = authResult.user.wallet_address;
       console.log('Wallet address permission granted:', walletAddress);
     } else {
       console.warn('Wallet address permission not granted or address not available');
@@ -165,31 +166,43 @@ export const requestWalletPermission = async (): Promise<string | null> => {
   }
   
   try {
+    // Ensure SDK is initialized before requesting permissions
+    if (!isInitialized) {
+      console.log('Pi Network SDK was not initialized. Initializing now...');
+      try {
+        await initializePiNetwork();
+      } catch (error) {
+        console.error('Failed to initialize Pi Network SDK:', error);
+        return null;
+      }
+    }
+    
     console.log('Specifically requesting wallet_address permission');
     // Make a focused request just for wallet_address permission
     const authResult = await window.Pi?.authenticate(['wallet_address'], (payment) => {
       console.log('Incomplete payment found during wallet address request:', payment);
     });
     
+    // Validate authentication result
     if (!authResult) {
-      console.error('Failed to get wallet_address permission');
+      console.error('Failed to get wallet_address permission - authentication was null or undefined');
       return null;
     }
     
-    // Check if wallet_address permission was granted
+    // Check if wallet_address permission was granted using roles array
     const hasWalletPermission = authResult.user.roles?.includes('wallet_address');
     
-    // Extract wallet address if available
-    const walletAddress = hasWalletPermission ? 
-      (authResult as any).user.wallet_address : null;
-    
-    if (walletAddress) {
-      console.log('Wallet address permission successfully granted:', walletAddress);
-      return walletAddress;
-    } else {
-      console.warn('Wallet address permission was not granted');
-      return null;
+    // Safely extract wallet address if available
+    if (hasWalletPermission && 'wallet_address' in authResult.user) {
+      const walletAddress = authResult.user.wallet_address;
+      if (walletAddress) {
+        console.log('Wallet address permission successfully granted:', walletAddress);
+        return walletAddress;
+      }
     }
+    
+    console.warn('Wallet address permission was not granted or address is not available');
+    return null;
   } catch (error) {
     console.error('Error requesting wallet address permission:', error);
     return null;

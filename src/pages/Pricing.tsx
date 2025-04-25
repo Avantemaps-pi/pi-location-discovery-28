@@ -18,6 +18,7 @@ const Pricing = () => {
   const [previousPlan, setPreviousPlan] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
+  const [isRequestingPermissions, setIsRequestingPermissions] = useState(false);
   
   // Get subscription payment utilities
   const { 
@@ -74,6 +75,9 @@ const Pricing = () => {
   
   // Handle wallet permissions
   const handleGrantPermissions = async () => {
+    if (isRequestingPermissions) return;
+    
+    setIsRequestingPermissions(true);
     setShowPermissionsDialog(false);
     
     toast.info("Requesting wallet address permission...");
@@ -94,7 +98,9 @@ const Pricing = () => {
           // Clear the URL parameter
           navigate(location.pathname);
         } else {
-          toast.error("Failed to get wallet address permission. Please try again.");
+          // Show dialog again if permission failed
+          toast.error("Wallet permission is required for payments. Please try again.");
+          setShowPermissionsDialog(true);
         }
       } else {
         toast.success("All required permissions granted");
@@ -105,6 +111,10 @@ const Pricing = () => {
     } catch (error) {
       console.error("Error granting permissions:", error);
       toast.error("Error requesting permissions. Please try again.");
+      // Show dialog again if permission failed
+      setShowPermissionsDialog(true);
+    } finally {
+      setIsRequestingPermissions(false);
     }
   };
   
@@ -122,7 +132,7 @@ const Pricing = () => {
               handleSubscribe(tier.id);
             }
           },
-          isLoading: isProcessingPayment,
+          isLoading: isProcessingPayment || (tier.id !== 'individual' && isRequestingPermissions),
           disabled: false // Remove the comingSoon check to enable all tiers
         }))}
         frequencies={["monthly", "yearly"]}
@@ -161,7 +171,9 @@ const Pricing = () => {
               setShowPermissionsDialog(false);
               navigate(location.pathname); // Clear URL parameters
             }}>Cancel</Button>
-            <Button onClick={handleGrantPermissions}>Grant Permissions</Button>
+            <Button onClick={handleGrantPermissions} disabled={isRequestingPermissions}>
+              {isRequestingPermissions ? 'Requesting...' : 'Grant Permissions'}
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

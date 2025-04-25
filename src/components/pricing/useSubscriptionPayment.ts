@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/auth';
@@ -67,6 +68,13 @@ export const useSubscriptionPayment = () => {
       console.log("Refreshing user data before payment...");
       await refreshUserData();
       
+      // Check if wallet permission is granted
+      if (!user?.walletAddress) {
+        toast.warning("Wallet address permission is required for payments");
+        navigate('?permissionsNeeded=true');
+        return;
+      }
+      
       const subscriptionTier = tier as SubscriptionTier;
       const price = getSubscriptionPrice(subscriptionTier, selectedFrequency);
       
@@ -94,6 +102,7 @@ export const useSubscriptionPayment = () => {
       
       if (error instanceof Error) {
         if (error.message.includes("permission") || 
+            error.message.includes("wallet address") ||
             error.message.includes("Failed to get user permissions") ||
             error.message.includes("wallet_address")) {
           toast.error("Additional permissions are needed to process this payment");
