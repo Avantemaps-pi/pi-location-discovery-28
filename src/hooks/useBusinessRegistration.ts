@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,12 +6,16 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from '@/context/auth';
+import { useBusinessImages } from './business/useBusinessImages';
+import { geocodeAddress } from '@/utils/business/geocoding';
+import { formatBusinessData } from '@/utils/business/formatBusinessData';
+import { uploadBusinessImages } from '@/utils/business/uploadBusinessImages';
 
 export const useBusinessRegistration = (onSuccess?: () => void) => {
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { selectedImages, handleImageUpload, handleImageRemove } = useBusinessImages();
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -54,48 +57,6 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
     },
   });
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const newImage = e.target.files[0];
-      setSelectedImages(prev => {
-        const updatedImages = [...prev, newImage].slice(0, 3);
-        return updatedImages;
-      });
-    }
-  };
-
-  const handleImageRemove = (index: number) => {
-    setSelectedImages(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const geocodeAddress = async (address: string): Promise<google.maps.LatLngLiteral | null> => {
-    try {
-      if (!window.google || !window.google.maps) {
-        console.error('Google Maps API not loaded');
-        toast.error('Google Maps API not loaded. Please refresh the page and try again.');
-        return null;
-      }
-      
-      const geocoder = new google.maps.Geocoder();
-      return new Promise((resolve, reject) => {
-        geocoder.geocode({ address }, (results, status) => {
-          if (status === google.maps.GeocoderStatus.OK && results?.[0]?.geometry?.location) {
-            const location = results[0].geometry.location;
-            resolve({
-              lat: location.lat(),
-              lng: location.lng()
-            });
-          } else {
-            reject(new Error(`Geocoding failed: ${status}`));
-          }
-        });
-      });
-    } catch (error) {
-      console.error('Error geocoding address:', error);
-      return null;
-    }
-  };
-
   const onSubmit = async (values: FormValues) => {
     try {
       if (!user?.uid) {
@@ -106,7 +67,6 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
       setIsSubmitting(true);
       console.log('Starting business registration submission with values:', values);
 
-      // Check if the business-images bucket exists, if not, handle gracefully
       const { data: buckets, error: bucketError } = await supabase
         .storage
         .listBuckets();
@@ -132,31 +92,7 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
       
       console.log('Coordinates obtained:', coordinates);
       
-      const businessData = {
-        name: values.businessName,
-        owner_id: user.uid,
-        location: fullAddress,
-        description: values.businessDescription,
-        category: values.businessTypes.length > 0 ? values.businessTypes[0] : 'Other',
-        coordinates: JSON.stringify(coordinates),
-        contact_info: {
-          phone: values.phone,
-          email: values.email,
-          website: values.website,
-        },
-        hours: {
-          monday: values.mondayClosed ? 'Closed' : `${values.mondayOpen}-${values.mondayClose}`,
-          tuesday: values.tuesdayClosed ? 'Closed' : `${values.tuesdayOpen}-${values.tuesdayClose}`,
-          wednesday: values.wednesdayClosed ? 'Closed' : `${values.wednesdayOpen}-${values.wednesdayClose}`,
-          thursday: values.thursdayClosed ? 'Closed' : `${values.thursdayOpen}-${values.thursdayClose}`,
-          friday: values.fridayClosed ? 'Closed' : `${values.fridayOpen}-${values.fridayClose}`,
-          saturday: values.saturdayClosed ? 'Closed' : `${values.saturdayOpen}-${values.saturdayClose}`,
-          sunday: values.sundayClosed ? 'Closed' : `${values.sundayOpen}-${values.sundayClose}`,
-        },
-        business_types: values.businessTypes,
-        pi_wallet_address: values.piWalletAddress,
-        keywords: [...values.businessTypes, ...values.businessName.split(' ')].flat(),
-      };
+      const businessData = formatBusinessData(values, coordinates, user.uid);
       
       console.log('Submitting business data to Supabase:', businessData);
       
@@ -174,53 +110,8 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
       
       console.log('Business successfully registered:', data);
       
-      // Upload images only if we have the bucket and images
       if (selectedImages.length > 0 && data && data[0]?.id) {
-        const businessId = data[0].id;
-        console.log('Uploading images for business ID:', businessId);
-        
-        if (!businessBucketExists) {
-          // If bucket doesn't exist, create it
-          console.log('Creating business-images bucket');
-          try {
-            const { data: newBucket, error: createBucketError } = await supabase
-              .storage
-              .createBucket('business-images', {
-                public: true
-              });
-              
-            if (createBucketError) {
-              console.error('Error creating bucket:', createBucketError);
-              toast.warning("Could not create storage bucket. Your business was registered but images couldn't be uploaded.");
-            } else {
-              console.log('Bucket created successfully:', newBucket);
-            }
-          } catch (bucketCreationError) {
-            console.error('Error creating bucket:', bucketCreationError);
-          }
-        }
-        
-        for (let i = 0; i < selectedImages.length; i++) {
-          const image = selectedImages[i];
-          const filePath = `businesses/${businessId}/${image.name}`;
-          
-          console.log(`Uploading image ${i+1}:`, filePath);
-          
-          try {
-            const { error: uploadError, data: uploadData } = await supabase.storage
-              .from('business-images')
-              .upload(filePath, image);
-              
-            if (uploadError) {
-              console.error(`Error uploading image ${i+1}:`, uploadError);
-              toast.error(`Business registered, but image ${i+1} upload failed.`);
-            } else {
-              console.log(`Image ${i+1} uploaded successfully:`, uploadData);
-            }
-          } catch (uploadError) {
-            console.error(`Error uploading image ${i+1}:`, uploadError);
-          }
-        }
+        await uploadBusinessImages(data[0].id, selectedImages, businessBucketExists);
       }
 
       toast.success('Business registration submitted successfully!');
