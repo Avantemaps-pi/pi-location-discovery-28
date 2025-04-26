@@ -1,4 +1,3 @@
-
 /**
  * Core utilities for interacting with the Pi Network SDK
  */
@@ -22,14 +21,14 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     // If SDK is available but not initialized, initialize it
     if (isPiNetworkAvailable()) {
       console.log('Pi Network SDK is loaded, initializing...');
-      console.log(`Initializing Pi SDK with version ${PI_CONFIG.sdkVersion} in ${PI_CONFIG.isTestnet ? 'testnet' : 'mainnet'} mode`);
+      console.log(`Initializing Pi SDK with version ${PI_CONFIG.sdkVersion} in sandbox mode`);
       
       window.Pi!.init({ 
         version: PI_CONFIG.sdkVersion,
-        sandbox: PI_CONFIG.isTestnet 
+        sandbox: true // Always true for sandbox testing
       })
         .then(() => {
-          console.log('Pi Network SDK initialized successfully');
+          console.log('Pi Network SDK initialized successfully in sandbox mode');
           isInitialized = true;
           resolve(true);
         })
@@ -48,15 +47,17 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     script.async = true;
     
     script.onload = () => {
-      console.log('Pi Network SDK loaded successfully, initializing...');
-      // Initialize the SDK after it's loaded with v2
+      console.log('Pi Network SDK loaded successfully, initializing in sandbox mode...');
+      // Initialize the SDK after it's loaded
       if (window.Pi) {
-        const sdkVersion = "2.0";
-        console.log(`Initializing Pi SDK with version ${sdkVersion}`);
+        console.log(`Initializing Pi SDK with version ${PI_CONFIG.sdkVersion} in sandbox mode`);
         
-        window.Pi.init({ version: sdkVersion })
+        window.Pi.init({ 
+          version: PI_CONFIG.sdkVersion,
+          sandbox: true // Always true for sandbox testing
+        })
           .then(() => {
-            console.log('Pi Network SDK initialized successfully');
+            console.log('Pi Network SDK initialized successfully in sandbox mode');
             isInitialized = true;
             resolve(true);
           })
@@ -122,7 +123,6 @@ export const requestUserPermissions = async (): Promise<{
     
     console.log('Permission request result:', authResult);
     
-    // Validate authentication result
     if (!authResult) {
       console.error('Failed to get user permissions - authentication was null or undefined');
       return null;
@@ -135,9 +135,7 @@ export const requestUserPermissions = async (): Promise<{
     const hasWalletPermission = authResult.user.roles?.includes('wallet_address');
     console.log('Has wallet_address permission:', hasWalletPermission);
 
-    // Extract wallet address using safe property access
     if (hasWalletPermission && 'wallet_address' in authResult.user) {
-      // Fix TypeScript error: Type assert the wallet_address to string
       const userWalletAddress = authResult.user.wallet_address as string;
       if (userWalletAddress) {
         walletAddress = userWalletAddress;
@@ -187,7 +185,6 @@ export const requestWalletPermission = async (): Promise<string | null> => {
       console.log('Incomplete payment found during wallet address request:', payment);
     });
     
-    // Validate authentication result
     if (!authResult) {
       console.error('Failed to get wallet_address permission - authentication was null or undefined');
       return null;
@@ -196,9 +193,7 @@ export const requestWalletPermission = async (): Promise<string | null> => {
     // Check if wallet_address permission was granted using roles array
     const hasWalletPermission = authResult.user.roles?.includes('wallet_address');
     
-    // Safely extract wallet address if available
     if (hasWalletPermission && 'wallet_address' in authResult.user) {
-      // Fix TypeScript error: Type assert the wallet_address to string
       const walletAddress = authResult.user.wallet_address as string;
       if (walletAddress) {
         console.log('Wallet address permission successfully granted:', walletAddress);
