@@ -12,10 +12,7 @@ export const PI_CONFIG = {
 
 // Function to validate that required configuration exists
 export const validateEnvConfig = (): boolean => {
-  if (!MAPS_CONFIG.apiKey) {
-    console.error("Missing Google Maps API key in environment configuration");
-    return false;
-  }
+  // Remove reference to non-existent MAPS_CONFIG
+  // Instead, check if any required config is missing in the future
   return true;
 };
-

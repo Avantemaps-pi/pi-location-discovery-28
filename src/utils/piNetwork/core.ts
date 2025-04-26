@@ -137,8 +137,12 @@ export const requestUserPermissions = async (): Promise<{
 
     // Extract wallet address using safe property access
     if (hasWalletPermission && 'wallet_address' in authResult.user) {
-      walletAddress = authResult.user.wallet_address;
-      console.log('Wallet address permission granted:', walletAddress);
+      // Fix TypeScript error: Type assert the wallet_address to string
+      const userWalletAddress = authResult.user.wallet_address as string;
+      if (userWalletAddress) {
+        walletAddress = userWalletAddress;
+        console.log('Wallet address permission granted:', walletAddress);
+      }
     } else {
       console.warn('Wallet address permission not granted or address not available');
     }
@@ -194,7 +198,8 @@ export const requestWalletPermission = async (): Promise<string | null> => {
     
     // Safely extract wallet address if available
     if (hasWalletPermission && 'wallet_address' in authResult.user) {
-      const walletAddress = authResult.user.wallet_address;
+      // Fix TypeScript error: Type assert the wallet_address to string
+      const walletAddress = authResult.user.wallet_address as string;
       if (walletAddress) {
         console.log('Wallet address permission successfully granted:', walletAddress);
         return walletAddress;
