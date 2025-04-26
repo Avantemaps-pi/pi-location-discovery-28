@@ -16,5 +16,3 @@ export const MARKER_COLORS = {
   default: '#8B5CF6'     // Default purple for other markers
 };
 
-// Google Maps API key (for backward compatibility with components still using Google Maps)
-export const GOOGLE_MAPS_API_KEY = ''; // Empty key since we're migrating to Leaflet
