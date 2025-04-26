@@ -1,39 +1,31 @@
 
 import { useState, useCallback } from 'react';
 import { FormValues } from '@/components/business/registration/formSchema';
-import { createBusiness, updateBusiness } from '@/api/business';
-import { Business } from '@/types/business';
+import { createBusiness } from '@/api/business';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useBusinessFormInit } from './business/useBusinessFormInit';
 import { useBusinessImages } from './business/useBusinessImages';
+import { useTabNavigation } from './business/useTabNavigation';
 
 export const useBusinessRegistration = (onSuccess?: () => void) => {
-  const [activeTab, setActiveTab] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const form = useBusinessFormInit();
   const { selectedImages, handleImageUpload, handleImageRemove } = useBusinessImages();
-
-  const nextTab = useCallback(() => {
-    setActiveTab((current) => Math.min(current + 1, 3));
-  }, []);
-
-  const prevTab = useCallback(() => {
-    setActiveTab((current) => Math.max(current - 1, 0));
-  }, []);
+  const { activeTab, setActiveTab, nextTab, prevTab } = useTabNavigation();
 
   const onSubmit = useCallback(async (values: FormValues) => {
     setIsSubmitting(true);
     try {
-      const createResult = await createBusiness(values);
-      if (createResult.success) {
+      const result = await createBusiness(values);
+      if (result.success) {
         toast.success('Business registered successfully!');
         if (onSuccess) onSuccess();
         navigate('/registered-business');
       } else {
-        toast.error(`Failed to register business: ${createResult.message}`);
+        toast.error(`Failed to register business: ${result.message || 'Unknown error'}`);
       }
     } catch (error: any) {
       console.error('Registration failed:', error);
@@ -56,3 +48,4 @@ export const useBusinessRegistration = (onSuccess?: () => void) => {
     handleImageRemove
   };
 };
+
