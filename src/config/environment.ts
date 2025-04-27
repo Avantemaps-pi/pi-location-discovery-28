@@ -2,14 +2,21 @@
  * Environment configuration for the application
  */
 
-// Determine if the current environment is Pi Testnet/Sandbox based on the domain
+// Detect if the URL has a sandbox query parameter (?sandbox=true)
+const urlParams = new URLSearchParams(window.location.search);
+const sandboxOverride = urlParams.get('sandbox') === 'true';
+
+// Determine if we are in a Sandbox/Testnet environment based on hostname
 const isSandboxEnvironment = window.location.hostname.includes("sandbox") || window.location.hostname.includes("testnet");
+
+// Final decision: either based on URL override or hostname detection
+const useSandbox = sandboxOverride || isSandboxEnvironment;
 
 // Pi Network configuration
 export const PI_CONFIG = {
-  sdkVersion: "2.0",              // Pi SDK version to use
-  isTestnet: isSandboxEnvironment, // Automatically true if in sandbox/testnet environment
-  sandbox: isSandboxEnvironment,   // Automatically true if in sandbox/testnet environment
+  sdkVersion: "2.0",          // Pi SDK version to use
+  isTestnet: useSandbox,      // Automatically true if sandbox or override detected
+  sandbox: useSandbox,        // Same as above
 };
 
 /**
