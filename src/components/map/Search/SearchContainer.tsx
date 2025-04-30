@@ -14,7 +14,7 @@ const SearchContainer: React.FC<SearchContainerProps> = ({ onSearch }) => {
           onSearch={onSearch}
           placeholders={[
             "Search for Address", 
-            "Search for Business name", 
+            "Search for Business Name", 
             "Search for Business Type", 
             "Search for Keywords"
           ]}
