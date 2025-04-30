@@ -8,6 +8,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/auth";
 import { useSessionRestoration } from "@/hooks/useSessionRestoration";
+
+//Pages
 import Index from "./pages/Index";
 import Recommendations from "./pages/Recommendations";
 import Bookmarks from "./pages/Bookmarks";
@@ -90,6 +92,7 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
+            <DebugBanner />
           </SidebarProvider>
         </AuthProvider>
       </TooltipProvider>
