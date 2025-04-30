@@ -1,15 +1,12 @@
-Here is the updated README file for your project, with added information regarding the testnet and mainnet configuration and other improvements:
-
----
 
 # Avante Maps 🌍  
 
-**Avante Maps** is a business coverage and discovery web application designed to increase exposure for businesses accepting **Pi Coin**. By integrating with **Google Maps** and providing advanced search functionality, Avante Maps helps users discover businesses that support cryptocurrency payments while offering business owners valuable analytics and marketing opportunities.  
+**Avante Maps** is a business coverage and discovery web application designed to increase exposure for businesses accepting **Pi Coin**. By integrating with **Open Maps** and providing advanced search functionality, Avante Maps helps users discover businesses that support cryptocurrency payments while offering business owners valuable analytics and marketing opportunities.  
 
 ## 🚀 Features  
 
 - **Business Discovery**: Easily find businesses that accept **Pi Coin** using an interactive map.  
-- **Google Maps Integration**: Seamless navigation and location-based search functionality.  
+- **Open Maps Integration**: Seamless navigation and location-based search functionality with **Open Maps**.  
 - **Premium Business Subscriptions**: Unlock advanced features like business analytics, additional listing slots, and direct communication with the Avante Maps team.  
 - **Free Marketing & Exposure**: Business owners benefit from increased visibility without additional costs.  
 - **Future Business Card NFTs**: A unique digital identity solution for businesses in the Pi Network ecosystem.  
@@ -24,11 +21,11 @@ Avante Maps collaborates with:
 
 ## 🔧 Technical Stack  
 
-- **Frontend**: HTML, CSS, JavaScript  
-- **Backend**: Python / Node.js  
-- **Database**: Firebase / MongoDB  
-- **Maps API**: Google Maps API  
-- **Hosting**: Firebase / AWS  
+- **Frontend**: React, TypeScript, HTML, CSS, JavaScript  
+- **Backend**: Node.js, Express  
+- **Database**: Supabase  
+- **Maps API**: OpenStreetMap  
+- **Hosting**: Vercel, AWS, Firebase  
 
 ## 🌐 Environment Configuration
 
@@ -84,7 +81,3 @@ This project is **open-source** under the [MIT License](LICENSE).
 - Open a **Pull Request** for review.  
 
 🚀 **Let's build the future of decentralized business discovery together!**  
-
----
-
-Feel free to copy and paste this updated content into your README file!
