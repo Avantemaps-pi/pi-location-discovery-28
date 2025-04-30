@@ -1,11 +1,12 @@
+
 # Avante Maps 🌍  
 
-**Avante Maps** is a business coverage and discovery web application designed to increase exposure for businesses accepting **Pi Coin**. By integrating with **Google Maps** and providing advanced search functionality, Avante Maps helps users discover businesses that support cryptocurrency payments while offering business owners valuable analytics and marketing opportunities.  
+**Avante Maps** is a business coverage and discovery web application designed to increase exposure for businesses accepting **Pi Coin**. By integrating with **Open Maps** and providing advanced search functionality, Avante Maps helps users discover businesses that support cryptocurrency payments while offering business owners valuable analytics and marketing opportunities.  
 
 ## 🚀 Features  
 
 - **Business Discovery**: Easily find businesses that accept **Pi Coin** using an interactive map.  
-- **Google Maps Integration**: Seamless navigation and location-based search functionality.  
+- **Open Maps Integration**: Seamless navigation and location-based search functionality with **Open Maps**.  
 - **Premium Business Subscriptions**: Unlock advanced features like business analytics, additional listing slots, and direct communication with the Avante Maps team.  
 - **Free Marketing & Exposure**: Business owners benefit from increased visibility without additional costs.  
 - **Future Business Card NFTs**: A unique digital identity solution for businesses in the Pi Network ecosystem.  
@@ -20,30 +21,38 @@ Avante Maps collaborates with:
 
 ## 🔧 Technical Stack  
 
-- **Frontend**: HTML, CSS, JavaScript  
-- **Backend**: Python / Node.js  
-- **Database**: Firebase / MongoDB  
-- **Maps API**: Google Maps API  
-- **Hosting**: Firebase / AWS  
+- **Frontend**: React, TypeScript, HTML, CSS, JavaScript  
+- **Backend**: Node.js, Express  
+- **Database**: Supabase  
+- **Maps API**: OpenStreetMap  
+- **Hosting**: Vercel, AWS, Firebase  
 
 ## 🌐 Environment Configuration
 
-The application supports both Pi Network Testnet and Mainnet environments. To switch between environments:
+Avante Maps supports both Pi Network Testnet and Mainnet environments, allowing you to easily switch between the two.
+
+### Switching Environments:
+To configure your app for Testnet or Mainnet:
 
 1. Open `src/config/environment.ts`
-2. Locate the `PI_CONFIG` object
+2. Locate the `PI_CONFIG` object.
 3. Set `isTestnet` to:
-   - `true` for Testnet environment
-   - `false` for Mainnet environment
+   - `true` for Testnet environment.
+   - `false` for Mainnet environment.
 
-Example:
+The `sandbox` option will automatically be adjusted based on this setting.
+
+Example configuration:
+
 ```typescript
 export const PI_CONFIG = {
-  isTestnet: true, // Set to false for mainnet
+  isTestnet: true, // Set to false for Mainnet
   sdkVersion: "2.0",
-  sandbox: true, // Automatically set based on isTestnet
+  sandbox: true, // Automatically true for Testnet
 };
 ```
+
+---
 
 ## 📌 Roadmap  
 
@@ -71,4 +80,4 @@ This project is **open-source** under the [MIT License](LICENSE).
 - Push the branch (`git push origin feature-branch`).  
 - Open a **Pull Request** for review.  
 
-🚀 **Let's build the future of decentralized business discovery together!**
+🚀 **Let's build the future of decentralized business discovery together!** 
