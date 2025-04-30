@@ -8,7 +8,7 @@ interface SearchContainerProps {
 
 const SearchContainer: React.FC<SearchContainerProps> = ({ onSearch }) => {
   return (
-    <div className="absolute top-20 left-0 right-0 z-10 px-4 md:hidden">
+    <div className="absolute top-20 left-0 right-0 z-10 px-4">
       <div className="max-w-md mx-auto">
         <SearchBar 
           onSearch={onSearch}
