@@ -65,6 +65,8 @@ const App = () => {
             <Toaster />
             <Sonner />
             <BrowserRouter>
+              {/* ✅ Conditionally show DebugBanner */}
+              {process.env.NODE_ENV !== "production" && <DebugBanner />}
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/recommendations" element={<Recommendations />} />
