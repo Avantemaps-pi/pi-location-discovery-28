@@ -19,7 +19,7 @@ self.addEventListener('install', (event) => {
           '/static/js/main.chunk.js',
           '/static/js/vendors~main.chunk.js',
           '/static/js/bundle.js',
-          '/lovable-uploads/b0daa374-9909-4cf8-a2ae-e08e2184c3fc.png',
+          '/lovable-uploads/Avantemaps.png',
           '/lovable-uploads/816179f9-d16d-46a7-9d6e-169846c0d0da.png'
         ]);
       })

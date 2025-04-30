@@ -37,7 +37,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
           </DialogClose>
           
           <div className="w-20 h-20 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center mb-6">
-            <img src="/lovable-uploads/816179f9-d16d-46a7-9d6e-169846c0d0da.png" alt="Pi Logo" className="w-12 h-12" />
+            <img src="/lovable-uploads/Avantemaps.png" alt="Pi Logo" className="w-12 h-12" />
           </div>
           
           <DialogTitle className="text-2xl mb-4 text-center font-bold">
@@ -47,7 +47,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
           <div className="w-full bg-muted/50 p-4 rounded-lg mb-6">
             <div className="flex items-center">
               <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                <img src="/lovable-uploads/816179f9-d16d-46a7-9d6e-169846c0d0da.png" alt="User" className="w-8 h-8" />
+                <img src="/lovable-uploads/Avantemaps.png" alt="User" className="w-8 h-8" />
               </div>
               <div className="ml-4 text-left">
                 <p className="font-medium text-lg">Pi Network User</p>
