@@ -13,8 +13,14 @@ async function checkPiMainnetStatus() {
     throw new Error('PI_MAINNET_API_KEY is not configured');
   }
 
+  // Determine the correct endpoint based on environment variables
+  const isTestnet = Deno.env.get('IS_TESTNET') === 'true';
+  const apiUrl = isTestnet 
+    ? 'https://api.testnet.minepi.com/v2/status' 
+    : 'https://api.minepi.com/v2/status';
+
   try {
-    const response = await fetch('https://api.minepi.com/v2/status', {
+    const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
         'Authorization': `Key ${PI_MAINNET_API_KEY}`,

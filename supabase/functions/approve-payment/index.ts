@@ -1,4 +1,3 @@
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
 
@@ -111,8 +110,11 @@ Deno.serve(async (req) => {
     
     // Call the Pi Network API to approve the payment
     try {
-      // The Pi Network API endpoint for approving a payment
-      const piNetworkApiUrl = 'https://api.minepi.com/v2/payments';
+      // Determine the correct endpoint based on environment variables
+      const isTestnet = Deno.env.get('IS_TESTNET') === 'true';
+      const piNetworkApiUrl = isTestnet
+        ? 'https://api.testnet.minepi.com/v2/payments'
+        : 'https://api.minepi.com/v2/payments';
       
       console.log('Calling Pi Network API to approve payment:', paymentRequest.paymentId);
       

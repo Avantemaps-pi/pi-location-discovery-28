@@ -1,5 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
+import { API_ENDPOINTS } from '@/config/apiEndpoints';
 
 export const checkPiMainnetStatus = async () => {
   try {
