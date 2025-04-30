@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Marker } from 'react-leaflet';
+import { Marker, Popup } from 'react-leaflet';
 import { Place } from '@/data/mockPlaces';
 import { createMarkerIcon } from '../markerUtils';
 import { LatLngTuple } from 'leaflet';
@@ -30,7 +30,21 @@ const MapMarkers: React.FC<MapMarkersProps> = ({ places, activeMarkerId, onMarke
               eventHandlers={{
                 click: () => onMarkerClick(place.id)
               }}
-            />
+            >
+              <Popup>
+                <div className="p-1">
+                  <h3 className="font-bold">{place.name}</h3>
+                  {place.description && (
+                    <p className="text-sm mt-1 line-clamp-2">{place.description}</p>
+                  )}
+                  {place.category && (
+                    <span className="inline-block px-2 py-1 mt-2 text-xs bg-purple-100 text-purple-800 rounded-full">
+                      {place.category}
+                    </span>
+                  )}
+                </div>
+              </Popup>
+            </Marker>
           );
         }
         return null;

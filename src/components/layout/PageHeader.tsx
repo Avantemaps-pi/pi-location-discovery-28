@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Menu } from 'lucide-react';
@@ -6,26 +7,32 @@ import DesktopMenuButton from './header/DesktopMenuButton';
 import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/components/ui/sidebar';
 import AuthStatus from '@/components/auth/AuthStatus';
+import SearchBar from '@/components/map/SearchBar';
+import { useBusinessData } from '@/hooks/useBusinessData';
+
 interface PageHeaderProps {
   title?: string;
   hideSidebar?: boolean;
 }
+
 const PageHeader = ({
   title = "Avante Maps",
   hideSidebar = false
 }: PageHeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {
-    setOpenMobile
-  } = useSidebar();
+  const { setOpenMobile } = useSidebar();
+  const { handleSearch } = useBusinessData();
+  
   const isAnalyticsPage = location.pathname === '/analytics';
   const isRegistrationPage = location.pathname === '/registration';
   const isIndexPage = location.pathname === '/';
+  
   const handleMenuClick = () => {
     setOpenMobile(true);
     console.log('Mobile menu opened');
   };
+  
   return <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-full items-center px-4">
         <div className="flex items-center">
@@ -60,6 +67,13 @@ const PageHeader = ({
             
           </Link>
         </div>
+
+        {/* Search bar - only show on map/index page */}
+        {isIndexPage && (
+          <div className="hidden md:block w-1/3 max-w-md mx-4">
+            <SearchBar onSearch={handleSearch} />
+          </div>
+        )}
         
         {/* Authentication status */}
         <div className="flex items-center space-x-4">
@@ -68,4 +82,5 @@ const PageHeader = ({
       </div>
     </header>;
 };
+
 export default PageHeader;

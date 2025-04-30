@@ -8,6 +8,7 @@ interface SearchBarProps {
   onSearch?: (searchTerm: string) => void;
   placeholders?: string[];
   cycleInterval?: number;
+  className?: string;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -19,6 +20,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     "Search by description"
   ],
   cycleInterval = 3000,
+  className = ""
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0);
@@ -58,13 +60,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <form onSubmit={handleSearch} className="relative w-full max-w-md mx-auto">
+    <form onSubmit={handleSearch} className={`relative w-full ${className}`}>
       <Input
         type="text"
         placeholder={placeholders[currentPlaceholderIndex]}
         value={searchTerm}
         onChange={handleInputChange}
-        className="w-full pl-10 h-12 shadow-md transition-all duration-300"
+        className="w-full pl-10 h-10 shadow-md transition-all duration-300"
       />
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <Search className="h-5 w-5 text-gray-400" />
