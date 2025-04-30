@@ -27,6 +27,7 @@ import VerificationInfo from "./pages/VerificationInfo";
 import Review from "./pages/Review";
 import Pricing from "./pages/Pricing";
 import Analytics from "./pages/Analytics";
+import DebugBanner from "@/components/DebugBanner";
 
 const queryClient = new QueryClient();
 
