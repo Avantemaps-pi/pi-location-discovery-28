@@ -19,8 +19,8 @@ const DebugBanner = () => {
   const isLocalhost = typeof window !== "undefined" && window.location.hostname === "localhost";
   const isTestnetDomain = typeof window !== "undefined" && window.location.hostname.includes("testnet");
 
-  // Check for environment variable to enable debug mode
-  const isDebugMode = process.env.NEXT_PUBLIC_DEBUG_MODE === "true";
+  // Check for environment variable to enable debug mode - using Vite's import.meta approach instead of process.env
+  const isDebugMode = import.meta.env.VITE_DEBUG_MODE === "true";
   const showBanner = isLocalhost || isTestnetDomain || isDebugEnabled() || isDebugMode;
 
   if (!showBanner) return null;
