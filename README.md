@@ -1,3 +1,7 @@
+Here is the updated README file for your project, with added information regarding the testnet and mainnet configuration and other improvements:
+
+---
+
 # Avante Maps 🌍  
 
 **Avante Maps** is a business coverage and discovery web application designed to increase exposure for businesses accepting **Pi Coin**. By integrating with **Google Maps** and providing advanced search functionality, Avante Maps helps users discover businesses that support cryptocurrency payments while offering business owners valuable analytics and marketing opportunities.  
@@ -28,22 +32,30 @@ Avante Maps collaborates with:
 
 ## 🌐 Environment Configuration
 
-The application supports both Pi Network Testnet and Mainnet environments. To switch between environments:
+Avante Maps supports both Pi Network Testnet and Mainnet environments, allowing you to easily switch between the two.
+
+### Switching Environments:
+To configure your app for Testnet or Mainnet:
 
 1. Open `src/config/environment.ts`
-2. Locate the `PI_CONFIG` object
+2. Locate the `PI_CONFIG` object.
 3. Set `isTestnet` to:
-   - `true` for Testnet environment
-   - `false` for Mainnet environment
+   - `true` for Testnet environment.
+   - `false` for Mainnet environment.
 
-Example:
+The `sandbox` option will automatically be adjusted based on this setting.
+
+Example configuration:
+
 ```typescript
 export const PI_CONFIG = {
-  isTestnet: true, // Set to false for mainnet
+  isTestnet: true, // Set to false for Mainnet
   sdkVersion: "2.0",
-  sandbox: true, // Automatically set based on isTestnet
+  sandbox: true, // Automatically true for Testnet
 };
 ```
+
+---
 
 ## 📌 Roadmap  
 
@@ -71,4 +83,8 @@ This project is **open-source** under the [MIT License](LICENSE).
 - Push the branch (`git push origin feature-branch`).  
 - Open a **Pull Request** for review.  
 
-🚀 **Let's build the future of decentralized business discovery together!**
+🚀 **Let's build the future of decentralized business discovery together!**  
+
+---
+
+Feel free to copy and paste this updated content into your README file!
