@@ -1,8 +1,9 @@
+
 // src/components/DebugBanner.tsx
 
 import React from "react";
 import { PI_CONFIG } from "@/config/environment";
-import { isSdkInitialized } from "@/utils/piNetwork/init";
+import { isSdkInitialized } from "@/utils/piNetwork/initialization";
 
 // Function to check if the debug flag is present in URL
 const isDebugEnabled = () => {
