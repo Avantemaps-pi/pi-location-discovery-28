@@ -6,12 +6,10 @@ import DesktopMenuButton from './header/DesktopMenuButton';
 import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/components/ui/sidebar';
 import AuthStatus from '@/components/auth/AuthStatus';
-
 interface PageHeaderProps {
   title?: string;
   hideSidebar?: boolean;
 }
-
 const PageHeader = ({
   title = "Avante Maps",
   hideSidebar = false
@@ -38,7 +36,7 @@ const PageHeader = ({
           {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && !isIndexPage && <DesktopMenuButton onClick={() => console.log('Desktop menu clicked')} />}
           
           {/* Index page menu button */}
-          {isIndexPage && <Button variant="ghost" size="icon" onClick={handleMenuClick} className="mr-2 block md:hidden flex items-center justify-center">
+          {isIndexPage && <Button variant="ghost" size="icon" onClick={handleMenuClick} className="mr-2 block md:hidden">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Open menu</span>
             </Button>}
@@ -70,5 +68,4 @@ const PageHeader = ({
       </div>
     </header>;
 };
-
 export default PageHeader;
