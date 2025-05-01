@@ -27,3 +27,8 @@ export function useMediaQuery(query: string): boolean {
 
   return matches;
 }
+
+// Add this new hook that uses the useMediaQuery hook with a mobile breakpoint
+export function useIsMobile(): boolean {
+  return useMediaQuery("(max-width: 768px)");
+}
