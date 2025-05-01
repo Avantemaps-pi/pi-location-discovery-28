@@ -1,15 +1,12 @@
-
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
 const CookiePolicy = () => {
-  return (
-    <AppLayout>
+  return <AppLayout>
       <Card>
         <CardHeader>
-          <CardTitle className="text-3xl">Cookie Policy</CardTitle>
+          
         </CardHeader>
         <CardContent className="prose prose-slate max-w-none">
           <p className="text-muted-foreground"><strong>Effective Date:</strong> April 13, 2025</p>
@@ -150,8 +147,6 @@ const CookiePolicy = () => {
           </section>
         </CardContent>
       </Card>
-    </AppLayout>
-  );
+    </AppLayout>;
 };
-
 export default CookiePolicy;
