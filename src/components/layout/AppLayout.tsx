@@ -15,7 +15,6 @@ interface AppLayoutProps {
   onBackClick?: () => void;
   className?: string;
   hideSidebar?: boolean;
-  onSearch?: (searchTerm: string) => void;
 }
 
 const AppLayout = ({ 
@@ -27,12 +26,11 @@ const AppLayout = ({
   backButton = false,
   onBackClick,
   className = '',
-  hideSidebar = false,
-  onSearch
+  hideSidebar = false
 }: AppLayoutProps) => {
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      {withHeader && <PageHeader title={title} hideSidebar={hideSidebar} onSearch={onSearch} />}
+      {withHeader && <PageHeader title={title} hideSidebar={hideSidebar} />}
       <div className="flex flex-1 overflow-hidden">
         <AppSidebar className={hideSidebar ? 'lg:hidden' : ''} />
         <main className={`flex-1 ${!hideSidebar && 'md:ml-64'} ${className} ${fullHeight ? 'h-[calc(100vh-4rem)]' : ''} ${withHeader ? 'overflow-y-auto overflow-x-hidden' : 'h-screen overflow-y-auto overflow-x-hidden'}`}>

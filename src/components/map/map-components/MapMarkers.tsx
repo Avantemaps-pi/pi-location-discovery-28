@@ -2,7 +2,7 @@
 import React from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { Place } from '@/data/mockPlaces';
-import { createMarkerIcon, createPopupContent } from '../markerUtils';
+import { createMarkerIcon } from '../markerUtils';
 import { LatLngTuple } from 'leaflet';
 
 interface MapMarkersProps {
@@ -22,25 +22,27 @@ const MapMarkers: React.FC<MapMarkersProps> = ({ places, activeMarkerId, onMarke
         // Only create marker if coordinates are valid numbers
         if (!isNaN(lat) && !isNaN(lng)) {
           const position: LatLngTuple = [lat, lng];
-          const isActive = place.id === activeMarkerId;
-          
           return (
             <Marker
               key={place.id}
               position={position}
-              icon={createMarkerIcon(isActive, place.isUserBusiness)}
+              icon={createMarkerIcon(place.id === activeMarkerId, place.isUserBusiness)}
               eventHandlers={{
                 click: () => onMarkerClick(place.id)
               }}
             >
-              <Popup closeButton={false}>
-                <div dangerouslySetInnerHTML={{ 
-                  __html: createPopupContent(
-                    place.name, 
-                    place.description,
-                    place.category
-                  ) 
-                }} />
+              <Popup>
+                <div className="p-1">
+                  <h3 className="font-bold">{place.name}</h3>
+                  {place.description && (
+                    <p className="text-sm mt-1 line-clamp-2">{place.description}</p>
+                  )}
+                  {place.category && (
+                    <span className="inline-block px-2 py-1 mt-2 text-xs bg-purple-100 text-purple-800 rounded-full">
+                      {place.category}
+                    </span>
+                  )}
+                </div>
               </Popup>
             </Marker>
           );

@@ -9,8 +9,7 @@
   height: 100%;
   width: 100%;
   z-index: 1;
-  font-family: inherit;
-  background-color: #b5d0d0; /* Light blue background for water */
+  background-color: #f8f9fa;
 }
 
 .leaflet-div-icon {
@@ -19,38 +18,27 @@
 }
 
 .leaflet-marker-icon {
-  transition: transform 0.2s, filter 0.2s;
+  transition: transform 0.2s;
 }
 
 .leaflet-marker-icon:hover {
   transform: scale(1.1);
-  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3));
 }
 
-/* Popup styles */
+/* Custom popup styles */
 .leaflet-popup-content-wrapper {
-  border-radius: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   padding: 0;
 }
 
 .leaflet-popup-content {
-  margin: 0.75rem 1rem;
+  margin: 8px 10px;
   line-height: 1.4;
 }
 
-.marker-popup h3 {
-  margin: 0;
-  color: #1e293b;
-}
-
-.marker-popup p {
-  margin: 0.25rem 0 0;
-  color: #475569;
-}
-
-/* Improve the scale control appearance */
-.leaflet-control-scale {
-  margin-bottom: 10px !important;
+.leaflet-popup-tip {
+  background: white;
 }
 
 /* Original map styles */

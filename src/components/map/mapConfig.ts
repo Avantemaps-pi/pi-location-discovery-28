@@ -15,3 +15,4 @@ export const MARKER_COLORS = {
   user: '#EF4444',       // Red for user businesses
   default: '#8B5CF6'     // Default purple for other markers
 };
+
