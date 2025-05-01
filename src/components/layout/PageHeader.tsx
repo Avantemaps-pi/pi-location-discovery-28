@@ -66,7 +66,7 @@ const PageHeader = ({
           
           {/* Back button for registration page */}
           {isRegistrationPage && <Button variant="ghost" size="icon" onClick={() => navigate('/')} className="mr-2">
-              <ArrowLeft className="h-5 w-5 text-2xl font-semibold mx-0 text-left" />
+              <ArrowLeft className="h-5 w-5 text-2xl mx-0 font-semibold text-left" />
               <span className="sr-only">Back to home</span>
             </Button>}
         </div>
