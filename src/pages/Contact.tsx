@@ -5,13 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
-
 const Contact = () => {
-  return (
-    <AppLayout title="Contact Us">
+  return <AppLayout title="Contact Us">
       <div className="max-w-5xl mx-auto space-y-8 p-4 sm:p-6 animate-fade-in">
         <div className="space-y-4">
-          <h1 className="text-3xl font-bold tracking-tight">Contact Us</h1>
+          
           <p className="text-muted-foreground">Have questions or feedback? We'd love to hear from you.</p>
         </div>
 
@@ -89,12 +87,7 @@ const Contact = () => {
                 <label htmlFor="message" className="text-sm font-medium">
                   Message
                 </label>
-                <Textarea
-                  id="message"
-                  placeholder="How can we help you?"
-                  rows={5}
-                  className="resize-none"
-                />
+                <Textarea id="message" placeholder="How can we help you?" rows={5} className="resize-none" />
               </div>
               <Button className="w-full sm:w-auto" type="submit">
                 <Send className="mr-2 h-4 w-4" />
@@ -139,8 +132,6 @@ const Contact = () => {
           </p>
         </div>
       </div>
-    </AppLayout>
-  );
+    </AppLayout>;
 };
-
 export default Contact;
