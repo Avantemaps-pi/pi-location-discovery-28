@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Menu } from 'lucide-react';
@@ -6,27 +7,34 @@ import DesktopMenuButton from './header/DesktopMenuButton';
 import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/components/ui/sidebar';
 import AuthStatus from '@/components/auth/AuthStatus';
+import HeaderSearchBar from '@/components/map/Search/HeaderSearchBar';
+
 interface PageHeaderProps {
   title?: string;
   hideSidebar?: boolean;
+  onSearch?: (searchTerm: string) => void;
 }
+
 const PageHeader = ({
   title = "Avante Maps",
-  hideSidebar = false
+  hideSidebar = false,
+  onSearch
 }: PageHeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {
-    setOpenMobile
-  } = useSidebar();
+  const { setOpenMobile } = useSidebar();
+  
   const isAnalyticsPage = location.pathname === '/analytics';
   const isRegistrationPage = location.pathname === '/registration';
   const isIndexPage = location.pathname === '/';
+  
   const handleMenuClick = () => {
     setOpenMobile(true);
     console.log('Mobile menu opened');
   };
-  return <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+  
+  return (
+    <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-full items-center px-4">
         <div className="flex items-center">
           {/* Mobile menu button - only shows on mobile */}
@@ -36,29 +44,42 @@ const PageHeader = ({
           {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && !isIndexPage && <DesktopMenuButton onClick={() => console.log('Desktop menu clicked')} />}
           
           {/* Index page menu button */}
-          {isIndexPage && <Button variant="ghost" size="icon" onClick={handleMenuClick} className="mr-2 block md:hidden">
+          {isIndexPage && (
+            <Button variant="ghost" size="icon" onClick={handleMenuClick} className="mr-2 block md:hidden">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Open menu</span>
-            </Button>}
+            </Button>
+          )}
           
           {/* Back button for analytics page */}
-          {isAnalyticsPage && <Button variant="ghost" size="icon" onClick={() => navigate('/registered-business')} className="mr-2">
+          {isAnalyticsPage && (
+            <Button variant="ghost" size="icon" onClick={() => navigate('/registered-business')} className="mr-2">
               <ArrowLeft className="h-5 w-5" />
               <span className="sr-only">Back</span>
-            </Button>}
+            </Button>
+          )}
           
           {/* Back button for registration page */}
-          {isRegistrationPage && <Button variant="ghost" size="icon" onClick={() => navigate('/')} className="mr-2">
+          {isRegistrationPage && (
+            <Button variant="ghost" size="icon" onClick={() => navigate('/')} className="mr-2">
               <ArrowLeft className="h-5 w-5" />
               <span className="sr-only">Back to home</span>
-            </Button>}
+            </Button>
+          )}
         </div>
         
         {/* Logo section */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 flex justify-center relative">
           <Link to="/" className="flex items-center gap-2 mx-auto">
             
           </Link>
+          
+          {/* Search bar - only show on index page and for desktop */}
+          {isIndexPage && onSearch && (
+            <div className="absolute left-0 right-0 hidden md:flex justify-center">
+              <HeaderSearchBar onSearch={onSearch} className="mx-auto" />
+            </div>
+          )}
         </div>
         
         {/* Authentication status */}
@@ -66,6 +87,8 @@ const PageHeader = ({
           <AuthStatus />
         </div>
       </div>
-    </header>;
+    </header>
+  );
 };
+
 export default PageHeader;

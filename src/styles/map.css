@@ -9,6 +9,7 @@
   height: 100%;
   width: 100%;
   z-index: 1;
+  font-family: inherit;
 }
 
 .leaflet-div-icon {
@@ -17,11 +18,38 @@
 }
 
 .leaflet-marker-icon {
-  transition: transform 0.2s;
+  transition: transform 0.2s, filter 0.2s;
 }
 
 .leaflet-marker-icon:hover {
   transform: scale(1.1);
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3));
+}
+
+/* Popup styles */
+.leaflet-popup-content-wrapper {
+  border-radius: 0.5rem;
+  padding: 0;
+}
+
+.leaflet-popup-content {
+  margin: 0.75rem 1rem;
+  line-height: 1.4;
+}
+
+.marker-popup h3 {
+  margin: 0;
+  color: #1e293b;
+}
+
+.marker-popup p {
+  margin: 0.25rem 0 0;
+  color: #475569;
+}
+
+/* Improve the scale control appearance */
+.leaflet-control-scale {
+  margin-bottom: 10px !important;
 }
 
 /* Original map styles */

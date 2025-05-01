@@ -6,6 +6,7 @@ import MapContainer from '@/components/map/MapContainer';
 import SearchContainer from '@/components/map/Search/SearchContainer';
 import AddBusinessButton from '@/components/map/buttons/AddBusinessButton';
 import { useBusinessData } from '@/hooks/useBusinessData';
+import { useMediaQuery } from '@/hooks/use-mobile';
 
 const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
@@ -13,6 +14,7 @@ const Index = () => {
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
   const { places, filteredPlaces, isLoading, handleSearch } = useBusinessData();
+  const isMobile = useMediaQuery("(max-width: 768px)");
   
   useEffect(() => {
     if (location.state && location.state.selectedPlaceId) {
@@ -31,6 +33,7 @@ const Index = () => {
       fullHeight={true} 
       fullWidth={true}
       hideSidebar={false}
+      onSearch={handleSearch}
     >
       <MapContainer 
         places={places}
@@ -40,7 +43,8 @@ const Index = () => {
         isLoading={isLoading}
         onMarkerClick={handlePlaceClick}
       />
-      <SearchContainer onSearch={handleSearch} />
+      {/* Only show SearchContainer on mobile */}
+      {isMobile && <SearchContainer onSearch={handleSearch} />}
       <AddBusinessButton selectedPlace={selectedPlace} />
     </AppLayout>
   );

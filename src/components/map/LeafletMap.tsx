@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, ZoomControl, ScaleControl } from 'react-leaflet';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
@@ -92,11 +92,15 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         zoomControl={false} 
         minZoom={3}
         maxZoom={18}
+        attributionControl={true}
       >
         <TileLayer
           attribution={OSM_TILE_LAYER.attribution}
           url={OSM_TILE_LAYER.url}
         />
+        
+        <ZoomControl position="bottomright" />
+        <ScaleControl position="bottomleft" imperial={false} />
         
         <MapViewUpdater center={mapCenter} zoom={zoom} />
         <MapMarkers places={displayPlaces} activeMarkerId={activeMarker} onMarkerClick={handleMarkerClick} />
