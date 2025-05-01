@@ -40,14 +40,14 @@ const Recommendations = () => {
 
   const getWidthClass = () => {
     if (isMobile) {
-      return 'basis-[85%] sm:basis-[85%]';
+      return 'basis-[90%] sm:basis-[90%]';
     }
-    return 'basis-[85%] sm:basis-[45%] md:basis-[35%] lg:basis-1/4';
+    return 'basis-[90%] sm:basis-[45%] md:basis-[35%] lg:basis-1/4';
   };
 
   return (
     <AppLayout>
-      <div className="recommendations-container mt-8 h-[calc(100vh-64px)]">
+      <div className="w-full mx-auto recommendations-container mt-8 overflow-hidden h-[calc(100vh-64px)]">
         <div className="space-y-1 mb-3 sm:mb-4 px-2 sm:px-4">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Recommendations</h1>
           <p className="text-sm text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency.</p>

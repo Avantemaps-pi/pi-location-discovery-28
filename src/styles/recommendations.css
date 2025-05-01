@@ -22,11 +22,9 @@
 /* Prevent horizontal scrolling on recommendations page */
 .recommendations-container {
   width: 100%;
-  overflow-x: hidden !important;
+  overflow-x: hidden;
   max-width: 100vw;
   position: relative;
-  padding-left: 0;
-  padding-right: 0;
 }
 
 /* Custom scrolling for expanded descriptions */
@@ -48,9 +46,4 @@
 /* Adjust carousel position */
 .embla__container {
   margin-left: -0.5rem !important;
-}
-
-/* Fix overflow issue */
-.overflow-y-auto {
-  overflow-x: hidden !important;
 }
