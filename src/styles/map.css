@@ -10,6 +10,7 @@
   width: 100%;
   z-index: 1;
   font-family: inherit;
+  background-color: #b5d0d0; /* Light blue background for water */
 }
 
 .leaflet-div-icon {
