@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Menu } from 'lucide-react';
@@ -21,13 +22,36 @@ const PageHeader = ({
   const {
     setOpenMobile
   } = useSidebar();
+  
+  // Determine the current page and set the display title
   const isAnalyticsPage = location.pathname === '/analytics';
   const isRegistrationPage = location.pathname === '/registration';
   const isIndexPage = location.pathname === '/';
+  
+  // Get page title based on the current path
+  const getPageTitle = () => {
+    if (isIndexPage) return "Avante Maps";
+    if (isAnalyticsPage) return "Analytics";
+    if (isRegistrationPage) return "Registration";
+    
+    // Extract the page name from the URL for other pages
+    const path = location.pathname.substring(1); // Remove leading slash
+    if (!path) return "Avante Maps";
+    
+    // Convert kebab-case to title case (e.g., "registered-business" to "Registered Business")
+    return path
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+  
+  const displayTitle = getPageTitle();
+  
   const handleMenuClick = () => {
     setOpenMobile(true);
     console.log('Mobile menu opened');
   };
+  
   return <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-full items-center px-4">
         <div className="flex items-center">
@@ -56,10 +80,13 @@ const PageHeader = ({
             </Button>}
         </div>
         
-        {/* Logo section */}
-        <div className="flex-1 flex justify-center">
-          <Link to="/" className="flex items-center gap-2 mx-auto">
-            
+        {/* Logo section with page title */}
+        <div className="flex-1 flex justify-center items-center">
+          <Link to="/" className={`flex items-center gap-2 ${isIndexPage ? 'mx-auto' : ''}`}>
+            {/* Display page title for all pages except index */}
+            <h1 className={`text-lg font-semibold ${isIndexPage ? 'hidden' : 'block'}`}>
+              {displayTitle}
+            </h1>
           </Link>
         </div>
         
