@@ -4,19 +4,13 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
-import { defaultCenter, defaultZoom } from './mapConfig';
+import { defaultCenter, defaultZoom, OSM_TILE_LAYER } from './mapConfig';
 import 'leaflet/dist/leaflet.css';
 import MapMarkers from './map-components/MapMarkers';
 import MapViewUpdater from './map-components/MapViewUpdater';
 import PlaceOverlay from './map-components/PlaceOverlay';
 import LoadingOverlay from './map-components/LoadingOverlay';
 import { LatLngTuple } from 'leaflet';
-
-// Custom map style with simplified view
-const SIMPLIFIED_MAP_TILE = {
-  url: 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-};
 
 interface LeafletMapProps {
   places?: Place[];
@@ -98,11 +92,10 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         zoomControl={false} 
         minZoom={3}
         maxZoom={18}
-        attributionControl={false}
       >
         <TileLayer
-          attribution={SIMPLIFIED_MAP_TILE.attribution}
-          url={SIMPLIFIED_MAP_TILE.url}
+          attribution={OSM_TILE_LAYER.attribution}
+          url={OSM_TILE_LAYER.url}
         />
         
         <MapViewUpdater center={mapCenter} zoom={zoom} />
