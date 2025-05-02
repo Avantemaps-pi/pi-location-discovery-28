@@ -21,3 +21,10 @@
   ],
   "sandbox": true
 }
+{
+  "app_urls": [
+    "https://sandbox.minepi.com/app/avante-maps",
+    "https://sandbox.minepi.com/app/avante-maps-87f3d96805a0d7c8"
+  ],
+  ...
+}
