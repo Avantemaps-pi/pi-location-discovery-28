@@ -1,15 +1,14 @@
-
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/auth";
 import { useSessionRestoration } from "@/hooks/useSessionRestoration";
 
-//Pages
+// Pages
 import Index from "./pages/Index";
 import Recommendations from "./pages/Recommendations";
 import Bookmarks from "./pages/Bookmarks";
@@ -30,7 +29,7 @@ import Review from "./pages/Review";
 import Pricing from "./pages/Pricing";
 import Analytics from "./pages/Analytics";
 import DebugBanner from "@/components/DebugBanner";
-import PiLogin from "./pages/PiLogin"; // Add the new Pi Login page
+import PiLogin from "./pages/PiLogin";
 
 const queryClient = new QueryClient();
 
@@ -43,19 +42,30 @@ const SessionManager = () => {
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Theme setup
   useEffect(() => {
     const savedScheme = localStorage.getItem('colorScheme');
-    
     if (savedScheme === 'dark') {
       document.documentElement.classList.add('dark');
       setIsDarkMode(true);
-    } else if (savedScheme === 'light') {
-      document.documentElement.classList.remove('dark');
-      setIsDarkMode(false);
     } else {
       document.documentElement.classList.remove('dark');
       setIsDarkMode(false);
       localStorage.setItem('colorScheme', 'light');
+    }
+  }, []);
+
+  // 🔐 Pi Network Authentication
+  useEffect(() => {
+    const Pi = (window as any).Pi;
+    if (Pi && Pi.authenticate) {
+      Pi.authenticate(['username'], function (auth: any) {
+        console.log("✅ Pi authentication response:", auth);
+        // Optional: Save to context or local storage
+        // localStorage.setItem("piUser", auth.user.username);
+      });
+    } else {
+      console.error("❌ Pi SDK not loaded or Pi.authenticate missing");
     }
   }, []);
 
@@ -68,7 +78,6 @@ const App = () => {
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              {/* ✅ Conditionally show DebugBanner */}
               {process.env.NODE_ENV !== "production" && <DebugBanner />}
               <Routes>
                 <Route path="/" element={<Index />} />
@@ -90,7 +99,7 @@ const App = () => {
                 <Route path="/update-registration/:businessId?" element={<UpdateRegistration />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/analytics" element={<Analytics />} />
-                <Route path="/pi-login" element={<PiLogin />} /> {/* Add new Pi login route */}
+                <Route path="/pi-login" element={<PiLogin />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
