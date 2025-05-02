@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { initializePiNetwork } from '@/utils/piNetwork';
 import { PiUser, AuthContextType, STORAGE_KEY } from './types';
 import { checkAccess } from './authUtils';
-import { performLogin, refreshUserData as refreshUserDataService, requestAuthPermissions } from './services';
+import { performLogin, refreshUserData as refreshUserDataService, requestAuthPermissions } from './authService';
 import { useNetworkStatus } from './networkStatusService';
 import { SubscriptionTier } from '@/utils/piNetwork/types';
 import AuthContext from './useAuth';
