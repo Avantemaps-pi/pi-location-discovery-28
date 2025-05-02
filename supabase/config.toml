@@ -1,1 +1,5 @@
+
 project_id = "xvpwbocwasbtzrzrxyvu"
+
+[functions.verify-pi-auth]
+verify_jwt = false

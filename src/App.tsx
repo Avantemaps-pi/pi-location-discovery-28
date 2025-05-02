@@ -30,6 +30,7 @@ import Review from "./pages/Review";
 import Pricing from "./pages/Pricing";
 import Analytics from "./pages/Analytics";
 import DebugBanner from "@/components/DebugBanner";
+import PiLogin from "./pages/PiLogin"; // Add the new Pi Login page
 
 const queryClient = new QueryClient();
 
@@ -89,6 +90,7 @@ const App = () => {
                 <Route path="/update-registration/:businessId?" element={<UpdateRegistration />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/analytics" element={<Analytics />} />
+                <Route path="/pi-login" element={<PiLogin />} /> {/* Add new Pi login route */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
