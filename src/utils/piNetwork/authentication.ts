@@ -11,6 +11,7 @@ import { Scope } from './types';
 export const requestUserPermissions = async (): Promise<{
   username: string;
   uid: string;
+  accessToken: string;
   walletAddress?: string;
 } | null> => {
   if (!isPiNetworkAvailable()) {
@@ -66,6 +67,7 @@ export const requestUserPermissions = async (): Promise<{
     return {
       username: authResult.user.username,
       uid: authResult.user.uid,
+      accessToken: authResult.accessToken,
       walletAddress: walletAddress
     };
   } catch (error) {
