@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/auth";
 import { useSessionRestoration } from "@/hooks/useSessionRestoration";
+import { initializePiNetwork } from "@/utils/piNetwork";
+import { toast } from "sonner";
 
 // Pages
 import Index from "./pages/Index";
@@ -36,6 +38,25 @@ const queryClient = new QueryClient();
 // Create a component to use the session restoration hook
 const SessionManager = () => {
   useSessionRestoration();
+  return null;
+};
+
+// Component to initialize Pi SDK
+const PiInitializer = () => {
+  useEffect(() => {
+    const initPi = async () => {
+      try {
+        await initializePiNetwork();
+        console.log("✅ Pi Network SDK initialized successfully");
+      } catch (error) {
+        console.error("❌ Error initializing Pi Network SDK:", error);
+        toast.error("Failed to connect to Pi Network. Some features may be limited.");
+      }
+    };
+    
+    initPi();
+  }, []);
+  
   return null;
 };
 
@@ -74,6 +95,7 @@ const App = () => {
       <TooltipProvider>
         <AuthProvider>
           <SidebarProvider>
+            <PiInitializer />
             <SessionManager />
             <Toaster />
             <Sonner />

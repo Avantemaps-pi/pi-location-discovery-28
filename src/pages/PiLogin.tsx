@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -11,6 +12,7 @@ import { verifyPiAuthWithBackend } from '@/utils/piNetwork/piAuthIntegration';
 const PiLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isSdkReady, setIsSdkReady] = useState(false);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -19,6 +21,7 @@ const PiLogin = () => {
       try {
         await initializePiNetwork();
         console.log('Pi Network SDK initialized successfully');
+        setIsSdkReady(true);
       } catch (error) {
         console.error('Failed to initialize Pi Network SDK:', error);
         setError('Failed to initialize Pi Network SDK. Please try again.');
@@ -35,6 +38,17 @@ const PiLogin = () => {
   }, []);
   
   const handlePiLogin = async () => {
+    if (!isSdkReady) {
+      try {
+        await initializePiNetwork();
+        setIsSdkReady(true);
+      } catch (error) {
+        setError('Failed to initialize Pi Network SDK. Please try again.');
+        toast.error('Pi Network SDK initialization failed. Please try again.');
+        return;
+      }
+    }
+    
     setIsLoading(true);
     setError(null);
     
