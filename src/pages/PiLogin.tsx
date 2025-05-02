@@ -3,28 +3,48 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { isPiBrowser } from '@/utils/piNetwork/piNetworkDetection';
-import { initializePiNetwork, requestUserPermissions } from '@/utils/piNetwork';
+import { initializePiNetwork, isSdkInitialized } from '@/utils/piNetwork';
+import { requestUserPermissions } from '@/utils/piNetwork';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import AppLayout from '@/components/layout/AppLayout';
 import { verifyPiAuthWithBackend } from '@/utils/piNetwork/piAuthIntegration';
+import { Loader2 } from "lucide-react";
 
 const PiLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSdkReady, setIsSdkReady] = useState(false);
+  const [initAttempts, setInitAttempts] = useState(0);
   const navigate = useNavigate();
   
+  // Initialize Pi SDK when the component mounts with improved error handling
   useEffect(() => {
-    // Initialize Pi SDK when the component mounts
     const initPiSdk = async () => {
+      setIsLoading(true);
       try {
+        if (isSdkInitialized()) {
+          console.log('Pi Network SDK is already initialized');
+          setIsSdkReady(true);
+          setIsLoading(false);
+          return;
+        }
+        
         await initializePiNetwork();
         console.log('Pi Network SDK initialized successfully');
         setIsSdkReady(true);
       } catch (error) {
         console.error('Failed to initialize Pi Network SDK:', error);
         setError('Failed to initialize Pi Network SDK. Please try again.');
+        
+        // Auto-retry initialization a few times
+        if (initAttempts < 3) {
+          console.log(`Retrying SDK initialization (attempt ${initAttempts + 1}/3)...`);
+          setInitAttempts(prev => prev + 1);
+          setTimeout(initPiSdk, 1500); // Retry after 1.5 seconds
+        }
+      } finally {
+        setIsLoading(false);
       }
     };
     
@@ -34,8 +54,13 @@ const PiLogin = () => {
     } else {
       // If not in Pi Browser, show warning and redirect after a delay
       toast.warning("This page is optimized for Pi Browser. You may experience limited functionality.");
+      setTimeout(() => {
+        if (location.pathname === '/pi-login') {
+          navigate('/');
+        }
+      }, 5000);
     }
-  }, []);
+  }, [navigate, initAttempts]);
   
   const handlePiLogin = async () => {
     if (!isSdkReady) {
@@ -115,8 +140,19 @@ const PiLogin = () => {
               disabled={isLoading}
               onClick={handlePiLogin}
             >
-              {isLoading ? 'Connecting...' : 'Connect with Pi Network'}
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Connecting...
+                </>
+              ) : 'Connect with Pi Network'}
             </Button>
+            
+            {!isSdkReady && isPiBrowser() && (
+              <p className="text-sm text-center mt-4 text-amber-600">
+                Initializing Pi Network SDK... Please wait.
+              </p>
+            )}
           </CardContent>
           <CardFooter className="flex justify-center text-sm text-muted-foreground">
             <p>By connecting, you agree to the terms and conditions of Pi Network and Avante Maps.</p>

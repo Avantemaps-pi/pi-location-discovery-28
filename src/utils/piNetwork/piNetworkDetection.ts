@@ -11,7 +11,14 @@ export const isPiBrowser = (): boolean => {
   if (typeof navigator === 'undefined') return false;
   
   const userAgent = navigator.userAgent.toLowerCase();
-  return userAgent.includes('pibrowser');
+  const isInPiBrowser = userAgent.includes('pibrowser');
+  
+  // Log for debugging
+  if (isInPiBrowser) {
+    console.log('Pi Browser detected in user agent:', userAgent);
+  }
+  
+  return isInPiBrowser;
 };
 
 /**
