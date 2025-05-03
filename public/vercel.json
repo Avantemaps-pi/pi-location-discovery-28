@@ -1,0 +1,30 @@
+{
+  "rewrites": [
+    {
+      "source": "/app/avante-maps-87f3d96805a0d7c8",
+      "destination": "/"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Cross-Origin-Embedder-Policy",
+          "value": "require-corp"
+        }
+      ]
+    }
+  ],
+  "redirects": [],
+  "cleanUrls": true,
+  "trailingSlash": false
+}
