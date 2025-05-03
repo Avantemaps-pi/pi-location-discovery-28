@@ -7,11 +7,18 @@
     <meta name="description" content="Discover and review businesses within the Pi Network ecosystem." />
     <meta name="author" content="Avante Maps Team" />
     <meta property="og:image" content="/og-image.png" />
-    
-    <!-- Pi Network manifest -->
-    <link rel="manifest" href="/manifest.json" />
-    
-    <!-- Required for iOS PWA compatibility (optional but helpful) -->
+
+    <!-- ✅ Dynamic manifest loader -->
+    <script>
+      const isDev = window.location.hostname.includes("dev.");
+      const manifest = isDev ? "/manifest.sandbox.json" : "/manifest.json";
+      const link = document.createElement("link");
+      link.rel = "manifest";
+      link.href = manifest;
+      document.head.appendChild(link);
+    </script>
+
+    <!-- PWA support for iOS (optional but helpful) -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Avante Maps" />
@@ -20,13 +27,13 @@
 
   <body>
     <div id="root"></div>
-    
-    <!-- Pi Network SDK script (optional if you're using it manually in components) -->
+
+    <!-- Optional: Pi Network SDK (can be added in app logic if needed) -->
     <!-- <script src="https://sdk.minepi.com/pi-sdk.js"></script> -->
 
     <!-- Lovable engine -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    
+
     <!-- Main application script -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
