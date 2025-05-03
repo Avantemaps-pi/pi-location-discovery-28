@@ -9,22 +9,15 @@
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/Avantemaps_logo.png", 
+      "src": "/Avantemaps_logo.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/Avantemaps.png", 
+      "src": "/Avantemaps.png",
       "type": "image/png",
       "sizes": "512x512"
     }
   ],
   "sandbox": true
-}
-{
-  "app_urls": [
-    "https://sandbox.minepi.com/app/avante-maps",
-    "https://sandbox.minepi.com/app/avante-maps-87f3d96805a0d7c8"
-  ],
-  ...
 }
