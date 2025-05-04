@@ -35,6 +35,9 @@ export const requestUserPermissions = async (): Promise<{
     console.log('Requesting permissions with authenticate: username, payments, wallet_address');
     const scopes: Scope[] = ['username', 'payments', 'wallet_address'];
     
+    // Dispatch an event that we can listen for elsewhere
+    window.dispatchEvent(new Event('pi-auth-start'));
+    
     const authResult = await window.Pi?.authenticate(scopes, (payment) => {
       console.log('Incomplete payment found during permission request:', payment);
       // Handle incomplete payment if needed
@@ -47,6 +50,9 @@ export const requestUserPermissions = async (): Promise<{
       return null;
     }
 
+    // Dispatch an event for successful authentication
+    window.dispatchEvent(new Event('pi-auth-success'));
+    
     // Safely extract wallet address if permission was granted
     let walletAddress: string | undefined = undefined;
     
@@ -72,6 +78,8 @@ export const requestUserPermissions = async (): Promise<{
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);
+    // Dispatch an event for authentication failure
+    window.dispatchEvent(new CustomEvent('pi-auth-error', { detail: error }));
     return null;
   }
 };

@@ -85,6 +85,36 @@ const PiLogin = () => {
     }
   }, [navigate, initAttempts]);
   
+  // Setup event listeners for authentication process
+  useEffect(() => {
+    const handleAuthStart = () => {
+      setLoginStage('auth');
+      console.log("Auth process started");
+    };
+    
+    const handleAuthSuccess = () => {
+      console.log("Auth process successful");
+    };
+    
+    const handleAuthError = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      console.error("Auth process error:", customEvent.detail);
+      setError("Authentication failed. Please try again.");
+    };
+    
+    // Add event listeners
+    window.addEventListener('pi-auth-start', handleAuthStart);
+    window.addEventListener('pi-auth-success', handleAuthSuccess);
+    window.addEventListener('pi-auth-error', handleAuthError);
+    
+    return () => {
+      // Clean up event listeners
+      window.removeEventListener('pi-auth-start', handleAuthStart);
+      window.removeEventListener('pi-auth-success', handleAuthSuccess);
+      window.removeEventListener('pi-auth-error', handleAuthError);
+    };
+  }, []);
+  
   const handlePiLogin = async () => {
     if (!isSdkReady) {
       try {

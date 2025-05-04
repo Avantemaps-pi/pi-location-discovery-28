@@ -1,9 +1,9 @@
-
 import { toast } from 'sonner';
 import { PiUser } from '../types';
 import { 
   isPiNetworkAvailable, 
-  initializePiNetwork
+  initializePiNetwork,
+  getSdkStatus
 } from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from '../authUtils';
 
@@ -33,8 +33,10 @@ export const performLogin = async (
     try {
       // Attempt to initialize SDK with minimal retry
       console.log("🔄 Initializing Pi SDK during login...");
-      const initialized = await initializePiNetwork();
-      if (!initialized) {
+      const initStart = performance.now();
+      const result = await initializePiNetwork();
+      console.log(`✅ SDK initialized during login in ${Math.round(performance.now() - initStart)}ms`);
+      if (!result) {
         throw new Error("SDK initialization failed");
       }
     } catch (error) {
@@ -66,6 +68,9 @@ export const performLogin = async (
     console.log("🔑 Authenticating with Pi Network, requesting scopes");
     toast.info("Connecting to Pi Network...", { id: "pi-auth-progress" });
     
+    // Dispatch an event to indicate authentication has started
+    window.dispatchEvent(new Event('pi-auth-start'));
+    
     // Authenticate with Pi Network with required scopes
     const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
       console.log('Incomplete payment found:', payment);
@@ -76,6 +81,9 @@ export const performLogin = async (
     toast.dismiss("pi-auth-progress");
     
     if (authResult && authResult.user && authResult.accessToken) {
+      // Dispatch successful authentication event
+      window.dispatchEvent(new Event('pi-auth-success'));
+      
       toast.success("Authentication successful!", { id: "auth-success" });
       
       // Store the current user in the window.Pi object for later use
@@ -133,6 +141,11 @@ export const performLogin = async (
         duration: 3000,
       });
     } else {
+      // Dispatch failed authentication event
+      window.dispatchEvent(new CustomEvent('pi-auth-error', { 
+        detail: "Authentication failed - no result returned" 
+      }));
+      
       throw new Error("Authentication failed");
     }
   } catch (error) {
@@ -141,6 +154,11 @@ export const performLogin = async (
     if (error instanceof Error) {
       errorMessage = error.message;
     }
+    
+    // Dispatch failed authentication event
+    window.dispatchEvent(new CustomEvent('pi-auth-error', { 
+      detail: error 
+    }));
     
     setAuthError(errorMessage);
     toast.error(errorMessage);

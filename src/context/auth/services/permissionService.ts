@@ -38,6 +38,9 @@ export const requestAuthPermissions = async (
       throw new Error("Failed to initialize Pi Network SDK");
     }
 
+    // Dispatch an event for auth start
+    window.dispatchEvent(new Event('pi-auth-start'));
+    
     // Request permissions with Pi Network
     const userInfo = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
       console.log('Incomplete payment found:', payment);
@@ -46,6 +49,9 @@ export const requestAuthPermissions = async (
     if (userInfo) {
       console.log("Permission request successful");
       toast.success("Permissions granted. Proceeding with authentication.");
+      
+      // Dispatch an event for successful authentication
+      window.dispatchEvent(new Event('pi-auth-success'));
       return true;
     } else {
       throw new Error("Permission request failed or was denied");
@@ -56,6 +62,9 @@ export const requestAuthPermissions = async (
     if (error instanceof Error) {
       errorMessage = error.message;
     }
+    
+    // Dispatch an event for authentication failure
+    window.dispatchEvent(new CustomEvent('pi-auth-error', { detail: error }));
     
     setAuthError(errorMessage);
     toast.error(errorMessage);

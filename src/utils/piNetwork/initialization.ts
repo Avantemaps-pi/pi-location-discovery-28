@@ -57,6 +57,10 @@ export const initializePiNetwork = async (): Promise<boolean> => {
           isInitialized = true;
           isInitializing = false;
           initializationAttempts = 0; // Reset attempts on success
+          
+          // Dispatch an event that we can listen for elsewhere
+          window.dispatchEvent(new Event('pi-sdk-init-success'));
+          
           resolve(true);
         })
         .catch(error => {
@@ -103,6 +107,10 @@ export const initializePiNetwork = async (): Promise<boolean> => {
             isInitialized = true;
             isInitializing = false;
             initializationAttempts = 0; // Reset attempts on success
+            
+            // Dispatch an event that we can listen for elsewhere
+            window.dispatchEvent(new Event('pi-sdk-init-success'));
+            
             resolve(true);
           })
           .catch(error => {
