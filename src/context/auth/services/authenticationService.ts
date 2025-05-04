@@ -3,12 +3,17 @@ import { toast } from 'sonner';
 import { PiUser } from '../types';
 import { 
   isPiNetworkAvailable, 
-  initializePiNetwork
+  initializePiNetwork,
+  isSdkInitialized
 } from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from '../authUtils';
 
+// Cache for recently retrieved subscription data to prevent redundant queries
+const subscriptionCache = new Map<string, { tier: string, timestamp: number }>();
+const SUBSCRIPTION_CACHE_TTL = 60000; // 1 minute cache TTL
+
 /**
- * Perform login with Pi Network
+ * Perform login with Pi Network with performance optimizations
  */
 export const performLogin = async (
   isSdkInitialized: boolean,
@@ -17,11 +22,28 @@ export const performLogin = async (
   setPendingAuth: (pending: boolean) => void,
   setUser: (user: PiUser | null) => void
 ): Promise<void> => {
+  // Performance tracking
+  const startTime = performance.now();
+  console.log("🕒 Login process started");
+  
   // Don't attempt login if SDK is not initialized yet
   if (!isSdkInitialized) {
     setPendingAuth(true);
-    toast.warning("Pi Network SDK is initializing. Please try again in a moment.");
-    return;
+    setIsLoading(true);
+    
+    try {
+      // Attempt to initialize SDK with minimal retry
+      console.log("🔄 Initializing Pi SDK during login...");
+      const initialized = await initializePiNetwork();
+      if (!initialized) {
+        throw new Error("SDK initialization failed");
+      }
+    } catch (error) {
+      console.error("❌ Login aborted: SDK initialization failed");
+      toast.warning("Pi Network connection failed. Please retry in a moment.");
+      setIsLoading(false);
+      return;
+    }
   }
   
   setIsLoading(true);
@@ -41,23 +63,21 @@ export const performLogin = async (
       throw new Error("Pi Network SDK is not available");
     }
 
-    // Ensure SDK is initialized before authentication
-    try {
-      await initializePiNetwork();
-    } catch (error) {
-      throw new Error("Failed to initialize Pi Network SDK");
-    }
-
+    // Authentication is the most time-consuming step, so provide clear feedback
+    console.log("🔑 Authenticating with Pi Network, requesting scopes");
+    toast.info("Connecting to Pi Network...", { id: "pi-auth-progress" });
+    
     // Authenticate with Pi Network with required scopes
-    console.log("Authenticating with Pi Network, requesting scopes: username, payments, wallet_address");
     const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
       console.log('Incomplete payment found:', payment);
-      // Handle incomplete payment when needed
-      // This would involve sending the payment to your server for completion
     });
     
+    const authTime = performance.now() - startTime;
+    console.log(`✅ Authentication completed in ${Math.round(authTime)}ms`);
+    toast.dismiss("pi-auth-progress");
+    
     if (authResult && authResult.user && authResult.accessToken) {
-      console.log("Authentication successful");
+      toast.success("Authentication successful!", { id: "auth-success" });
       
       // Store the current user in the window.Pi object for later use
       if (window.Pi) {
@@ -68,11 +88,28 @@ export const performLogin = async (
         };
       }
       
-      // Get user's subscription tier from Supabase
-      const subscriptionTier = await getUserSubscription(authResult.user.uid);
+      // Check subscription cache first to avoid database call
+      let subscriptionTier;
+      const cachedSubscription = subscriptionCache.get(authResult.user.uid);
+      
+      if (cachedSubscription && (Date.now() - cachedSubscription.timestamp < SUBSCRIPTION_CACHE_TTL)) {
+        subscriptionTier = cachedSubscription.tier;
+        console.log("📦 Using cached subscription data");
+      } else {
+        // Get user's subscription tier from Supabase
+        console.log("📡 Fetching subscription data");
+        const subStartTime = performance.now();
+        subscriptionTier = await getUserSubscription(authResult.user.uid);
+        console.log(`🔄 Subscription data retrieved in ${Math.round(performance.now() - subStartTime)}ms`);
+        
+        // Update cache
+        subscriptionCache.set(authResult.user.uid, {
+          tier: subscriptionTier,
+          timestamp: Date.now()
+        });
+      }
       
       // Extract wallet address if available from user properties
-      // Note: In real implementation, use your backend with Platform API to verify this
       const walletAddress = (authResult as any).user.wallet_address;
       
       const userData: PiUser = {
@@ -86,9 +123,16 @@ export const performLogin = async (
       };
 
       // Update Supabase and localStorage
+      const updateStartTime = performance.now();
       await updateUserData(userData, setUser);
+      console.log(`🔄 User data updated in ${Math.round(performance.now() - updateStartTime)}ms`);
       
-      toast.success(`Welcome back, ${userData.username}!`);
+      const totalTime = performance.now() - startTime;
+      console.log(`✅ Total login process completed in ${Math.round(totalTime)}ms`);
+      toast.success(`Welcome back, ${userData.username}!`, {
+        id: "login-complete",
+        duration: 3000,
+      });
     } else {
       throw new Error("Authentication failed");
     }
@@ -108,7 +152,7 @@ export const performLogin = async (
 };
 
 /**
- * Refresh user data
+ * Refresh user data with performance optimizations
  */
 export const refreshUserData = async (
   user: PiUser | null,
@@ -117,26 +161,41 @@ export const refreshUserData = async (
 ): Promise<void> => {
   if (!user) return;
 
+  const startTime = performance.now();
+  console.log("🔄 Starting user data refresh");
+  
   try {
     setIsLoading(true);
     
-    // Ensure SDK is initialized before proceeding
-    try {
-      await initializePiNetwork();
-    } catch (error) {
-      console.error("Failed to initialize Pi Network SDK:", error);
-      return;
-    }
+    // Check subscription cache first
+    const cachedSubscription = subscriptionCache.get(user.uid);
+    let subscriptionTier;
     
-    // Get user's current subscription
-    const subscriptionTier = await getUserSubscription(user.uid);
+    if (cachedSubscription && (Date.now() - cachedSubscription.timestamp < SUBSCRIPTION_CACHE_TTL)) {
+      subscriptionTier = cachedSubscription.tier;
+      console.log("📦 Using cached subscription data for refresh");
+    } else {
+      // Get user's current subscription
+      const subStartTime = performance.now();
+      subscriptionTier = await getUserSubscription(user.uid);
+      console.log(`🔄 Subscription data retrieved in ${Math.round(performance.now() - subStartTime)}ms`);
+      
+      // Update cache
+      subscriptionCache.set(user.uid, {
+        tier: subscriptionTier,
+        timestamp: Date.now()
+      });
+    }
 
-    // Request permissions again to ensure all required ones are granted
-    if (isPiNetworkAvailable()) {
-      console.log("Refreshing user permissions with authenticate");
+    // Only perform Pi Network operations if SDK is already initialized
+    // This prevents unnecessary SDK initialization during refresh
+    if (isSdkInitialized() && isPiNetworkAvailable()) {
+      console.log("🔑 Refreshing user permissions with authenticate");
+      const authStartTime = performance.now();
       const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
         console.log('Incomplete payment found during refresh:', payment);
       });
+      console.log(`🔄 Authentication refresh completed in ${Math.round(performance.now() - authStartTime)}ms`);
       
       if (authResult) {
         // Update the current user in the window.Pi object
@@ -151,12 +210,13 @@ export const refreshUserData = async (
         // Extract wallet address if available
         const walletAddress = (authResult as any).user.wallet_address;
         
+        const updateStartTime = performance.now();
         await updateUserData({
           ...user,
           walletAddress: walletAddress || user.walletAddress,
           subscriptionTier
         }, setUser);
-        toast.success("User profile updated");
+        console.log(`🔄 User data updated in ${Math.round(performance.now() - updateStartTime)}ms`);
       }
     } else {
       // Just update the subscription
@@ -167,6 +227,9 @@ export const refreshUserData = async (
         }, setUser);
       }
     }
+    
+    const totalTime = performance.now() - startTime;
+    console.log(`✅ User data refresh completed in ${Math.round(totalTime)}ms`);
   } catch (error) {
     console.error("Error refreshing user data:", error);
     toast.error("Failed to refresh user data. Please try again.");

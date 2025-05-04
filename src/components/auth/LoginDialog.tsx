@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, UserRound, LogIn, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from '@/context/auth';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface LoginDialogProps {
   open: boolean;
@@ -13,18 +14,56 @@ interface LoginDialogProps {
 
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
   const { login, isLoading } = useAuth();
+  const isMobile = useIsMobile();
+  const [loginStage, setLoginStage] = useState<string>('idle');
   
   const handleLogin = async () => {
     try {
+      setLoginStage('init');
+      
+      // Create a progress indicator
+      const updateProgress = (stage: string) => {
+        setLoginStage(stage);
+      };
+      
+      // Add event listeners for SDK events
+      const onSdkInit = () => updateProgress('connected');
+      const onAuthStart = () => updateProgress('authenticating');
+      
+      // Register temporary listeners
+      window.addEventListener('pi-sdk-init-success', onSdkInit);
+      window.addEventListener('pi-auth-start', onAuthStart);
+      
       await login();
       onOpenChange(false);
+      
+      // Clean up listeners
+      window.removeEventListener('pi-sdk-init-success', onSdkInit);
+      window.removeEventListener('pi-auth-start', onAuthStart);
     } catch (error) {
       console.error('Login failed:', error);
+      setLoginStage('error');
+    } finally {
+      if (!isLoading) {
+        setLoginStage('idle');
+      }
     }
   };
   
   const handleContinueBrowsing = () => {
     onOpenChange(false);
+  };
+  
+  const getLoginButtonText = () => {
+    if (isLoading) {
+      switch (loginStage) {
+        case 'init': return "Initializing...";
+        case 'connected': return "Connecting...";
+        case 'authenticating': return "Authenticating...";
+        default: return "Connecting...";
+      }
+    }
+    return "Connect with Pi Network";
   };
 
   return (
@@ -56,12 +95,23 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
             </div>
           </div>
           
+          {/* Login button with improved progress indication */}
           <Button 
             className="w-full mb-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3"
             onClick={handleLogin}
             disabled={isLoading}
           >
-            {isLoading ? "Connecting..." : "Connect with Pi Network"}
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                {getLoginButtonText()}
+              </>
+            ) : (
+              <>
+                <LogIn className="h-4 w-4 mr-2" />
+                Connect with Pi Network
+              </>
+            )}
           </Button>
           
           <Button 
