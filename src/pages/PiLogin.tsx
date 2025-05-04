@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { isPiBrowser } from '@/utils/piNetwork/piNetworkDetection';
-import { initializePiNetwork, isSdkInitialized } from '@/utils/piNetwork';
+import { initializePiNetwork, getSdkStatus } from '@/utils/piNetwork';
 import { requestUserPermissions } from '@/utils/piNetwork';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
@@ -39,7 +39,9 @@ const PiLogin = () => {
       const sdkStartTime = performance.now();
       
       try {
-        if (isSdkInitialized()) {
+        // Check if SDK is already initialized using getSdkStatus instead
+        const sdkStatus = getSdkStatus();
+        if (sdkStatus.isInitialized) {
           console.log('Pi Network SDK is already initialized');
           metrics.current.sdkLoadTime = performance.now() - sdkStartTime;
           console.log(`SDK was already initialized (${Math.round(metrics.current.sdkLoadTime)}ms)`);
