@@ -12,7 +12,7 @@ import { Business } from '@/types/business';
 
 const RegisteredBusiness = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, login } = useAuth();
+  const { isAuthenticated } = useAuth();
   const businesses: Business[] = [
     {
       id: 1,
@@ -48,29 +48,23 @@ const RegisteredBusiness = () => {
     }
   };
 
-  // Handle login button click
-  const handleLoginClick = () => {
-    login();
-  };
-
   if (!isAuthenticated) {
     return (
       <AppLayout title="Avante Maps">
         <div className="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-4xl font-bold tracking-tight text-gray-900">
-              Sign In to View Your Businesses
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Login Required
             </h2>
-            <p className="mt-6 text-xl text-gray-500">
-              Please log in to view and manage your registered businesses on Avante Maps.
+            <p className="mt-4 text-lg leading-6 text-gray-600">
+              Please login to view and manage your registered businesses.
             </p>
             <div className="mt-8">
               <Button 
-                onClick={handleLoginClick}
-                className="bg-blue-500 hover:bg-blue-600 text-white text-xl py-6 px-12 rounded-md"
-                size="lg"
+                onClick={() => navigate('/')}
+                className="bg-primary hover:bg-primary/90"
               >
-                Login
+                Return Home
               </Button>
             </div>
           </div>

@@ -9,7 +9,6 @@ export interface PiUser {
   accessToken: string;
   lastAuthenticated: number;
   subscriptionTier: SubscriptionTier;
-  businessCount?: number; // Added businessCount property as optional
 }
 
 export interface AuthContextType {

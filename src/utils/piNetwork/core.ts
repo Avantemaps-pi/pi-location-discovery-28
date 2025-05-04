@@ -4,7 +4,6 @@
  */
 import { isPiNetworkAvailable } from './helpers';
 import { Scope } from './types';
-import { PI_CONFIG } from '@/config/environment';
 
 // Flag to track SDK initialization
 let isInitialized = false;
@@ -22,12 +21,7 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     // If SDK is available but not initialized, initialize it
     if (isPiNetworkAvailable()) {
       console.log('Pi Network SDK is loaded, initializing...');
-      console.log(`Initializing Pi SDK with version ${PI_CONFIG.sdkVersion} in ${PI_CONFIG.isTestnet ? 'testnet' : 'mainnet'} mode`);
-      
-      window.Pi!.init({ 
-        version: PI_CONFIG.sdkVersion,
-        sandbox: PI_CONFIG.isTestnet 
-      })
+      window.Pi!.init({ version: "2.0" })
         .then(() => {
           console.log('Pi Network SDK initialized successfully');
           isInitialized = true;
@@ -49,19 +43,16 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     
     script.onload = () => {
       console.log('Pi Network SDK loaded successfully, initializing...');
-      // Initialize the SDK after it's loaded with v2
+      // Initialize the SDK after it's loaded
       if (window.Pi) {
-        const sdkVersion = "2.0";
-        console.log(`Initializing Pi SDK with version ${sdkVersion}`);
-        
-        window.Pi.init({ version: sdkVersion })
+        window.Pi.init({ version: "2.0" })
           .then(() => {
             console.log('Pi Network SDK initialized successfully');
             isInitialized = true;
             resolve(true);
           })
           .catch(error => {
-            console.error('Failed to initialize Pi SDK:', error);
+            console.error('Failed to initialize Pi Network SDK:', error);
             reject(error);
           });
       } else {
@@ -122,94 +113,22 @@ export const requestUserPermissions = async (): Promise<{
     
     console.log('Permission request result:', authResult);
     
-    // Validate authentication result
     if (!authResult) {
-      console.error('Failed to get user permissions - authentication was null or undefined');
+      console.error('Failed to get user permissions');
       return null;
     }
 
-    // Safely extract wallet address if permission was granted
-    let walletAddress: string | undefined = undefined;
-    
-    // Check if wallet_address permission was granted (using roles array)
-    const hasWalletPermission = authResult.user.roles?.includes('wallet_address');
-    console.log('Has wallet_address permission:', hasWalletPermission);
-
-    // Extract wallet address using safe property access
-    if (hasWalletPermission && 'wallet_address' in authResult.user) {
-      // Fix TypeScript error: Type assert the wallet_address to string
-      const userWalletAddress = authResult.user.wallet_address as string;
-      if (userWalletAddress) {
-        walletAddress = userWalletAddress;
-        console.log('Wallet address permission granted:', walletAddress);
-      }
-    } else {
-      console.warn('Wallet address permission not granted or address not available');
-    }
-
+    // Extract wallet address if available from user roles
+    // Note: According to SDK, wallet_address should be available 
+    // when requested as a scope
     return {
       username: authResult.user.username,
       uid: authResult.user.uid,
-      walletAddress: walletAddress
+      walletAddress: authResult.user.roles?.includes('wallet_address') ? 
+        (authResult as any).user.wallet_address : undefined
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);
-    return null;
-  }
-};
-
-/**
- * Request wallet address permission explicitly
- * This function is specifically used when wallet_address permission is required
- * for payment operations
- */
-export const requestWalletPermission = async (): Promise<string | null> => {
-  if (!isPiNetworkAvailable()) {
-    console.error('Pi Network SDK not available');
-    return null;
-  }
-  
-  try {
-    // Ensure SDK is initialized before requesting permissions
-    if (!isInitialized) {
-      console.log('Pi Network SDK was not initialized. Initializing now...');
-      try {
-        await initializePiNetwork();
-      } catch (error) {
-        console.error('Failed to initialize Pi Network SDK:', error);
-        return null;
-      }
-    }
-    
-    console.log('Specifically requesting wallet_address permission');
-    // Make a focused request just for wallet_address permission
-    const authResult = await window.Pi?.authenticate(['wallet_address'], (payment) => {
-      console.log('Incomplete payment found during wallet address request:', payment);
-    });
-    
-    // Validate authentication result
-    if (!authResult) {
-      console.error('Failed to get wallet_address permission - authentication was null or undefined');
-      return null;
-    }
-    
-    // Check if wallet_address permission was granted using roles array
-    const hasWalletPermission = authResult.user.roles?.includes('wallet_address');
-    
-    // Safely extract wallet address if available
-    if (hasWalletPermission && 'wallet_address' in authResult.user) {
-      // Fix TypeScript error: Type assert the wallet_address to string
-      const walletAddress = authResult.user.wallet_address as string;
-      if (walletAddress) {
-        console.log('Wallet address permission successfully granted:', walletAddress);
-        return walletAddress;
-      }
-    }
-    
-    console.warn('Wallet address permission was not granted or address is not available');
-    return null;
-  } catch (error) {
-    console.error('Error requesting wallet address permission:', error);
     return null;
   }
 };

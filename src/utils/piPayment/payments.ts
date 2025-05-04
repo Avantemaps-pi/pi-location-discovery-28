@@ -1,10 +1,14 @@
 
 import { toast } from 'sonner';
-import { initializePiNetwork, isPiNetworkAvailable, requestUserPermissions } from '../piNetwork';
+import { initializePiNetwork, isPiNetworkAvailable } from '../piNetwork';
 import { PaymentResult, SubscriptionFrequency } from './types';
 import { SubscriptionTier, PaymentDTO, PaymentData, PaymentCallbacks } from '../piNetwork/types';
 import { approvePayment, completePayment } from '@/api/payments';
 
+/**
+ * Executes a payment transaction for subscription upgrades
+ * This implementation follows the Pi Network SDK reference
+ */
 export const executeSubscriptionPayment = async (
   amount: number,
   tier: SubscriptionTier,
@@ -13,37 +17,16 @@ export const executeSubscriptionPayment = async (
   try {
     // Ensure Pi SDK is available
     if (!isPiNetworkAvailable()) {
-      const errorMsg = "Pi Network SDK is not available";
-      toast.error(errorMsg);
-      throw new Error(errorMsg);
+      throw new Error("Pi Network SDK is not available");
     }
     
     // Ensure SDK is initialized
     await initializePiNetwork();
     
-    // Request necessary permissions first
-    console.log("Requesting user permissions before payment...");
-    const userInfo = await requestUserPermissions();
-    
-    // Validate wallet permission was granted
-    if (!userInfo) {
-      const errorMsg = "Failed to authenticate with Pi Network";
-      toast.error(errorMsg);
-      throw new Error(errorMsg);
-    }
-    
-    if (!userInfo.walletAddress) {
-      const errorMsg = "Wallet address permission is required for payments";
-      toast.error(errorMsg);
-      throw new Error(errorMsg);
-    }
-    
-    console.log("Permissions granted, proceeding with payment...");
-    
     // Create a promise that will be resolved when the payment is processed
     return new Promise((resolve, reject) => {
       try {
-        // Create the payment data according to SDK reference
+        // Create the payment data
         const paymentData: PaymentData = {
           amount: amount,
           memo: `Avante Maps ${tier} subscription (${frequency})`,
@@ -55,92 +38,72 @@ export const executeSubscriptionPayment = async (
         };
         
         console.log("Creating payment with data:", paymentData);
-        toast.info(`Initiating payment of ${amount} Pi`);
         
-        // Define the callbacks according to SDK reference
+        // Define the callbacks for payment events according to SDK reference
         const callbacks: PaymentCallbacks = {
           onReadyForServerApproval: async (paymentId: string) => {
             console.log("Payment ready for server approval:", paymentId);
-            toast.info("Processing payment...");
             
             // Get the current authenticated user information
             const piUser = window.Pi?.currentUser;
             if (!piUser?.uid) {
-              const errorMsg = "User not authenticated";
-              console.error(errorMsg);
-              toast.error("Authentication error. Please login again.");
-              reject(new Error(errorMsg));
+              console.error("User not authenticated");
               return;
             }
             
-            try {
-              // Call our server-side approval endpoint
-              const approvalResult = await approvePayment({
-                paymentId,
-                userId: piUser.uid,
-                amount: paymentData.amount,
-                memo: paymentData.memo,
-                metadata: paymentData.metadata
-              });
-              
-              if (!approvalResult.success) {
-                console.error("Payment approval failed:", approvalResult.message);
-                toast.error("Payment approval failed. Please try again.");
-                reject(new Error(approvalResult.message));
-              } else {
-                console.log("Payment approved:", paymentId);
-                toast.success("Payment approved! Completing transaction...");
-              }
-            } catch (error) {
-              console.error("Error during payment approval:", error);
-              reject(error);
+            // Call our server-side approval endpoint
+            const approvalResult = await approvePayment({
+              paymentId,
+              userId: piUser.uid,
+              amount: paymentData.amount,
+              memo: paymentData.memo,
+              metadata: paymentData.metadata
+            });
+            
+            if (!approvalResult.success) {
+              console.error("Payment approval failed:", approvalResult.message);
+              toast.error("Payment approval failed. Please try again.");
+            } else {
+              console.log("Payment approved:", paymentId);
             }
           },
           
           onReadyForServerCompletion: async (paymentId: string, txid: string) => {
             console.log("Payment ready for server completion:", paymentId, txid);
-            toast.info("Finalizing transaction...");
             
             // Get the current authenticated user information
             const piUser = window.Pi?.currentUser;
             if (!piUser?.uid) {
-              const errorMsg = "User not authenticated";
-              console.error(errorMsg);
-              reject(new Error(errorMsg));
+              console.error("User not authenticated");
               return;
             }
             
-            try {
-              // Call our server-side completion endpoint
-              const completionResult = await completePayment({
-                paymentId,
-                txid,
-                userId: piUser.uid,
-                amount: paymentData.amount,
-                memo: paymentData.memo,
-                metadata: paymentData.metadata
+            // Call our server-side completion endpoint
+            const completionResult = await completePayment({
+              paymentId,
+              txid,
+              userId: piUser.uid,
+              amount: paymentData.amount,
+              memo: paymentData.memo,
+              metadata: paymentData.metadata
+            });
+            
+            if (!completionResult.success) {
+              console.error("Payment completion failed:", completionResult.message);
+              reject(new Error(completionResult.message));
+            } else {
+              console.log("Payment completed:", paymentId, txid);
+              resolve({
+                success: true,
+                transactionId: txid,
+                message: "Payment successful! Your subscription has been upgraded."
               });
-              
-              if (!completionResult.success) {
-                console.error("Payment completion failed:", completionResult.message);
-                reject(new Error(completionResult.message));
-              } else {
-                console.log("Payment completed:", paymentId, txid);
-                resolve({
-                  success: true,
-                  transactionId: txid,
-                  message: "Payment successful! Your subscription has been upgraded."
-                });
-              }
-            } catch (error) {
-              console.error("Error during payment completion:", error);
-              reject(error);
             }
           },
           
           onCancel: (paymentId: string) => {
             console.log("Payment cancelled:", paymentId);
-            toast.warning("Payment was cancelled by user");
+            // Handle payment cancellation
             resolve({
               success: false,
               message: "Payment was cancelled."
@@ -149,22 +112,13 @@ export const executeSubscriptionPayment = async (
           
           onError: (error: Error, payment?: PaymentDTO) => {
             console.error("Payment error:", error, payment);
-            toast.error(`Payment error: ${error.message}`);
+            // Handle payment error
             reject(error);
           }
         };
         
-        console.log("About to call Pi.createPayment...");
-        
         // Execute the payment with all required callbacks
-        if (!window.Pi) {
-          throw new Error("Pi SDK not available");
-        }
-        
-        // Directly create the payment after ensuring SDK is available
-        window.Pi.createPayment(paymentData, callbacks);
-        console.log("Pi.createPayment called successfully");
-        
+        window.Pi?.createPayment(paymentData, callbacks);
       } catch (error) {
         console.error("Error creating payment:", error);
         reject(error);

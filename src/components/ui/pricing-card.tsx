@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -25,7 +24,7 @@ interface PricingCardProps {
   paymentFrequency: string
   id?: string
   onSubscribe?: () => void
-  isLoading?: boolean
+  isLoading: boolean
   disabled?: boolean
 }
 
@@ -40,6 +39,7 @@ export function PricingCard({
   const { convertUsdToPi, isLoading: isPriceLoading } = usePiPrice();
   const price = tier.price[paymentFrequency as keyof typeof tier.price];
   const isCustom = typeof price === "string";
+  const isComingSoon = tier.comingSoon;
 
   const piPrice = !isCustom && typeof price === 'number' ? convertUsdToPi(price) : null;
 
@@ -55,6 +55,14 @@ export function PricingCard({
       {tier.popular && (
         <div className="absolute -top-3 left-8 rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold text-white">
           Most popular
+        </div>
+      )}
+
+      {isComingSoon && (
+        <div className="absolute inset-0 bg-gray-700/70 backdrop-blur-sm rounded-2xl flex items-center justify-center overflow-hidden z-10">
+          <div className="absolute transform rotate-[-35deg] bg-secondary/90 py-2 px-1 w-[150%] text-center">
+            <span className="text-white font-bold text-xl tracking-wider">Coming Soon</span>
+          </div>
         </div>
       )}
 
@@ -104,7 +112,7 @@ export function PricingCard({
           tier.popular && "bg-blue-500 hover:bg-blue-600"
         )}
         onClick={onSubscribe}
-        disabled={isSubscribing || disabled}
+        disabled={isSubscribing || disabled || isComingSoon}
       >
         {isSubscribing ? "Processing..." : tier.cta}
       </Button>
