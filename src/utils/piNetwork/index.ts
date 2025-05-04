@@ -1,6 +1,6 @@
 
 // Export core SDK functionality
-export { initializePiNetwork, isSdkInitialized } from './initialization';
+export { initializePiNetwork, getSdkStatus } from './initialization';
 export { requestUserPermissions } from './authentication';
 export { requestWalletPermission } from './wallet';
 

@@ -3,8 +3,7 @@ import { toast } from 'sonner';
 import { PiUser } from '../types';
 import { 
   isPiNetworkAvailable, 
-  initializePiNetwork,
-  isSdkInitialized
+  initializePiNetwork
 } from '@/utils/piNetwork';
 import { getUserSubscription, updateUserData } from '../authUtils';
 
@@ -189,7 +188,7 @@ export const refreshUserData = async (
 
     // Only perform Pi Network operations if SDK is already initialized
     // This prevents unnecessary SDK initialization during refresh
-    if (isSdkInitialized() && isPiNetworkAvailable()) {
+    if (isPiNetworkAvailable()) {
       console.log("🔑 Refreshing user permissions with authenticate");
       const authStartTime = performance.now();
       const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
-import { initializePiNetwork, isSdkInitialized } from '@/utils/piNetwork';
+import { initializePiNetwork } from '@/utils/piNetwork';
 import { PiUser, AuthContextType, STORAGE_KEY } from './types';
 import { checkAccess } from './authUtils';
 import { performLogin, refreshUserData as refreshUserDataService, requestAuthPermissions } from './authService';
@@ -86,7 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     toast.loading("Connecting to Pi Network...", { id: "login-process" });
     
     // Ensure SDK is initialized
-    if (!isSdkInitialized && !isSdkInitialized()) {
+    if (!isSdkInitialized) {
       try {
         console.log("🔄 Attempting to initialize SDK before login...");
         const initStart = performance.now();
@@ -176,7 +176,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
   // Log total initialization time
   useEffect(() => {
-    if (sessionRestorationComplete && (isSdkInitialized || isSdkInitialized())) {
+    if (sessionRestorationComplete && isSdkInitialized) {
       const totalInitTime = performance.now() - mountTime.current;
       console.log(`📊 Auth provider fully initialized in ${Math.round(totalInitTime)}ms`);
     }
