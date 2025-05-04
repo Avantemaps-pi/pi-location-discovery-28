@@ -19,26 +19,9 @@ const PageHeader = ({
   const {
     setOpenMobile
   } = useSidebar();
-
-  // Determine the current page and set the display title
   const isAnalyticsPage = location.pathname === '/analytics';
   const isRegistrationPage = location.pathname === '/registration';
   const isIndexPage = location.pathname === '/';
-
-  // Get page title based on the current path
-  const getPageTitle = () => {
-    if (isIndexPage) return "Avante Maps";
-    if (isAnalyticsPage) return "Analytics";
-    if (isRegistrationPage) return "Registration";
-
-    // Extract the page name from the URL for other pages
-    const path = location.pathname.substring(1); // Remove leading slash
-    if (!path) return "Avante Maps";
-
-    // Convert kebab-case to title case (e.g., "registered-business" to "Registered Business")
-    return path.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-  };
-  const displayTitle = getPageTitle();
   const handleMenuClick = () => {
     setOpenMobile(true);
     console.log('Mobile menu opened');
@@ -53,7 +36,7 @@ const PageHeader = ({
           {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && !isIndexPage && <DesktopMenuButton onClick={() => console.log('Desktop menu clicked')} />}
           
           {/* Index page menu button */}
-          {isIndexPage && <Button variant="ghost" size="icon" onClick={handleMenuClick} className="mr-2 block md:hidden flex items-center justify-center">
+          {isIndexPage && <Button variant="ghost" size="icon" onClick={handleMenuClick} className="mr-2 block md:hidden">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Open menu</span>
             </Button>}
@@ -66,18 +49,15 @@ const PageHeader = ({
           
           {/* Back button for registration page */}
           {isRegistrationPage && <Button variant="ghost" size="icon" onClick={() => navigate('/')} className="mr-2">
-              <ArrowLeft className="h-5 w-5 text-2xl mx-0 font-semibold text-left" />
+              <ArrowLeft className="h-5 w-5" />
               <span className="sr-only">Back to home</span>
             </Button>}
         </div>
         
-        {/* Logo section with page title */}
-        <div className="flex-1 flex justify-center items-center">
-          <Link to="/" className={`flex items-center gap-2 ${isIndexPage ? 'mx-auto' : ''}`}>
-            {/* Display page title for all pages except index */}
-            <h1 className="text-2xl">
-              {displayTitle}
-            </h1>
+        {/* Logo section */}
+        <div className="flex-1 flex justify-center">
+          <Link to="/" className="flex items-center gap-2 mx-auto">
+            
           </Link>
         </div>
         

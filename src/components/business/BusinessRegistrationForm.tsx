@@ -21,12 +21,12 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
   const navigate = useNavigate();
   const { user } = useAuth();
   const { 
-    form,
-    onSubmit,
+    form, 
+    selectedImages, 
+    handleImageUpload, 
+    handleImageRemove,
+    onSubmit, 
     isSubmitting,
-    selectedImages,
-    handleImageUpload,
-    handleImageRemove
   } = useBusinessRegistration(onSuccess);
   const [selectedTab, setSelectedTab] = React.useState('business-owner');
 

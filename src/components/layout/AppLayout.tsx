@@ -1,9 +1,9 @@
+
 import { ReactNode } from 'react';
 import AppSidebar from './AppSidebar';
 import PageHeader from './PageHeader';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import { usePiRedirect } from '@/hooks/usePiRedirect';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -28,9 +28,6 @@ const AppLayout = ({
   className = '',
   hideSidebar = false
 }: AppLayoutProps) => {
-  // Add Pi Browser detection and redirection
-  usePiRedirect();
-  
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {withHeader && <PageHeader title={title} hideSidebar={hideSidebar} />}

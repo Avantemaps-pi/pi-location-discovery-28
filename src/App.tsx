@@ -4,15 +4,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/auth";
 import { useSessionRestoration } from "@/hooks/useSessionRestoration";
-import { initializePiNetwork } from "@/utils/piNetwork";
-import { toast } from "sonner";
-import { usePiRedirect } from "@/hooks/usePiRedirect";
-
-// Pages
 import Index from "./pages/Index";
 import Recommendations from "./pages/Recommendations";
 import Bookmarks from "./pages/Bookmarks";
@@ -32,8 +27,6 @@ import VerificationInfo from "./pages/VerificationInfo";
 import Review from "./pages/Review";
 import Pricing from "./pages/Pricing";
 import Analytics from "./pages/Analytics";
-import DebugBanner from "@/components/DebugBanner";
-import PiLogin from "./pages/PiLogin";
 
 const queryClient = new QueryClient();
 
@@ -43,106 +36,22 @@ const SessionManager = () => {
   return null;
 };
 
-// Component to initialize Pi SDK with improved error handling and retries
-const PiInitializer = () => {
-  useEffect(() => {
-    const initPi = async () => {
-      try {
-        // Try to initialize Pi Network with retries
-        let attempts = 0;
-        const maxAttempts = 3;
-        let success = false;
-        
-        while (!success && attempts < maxAttempts) {
-          try {
-            await initializePiNetwork();
-            console.log("✅ Pi Network SDK initialized successfully");
-            success = true;
-          } catch (error) {
-            attempts++;
-            console.warn(`Pi SDK initialization attempt ${attempts} failed, ${maxAttempts - attempts} retries left`);
-            // Wait a bit before retrying
-            await new Promise(resolve => setTimeout(resolve, 1000));
-          }
-        }
-        
-        if (!success) {
-          throw new Error(`Failed to initialize Pi SDK after ${maxAttempts} attempts`);
-        }
-      } catch (error) {
-        console.error("❌ Error initializing Pi Network SDK:", error);
-        toast.error("Failed to connect to Pi Network. Some features may be limited.");
-      }
-    };
-    
-    initPi();
-  }, []);
-  
-  return null;
-};
-
-// Router component with Pi Browser detection
-const AppRouter = () => {
-  usePiRedirect();
-  
-  return (
-    <>
-      {process.env.NODE_ENV !== "production" && <DebugBanner />}
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/recommendations" element={<Recommendations />} />
-        <Route path="/recommendations/:placeId" element={<Recommendations />} />
-        <Route path="/bookmarks" element={<Bookmarks />} />
-        <Route path="/communicon" element={<Communicon />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/registered-business" element={<RegisteredBusiness />} />
-        <Route path="/verification-info" element={<VerificationInfo />} />
-        <Route path="/review/:businessId?" element={<Review />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/terms" element={<TermsOfService />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/cookies" element={<CookiePolicy />} />
-        <Route path="/registration" element={<Registration />} />
-        <Route path="/update-registration/:businessId?" element={<UpdateRegistration />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/analytics" element={<Analytics />} />
-        <Route path="/pi-login" element={<PiLogin />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <DebugBanner />
-    </>
-  );
-};
-
 const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Theme setup
   useEffect(() => {
     const savedScheme = localStorage.getItem('colorScheme');
+    
     if (savedScheme === 'dark') {
       document.documentElement.classList.add('dark');
       setIsDarkMode(true);
+    } else if (savedScheme === 'light') {
+      document.documentElement.classList.remove('dark');
+      setIsDarkMode(false);
     } else {
       document.documentElement.classList.remove('dark');
       setIsDarkMode(false);
       localStorage.setItem('colorScheme', 'light');
-    }
-  }, []);
-
-  // 🔐 Pi Network Authentication
-  useEffect(() => {
-    const Pi = (window as any).Pi;
-    if (Pi && Pi.authenticate) {
-      Pi.authenticate(['username'], function (auth: any) {
-        console.log("✅ Pi authentication response:", auth);
-        // Optional: Save to context or local storage
-        // localStorage.setItem("piUser", auth.user.username);
-      });
-    } else {
-      console.error("❌ Pi SDK not loaded or Pi.authenticate missing");
     }
   }, []);
 
@@ -151,12 +60,32 @@ const App = () => {
       <TooltipProvider>
         <AuthProvider>
           <SidebarProvider>
-            <PiInitializer />
             <SessionManager />
             <Toaster />
             <Sonner />
             <BrowserRouter>
-              <AppRouter />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/recommendations" element={<Recommendations />} />
+                <Route path="/recommendations/:placeId" element={<Recommendations />} />
+                <Route path="/bookmarks" element={<Bookmarks />} />
+                <Route path="/communicon" element={<Communicon />} />
+                <Route path="/notifications" element={<Notifications />} />
+                <Route path="/registered-business" element={<RegisteredBusiness />} />
+                <Route path="/verification-info" element={<VerificationInfo />} />
+                <Route path="/review/:businessId?" element={<Review />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/cookies" element={<CookiePolicy />} />
+                <Route path="/registration" element={<Registration />} />
+                <Route path="/update-registration/:businessId?" element={<UpdateRegistration />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
             </BrowserRouter>
           </SidebarProvider>
         </AuthProvider>

@@ -1,11 +1,10 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, UserRound, LogIn, Loader2 } from "lucide-react";
+import { X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from '@/context/auth';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface LoginDialogProps {
   open: boolean;
@@ -14,56 +13,18 @@ interface LoginDialogProps {
 
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
   const { login, isLoading } = useAuth();
-  const isMobile = useIsMobile();
-  const [loginStage, setLoginStage] = useState<string>('idle');
   
   const handleLogin = async () => {
     try {
-      setLoginStage('init');
-      
-      // Create a progress indicator
-      const updateProgress = (stage: string) => {
-        setLoginStage(stage);
-      };
-      
-      // Add event listeners for SDK events
-      const onSdkInit = () => updateProgress('connected');
-      const onAuthStart = () => updateProgress('authenticating');
-      
-      // Register temporary listeners
-      window.addEventListener('pi-sdk-init-success', onSdkInit);
-      window.addEventListener('pi-auth-start', onAuthStart);
-      
       await login();
       onOpenChange(false);
-      
-      // Clean up listeners
-      window.removeEventListener('pi-sdk-init-success', onSdkInit);
-      window.removeEventListener('pi-auth-start', onAuthStart);
     } catch (error) {
       console.error('Login failed:', error);
-      setLoginStage('error');
-    } finally {
-      if (!isLoading) {
-        setLoginStage('idle');
-      }
     }
   };
   
   const handleContinueBrowsing = () => {
     onOpenChange(false);
-  };
-  
-  const getLoginButtonText = () => {
-    if (isLoading) {
-      switch (loginStage) {
-        case 'init': return "Initializing...";
-        case 'connected': return "Connecting...";
-        case 'authenticating': return "Authenticating...";
-        default: return "Connecting...";
-      }
-    }
-    return "Connect with Pi Network";
   };
 
   return (
@@ -76,7 +37,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
           </DialogClose>
           
           <div className="w-20 h-20 rounded-full bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center mb-6">
-            <img src="/lovable-uploads/Avantemaps.png" alt="Pi Logo" className="w-12 h-12" />
+            <img src="/lovable-uploads/816179f9-d16d-46a7-9d6e-169846c0d0da.png" alt="Pi Logo" className="w-12 h-12" />
           </div>
           
           <DialogTitle className="text-2xl mb-4 text-center font-bold">
@@ -86,7 +47,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
           <div className="w-full bg-muted/50 p-4 rounded-lg mb-6">
             <div className="flex items-center">
               <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-                <img src="/lovable-uploads/Avantemaps.png" alt="User" className="w-8 h-8" />
+                <img src="/lovable-uploads/816179f9-d16d-46a7-9d6e-169846c0d0da.png" alt="User" className="w-8 h-8" />
               </div>
               <div className="ml-4 text-left">
                 <p className="font-medium text-lg">Pi Network User</p>
@@ -95,23 +56,12 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
             </div>
           </div>
           
-          {/* Login button with improved progress indication */}
           <Button 
             className="w-full mb-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3"
             onClick={handleLogin}
             disabled={isLoading}
           >
-            {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                {getLoginButtonText()}
-              </>
-            ) : (
-              <>
-                <LogIn className="h-4 w-4 mr-2" />
-                Connect with Pi Network
-              </>
-            )}
+            {isLoading ? "Connecting..." : "Connect with Pi Network"}
           </Button>
           
           <Button 

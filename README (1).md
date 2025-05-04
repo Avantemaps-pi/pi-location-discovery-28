@@ -26,25 +26,6 @@ Avante Maps collaborates with:
 - **Maps API**: Google Maps API  
 - **Hosting**: Firebase / AWS  
 
-## 🌐 Environment Configuration
-
-The application supports both Pi Network Testnet and Mainnet environments. To switch between environments:
-
-1. Open `src/config/environment.ts`
-2. Locate the `PI_CONFIG` object
-3. Set `isTestnet` to:
-   - `true` for Testnet environment
-   - `false` for Mainnet environment
-
-Example:
-```typescript
-export const PI_CONFIG = {
-  isTestnet: true, // Set to false for mainnet
-  sdkVersion: "2.0",
-  sandbox: true, // Automatically set based on isTestnet
-};
-```
-
 ## 📌 Roadmap  
 
 ### **2025 Goals**  

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
-import { initializePiNetwork, getSdkStatus } from '@/utils/piNetwork';
+import { initializePiNetwork } from '@/utils/piNetwork';
 import { PiUser, AuthContextType, STORAGE_KEY } from './types';
 import { checkAccess } from './authUtils';
 import { performLogin, refreshUserData as refreshUserDataService, requestAuthPermissions } from './authService';
@@ -11,24 +11,18 @@ import AuthContext from './useAuth';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<PiUser | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // Start with loading true
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSdkInitialized, setIsSdkInitialized] = useState<boolean>(false);
   const [lastRefresh, setLastRefresh] = useState<number>(0);
-  const [sessionRestorationComplete, setSessionRestorationComplete] = useState<boolean>(false);
   const pendingAuthRef = useRef<boolean>(false);
   const initAttempted = useRef<boolean>(false);
   
-  // Longer refresh cooldown to reduce unnecessary API calls
-  const REFRESH_COOLDOWN = 30 * 60 * 1000; // 30 minutes
-  
-  // Performance tracking
-  const mountTime = useRef(performance.now());
+  // Minimum time between refresh calls (15 minutes)
+  const REFRESH_COOLDOWN = 15 * 60 * 1000; 
 
-  // Check for cached session on mount - Do this first for best UX
+  // Check for cached session on mount
   useEffect(() => {
-    console.log("🔍 Checking for cached session");
-    const sessionCheckStart = performance.now();
     const cachedSession = localStorage.getItem(STORAGE_KEY);
     
     if (cachedSession) {
@@ -36,74 +30,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const userData = JSON.parse(cachedSession) as PiUser;
         // Check if the session is still relatively fresh (less than 24 hours old)
         if (Date.now() - userData.lastAuthenticated < 24 * 60 * 60 * 1000) {
-          console.log(`📦 Restored user from cached session in ${Math.round(performance.now() - sessionCheckStart)}ms`);
+          console.log("Restoring user from cached session");
           setUser(userData);
-        } else {
-          console.log("🕒 Cached session expired");
         }
       } catch (error) {
-        console.error("❌ Error parsing cached session:", error);
+        console.error("Error parsing cached session:", error);
         localStorage.removeItem(STORAGE_KEY);
       }
-    } else {
-      console.log("🔍 No cached session found");
     }
     
-    setSessionRestorationComplete(true);
+    setIsLoading(false);
   }, []);
 
-  // Initialize Pi Network SDK lazily - only when needed
+  // Initialize Pi Network SDK but don't authenticate automatically
   useEffect(() => {
     if (initAttempted.current) return;
     
-    // Delay SDK initialization slightly to prioritize UI rendering
-    const timer = setTimeout(() => {
-      initAttempted.current = true;
-      const initSdk = async () => {
-        try {
-          console.log("🔄 Starting Pi Network SDK initialization...");
-          const initStart = performance.now();
-          const result = await initializePiNetwork();
-          setIsSdkInitialized(result);
-          console.log(`✅ Pi Network SDK initialization complete: ${result} (${Math.round(performance.now() - initStart)}ms)`);
-        } catch (error) {
-          console.error("❌ Failed to initialize Pi Network SDK:", error);
-          toast.error("Failed to initialize Pi Network SDK. Some features may be unavailable.");
-          setIsSdkInitialized(false);
-        }
-      };
-      
-      initSdk();
-    }, 500); // Short delay to prioritize UI rendering
-    
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Login function with performance monitoring
-  const login = useCallback(async (): Promise<void> => {
-    // Render load indicators immediately for better UX
-    setIsLoading(true);
-    toast.loading("Connecting to Pi Network...", { id: "login-process" });
-    
-    // Check if SDK is initialized
-    const sdkStatus = getSdkStatus();
-    
-    // Ensure SDK is initialized
-    if (!sdkStatus.isInitialized) {
+    initAttempted.current = true;
+    const initSdk = async () => {
       try {
-        console.log("🔄 Attempting to initialize SDK before login...");
-        const initStart = performance.now();
+        console.log("Starting Pi Network SDK initialization...");
         const result = await initializePiNetwork();
         setIsSdkInitialized(result);
-        console.log(`✅ SDK initialized during login in ${Math.round(performance.now() - initStart)}ms`);
+        console.log("Pi Network SDK initialization complete:", result);
       } catch (error) {
-        console.error("❌ Failed to initialize Pi Network SDK during login:", error);
+        console.error("Failed to initialize Pi Network SDK:", error);
+        toast.error("Failed to initialize Pi Network SDK. Some features may be unavailable.");
+        setIsSdkInitialized(false);
+      }
+    };
+    
+    initSdk();
+  }, []);
+
+  // Two-step login process
+  const login = useCallback(async (): Promise<void> => {
+    if (!isSdkInitialized) {
+      try {
+        console.log("Attempting to initialize SDK before login...");
+        const result = await initializePiNetwork();
+        setIsSdkInitialized(result);
+      } catch (error) {
+        console.error("Failed to initialize Pi Network SDK during login:", error);
         toast.error("Failed to initialize Pi Network SDK. Please try again later.");
-        setIsLoading(false);
-        toast.dismiss("login-process");
         return;
       }
     }
+    
+    setIsLoading(true);
     
     // First step: Request permissions
     const permissionsGranted = await requestAuthPermissions(
@@ -113,9 +87,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
     
     if (!permissionsGranted) {
-      console.log("⚠️ Permissions not granted. Authentication aborted.");
+      console.log("Permissions not granted. Authentication aborted.");
       setIsLoading(false);
-      toast.dismiss("login-process");
       return;
     }
     
@@ -130,7 +103,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // Update last refresh timestamp
     setLastRefresh(Date.now());
-    toast.dismiss("login-process");
   }, [isSdkInitialized]);
 
   // Handle online/offline status
@@ -141,49 +113,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Skip refresh if called too frequently unless forced
     const now = Date.now();
     if (!force && now - lastRefresh < REFRESH_COOLDOWN) {
-      console.log("⏱️ Skipping refresh, too soon since last refresh");
+      console.log("Skipping refresh, too soon since last refresh");
       return;
     }
     
-    // Only proceed if there's a user to refresh
+    if (!isSdkInitialized) {
+      try {
+        const result = await initializePiNetwork();
+        setIsSdkInitialized(result);
+      } catch (error) {
+        console.error("Failed to initialize Pi Network SDK during refresh:", error);
+        return;
+      }
+    }
+    
     if (!user) {
-      console.log("ℹ️ No user to refresh data for");
+      console.log("No user to refresh data for");
       return;
     }
     
-    console.log("🔄 Refreshing user data...");
+    console.log("Refreshing user data...");
     setIsLoading(true);
     try {
       await refreshUserDataService(user, setUser, setIsLoading);
-      console.log("✅ User data refreshed successfully");
+      console.log("User data refreshed successfully");
       setLastRefresh(now);
     } catch (error) {
-      console.error("❌ Failed to refresh user data:", error);
+      console.error("Failed to refresh user data:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [user, lastRefresh]);
+  }, [user, isSdkInitialized, lastRefresh]);
   
-  // Silent refresh when app starts or becomes online - but only after a delay
+  // Silent refresh when app starts or becomes online
   useEffect(() => {
-    if (user && !isOffline && isSdkInitialized && sessionRestorationComplete) {
+    if (user && !isOffline && isSdkInitialized) {
       // Use setTimeout to avoid refreshing immediately during initial render
       const timer = setTimeout(() => {
-        console.log("🔄 Performing background refresh of user data");
         refreshUserData(false);
-      }, 2000); // Longer delay for better UX
+      }, 1000);
       
       return () => clearTimeout(timer);
     }
-  }, [user, isOffline, isSdkInitialized, sessionRestorationComplete, refreshUserData]);
-  
-  // Log total initialization time
-  useEffect(() => {
-    if (sessionRestorationComplete && isSdkInitialized) {
-      const totalInitTime = performance.now() - mountTime.current;
-      console.log(`📊 Auth provider fully initialized in ${Math.round(totalInitTime)}ms`);
-    }
-  }, [sessionRestorationComplete, isSdkInitialized]);
+  }, [user, isOffline, isSdkInitialized, refreshUserData]);
 
   const logout = (): void => {
     localStorage.removeItem(STORAGE_KEY);

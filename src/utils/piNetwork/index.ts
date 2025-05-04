@@ -1,8 +1,10 @@
 
+/**
+ * Pi Network SDK utilities - main exports
+ */
+
 // Export core SDK functionality
-export { initializePiNetwork, getSdkStatus, isSdkInitialized } from './initialization';
-export { requestUserPermissions } from './authentication';
-export { requestWalletPermission } from './wallet';
+export { initializePiNetwork, isSdkInitialized, requestUserPermissions, requestWalletPermission } from './core';
 
 // Export helpers
 export { isPiNetworkAvailable, isSessionExpired } from './helpers';

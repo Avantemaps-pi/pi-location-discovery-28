@@ -1,12 +1,15 @@
+
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+
 const TermsOfService = () => {
-  return <AppLayout title="Terms of Service">
+  return (
+    <AppLayout title="Terms of Service">
       <div className="max-w-5xl mx-auto space-y-8 p-4 sm:p-6 animate-fade-in">
         <div className="space-y-4">
-          
+          <h1 className="text-3xl font-bold tracking-tight">Terms of Service</h1>
           <p className="text-muted-foreground"><strong>Effective Date:</strong> April 13, 2025</p>
         </div>
 
@@ -113,6 +116,8 @@ const TermsOfService = () => {
           </CardContent>
         </Card>
       </div>
-    </AppLayout>;
+    </AppLayout>
+  );
 };
+
 export default TermsOfService;
