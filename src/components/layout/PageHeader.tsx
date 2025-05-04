@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Menu } from 'lucide-react';
@@ -36,7 +37,7 @@ const PageHeader = ({
           {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && !isIndexPage && <DesktopMenuButton onClick={() => console.log('Desktop menu clicked')} />}
           
           {/* Index page menu button */}
-          {isIndexPage && <Button variant="ghost" size="icon" onClick={handleMenuClick} className="mr-2 block md:hidden">
+          {isIndexPage && <Button variant="ghost" size="icon" onClick={handleMenuClick} className="mr-2 flex items-center justify-center block md:hidden">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Open menu</span>
             </Button>}
