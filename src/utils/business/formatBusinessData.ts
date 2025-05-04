@@ -1,7 +1,12 @@
 
 import { FormValues } from '@/components/business/registration/formSchema';
 
-export const formatBusinessData = (values: FormValues, coordinates: google.maps.LatLngLiteral, userId: string) => {
+interface Coordinates {
+  lat: number;
+  lng: number;
+}
+
+export const formatBusinessData = (values: FormValues, coordinates: Coordinates, userId: string) => {
   const fullAddress = `${values.streetAddress}, ${values.state}, ${values.zipCode}`;
   
   return {
