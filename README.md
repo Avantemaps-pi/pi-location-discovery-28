@@ -1,23 +1,16 @@
 
 # Avante Maps 🌍  
 
-**Avante Maps** is a business coverage and discovery web application designed to increase exposure for businesses accepting **Pi Coin**. By integrating with **Open Maps** and providing advanced search functionality, Avante Maps helps users discover businesses that support cryptocurrency payments while offering business owners valuable analytics and marketing opportunities.  
+**Avante Maps** is a business coverage and discovery web application designed to increase exposure for businesses accepting **Pi Coin**. By integrating with **OpenStreet Maps** and providing advanced search functionality, Avante Maps helps users discover businesses that support cryptocurrency payments while offering business owners valuable analytics and marketing opportunities.  
 
 ## 🚀 Features  
 
 - **Business Discovery**: Easily find businesses that accept **Pi Coin** using an interactive map.  
-- **Open Maps Integration**: Seamless navigation and location-based search functionality with **Open Maps**.  
+- **Open Maps Integration**: Seamless navigation and location-based search functionality with **OpenStreet Maps**.  
 - **Premium Business Subscriptions**: Unlock advanced features like business analytics, additional listing slots, and direct communication with the Avante Maps team.  
 - **Free Marketing & Exposure**: Business owners benefit from increased visibility without additional costs.  
 - **Future Business Card NFTs**: A unique digital identity solution for businesses in the Pi Network ecosystem.  
 - **Enhanced UI/UX**: Optimized for different screen sizes to ensure a seamless experience.  
-
-## 🏆 Future Partnerships  
-
-Avante Maps collaborates with:  
-
-- **Map of Pi** 📍 - A trusted Pi Network business directory.  
-- **VCity** 🏙️ - Enhancing digital commerce within the Pi ecosystem.  
 
 ## 🔧 Technical Stack  
 
@@ -48,7 +41,7 @@ Example configuration:
 export const PI_CONFIG = {
   isTestnet: true, // Set to false for Mainnet
   sdkVersion: "2.0",
-  sandbox: true, // Automatically true for Testnet
+  sandbox: true, // Automatically true for Dev
 };
 ```
 
