@@ -32,9 +32,8 @@ const VerificationInfo = () => {
       <div className="flex-1 p-4">
         <div className="max-w-4xl mx-auto">
           <div className="mb-6">
-            <h2 className="text-3xl font-bold tracking-tight">Verification & Certification</h2>
             <p className="text-muted-foreground mt-1">
-              Understanding the processes for verifying and certifying your Pi business
+              Understanding the processes for verifying /n and certifying your Pi business
             </p>
           </div>
 
