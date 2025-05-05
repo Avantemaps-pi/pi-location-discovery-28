@@ -1,69 +1,52 @@
-# Welcome to your Lovable project
+# Avante Maps 🌍  
 
-## Project info
+**Avante Maps** is a business coverage and discovery web application designed to increase exposure for businesses accepting **Pi Coin**. By integrating with **OpenStreet Maps** and providing advanced search functionality, Avante Maps helps users discover businesses that support cryptocurrency payments while offering business owners valuable analytics and marketing opportunities.  
 
-**URL**: https://lovable.dev/projects/33a91989-4bfe-401a-852c-f32f01bab13f
+## 🚀 Features  
 
-## How can I edit this code?
+- **Business Discovery**: Easily find businesses that accept **Pi Coin** using an interactive map.  
+- **OpenStreet Maps Integration**: Seamless navigation and location-based search functionality.  
+- **Premium Business Subscriptions**: Unlock advanced features like business analytics, additional listing slots, and direct communication with the Avante Maps team.  
+- **Free Marketing & Exposure**: Business owners benefit from increased visibility without additional costs.  
+- **Future Business Card NFTs**: A unique digital identity solution for businesses in the Pi Network ecosystem.  
+- **Enhanced UI/UX**: Optimized for different screen sizes to ensure a seamless experience.  
 
-There are several ways of editing your application.
+## 🏆 Future Partnerships  
 
-**Use Lovable**
+Coming Sooon  
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/33a91989-4bfe-401a-852c-f32f01bab13f) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
+## 🔧 Technical Stack  
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
-- Tailwind CSS
+- Tailwind CSS 
 
-## How can I deploy this project?
+## 📌 Roadmap  
 
-Simply open [Lovable](https://lovable.dev/projects/33a91989-4bfe-401a-852c-f32f01bab13f) and click on Share -> Publish.
+### **2025 Goals**  
+✔ Improve mobile responsiveness for different screen types.  
+✔ Implement **Premium Subscriptions** for businesses.  
+✔ Introduce **Business Analytics & Insights**.  
+✔ Expand **marketing & outreach** for businesses listed on Avante Maps.  
+✔ Develop **NFT-based business cards** for digital identity.  
 
-## I want to use a custom domain - is that possible?
+## 📜 License  
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+This project is **open-source** under the [MIT License](LICENSE).  
+
+## 💬 Get Involved  
+
+👥 **Join the Community**  
+- Follow our updates on [Pi Network forums](#) and social media.  
+- Share your feedback and feature requests by opening an **issue**.  
+
+🤝 **Contribute**  
+- Fork this repository.  
+- Create a new feature branch (`git checkout -b feature-branch`).  
+- Commit your changes (`git commit -m "Add feature"`).  
+- Push the branch (`git push origin feature-branch`).  
+- Open a **Pull Request** for review.  
+
+🚀 **Let's build the future of decentralized business discovery together!**
