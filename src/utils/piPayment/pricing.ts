@@ -21,7 +21,7 @@ export const TIERS = [
     description: "Basic features for all users",
     features: [
       "AI chat support",
-      "1 business listing",
+      "1 Business listing",
     ],
     cta: "Select Plan",
   },
