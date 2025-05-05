@@ -45,7 +45,7 @@ export const initializePiNetwork = async (): Promise<boolean> => {
       console.log('Pi Network SDK loaded successfully, initializing...');
       // Initialize the SDK after it's loaded
       if (window.Pi) {
-        window.Pi.init({ version: "2.0" })
+        window.Pi.init({ version: "2.0", sandbox: true }) // Enable sandbox mode for Testnet
           .then(() => {
             console.log('Pi Network SDK initialized successfully');
             isInitialized = true;
@@ -118,14 +118,10 @@ export const requestUserPermissions = async (): Promise<{
       return null;
     }
 
-    // Extract wallet address if available from user roles
-    // Note: According to SDK, wallet_address should be available 
-    // when requested as a scope
     return {
       username: authResult.user.username,
       uid: authResult.user.uid,
-      walletAddress: authResult.user.roles?.includes('wallet_address') ? 
-        (authResult as any).user.wallet_address : undefined
+      walletAddress: authResult.user.wallet_address || undefined
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);

@@ -12,23 +12,44 @@ export const approvePayment = async (req: PaymentRequest): Promise<PaymentRespon
   try {
     console.log('Calling payment approval edge function:', req.paymentId);
     
-    // Call the Supabase Edge Function for payment approval
-    const { data, error } = await supabase.functions.invoke('approve-payment', {
-      body: JSON.stringify(req)
-    });
+    // Call the Supabase Edge Function for payment approval with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
     
-    if (error) {
-      console.error('Error calling payment approval edge function:', error);
-      return {
-        success: false,
-        message: `Failed to approve payment: ${error.message}`,
-        paymentId: req.paymentId
-      };
+    try {
+      const { data, error } = await supabase.functions.invoke('approve-payment', {
+        body: JSON.stringify(req),
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (error) {
+        console.error('Error calling payment approval edge function:', error);
+        return {
+          success: false,
+          message: `Failed to approve payment: ${error.message}`,
+          paymentId: req.paymentId
+        };
+      }
+      
+      console.log('Payment approval edge function response:', data);
+      
+      return data as PaymentResponse;
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      
+      if (fetchError.name === 'AbortError') {
+        console.error('Payment approval request timed out');
+        return {
+          success: false,
+          message: 'Payment approval timed out. Please try again.',
+          paymentId: req.paymentId
+        };
+      }
+      
+      throw fetchError;
     }
-    
-    console.log('Payment approval edge function response:', data);
-    
-    return data as PaymentResponse;
   } catch (error) {
     console.error('Error approving payment:', error);
     return {

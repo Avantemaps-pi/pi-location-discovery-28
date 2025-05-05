@@ -46,6 +46,10 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
   
+  // Log the start time to track execution duration
+  const startTime = Date.now();
+  console.log(`Starting payment approval at ${new Date().toISOString()}`);
+  
   try {
     // Get request body
     const paymentRequest: PaymentRequest = await req.json();
@@ -77,36 +81,66 @@ Deno.serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
       );
     }
-    
-    // First record the payment in the database
-    const { data, error } = await supabaseClient
+
+    // Check if the payment already exists in the database
+    const { data: existingPayment, error: checkError } = await supabaseClient
       .from('payments')
-      .insert({
-        payment_id: paymentRequest.paymentId,
-        user_id: paymentRequest.userId,
-        amount: paymentRequest.amount,
-        memo: paymentRequest.memo,
-        metadata: paymentRequest.metadata,
-        status: {
-          approved: false,
-          verified: false,
-          completed: false,
-          cancelled: false
-        }
-      })
-      .select()
+      .select('status')
+      .eq('payment_id', paymentRequest.paymentId)
       .single();
-      
-    if (error) {
-      console.error('Database error:', error);
+
+    // If payment already exists and is approved, return success immediately
+    if (existingPayment?.status?.approved) {
+      console.log('Payment was already approved previously:', paymentRequest.paymentId);
       return new Response(
         JSON.stringify({ 
-          success: false, 
-          message: `Database error: ${error.message}`,
+          success: true, 
+          message: 'Payment was already approved',
           paymentId: paymentRequest.paymentId
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+    
+    // If payment exists but isn't approved, update it instead of inserting
+    if (existingPayment) {
+      console.log('Payment exists but needs approval:', paymentRequest.paymentId);
+    } else {
+      // Record the payment in the database
+      const { data, error } = await supabaseClient
+        .from('payments')
+        .insert({
+          payment_id: paymentRequest.paymentId,
+          user_id: paymentRequest.userId,
+          amount: paymentRequest.amount,
+          memo: paymentRequest.memo,
+          metadata: paymentRequest.metadata,
+          status: {
+            approved: false,
+            verified: false,
+            completed: false,
+            cancelled: false
+          }
+        })
+        .select()
+        .single();
+        
+      if (error) {
+        // If it's a unique violation, it might be a duplicate request
+        if (error.code === '23505') {
+          console.log('Payment already exists in database:', paymentRequest.paymentId);
+        } else {
+          console.error('Database error:', error);
+          return new Response(
+            JSON.stringify({ 
+              success: false, 
+              message: `Database error: ${error.message}`,
+              paymentId: paymentRequest.paymentId
+            }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+          );
+        }
+      }
     }
     
     // Call the Pi Network API to approve the payment
@@ -115,6 +149,7 @@ Deno.serve(async (req) => {
       const piNetworkApiUrl = 'https://api.minepi.com/v2/payments';
       
       console.log('Calling Pi Network API to approve payment:', paymentRequest.paymentId);
+      console.log('API key used (first 4 chars):', piApiKey?.substring(0, 4));
       
       const approveResponse = await fetch(`${piNetworkApiUrl}/${paymentRequest.paymentId}/approve`, {
         method: 'POST',
@@ -129,6 +164,34 @@ Deno.serve(async (req) => {
       
       if (!approveResponse.ok) {
         console.error('Pi Network API error:', approveResult);
+        
+        // If payment is already approved, treat as success
+        if (approveResult.message && approveResult.message.includes('already approved')) {
+          console.log('Payment was already approved on Pi Network side');
+          
+          // Update the payment status to approved
+          await supabaseClient
+            .from('payments')
+            .update({
+              status: {
+                approved: true,
+                verified: false,
+                completed: false,
+                cancelled: false
+              },
+              updated_at: new Date().toISOString()
+            })
+            .eq('payment_id', paymentRequest.paymentId);
+          
+          return new Response(
+            JSON.stringify({ 
+              success: true, 
+              message: 'Payment was already approved',
+              paymentId: paymentRequest.paymentId
+            }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
         
         // Update the payment status to reflect the error
         await supabaseClient
@@ -229,6 +292,9 @@ Deno.serve(async (req) => {
       } else {
         console.log(`User ${paymentRequest.userId} not found in database. Cannot update subscription.`);
       }
+      
+      const endTime = Date.now();
+      console.log(`Payment approval completed in ${endTime - startTime}ms`);
       
       // Payment approved successfully
       return new Response(

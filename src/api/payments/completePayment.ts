@@ -12,24 +12,46 @@ export const completePayment = async (req: PaymentRequest & { txid: string }): P
   try {
     console.log('Calling payment completion edge function:', req.paymentId, 'with txid:', req.txid);
     
-    // Call the Supabase Edge Function for payment completion
-    const { data, error } = await supabase.functions.invoke('complete-payment', {
-      body: JSON.stringify(req)
-    });
+    // Call the Supabase Edge Function for payment completion with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
     
-    if (error) {
-      console.error('Error calling payment completion edge function:', error);
-      return {
-        success: false,
-        message: `Failed to complete payment: ${error.message}`,
-        paymentId: req.paymentId,
-        txid: req.txid
-      };
+    try {
+      const { data, error } = await supabase.functions.invoke('complete-payment', {
+        body: JSON.stringify(req),
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (error) {
+        console.error('Error calling payment completion edge function:', error);
+        return {
+          success: false,
+          message: `Failed to complete payment: ${error.message}`,
+          paymentId: req.paymentId,
+          txid: req.txid
+        };
+      }
+      
+      console.log('Payment completion edge function response:', data);
+      
+      return data as PaymentResponse;
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      
+      if (fetchError.name === 'AbortError') {
+        console.error('Payment completion request timed out');
+        return {
+          success: false,
+          message: 'Payment completion timed out. Please try again.',
+          paymentId: req.paymentId,
+          txid: req.txid
+        };
+      }
+      
+      throw fetchError;
     }
-    
-    console.log('Payment completion edge function response:', data);
-    
-    return data as PaymentResponse;
   } catch (error) {
     console.error('Error completing payment:', error);
     return {

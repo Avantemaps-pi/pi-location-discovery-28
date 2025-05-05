@@ -30,6 +30,10 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
   
+  // Log the start time to track execution duration
+  const startTime = Date.now();
+  console.log(`Starting payment completion at ${new Date().toISOString()}`);
+  
   try {
     // Get request body
     const paymentRequest: PaymentRequest = await req.json();
@@ -61,35 +65,60 @@ Deno.serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
       );
     }
-    
-    // First update the payment in the database
-    const { data, error } = await supabaseClient
+
+    // Check if the payment already exists and is completed
+    const { data: existingPayment, error: checkError } = await supabaseClient
       .from('payments')
-      .update({
-        txid: paymentRequest.txid,
-        status: {
-          approved: true,
-          verified: true,
-          completed: true,
-          cancelled: false
-        },
-        updated_at: new Date().toISOString()
-      })
+      .select('status, txid')
       .eq('payment_id', paymentRequest.paymentId)
-      .select()
       .single();
-      
-    if (error) {
-      console.error('Database error:', error);
+
+    // If payment is already completed, return success immediately
+    if (existingPayment?.status?.completed && existingPayment?.txid === paymentRequest.txid) {
+      console.log('Payment was already completed:', paymentRequest.paymentId);
       return new Response(
         JSON.stringify({ 
-          success: false, 
-          message: `Database error: ${error.message}`,
+          success: true, 
+          message: 'Payment was already completed',
           paymentId: paymentRequest.paymentId,
           txid: paymentRequest.txid
         }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+    
+    // First update the payment in the database
+    try {
+      const { data, error } = await supabaseClient
+        .from('payments')
+        .update({
+          txid: paymentRequest.txid,
+          status: {
+            approved: true,
+            verified: true,
+            completed: false, // Will be set to true after Pi API call
+            cancelled: false
+          },
+          updated_at: new Date().toISOString()
+        })
+        .eq('payment_id', paymentRequest.paymentId)
+        .select()
+        .single();
+        
+      if (error) {
+        console.error('Database error:', error);
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            message: `Database error: ${error.message}`,
+            paymentId: paymentRequest.paymentId,
+            txid: paymentRequest.txid
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        );
+      }
+    } catch (dbError) {
+      console.error('Error updating payment in database:', dbError);
     }
     
     // Call the Pi Network API to complete the payment
@@ -98,6 +127,8 @@ Deno.serve(async (req) => {
       const piNetworkApiUrl = 'https://api.minepi.com/v2/payments';
       
       console.log('Calling Pi Network API to complete payment:', paymentRequest.paymentId);
+      console.log('API key used (first 4 chars):', piApiKey?.substring(0, 4));
+      console.log('Transaction ID:', paymentRequest.txid);
       
       const completeResponse = await fetch(`${piNetworkApiUrl}/${paymentRequest.paymentId}/complete`, {
         method: 'POST',
@@ -116,12 +147,42 @@ Deno.serve(async (req) => {
       if (!completeResponse.ok) {
         console.error('Pi Network API error:', completeResult);
         
+        // Special handling for "already completed" errors - treat as success
+        if (completeResult.message && completeResult.message.includes('already completed')) {
+          console.log('Payment was already completed on Pi Network side');
+          
+          // Update the payment status to completed
+          await supabaseClient
+            .from('payments')
+            .update({
+              status: {
+                approved: true,
+                verified: true,
+                completed: true,
+                cancelled: false
+              },
+              updated_at: new Date().toISOString()
+            })
+            .eq('payment_id', paymentRequest.paymentId);
+          
+          return new Response(
+            JSON.stringify({ 
+              success: true, 
+              message: 'Payment was already completed',
+              paymentId: paymentRequest.paymentId,
+              txid: paymentRequest.txid
+            }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+        
         // Update the payment status to reflect the error
         await supabaseClient
           .from('payments')
           .update({
             status: {
-              ...data.status,
+              approved: true,
+              verified: true,
               completed: false,
               error: `Pi Network API error: ${JSON.stringify(completeResult)}`
             },
@@ -139,6 +200,23 @@ Deno.serve(async (req) => {
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 502 }
         );
       }
+      
+      // Payment completed successfully, update the database
+      await supabaseClient
+        .from('payments')
+        .update({
+          status: {
+            approved: true,
+            verified: true,
+            completed: true,
+            cancelled: false
+          },
+          updated_at: new Date().toISOString()
+        })
+        .eq('payment_id', paymentRequest.paymentId);
+      
+      const endTime = Date.now();
+      console.log(`Payment completion finished in ${endTime - startTime}ms`);
       
       // Payment completed successfully
       return new Response(
@@ -158,7 +236,8 @@ Deno.serve(async (req) => {
         .from('payments')
         .update({
           status: {
-            ...data.status,
+            approved: true,
+            verified: true,
             completed: false,
             error: `API call error: ${apiError.message}`
           },
