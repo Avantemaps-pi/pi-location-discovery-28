@@ -17,9 +17,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [lastRefresh, setLastRefresh] = useState<number>(0);
   const pendingAuthRef = useRef<boolean>(false);
   const initAttempted = useRef<boolean>(false);
+  const authTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   // Minimum time between refresh calls (15 minutes)
   const REFRESH_COOLDOWN = 15 * 60 * 1000; 
+  // Maximum time to wait for authentication before timing out (30 seconds)
+  const AUTH_TIMEOUT = 30 * 1000;
 
   // Check for cached session on mount
   useEffect(() => {
@@ -32,6 +35,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (Date.now() - userData.lastAuthenticated < 24 * 60 * 60 * 1000) {
           console.log("Restoring user from cached session");
           setUser(userData);
+        } else {
+          console.log("Cached session expired");
         }
       } catch (error) {
         console.error("Error parsing cached session:", error);
@@ -39,7 +44,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     
-    setIsLoading(false);
+    // Set a timeout to automatically set isLoading to false after AUTH_TIMEOUT
+    // This prevents the app from being stuck in the loading state indefinitely
+    authTimeoutRef.current = setTimeout(() => {
+      if (isLoading) {
+        console.log("Authentication timed out, resetting loading state");
+        setIsLoading(false);
+        setAuthError("Authentication timed out. Please try again later.");
+      }
+    }, AUTH_TIMEOUT);
+    
+    setIsLoading(false); // Reset loading state since we've checked cache
+    
+    return () => {
+      if (authTimeoutRef.current) {
+        clearTimeout(authTimeoutRef.current);
+      }
+    };
   }, []);
 
   // Initialize Pi Network SDK but don't authenticate automatically
@@ -79,6 +100,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     setIsLoading(true);
     
+    // Set authentication timeout
+    if (authTimeoutRef.current) {
+      clearTimeout(authTimeoutRef.current);
+    }
+    
+    authTimeoutRef.current = setTimeout(() => {
+      setIsLoading(false);
+      setAuthError("Authentication timed out. Please try again.");
+      toast.error("Authentication timed out. Please try again.");
+    }, AUTH_TIMEOUT);
+    
     // First step: Request permissions
     const permissionsGranted = await requestAuthPermissions(
       isSdkInitialized, 
@@ -89,6 +121,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!permissionsGranted) {
       console.log("Permissions not granted. Authentication aborted.");
       setIsLoading(false);
+      if (authTimeoutRef.current) {
+        clearTimeout(authTimeoutRef.current);
+      }
       return;
     }
     
@@ -100,6 +135,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       (pending) => { pendingAuthRef.current = pending; },
       setUser
     );
+    
+    // Clear authentication timeout
+    if (authTimeoutRef.current) {
+      clearTimeout(authTimeoutRef.current);
+      authTimeoutRef.current = null;
+    }
     
     // Update last refresh timestamp
     setLastRefresh(Date.now());

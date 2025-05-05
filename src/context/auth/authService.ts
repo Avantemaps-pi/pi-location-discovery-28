@@ -1,4 +1,3 @@
-
 import { toast } from 'sonner';
 import { PiUser } from './types';
 import { 
@@ -16,6 +15,7 @@ export const requestAuthPermissions = async (
   setAuthError: (error: string | null) => void
 ): Promise<boolean> => {
   if (!isSdkInitialized) {
+    console.log("SDK not initialized during permission request");
     toast.warning("Pi Network SDK is initializing. Please try again in a moment.");
     return false;
   }
@@ -33,13 +33,18 @@ export const requestAuthPermissions = async (
 
     // Check if Pi SDK is available
     if (!isPiNetworkAvailable()) {
+      console.error("Pi Network SDK is not available");
       throw new Error("Pi Network SDK is not available");
     }
 
     // Ensure SDK is initialized before requesting permissions
     try {
-      await initializePiNetwork();
+      const initResult = await initializePiNetwork();
+      if (!initResult) {
+        throw new Error("Failed to initialize Pi Network SDK");
+      }
     } catch (error) {
+      console.error("SDK init error:", error);
       throw new Error("Failed to initialize Pi Network SDK");
     }
 
@@ -47,10 +52,11 @@ export const requestAuthPermissions = async (
     const userInfo = await requestUserPermissions();
     
     if (userInfo) {
-      console.log("Permission request successful");
+      console.log("Permission request successful:", userInfo);
       toast.success("Permissions granted. Proceeding with authentication.");
       return true;
     } else {
+      console.log("Permission request failed or was denied");
       throw new Error("Permission request failed or was denied");
     }
   } catch (error) {
@@ -60,9 +66,9 @@ export const requestAuthPermissions = async (
       errorMessage = error.message;
     }
     
+    console.error("Permission error:", errorMessage);
     setAuthError(errorMessage);
     toast.error(errorMessage);
-    console.error("Permission error:", error);
     return false;
   } finally {
     setIsLoading(false);
@@ -79,6 +85,7 @@ export const performLogin = async (
   // Don't attempt login if SDK is not initialized yet
   if (!isSdkInitialized) {
     setPendingAuth(true);
+    console.log("SDK not initialized during login attempt");
     toast.warning("Pi Network SDK is initializing. Please try again in a moment.");
     return;
   }
@@ -97,13 +104,18 @@ export const performLogin = async (
 
     // Check if Pi SDK is available
     if (!isPiNetworkAvailable()) {
+      console.error("Pi Network SDK is not available");
       throw new Error("Pi Network SDK is not available");
     }
 
     // Ensure SDK is initialized before authentication
     try {
-      await initializePiNetwork();
+      const initResult = await initializePiNetwork();
+      if (!initResult) {
+        throw new Error("Failed to initialize Pi Network SDK");
+      }
     } catch (error) {
+      console.error("SDK init error during login:", error);
       throw new Error("Failed to initialize Pi Network SDK");
     }
 
@@ -114,6 +126,8 @@ export const performLogin = async (
       // Handle incomplete payment when needed
       // This would involve sending the payment to your server for completion
     });
+    
+    console.log("Authentication result:", authResult);
     
     if (authResult && authResult.user && authResult.accessToken) {
       console.log("Authentication successful");
@@ -131,8 +145,18 @@ export const performLogin = async (
       const subscriptionTier = await getUserSubscription(authResult.user.uid);
       
       // Extract wallet address if available from user properties
-      // Note: In real implementation, use your backend with Platform API to verify this
-      const walletAddress = (authResult as any).user.wallet_address;
+      // Type assertion to access wallet_address property
+      const authResultWithWallet = authResult as {
+        user: {
+          uid: string;
+          username: string;
+          roles?: string[];
+          wallet_address?: string;
+        };
+        accessToken: string;
+      };
+      
+      const walletAddress = authResultWithWallet.user.wallet_address;
       
       const userData: PiUser = {
         uid: authResult.user.uid,
@@ -149,6 +173,7 @@ export const performLogin = async (
       
       toast.success(`Welcome back, ${userData.username}!`);
     } else {
+      console.error("Authentication failed: auth result incomplete", authResult);
       throw new Error("Authentication failed");
     }
   } catch (error) {
@@ -162,6 +187,7 @@ export const performLogin = async (
     toast.error(errorMessage);
     console.error("Auth error:", error);
   } finally {
+    setPendingAuth(false);
     setIsLoading(false);
   }
 };

@@ -118,10 +118,20 @@ export const requestUserPermissions = async (): Promise<{
       return null;
     }
 
+    // Type assertion to access wallet_address while ensuring TypeScript compatibility
+    const authResultWithWallet = authResult as {
+      user: {
+        uid: string;
+        username: string;
+        roles?: string[];
+        wallet_address?: string;
+      };
+    };
+
     return {
       username: authResult.user.username,
       uid: authResult.user.uid,
-      walletAddress: authResult.user.wallet_address || undefined
+      walletAddress: authResultWithWallet.user.wallet_address
     };
   } catch (error) {
     console.error('Error requesting user permissions:', error);

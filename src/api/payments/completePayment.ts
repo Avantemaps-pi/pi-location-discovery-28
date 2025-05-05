@@ -12,45 +12,41 @@ export const completePayment = async (req: PaymentRequest & { txid: string }): P
   try {
     console.log('Calling payment completion edge function:', req.paymentId, 'with txid:', req.txid);
     
-    // Call the Supabase Edge Function for payment completion with timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    // Call the Supabase Edge Function for payment completion with timeout handling
+    const timeoutPromise = new Promise<PaymentResponse>((_, reject) => {
+      setTimeout(() => {
+        reject(new Error('Payment completion request timed out'));
+      }, 30000); // 30 second timeout
+    });
     
     try {
-      const { data, error } = await supabase.functions.invoke('complete-payment', {
-        body: JSON.stringify(req),
-        signal: controller.signal
+      const fetchPromise = supabase.functions.invoke('complete-payment', {
+        body: JSON.stringify(req)
+      }).then(({ data, error }) => {
+        if (error) {
+          console.error('Error calling payment completion edge function:', error);
+          return {
+            success: false,
+            message: `Failed to complete payment: ${error.message}`,
+            paymentId: req.paymentId,
+            txid: req.txid
+          };
+        }
+        
+        console.log('Payment completion edge function response:', data);
+        return data as PaymentResponse;
       });
       
-      clearTimeout(timeoutId);
-      
-      if (error) {
-        console.error('Error calling payment completion edge function:', error);
-        return {
-          success: false,
-          message: `Failed to complete payment: ${error.message}`,
-          paymentId: req.paymentId,
-          txid: req.txid
-        };
-      }
-      
-      console.log('Payment completion edge function response:', data);
-      
-      return data as PaymentResponse;
+      // Race between the fetch and the timeout
+      return await Promise.race([fetchPromise, timeoutPromise]);
     } catch (fetchError) {
-      clearTimeout(timeoutId);
-      
-      if (fetchError.name === 'AbortError') {
-        console.error('Payment completion request timed out');
-        return {
-          success: false,
-          message: 'Payment completion timed out. Please try again.',
-          paymentId: req.paymentId,
-          txid: req.txid
-        };
-      }
-      
-      throw fetchError;
+      console.error('Error calling payment completion edge function:', fetchError);
+      return {
+        success: false,
+        message: 'Payment completion request failed: ' + (fetchError instanceof Error ? fetchError.message : 'Unknown error'),
+        paymentId: req.paymentId,
+        txid: req.txid
+      };
     }
   } catch (error) {
     console.error('Error completing payment:', error);

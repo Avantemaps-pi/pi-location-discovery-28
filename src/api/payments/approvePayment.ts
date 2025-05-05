@@ -12,43 +12,39 @@ export const approvePayment = async (req: PaymentRequest): Promise<PaymentRespon
   try {
     console.log('Calling payment approval edge function:', req.paymentId);
     
-    // Call the Supabase Edge Function for payment approval with timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    // Call the Supabase Edge Function for payment approval with timeout handling
+    const timeoutPromise = new Promise<PaymentResponse>((_, reject) => {
+      setTimeout(() => {
+        reject(new Error('Payment approval request timed out'));
+      }, 30000); // 30 second timeout
+    });
     
     try {
-      const { data, error } = await supabase.functions.invoke('approve-payment', {
-        body: JSON.stringify(req),
-        signal: controller.signal
+      const fetchPromise = supabase.functions.invoke('approve-payment', {
+        body: JSON.stringify(req)
+      }).then(({ data, error }) => {
+        if (error) {
+          console.error('Error calling payment approval edge function:', error);
+          return {
+            success: false,
+            message: `Failed to approve payment: ${error.message}`,
+            paymentId: req.paymentId
+          };
+        }
+        
+        console.log('Payment approval edge function response:', data);
+        return data as PaymentResponse;
       });
       
-      clearTimeout(timeoutId);
-      
-      if (error) {
-        console.error('Error calling payment approval edge function:', error);
-        return {
-          success: false,
-          message: `Failed to approve payment: ${error.message}`,
-          paymentId: req.paymentId
-        };
-      }
-      
-      console.log('Payment approval edge function response:', data);
-      
-      return data as PaymentResponse;
+      // Race between the fetch and the timeout
+      return await Promise.race([fetchPromise, timeoutPromise]);
     } catch (fetchError) {
-      clearTimeout(timeoutId);
-      
-      if (fetchError.name === 'AbortError') {
-        console.error('Payment approval request timed out');
-        return {
-          success: false,
-          message: 'Payment approval timed out. Please try again.',
-          paymentId: req.paymentId
-        };
-      }
-      
-      throw fetchError;
+      console.error('Error calling payment approval edge function:', fetchError);
+      return {
+        success: false,
+        message: 'Payment approval request failed: ' + (fetchError instanceof Error ? fetchError.message : 'Unknown error'),
+        paymentId: req.paymentId
+      };
     }
   } catch (error) {
     console.error('Error approving payment:', error);
