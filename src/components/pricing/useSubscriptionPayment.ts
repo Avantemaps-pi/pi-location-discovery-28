@@ -50,7 +50,6 @@ export const useSubscriptionPayment = () => {
   const handleSubscribe = async (tier: string) => {
     // Skip if it's the free tier or if it's marked as coming soon
     if (tier === "individual" || tier.includes("coming-soon")) {
-      console.log("Skipping payment for individual tier or coming soon feature");
       return;
     }
     
@@ -67,7 +66,6 @@ export const useSubscriptionPayment = () => {
       return;
     }
     
-    console.log("Starting payment process for tier:", tier);
     setIsProcessingPayment(true);
     
     try {
@@ -75,26 +73,9 @@ export const useSubscriptionPayment = () => {
       console.log("Refreshing user data before payment...");
       await refreshUserData();
       
-      // Check if user has wallet_address permission
-      if (!user?.walletAddress) {
-        console.warn("User does not have wallet_address permission");
-        toast.warning("Additional permissions needed for payment processing");
-        await login(); // Re-login to get fresh permissions
-        
-        // Check again after login attempt
-        if (!user?.walletAddress) {
-          toast.error("Wallet address permission required for payments");
-          setIsProcessingPayment(false);
-          return;
-        }
-      }
-      
       // Get the subscription price
       const subscriptionTier = tier as SubscriptionTier;
       const price = getSubscriptionPrice(subscriptionTier, selectedFrequency);
-      
-      console.log(`Processing payment of ${price} Pi for ${subscriptionTier} subscription (${selectedFrequency})`);
-      toast.info(`Initiating payment of ${price} Pi`);
       
       // Execute the payment
       const result = await executeSubscriptionPayment(

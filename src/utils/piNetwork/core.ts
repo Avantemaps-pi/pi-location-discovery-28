@@ -21,11 +21,7 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     // If SDK is available but not initialized, initialize it
     if (isPiNetworkAvailable()) {
       console.log('Pi Network SDK is loaded, initializing...');
-      // Use v2 of the SDK for mainnet compatibility
-      const sdkVersion = "2.0";
-      console.log(`Initializing Pi SDK with version ${sdkVersion}`);
-      
-      window.Pi!.init({ version: sdkVersion })
+      window.Pi!.init({ version: "2.0" })
         .then(() => {
           console.log('Pi Network SDK initialized successfully');
           isInitialized = true;
@@ -47,12 +43,9 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     
     script.onload = () => {
       console.log('Pi Network SDK loaded successfully, initializing...');
-      // Initialize the SDK after it's loaded with v2
+      // Initialize the SDK after it's loaded
       if (window.Pi) {
-        const sdkVersion = "2.0";
-        console.log(`Initializing Pi SDK with version ${sdkVersion}`);
-        
-        window.Pi.init({ version: sdkVersion })
+        window.Pi.init({ version: "2.0" })
           .then(() => {
             console.log('Pi Network SDK initialized successfully');
             isInitialized = true;
@@ -126,6 +119,8 @@ export const requestUserPermissions = async (): Promise<{
     }
 
     // Extract wallet address if available from user roles
+    // Note: According to SDK, wallet_address should be available 
+    // when requested as a scope
     return {
       username: authResult.user.username,
       uid: authResult.user.uid,
