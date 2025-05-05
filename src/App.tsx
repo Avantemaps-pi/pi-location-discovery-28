@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -26,6 +27,7 @@ import VerificationInfo from "./pages/VerificationInfo";
 import Review from "./pages/Review";
 import Pricing from "./pages/Pricing";
 import Analytics from "./pages/Analytics";
+import { initializePiNetwork } from "./utils/piNetwork";
 
 // 🆕 Extend window for TypeScript
 declare global {
@@ -45,14 +47,26 @@ const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // 🆕 Pi SDK initialization
-    const isSandbox = import.meta.env.VITE_PI_SANDBOX === 'true';
-    if (window.Pi) {
-      window.Pi.init({ version: "2.0", sandbox: isSandbox });
-      console.log(`Pi SDK initialized. Sandbox mode: ${isSandbox}`);
-    } else {
-      console.warn("Pi SDK not found. Make sure it is included in public/index.html.");
-    }
+    // Initialize Pi SDK with better error handling
+    const initPiSdk = async () => {
+      try {
+        const isSandbox = import.meta.env.VITE_PI_SANDBOX === 'true';
+        console.log(`Initializing Pi SDK. Sandbox mode: ${isSandbox}`);
+        
+        // Use our improved initialization utility
+        const success = await initializePiNetwork();
+        
+        if (success) {
+          console.log("Pi SDK initialized successfully in App.tsx");
+        } else {
+          console.warn("Pi SDK initialization failed in App.tsx");
+        }
+      } catch (err) {
+        console.error("Error initializing Pi SDK:", err);
+      }
+    };
+
+    initPiSdk();
   }, []);
 
   useEffect(() => {
