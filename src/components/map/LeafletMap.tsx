@@ -10,6 +10,7 @@ import MapMarkers from './map-components/MapMarkers';
 import MapViewUpdater from './map-components/MapViewUpdater';
 import PlaceOverlay from './map-components/PlaceOverlay';
 import LoadingOverlay from './map-components/LoadingOverlay';
+import { LatLngTuple } from 'leaflet';
 
 interface LeafletMapProps {
   places?: Place[];
@@ -28,7 +29,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
 }) => {
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
   const [showPopover, setShowPopover] = useState(false);
-  const [mapCenter, setMapCenter] = useState([defaultCenter.lat, defaultCenter.lng]);
+  const [mapCenter, setMapCenter] = useState<LatLngTuple>([defaultCenter.lat, defaultCenter.lng]);
   const [zoom, setZoom] = useState(defaultZoom);
 
   // Use provided places or default locations
@@ -88,10 +89,9 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         center={mapCenter} 
         zoom={zoom} 
         style={{ height: '100%', width: '100%', zIndex: 1 }}
-        zoomControl={false} // Removed zoom controls
+        zoomControl={false} 
         minZoom={3}
         maxZoom={18}
-        bounds={places.length > 0 ? places.map(place => [place.position.lat, place.position.lng]) : undefined}
       >
         <TileLayer
           attribution={OSM_TILE_LAYER.attribution}

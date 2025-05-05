@@ -67,9 +67,7 @@ const Pricing = () => {
   return (
     <AppLayout title="Pricing">
       <PricingSection 
-        title={
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl max-w-2xl mx-auto">Simple, transparent pricing</h2>
-        }
+        title="Simple, transparent pricing"
         subtitle="Choose the plan that's right for you and explore Avante Maps with premium features."
         tiers={TIERS.map(tier => ({
           ...tier,
@@ -81,7 +79,7 @@ const Pricing = () => {
             }
           },
           isLoading: isProcessingPayment,
-          disabled: tier.comingSoon
+          disabled: false // Remove the comingSoon check to enable all tiers
         }))}
         frequencies={["monthly", "yearly"]}
         onFrequencyChange={handleBillingChange}

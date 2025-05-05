@@ -24,6 +24,7 @@ export const TIERS: PricingTier[] = [
       yearly: "95.90"
     },
     features: [
+      "1 - 3 Business listings", 
       "All Individual features",
       "Highlighted business profile",
       "Business analytics",
@@ -43,13 +44,14 @@ export const TIERS: PricingTier[] = [
       yearly: "199.90"
     },
     features: [
+      "1 - 5 Business listings", 
       "All Small Business features",
       "Multiple business locations",
       "Advanced analytics",
       "Dedicated support team",
       "Custom business integration",
     ],
-    cta: "Contact Us",
+    cta: "Upgrade to Organization",
     highlighted: true
   }
 ];

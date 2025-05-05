@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Tabs } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -26,11 +27,15 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
     handleImageRemove,
     onSubmit, 
     isSubmitting,
-    businessCount = 0 
   } = useBusinessRegistration(onSuccess);
   const [selectedTab, setSelectedTab] = React.useState('business-owner');
 
+  // Check if user is able to register more businesses based on subscription
   React.useEffect(() => {
+    // This is a placeholder - the actual businessCount check should come from 
+    // the useBusinessRegistration hook or another source
+    const businessCount = user?.businessCount || 0;
+    
     if (businessCount > 0 && user?.subscriptionTier === 'individual') {
       toast.error(
         "Upgrade Required", 
@@ -44,7 +49,7 @@ const BusinessRegistrationForm = ({ onSuccess }: BusinessRegistrationFormProps) 
       );
       navigate('/registered-business');
     }
-  }, [businessCount, user?.subscriptionTier, navigate]);
+  }, [user, navigate]);
 
   return (
     <div className="w-full py-2 min-h-[600px]">
