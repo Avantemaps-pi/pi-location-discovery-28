@@ -1,10 +1,9 @@
-
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/auth";
 import { useSessionRestoration } from "@/hooks/useSessionRestoration";
@@ -28,9 +27,15 @@ import Review from "./pages/Review";
 import Pricing from "./pages/Pricing";
 import Analytics from "./pages/Analytics";
 
+// 🆕 Extend window for TypeScript
+declare global {
+  interface Window {
+    Pi: any;
+  }
+}
+
 const queryClient = new QueryClient();
 
-// Create a component to use the session restoration hook
 const SessionManager = () => {
   useSessionRestoration();
   return null;
@@ -40,14 +45,21 @@ const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
+    // 🆕 Pi SDK initialization
+    const isSandbox = import.meta.env.VITE_PI_SANDBOX === 'true';
+    if (window.Pi) {
+      window.Pi.init({ version: "2.0", sandbox: isSandbox });
+      console.log(`Pi SDK initialized. Sandbox mode: ${isSandbox}`);
+    } else {
+      console.warn("Pi SDK not found. Make sure it is included in public/index.html.");
+    }
+  }, []);
+
+  useEffect(() => {
     const savedScheme = localStorage.getItem('colorScheme');
-    
     if (savedScheme === 'dark') {
       document.documentElement.classList.add('dark');
       setIsDarkMode(true);
-    } else if (savedScheme === 'light') {
-      document.documentElement.classList.remove('dark');
-      setIsDarkMode(false);
     } else {
       document.documentElement.classList.remove('dark');
       setIsDarkMode(false);
