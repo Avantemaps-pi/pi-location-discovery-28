@@ -36,7 +36,7 @@ export const initializePiNetwork = async (): Promise<boolean> => {
   initializationInProgress = true;
   
   initializationPromise = new Promise((resolve, reject) => {
-    // Set a timeout to prevent hanging - reduced from 15s to 10s
+    // Set a timeout to prevent hanging - reduced to 5s for faster feedback
     const timeout = setTimeout(() => {
       initializationInProgress = false;
       
@@ -52,12 +52,14 @@ export const initializePiNetwork = async (): Promise<boolean> => {
         console.error('Pi Network SDK initialization failed after maximum retries');
         reject(new Error('Pi Network SDK initialization timed out after maximum retries'));
       }
-    }, 10000); // 10 second timeout
+    }, 5000); // 5 second timeout (reduced from 10s)
     
     // If SDK is available but not initialized, initialize it
     if (isPiNetworkAvailable()) {
       console.log('Pi Network SDK is loaded, initializing...');
-      const isSandbox = import.meta.env.VITE_PI_SANDBOX === 'true';
+      
+      // Determine sandbox mode based on environment/hostname
+      const isSandbox = determineSandboxMode();
       console.log(`Initializing Pi SDK with sandbox mode: ${isSandbox}`);
       
       window.Pi!.init({ version: "2.0", sandbox: isSandbox })
@@ -99,7 +101,8 @@ export const initializePiNetwork = async (): Promise<boolean> => {
       console.log('Pi Network SDK loaded successfully, initializing...');
       // Initialize the SDK after it's loaded
       if (window.Pi) {
-        const isSandbox = import.meta.env.VITE_PI_SANDBOX === 'true';
+        // Determine sandbox mode based on environment/hostname
+        const isSandbox = determineSandboxMode();
         console.log(`Initializing Pi SDK with sandbox mode: ${isSandbox}`);
         
         window.Pi.init({ version: "2.0", sandbox: isSandbox })
@@ -160,6 +163,36 @@ export const initializePiNetwork = async (): Promise<boolean> => {
   return initializationPromise;
 };
 
+/**
+ * Determines whether to use sandbox mode based on environment/hostname
+ * - dev branch should use sandbox: true
+ * - testnet branch should use sandbox: false
+ */
+export const determineSandboxMode = (): boolean => {
+  // Check environment variable first
+  if (typeof import.meta.env.VITE_PI_SANDBOX === 'string') {
+    return import.meta.env.VITE_PI_SANDBOX === 'true';
+  }
+  
+  // Fallback to hostname check
+  const hostname = window.location.hostname;
+  
+  // Check if we're in a development environment
+  if (
+    hostname === 'localhost' || 
+    hostname.includes('127.0.0.1') ||
+    hostname.includes('dev.') ||
+    hostname.includes('.dev.') ||
+    hostname.includes('-dev-') ||
+    hostname.includes('sandbox')
+  ) {
+    return true; // Use sandbox mode in development environments
+  }
+  
+  // Default to production (non-sandbox) mode for testnet and production
+  return false;
+};
+
 // Check if SDK is initialized
 export const isSdkInitialized = (): boolean => {
   return isInitialized;
@@ -190,11 +223,11 @@ export const requestUserPermissions = async (): Promise<{
   }
 
   try {
-    // Set a timeout for authentication - reduced from 20s to 8s for quicker feedback
+    // Set a timeout for authentication - reduced to 6s for quicker feedback
     const authPromise = new Promise<any>((resolve, reject) => {
       const authTimeout = setTimeout(() => {
         reject(new Error('Permission request timed out'));
-      }, 8000); // 8 second timeout - faster feedback to user
+      }, 6000); // 6 second timeout - faster feedback to user
       
       // Use authenticate to request the required scopes as per SDK reference
       console.log('Requesting permissions with authenticate: username, payments, wallet_address');
@@ -202,7 +235,11 @@ export const requestUserPermissions = async (): Promise<{
       
       window.Pi!.authenticate(scopes, (payment) => {
         console.log('Incomplete payment found during permission request:', payment);
-        // Handle incomplete payment if needed
+        // Handle incomplete payment
+        // Store it to be handled after authentication
+        if (window.localStorage) {
+          window.localStorage.setItem('pi_incomplete_payment', JSON.stringify(payment));
+        }
       })
       .then(result => {
         clearTimeout(authTimeout);
@@ -230,6 +267,7 @@ export const requestUserPermissions = async (): Promise<{
         roles?: string[];
         wallet_address?: string;
       };
+      accessToken: string;
     };
 
     return {

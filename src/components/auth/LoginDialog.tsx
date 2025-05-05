@@ -15,17 +15,37 @@ interface LoginDialogProps {
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
   const { login, isLoading, authError } = useAuth();
   const [sdkAvailable, setSdkAvailable] = useState<boolean>(false);
+  const [retryCount, setRetryCount] = useState<number>(0);
   
   useEffect(() => {
     // Check if Pi SDK is available
     setSdkAvailable(isPiNetworkAvailable());
     
+    // More frequent checks when dialog is open
     const checkInterval = setInterval(() => {
-      setSdkAvailable(isPiNetworkAvailable());
-    }, 2000);
+      const available = isPiNetworkAvailable();
+      setSdkAvailable(available);
+      
+      // If dialog is open and SDK becomes available, increment retry count
+      if (open && available && retryCount === 0) {
+        setRetryCount(1);
+      }
+    }, 1000);
     
     return () => clearInterval(checkInterval);
-  }, [open]);
+  }, [open, retryCount]);
+  
+  useEffect(() => {
+    // Auto-retry SDK detection once when dialog opens
+    if (open && !sdkAvailable && retryCount === 0) {
+      const timer = setTimeout(() => {
+        setRetryCount(1);
+        setSdkAvailable(isPiNetworkAvailable());
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [open, sdkAvailable, retryCount]);
   
   const handleLogin = async () => {
     try {
@@ -109,9 +129,9 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
           <div className="text-center text-sm text-muted-foreground px-4">
             <p>
               By connecting, Pi Network will share your profile information with Avante Maps. See our{' '}
-              <Link to="/privacy-policy" className="text-primary hover:underline">privacy policy</Link>
+              <Link to="/privacy" className="text-primary hover:underline">privacy policy</Link>
               {' '}and{' '}
-              <Link to="/terms-of-service" className="text-primary hover:underline">terms of service</Link>.
+              <Link to="/terms" className="text-primary hover:underline">terms of service</Link>.
             </p>
           </div>
         </div>

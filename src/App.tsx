@@ -28,6 +28,7 @@ import Review from "./pages/Review";
 import Pricing from "./pages/Pricing";
 import Analytics from "./pages/Analytics";
 import { initializePiNetwork } from "./utils/piNetwork";
+import { checkForIncompletePayments } from "./utils/piPayment/payments";
 
 // 🆕 Extend window for TypeScript
 declare global {
@@ -50,14 +51,19 @@ const App = () => {
     // Initialize Pi SDK with better error handling
     const initPiSdk = async () => {
       try {
-        const isSandbox = import.meta.env.VITE_PI_SANDBOX === 'true';
-        console.log(`Initializing Pi SDK. Sandbox mode: ${isSandbox}`);
+        console.log("Initializing Pi SDK...");
         
         // Use our improved initialization utility
         const success = await initializePiNetwork();
         
         if (success) {
           console.log("Pi SDK initialized successfully in App.tsx");
+          // Check for incomplete payments after SDK is initialized
+          const incompletePayment = checkForIncompletePayments();
+          if (incompletePayment && !incompletePayment.status.developer_completed) {
+            console.log("Found incomplete payment that needs handling:", incompletePayment);
+            // You can show a UI to the user or handle it automatically 
+          }
         } else {
           console.warn("Pi SDK initialization failed in App.tsx");
         }

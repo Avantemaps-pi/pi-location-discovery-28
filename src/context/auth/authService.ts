@@ -57,7 +57,7 @@ export const requestAuthPermissions = async (
         throw new Error("Pi Network SDK is not available");
       }
 
-      // Set explicit permission request timeout
+      // Set explicit permission request timeout - reduced to 6 seconds
       const requestTimeout = setTimeout(() => {
         if (retryCount < maxRetries) {
           retryCount++;
@@ -68,7 +68,7 @@ export const requestAuthPermissions = async (
           setAuthError("Permission request timed out. Please try again.");
           toast.error("Permission request timed out. Please try again.");
         }
-      }, 8000); // 8 second timeout
+      }, 6000); // 6 second timeout
 
       // Request permissions with Pi Network
       const userInfo = await requestUserPermissions();
@@ -175,14 +175,18 @@ export const performLogin = async (
       // Authenticate with Pi Network with required scopes
       console.log("Authenticating with Pi Network, requesting scopes: username, payments, wallet_address");
       
-      // Create a promise with timeout for authentication
+      // Create a promise with timeout for authentication - reduced to 6 seconds
       const authPromise = new Promise<any>((resolve, reject) => {
         const authTimeout = setTimeout(() => {
           reject(new Error('Authentication request timed out'));
-        }, 8000); // 8 second timeout for this specific step
+        }, 6000); // 6 second timeout for this specific step
         
         window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
           console.log('Incomplete payment found:', payment);
+          // Store it to be handled after authentication
+          if (window.localStorage) {
+            window.localStorage.setItem('pi_incomplete_payment', JSON.stringify(payment));
+          }
         })
         .then(result => {
           clearTimeout(authTimeout);
@@ -214,7 +218,6 @@ export const performLogin = async (
         const subscriptionTier = await getUserSubscription(authResult.user.uid);
         
         // Extract wallet address if available from user properties
-        // Type assertion to access wallet_address property
         const authResultWithWallet = authResult as {
           user: {
             uid: string;
@@ -273,6 +276,7 @@ export const performLogin = async (
   }
 };
 
+// Simplified refresh function with improved error handling
 export const refreshUserData = async (
   user: PiUser | null,
   setUser: (user: PiUser) => void,
@@ -299,6 +303,10 @@ export const refreshUserData = async (
       console.log("Refreshing user permissions with authenticate");
       const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
         console.log('Incomplete payment found during refresh:', payment);
+        // Store it to be handled later
+        if (window.localStorage) {
+          window.localStorage.setItem('pi_incomplete_payment', JSON.stringify(payment));
+        }
       });
       
       if (authResult) {
@@ -312,7 +320,8 @@ export const refreshUserData = async (
         }
         
         // Extract wallet address if available
-        const walletAddress = (authResult as any).user.wallet_address;
+        const authResultWithWallet = authResult as any;
+        const walletAddress = authResultWithWallet.user.wallet_address;
         
         await updateUserData({
           ...user,

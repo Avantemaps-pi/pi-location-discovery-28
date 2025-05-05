@@ -11,7 +11,7 @@ import AuthContext from './useAuth';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<PiUser | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false); // Start with loading false
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSdkInitialized, setIsSdkInitialized] = useState<boolean>(false);
   const [lastRefresh, setLastRefresh] = useState<number>(0);
@@ -21,8 +21,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
   // Minimum time between refresh calls (15 minutes)
   const REFRESH_COOLDOWN = 15 * 60 * 1000; 
-  // Reduce maximum time to wait for authentication (8 seconds instead of 15)
-  const AUTH_TIMEOUT = 8 * 1000;
+  // Reduced timeout to 6 seconds
+  const AUTH_TIMEOUT = 6 * 1000;
 
   // Check for cached session on mount
   useEffect(() => {
@@ -83,7 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       clearTimeout(authTimeoutRef.current);
     }
     
-    // Set new authentication timeout - reduced from 15s to 8s
+    // Set new authentication timeout - reduced to 6s
     authTimeoutRef.current = setTimeout(() => {
       setIsLoading(false);
       setAuthError("Authentication timed out. Please try again.");

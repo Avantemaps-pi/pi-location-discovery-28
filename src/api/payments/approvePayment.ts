@@ -16,7 +16,7 @@ export const approvePayment = async (req: PaymentRequest): Promise<PaymentRespon
     const timeoutPromise = new Promise<PaymentResponse>((_, reject) => {
       setTimeout(() => {
         reject(new Error('Payment approval request timed out'));
-      }, 30000); // 30 second timeout
+      }, 20000); // 20 second timeout (reduced from 30s)
     });
     
     try {
