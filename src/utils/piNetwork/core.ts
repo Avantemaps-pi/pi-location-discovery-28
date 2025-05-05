@@ -7,28 +7,48 @@ import { Scope } from './types';
 
 // Flag to track SDK initialization
 let isInitialized = false;
+let initializationInProgress = false;
+let initializationPromise: Promise<boolean> | null = null;
 
-// Initialize the Pi Network SDK
+// Initialize the Pi Network SDK with improved performance
 export const initializePiNetwork = async (): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
-    // If SDK is already initialized, resolve immediately
-    if (isInitialized) {
-      console.log('Pi Network SDK is already initialized');
-      resolve(true);
-      return;
-    }
+  // Return cached initialization promise if one is in progress
+  if (initializationInProgress && initializationPromise) {
+    console.log('Pi Network SDK initialization already in progress, returning existing promise');
+    return initializationPromise;
+  }
+  
+  // If SDK is already initialized, resolve immediately
+  if (isInitialized) {
+    console.log('Pi Network SDK is already initialized');
+    return Promise.resolve(true);
+  }
+  
+  // Set flag and create new initialization promise
+  initializationInProgress = true;
+  
+  initializationPromise = new Promise((resolve, reject) => {
+    // Set a timeout to prevent hanging
+    const timeout = setTimeout(() => {
+      initializationInProgress = false;
+      reject(new Error('Pi Network SDK initialization timed out'));
+    }, 15000); // 15 second timeout
     
     // If SDK is available but not initialized, initialize it
     if (isPiNetworkAvailable()) {
       console.log('Pi Network SDK is loaded, initializing...');
-      window.Pi!.init({ version: "2.0" })
+      window.Pi!.init({ version: "2.0", sandbox: true }) // Enable sandbox mode for Testnet
         .then(() => {
           console.log('Pi Network SDK initialized successfully');
           isInitialized = true;
+          initializationInProgress = false;
+          clearTimeout(timeout);
           resolve(true);
         })
         .catch(error => {
           console.error('Failed to initialize Pi Network SDK:', error);
+          initializationInProgress = false;
+          clearTimeout(timeout);
           reject(error);
         });
       return;
@@ -49,26 +69,36 @@ export const initializePiNetwork = async (): Promise<boolean> => {
           .then(() => {
             console.log('Pi Network SDK initialized successfully');
             isInitialized = true;
+            initializationInProgress = false;
+            clearTimeout(timeout);
             resolve(true);
           })
           .catch(error => {
             console.error('Failed to initialize Pi Network SDK:', error);
+            initializationInProgress = false;
+            clearTimeout(timeout);
             reject(error);
           });
       } else {
         const error = new Error('Pi Network SDK loaded but not defined');
         console.error(error);
+        initializationInProgress = false;
+        clearTimeout(timeout);
         reject(error);
       }
     };
     
     script.onerror = (error) => {
       console.error('Failed to load Pi Network SDK', error);
+      initializationInProgress = false;
+      clearTimeout(timeout);
       reject(new Error('Failed to load Pi Network SDK'));
     };
     
     document.head.appendChild(script);
   });
+  
+  return initializationPromise;
 };
 
 // Check if SDK is initialized
@@ -77,9 +107,7 @@ export const isSdkInitialized = (): boolean => {
 };
 
 /**
- * Request additional user permissions
- * According to SDK documentation, this should request any scopes that may have been rejected 
- * or not requested previously
+ * Request additional user permissions with improved error handling
  */
 export const requestUserPermissions = async (): Promise<{
   username: string;
@@ -91,6 +119,7 @@ export const requestUserPermissions = async (): Promise<{
     return null;
   }
   
+  // Don't re-initialize if already done
   if (!isInitialized) {
     console.log('Pi Network SDK was not initialized. Initializing now...');
     try {
@@ -102,15 +131,31 @@ export const requestUserPermissions = async (): Promise<{
   }
 
   try {
-    // Use authenticate to request the required scopes as per SDK reference
-    console.log('Requesting permissions with authenticate: username, payments, wallet_address');
-    const scopes: Scope[] = ['username', 'payments', 'wallet_address'];
-    
-    const authResult = await window.Pi?.authenticate(scopes, (payment) => {
-      console.log('Incomplete payment found during permission request:', payment);
-      // Handle incomplete payment if needed
+    // Set a timeout for authentication
+    const authPromise = new Promise<any>((resolve, reject) => {
+      const authTimeout = setTimeout(() => {
+        reject(new Error('Authentication request timed out'));
+      }, 20000); // 20 second timeout
+      
+      // Use authenticate to request the required scopes as per SDK reference
+      console.log('Requesting permissions with authenticate: username, payments, wallet_address');
+      const scopes: Scope[] = ['username', 'payments', 'wallet_address'];
+      
+      window.Pi!.authenticate(scopes, (payment) => {
+        console.log('Incomplete payment found during permission request:', payment);
+        // Handle incomplete payment if needed
+      })
+      .then(result => {
+        clearTimeout(authTimeout);
+        resolve(result);
+      })
+      .catch(err => {
+        clearTimeout(authTimeout);
+        reject(err);
+      });
     });
     
+    const authResult = await authPromise;
     console.log('Permission request result:', authResult);
     
     if (!authResult) {

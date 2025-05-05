@@ -8,7 +8,7 @@ import {
 import { SubscriptionTier } from '@/utils/piNetwork/types';
 import { getUserSubscription, updateUserData } from './authUtils';
 
-// Request permissions before authenticating
+// Request permissions before authenticating with improved error handling
 export const requestAuthPermissions = async (
   isSdkInitialized: boolean,
   setIsLoading: (loading: boolean) => void,
@@ -37,23 +37,11 @@ export const requestAuthPermissions = async (
       throw new Error("Pi Network SDK is not available");
     }
 
-    // Ensure SDK is initialized before requesting permissions
-    try {
-      const initResult = await initializePiNetwork();
-      if (!initResult) {
-        throw new Error("Failed to initialize Pi Network SDK");
-      }
-    } catch (error) {
-      console.error("SDK init error:", error);
-      throw new Error("Failed to initialize Pi Network SDK");
-    }
-
     // Request permissions with Pi Network
     const userInfo = await requestUserPermissions();
     
     if (userInfo) {
       console.log("Permission request successful:", userInfo);
-      toast.success("Permissions granted. Proceeding with authentication.");
       return true;
     } else {
       console.log("Permission request failed or was denied");
@@ -75,6 +63,7 @@ export const requestAuthPermissions = async (
   }
 };
 
+// Optimized login with better error handling and timeout management
 export const performLogin = async (
   isSdkInitialized: boolean,
   setIsLoading: (loading: boolean) => void,
@@ -108,24 +97,29 @@ export const performLogin = async (
       throw new Error("Pi Network SDK is not available");
     }
 
-    // Ensure SDK is initialized before authentication
-    try {
-      const initResult = await initializePiNetwork();
-      if (!initResult) {
-        throw new Error("Failed to initialize Pi Network SDK");
-      }
-    } catch (error) {
-      console.error("SDK init error during login:", error);
-      throw new Error("Failed to initialize Pi Network SDK");
-    }
-
     // Authenticate with Pi Network with required scopes
     console.log("Authenticating with Pi Network, requesting scopes: username, payments, wallet_address");
-    const authResult = await window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
-      console.log('Incomplete payment found:', payment);
-      // Handle incomplete payment when needed
-      // This would involve sending the payment to your server for completion
+    
+    // Create a promise with timeout for authentication
+    const authPromise = new Promise<any>((resolve, reject) => {
+      const authTimeout = setTimeout(() => {
+        reject(new Error('Authentication request timed out'));
+      }, 10000); // 10 second timeout for this specific step
+      
+      window.Pi!.authenticate(['username', 'payments', 'wallet_address'], (payment) => {
+        console.log('Incomplete payment found:', payment);
+      })
+      .then(result => {
+        clearTimeout(authTimeout);
+        resolve(result);
+      })
+      .catch(err => {
+        clearTimeout(authTimeout);
+        reject(err);
+      });
     });
+    
+    const authResult = await authPromise;
     
     console.log("Authentication result:", authResult);
     

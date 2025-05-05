@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { initializePiNetwork } from '@/utils/piNetwork';
@@ -21,8 +20,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
   // Minimum time between refresh calls (15 minutes)
   const REFRESH_COOLDOWN = 15 * 60 * 1000; 
-  // Maximum time to wait for authentication before timing out (30 seconds)
-  const AUTH_TIMEOUT = 30 * 1000;
+  // Reduce maximum time to wait for authentication (15 seconds instead of 30)
+  const AUTH_TIMEOUT = 15 * 1000;
 
   // Check for cached session on mount
   useEffect(() => {
@@ -63,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  // Initialize Pi Network SDK but don't authenticate automatically
+  // Initialize Pi Network SDK efficiently
   useEffect(() => {
     if (initAttempted.current) return;
     
@@ -84,66 +83,90 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initSdk();
   }, []);
 
-  // Two-step login process
+  // Optimized login process
   const login = useCallback(async (): Promise<void> => {
-    if (!isSdkInitialized) {
-      try {
-        console.log("Attempting to initialize SDK before login...");
-        const result = await initializePiNetwork();
-        setIsSdkInitialized(result);
-      } catch (error) {
-        console.error("Failed to initialize Pi Network SDK during login:", error);
-        toast.error("Failed to initialize Pi Network SDK. Please try again later.");
-        return;
-      }
+    if (pendingAuthRef.current) {
+      console.log("Authentication already in progress");
+      toast.info("Authentication in progress, please wait...");
+      return;
     }
-    
+
+    pendingAuthRef.current = true;
     setIsLoading(true);
     
-    // Set authentication timeout
+    // Reset any existing timeout
     if (authTimeoutRef.current) {
       clearTimeout(authTimeoutRef.current);
     }
     
+    // Set new authentication timeout
     authTimeoutRef.current = setTimeout(() => {
       setIsLoading(false);
       setAuthError("Authentication timed out. Please try again.");
       toast.error("Authentication timed out. Please try again.");
+      pendingAuthRef.current = false;
     }, AUTH_TIMEOUT);
     
-    // First step: Request permissions
-    const permissionsGranted = await requestAuthPermissions(
-      isSdkInitialized, 
-      setIsLoading, 
-      setAuthError
-    );
-    
-    if (!permissionsGranted) {
-      console.log("Permissions not granted. Authentication aborted.");
-      setIsLoading(false);
+    try {
+      // Initialize SDK if needed
+      if (!isSdkInitialized) {
+        console.log("Attempting to initialize SDK before login...");
+        try {
+          const result = await initializePiNetwork();
+          setIsSdkInitialized(result);
+        } catch (error) {
+          console.error("Failed to initialize Pi Network SDK during login:", error);
+          toast.error("Failed to initialize Pi Network SDK. Please try again later.");
+          pendingAuthRef.current = false;
+          setIsLoading(false);
+          if (authTimeoutRef.current) {
+            clearTimeout(authTimeoutRef.current);
+          }
+          return;
+        }
+      }
+      
+      // First step: Request permissions
+      const permissionsGranted = await requestAuthPermissions(
+        isSdkInitialized, 
+        setIsLoading, 
+        setAuthError
+      );
+      
+      if (!permissionsGranted) {
+        console.log("Permissions not granted. Authentication aborted.");
+        pendingAuthRef.current = false;
+        setIsLoading(false);
+        if (authTimeoutRef.current) {
+          clearTimeout(authTimeoutRef.current);
+          authTimeoutRef.current = null;
+        }
+        return;
+      }
+      
+      // Second step: Authenticate with Pi Network
+      await performLogin(
+        isSdkInitialized,
+        setIsLoading,
+        setAuthError,
+        (pending) => { pendingAuthRef.current = pending; },
+        setUser
+      );
+      
+      // Update last refresh timestamp
+      setLastRefresh(Date.now());
+    } catch (error) {
+      console.error("Login process error:", error);
+      toast.error("Authentication failed. Please try again.");
+      pendingAuthRef.current = false;
+    } finally {
+      // Clear authentication timeout
       if (authTimeoutRef.current) {
         clearTimeout(authTimeoutRef.current);
+        authTimeoutRef.current = null;
       }
-      return;
+      setIsLoading(false);
     }
-    
-    // Second step: Authenticate with Pi Network
-    await performLogin(
-      isSdkInitialized,
-      setIsLoading,
-      setAuthError,
-      (pending) => { pendingAuthRef.current = pending; },
-      setUser
-    );
-    
-    // Clear authentication timeout
-    if (authTimeoutRef.current) {
-      clearTimeout(authTimeoutRef.current);
-      authTimeoutRef.current = null;
-    }
-    
-    // Update last refresh timestamp
-    setLastRefresh(Date.now());
   }, [isSdkInitialized]);
 
   // Handle online/offline status
