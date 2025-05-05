@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from '@/context/auth';
+import { isPiNetworkAvailable } from '@/utils/piNetwork';
 
 interface LoginDialogProps {
   open: boolean;
@@ -12,12 +13,44 @@ interface LoginDialogProps {
 }
 
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
-  const { login, isLoading } = useAuth();
+  const { login, isLoading, authError } = useAuth();
+  const [sdkAvailable, setSdkAvailable] = useState<boolean>(false);
+  const [retryCount, setRetryCount] = useState<number>(0);
+  
+  useEffect(() => {
+    // Check if Pi SDK is available
+    setSdkAvailable(isPiNetworkAvailable());
+    
+    // More frequent checks when dialog is open
+    const checkInterval = setInterval(() => {
+      const available = isPiNetworkAvailable();
+      setSdkAvailable(available);
+      
+      // If dialog is open and SDK becomes available, increment retry count
+      if (open && available && retryCount === 0) {
+        setRetryCount(1);
+      }
+    }, 1000);
+    
+    return () => clearInterval(checkInterval);
+  }, [open, retryCount]);
+  
+  useEffect(() => {
+    // Auto-retry SDK detection once when dialog opens
+    if (open && !sdkAvailable && retryCount === 0) {
+      const timer = setTimeout(() => {
+        setRetryCount(1);
+        setSdkAvailable(isPiNetworkAvailable());
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [open, sdkAvailable, retryCount]);
   
   const handleLogin = async () => {
     try {
       await login();
-      onOpenChange(false);
+      // Only close on successful login - this will be handled by the auth flow
     } catch (error) {
       console.error('Login failed:', error);
     }
@@ -44,6 +77,22 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
             Sign in to <span className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">Avante Maps</span>
           </DialogTitle>
           
+          {!sdkAvailable && (
+            <div className="w-full bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 text-yellow-800 dark:text-yellow-300 p-3 rounded-md mb-4 flex items-start">
+              <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+              <p className="text-sm">
+                Pi Network SDK not detected. Please ensure you're using the Pi Browser app.
+              </p>
+            </div>
+          )}
+          
+          {authError && (
+            <div className="w-full bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 p-3 rounded-md mb-4 flex items-start">
+              <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+              <p className="text-sm">{authError}</p>
+            </div>
+          )}
+          
           <div className="w-full bg-muted/50 p-4 rounded-lg mb-6">
             <div className="flex items-center">
               <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
@@ -59,9 +108,14 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
           <Button 
             className="w-full mb-3 bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3"
             onClick={handleLogin}
-            disabled={isLoading}
+            disabled={isLoading || !sdkAvailable}
           >
-            {isLoading ? "Connecting..." : "Connect with Pi Network"}
+            {isLoading 
+              ? "Connecting..." 
+              : !sdkAvailable
+                ? "Pi Network Not Available"
+                : "Connect with Pi Network"
+            }
           </Button>
           
           <Button 
@@ -75,9 +129,9 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
           <div className="text-center text-sm text-muted-foreground px-4">
             <p>
               By connecting, Pi Network will share your profile information with Avante Maps. See our{' '}
-              <Link to="/privacy-policy" className="text-primary hover:underline">privacy policy</Link>
+              <Link to="/privacy" className="text-primary hover:underline">privacy policy</Link>
               {' '}and{' '}
-              <Link to="/terms-of-service" className="text-primary hover:underline">terms of service</Link>.
+              <Link to="/terms" className="text-primary hover:underline">terms of service</Link>.
             </p>
           </div>
         </div>

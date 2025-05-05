@@ -1,6 +1,6 @@
 
 import { toast } from 'sonner';
-import { initializePiNetwork, isPiNetworkAvailable } from '../piNetwork';
+import { initializePiNetwork, isPiNetworkAvailable, determineSandboxMode } from '../piNetwork';
 import { PaymentResult, SubscriptionFrequency } from './types';
 import { SubscriptionTier, PaymentDTO, PaymentData, PaymentCallbacks } from '../piNetwork/types';
 import { approvePayment, completePayment } from '@/api/payments';
@@ -8,8 +8,8 @@ import { approvePayment, completePayment } from '@/api/payments';
 // Global flag to track payment state
 let paymentInProgress = false;
 
-// Timeout settings for payment operations
-const PAYMENT_TIMEOUT = 120000; // 2 minutes
+// Timeout settings for payment operations (reduced)
+const PAYMENT_TIMEOUT = 60000; // 1 minute (reduced from 2 minutes)
 const POLLING_INTERVAL = 2000; // Poll every 2 seconds
 
 /**
@@ -71,13 +71,13 @@ export const executeSubscriptionPayment = async (
               clearTimeout(approvalTimeoutId);
             }
             
-            // Setup timeout for approval
+            // Setup timeout for approval - reduced to 45 seconds from 60
             approvalTimeoutId = window.setTimeout(() => {
               console.error("Payment approval timed out");
               toast.error("Payment approval timed out. Please try again.");
               paymentInProgress = false;
               reject(new Error("Payment approval timed out"));
-            }, PAYMENT_TIMEOUT);
+            }, 45000); // 45 second timeout (reduced from 60s)
             
             // Get the current authenticated user information
             const piUser = window.Pi?.currentUser;
@@ -95,6 +95,11 @@ export const executeSubscriptionPayment = async (
             
             while (retries > 0 && !success) {
               try {
+                // Show user feedback
+                if (retries < 3) {
+                  toast.info("Processing payment...");
+                }
+                
                 const approvalResult = await approvePayment({
                   paymentId,
                   userId: piUser.uid,
@@ -137,13 +142,13 @@ export const executeSubscriptionPayment = async (
               clearTimeout(approvalTimeoutId);
             }
             
-            // Setup timeout for completion
+            // Setup timeout for completion - reduced to 45 seconds
             completionTimeoutId = window.setTimeout(() => {
               console.error("Payment completion timed out");
               toast.error("Payment completion timed out. Please contact support.");
               paymentInProgress = false;
               reject(new Error("Payment completion timed out"));
-            }, PAYMENT_TIMEOUT);
+            }, 45000); // 45 second timeout (reduced from 60s)
             
             // Get the current authenticated user information
             const piUser = window.Pi?.currentUser;
@@ -161,6 +166,11 @@ export const executeSubscriptionPayment = async (
             
             while (retries > 0 && !success) {
               try {
+                // Show user feedback
+                if (retries < 3) {
+                  toast.info("Finalizing payment...");
+                }
+                
                 const completionResult = await completePayment({
                   paymentId,
                   txid,
@@ -254,5 +264,32 @@ export const executeSubscriptionPayment = async (
       success: false,
       message: errorMessage
     };
+  }
+};
+
+// Check for incomplete payments on initialization
+export const checkForIncompletePayments = (): PaymentDTO | null => {
+  try {
+    const storedPayment = localStorage.getItem('pi_incomplete_payment');
+    
+    if (storedPayment) {
+      const payment: PaymentDTO = JSON.parse(storedPayment);
+      console.log('Found incomplete payment:', payment);
+      return payment;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error checking for incomplete payments:', error);
+    return null;
+  }
+};
+
+// Clear incomplete payment data
+export const clearIncompletePayment = (): void => {
+  try {
+    localStorage.removeItem('pi_incomplete_payment');
+  } catch (error) {
+    console.error('Error clearing incomplete payment:', error);
   }
 };

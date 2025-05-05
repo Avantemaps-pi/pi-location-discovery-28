@@ -9,8 +9,11 @@ import { Scope } from './types';
 let isInitialized = false;
 let initializationInProgress = false;
 let initializationPromise: Promise<boolean> | null = null;
+let initRetries = 0;
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000; // 2 seconds
 
-// Initialize the Pi Network SDK with improved performance
+// Initialize the Pi Network SDK with improved performance and retry logic
 export const initializePiNetwork = async (): Promise<boolean> => {
   // Return cached initialization promise if one is in progress
   if (initializationInProgress && initializationPromise) {
@@ -24,20 +27,42 @@ export const initializePiNetwork = async (): Promise<boolean> => {
     return Promise.resolve(true);
   }
   
+  // Reset retry counter on fresh initialization
+  if (!initializationInProgress) {
+    initRetries = 0;
+  }
+  
   // Set flag and create new initialization promise
   initializationInProgress = true;
   
   initializationPromise = new Promise((resolve, reject) => {
-    // Set a timeout to prevent hanging
+    // Set a timeout to prevent hanging - reduced to 5s for faster feedback
     const timeout = setTimeout(() => {
       initializationInProgress = false;
-      reject(new Error('Pi Network SDK initialization timed out'));
-    }, 15000); // 15 second timeout
+      
+      // Retry logic instead of immediate rejection
+      if (initRetries < MAX_RETRIES) {
+        console.log(`Pi Network SDK initialization timed out, retrying... (${initRetries + 1}/${MAX_RETRIES})`);
+        initRetries++;
+        setTimeout(() => {
+          initializationPromise = null; // Clear the promise to allow new attempts
+          initializePiNetwork().then(resolve).catch(reject);
+        }, RETRY_DELAY);
+      } else {
+        console.error('Pi Network SDK initialization failed after maximum retries');
+        reject(new Error('Pi Network SDK initialization timed out after maximum retries'));
+      }
+    }, 5000); // 5 second timeout (reduced from 10s)
     
     // If SDK is available but not initialized, initialize it
     if (isPiNetworkAvailable()) {
       console.log('Pi Network SDK is loaded, initializing...');
-      window.Pi!.init({ version: "2.0", sandbox: true }) // Enable sandbox mode for Testnet
+      
+      // Determine sandbox mode based on environment/hostname
+      const isSandbox = determineSandboxMode();
+      console.log(`Initializing Pi SDK with sandbox mode: ${isSandbox}`);
+      
+      window.Pi!.init({ version: "2.0", sandbox: isSandbox })
         .then(() => {
           console.log('Pi Network SDK initialized successfully');
           isInitialized = true;
@@ -49,7 +74,18 @@ export const initializePiNetwork = async (): Promise<boolean> => {
           console.error('Failed to initialize Pi Network SDK:', error);
           initializationInProgress = false;
           clearTimeout(timeout);
-          reject(error);
+          
+          // Retry logic for initialization failures
+          if (initRetries < MAX_RETRIES) {
+            console.log(`Retrying initialization... (${initRetries + 1}/${MAX_RETRIES})`);
+            initRetries++;
+            setTimeout(() => {
+              initializationPromise = null; // Clear the promise to allow new attempts
+              initializePiNetwork().then(resolve).catch(reject);
+            }, RETRY_DELAY);
+          } else {
+            reject(error);
+          }
         });
       return;
     }
@@ -65,7 +101,11 @@ export const initializePiNetwork = async (): Promise<boolean> => {
       console.log('Pi Network SDK loaded successfully, initializing...');
       // Initialize the SDK after it's loaded
       if (window.Pi) {
-        window.Pi.init({ version: "2.0", sandbox: true }) // Enable sandbox mode for Testnet
+        // Determine sandbox mode based on environment/hostname
+        const isSandbox = determineSandboxMode();
+        console.log(`Initializing Pi SDK with sandbox mode: ${isSandbox}`);
+        
+        window.Pi.init({ version: "2.0", sandbox: isSandbox })
           .then(() => {
             console.log('Pi Network SDK initialized successfully');
             isInitialized = true;
@@ -77,7 +117,18 @@ export const initializePiNetwork = async (): Promise<boolean> => {
             console.error('Failed to initialize Pi Network SDK:', error);
             initializationInProgress = false;
             clearTimeout(timeout);
-            reject(error);
+            
+            // Retry logic for initialization failures
+            if (initRetries < MAX_RETRIES) {
+              console.log(`Retrying initialization... (${initRetries + 1}/${MAX_RETRIES})`);
+              initRetries++;
+              setTimeout(() => {
+                initializationPromise = null;
+                initializePiNetwork().then(resolve).catch(reject);
+              }, RETRY_DELAY);
+            } else {
+              reject(error);
+            }
           });
       } else {
         const error = new Error('Pi Network SDK loaded but not defined');
@@ -92,7 +143,18 @@ export const initializePiNetwork = async (): Promise<boolean> => {
       console.error('Failed to load Pi Network SDK', error);
       initializationInProgress = false;
       clearTimeout(timeout);
-      reject(new Error('Failed to load Pi Network SDK'));
+      
+      // Retry logic for script loading failures
+      if (initRetries < MAX_RETRIES) {
+        console.log(`Retrying SDK script loading... (${initRetries + 1}/${MAX_RETRIES})`);
+        initRetries++;
+        setTimeout(() => {
+          initializationPromise = null;
+          initializePiNetwork().then(resolve).catch(reject);
+        }, RETRY_DELAY);
+      } else {
+        reject(new Error('Failed to load Pi Network SDK after maximum retries'));
+      }
     };
     
     document.head.appendChild(script);
@@ -101,13 +163,43 @@ export const initializePiNetwork = async (): Promise<boolean> => {
   return initializationPromise;
 };
 
+/**
+ * Determines whether to use sandbox mode based on environment/hostname
+ * - dev branch should use sandbox: true
+ * - testnet branch should use sandbox: false
+ */
+export const determineSandboxMode = (): boolean => {
+  // Check environment variable first
+  if (typeof import.meta.env.VITE_PI_SANDBOX === 'string') {
+    return import.meta.env.VITE_PI_SANDBOX === 'true';
+  }
+  
+  // Fallback to hostname check
+  const hostname = window.location.hostname;
+  
+  // Check if we're in a development environment
+  if (
+    hostname === 'localhost' || 
+    hostname.includes('127.0.0.1') ||
+    hostname.includes('dev.') ||
+    hostname.includes('.dev.') ||
+    hostname.includes('-dev-') ||
+    hostname.includes('sandbox')
+  ) {
+    return true; // Use sandbox mode in development environments
+  }
+  
+  // Default to production (non-sandbox) mode for testnet and production
+  return false;
+};
+
 // Check if SDK is initialized
 export const isSdkInitialized = (): boolean => {
   return isInitialized;
 };
 
 /**
- * Request additional user permissions with improved error handling
+ * Request additional user permissions with improved error handling and timeout
  */
 export const requestUserPermissions = async (): Promise<{
   username: string;
@@ -131,11 +223,11 @@ export const requestUserPermissions = async (): Promise<{
   }
 
   try {
-    // Set a timeout for authentication
+    // Set a timeout for authentication - reduced to 6s for quicker feedback
     const authPromise = new Promise<any>((resolve, reject) => {
       const authTimeout = setTimeout(() => {
-        reject(new Error('Authentication request timed out'));
-      }, 20000); // 20 second timeout
+        reject(new Error('Permission request timed out'));
+      }, 6000); // 6 second timeout - faster feedback to user
       
       // Use authenticate to request the required scopes as per SDK reference
       console.log('Requesting permissions with authenticate: username, payments, wallet_address');
@@ -143,7 +235,11 @@ export const requestUserPermissions = async (): Promise<{
       
       window.Pi!.authenticate(scopes, (payment) => {
         console.log('Incomplete payment found during permission request:', payment);
-        // Handle incomplete payment if needed
+        // Handle incomplete payment
+        // Store it to be handled after authentication
+        if (window.localStorage) {
+          window.localStorage.setItem('pi_incomplete_payment', JSON.stringify(payment));
+        }
       })
       .then(result => {
         clearTimeout(authTimeout);
@@ -171,6 +267,7 @@ export const requestUserPermissions = async (): Promise<{
         roles?: string[];
         wallet_address?: string;
       };
+      accessToken: string;
     };
 
     return {
@@ -182,4 +279,15 @@ export const requestUserPermissions = async (): Promise<{
     console.error('Error requesting user permissions:', error);
     return null;
   }
+};
+
+// Force re-initialization of the SDK
+export const forceSdkReinitialization = async (): Promise<boolean> => {
+  console.log('Forcing Pi SDK re-initialization');
+  isInitialized = false;
+  initializationInProgress = false;
+  initializationPromise = null;
+  initRetries = 0;
+  
+  return initializePiNetwork();
 };

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { initializePiNetwork } from '@/utils/piNetwork';
@@ -10,7 +11,7 @@ import AuthContext from './useAuth';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<PiUser | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // Start with loading true
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSdkInitialized, setIsSdkInitialized] = useState<boolean>(false);
   const [lastRefresh, setLastRefresh] = useState<number>(0);
@@ -20,8 +21,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   
   // Minimum time between refresh calls (15 minutes)
   const REFRESH_COOLDOWN = 15 * 60 * 1000; 
-  // Reduce maximum time to wait for authentication (15 seconds instead of 30)
-  const AUTH_TIMEOUT = 15 * 1000;
+  // Reduced timeout to 6 seconds
+  const AUTH_TIMEOUT = 6 * 1000;
 
   // Check for cached session on mount
   useEffect(() => {
@@ -36,30 +37,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(userData);
         } else {
           console.log("Cached session expired");
+          localStorage.removeItem(STORAGE_KEY);
         }
       } catch (error) {
         console.error("Error parsing cached session:", error);
         localStorage.removeItem(STORAGE_KEY);
       }
     }
-    
-    // Set a timeout to automatically set isLoading to false after AUTH_TIMEOUT
-    // This prevents the app from being stuck in the loading state indefinitely
-    authTimeoutRef.current = setTimeout(() => {
-      if (isLoading) {
-        console.log("Authentication timed out, resetting loading state");
-        setIsLoading(false);
-        setAuthError("Authentication timed out. Please try again later.");
-      }
-    }, AUTH_TIMEOUT);
-    
-    setIsLoading(false); // Reset loading state since we've checked cache
-    
-    return () => {
-      if (authTimeoutRef.current) {
-        clearTimeout(authTimeoutRef.current);
-      }
-    };
   }, []);
 
   // Initialize Pi Network SDK efficiently
@@ -99,7 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       clearTimeout(authTimeoutRef.current);
     }
     
-    // Set new authentication timeout
+    // Set new authentication timeout - reduced to 6s
     authTimeoutRef.current = setTimeout(() => {
       setIsLoading(false);
       setAuthError("Authentication timed out. Please try again.");
@@ -114,6 +98,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           const result = await initializePiNetwork();
           setIsSdkInitialized(result);
+          if (!result) {
+            throw new Error("SDK initialization failed");
+          }
         } catch (error) {
           console.error("Failed to initialize Pi Network SDK during login:", error);
           toast.error("Failed to initialize Pi Network SDK. Please try again later.");
@@ -167,7 +154,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       setIsLoading(false);
     }
-  }, [isSdkInitialized]);
+  }, [isSdkInitialized, AUTH_TIMEOUT]);
 
   // Handle online/offline status
   const isOffline = useNetworkStatus(pendingAuthRef, login);
