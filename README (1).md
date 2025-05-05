@@ -20,11 +20,11 @@ Avante Maps collaborates with:
 
 ## 🔧 Technical Stack  
 
-- **Frontend**: HTML, CSS, JavaScript  
-- **Backend**: Python / Node.js  
-- **Database**: Firebase / MongoDB  
-- **Maps API**: Google Maps API  
-- **Hosting**: Firebase / AWS  
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS 
 
 ## 📌 Roadmap  
 
