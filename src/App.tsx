@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/auth";
 import { useSessionRestoration } from "@/hooks/useSessionRestoration";
+import 'leaflet/dist/leaflet.css';
 import Index from "./pages/Index";
 import Recommendations from "./pages/Recommendations";
 import Bookmarks from "./pages/Bookmarks";
