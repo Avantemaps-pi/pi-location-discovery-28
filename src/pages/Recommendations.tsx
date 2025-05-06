@@ -11,7 +11,6 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useIsMobile } from '@/hooks/use-mobile';
-import styles from '@/styles/scroll-snap.module.css';
 
 const Recommendations = () => {
   const navigate = useNavigate();
@@ -30,11 +29,25 @@ const Recommendations = () => {
     setActiveSection(null);
   };
 
+  const getWidthClass = () => {
+    if (isMobile) {
+      return 'min-w-[85%] snap-start px-2';
+    }
+    return 'basis-[45%] md:basis-[35%] lg:basis-1/4 pl-0';
+  };
+
+  const getCarouselContentClass = () => {
+    return isMobile
+      ? 'flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory touch-pan-x -mx-4 px-4'
+      : 'ml-0';
+  };
+
   return (
     <AppLayout title="Recommendations">
       <div className="w-full mx-auto recommendations-container mt-4 overflow-hidden h-[calc(100vh-80px)]">
         <div className="space-y-4 sm:space-y-5 overflow-y-auto h-[calc(100vh-94px)] px-2 pb-4">
 
+          {/* Reusable Carousel Section */}
           {[
             { title: 'Avante Top Choice', id: 'avanteTopChoice', data: avanteTopChoice },
             { title: 'Suggested for you', id: 'suggestedForYou', data: suggestedForYou },
@@ -58,12 +71,9 @@ const Recommendations = () => {
                     <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
                   </>
                 )}
-                <CarouselContent className={isMobile ? styles.scrollSnapContainer : 'ml-0'}>
+                <CarouselContent className={getCarouselContentClass()}>
                   {data.map((place) => (
-                    <CarouselItem
-                      key={place.id}
-                      className={isMobile ? styles.scrollSnapItem : 'basis-[45%] md:basis-[35%] lg:basis-1/4 pl-0'}
-                    >
+                    <CarouselItem key={place.id} className={getWidthClass()}>
                       <PlaceCard
                         place={place}
                         onPlaceClick={handlePlaceClick}
@@ -75,7 +85,7 @@ const Recommendations = () => {
               </Carousel>
             </section>
           ))}
-
+          
         </div>
       </div>
     </AppLayout>
