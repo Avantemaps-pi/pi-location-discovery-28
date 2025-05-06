@@ -29,81 +29,63 @@ const Recommendations = () => {
     setActiveSection(null);
   };
 
-  const getItemClass = () => {
-    return isMobile
-      ? 'min-w-full scroll-snap-align-start px-2'
-      : 'basis-[45%] md:basis-[35%] lg:basis-1/4 px-2';
+  const getWidthClass = () => {
+    if (isMobile) {
+      return 'min-w-[85%] snap-start px-2';
+    }
+    return 'basis-[45%] md:basis-[35%] lg:basis-1/4 pl-0';
   };
 
-  const renderSection = (
-    title: string,
-    sectionKey: string,
-    data: typeof recommendedForYou
-  ) => (
-    <section
-      className="relative"
-      onMouseEnter={() => handleMouseEnter(sectionKey)}
-      onMouseLeave={handleMouseLeave}
-      onTouchStart={() => handleMouseEnter(sectionKey)}
-    >
-      <h2 className="text-xl font-semibold mb-2 flex items-center">
-        <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
-        {title}
-      </h2>
-
-      <div className="relative">
-        {!isMobile && activeSection === sectionKey && (
-          <>
-            <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-1" />
-            <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
-          </>
-        )}
-
-        <Carousel className="w-full">
-          <CarouselContent
-            className={`flex ${isMobile
-              ? 'overflow-x-auto scroll-snap-x mandatory -mx-2'
-              : 'overflow-hidden'
-            }`}
-            style={
-              isMobile
-                ? {
-                    scrollSnapType: 'x mandatory',
-                    WebkitOverflowScrolling: 'touch',
-                  }
-                : {}
-            }
-          >
-            {data.map((place) => (
-              <CarouselItem
-                key={place.id}
-                className={`${getItemClass()} scroll-snap-align-start`}
-                style={
-                  isMobile
-                    ? { scrollSnapAlign: 'start' }
-                    : {}
-                }
-              >
-                <PlaceCard
-                  place={place}
-                  onPlaceClick={handlePlaceClick}
-                  className="w-full"
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
-      </div>
-    </section>
-  );
+  const getCarouselContentClass = () => {
+    return isMobile
+      ? 'flex gap-2 overflow-x-auto scroll-smooth snap-x snap-mandatory touch-pan-x -mx-4 px-4'
+      : 'ml-0';
+  };
 
   return (
     <AppLayout title="Recommendations">
-      <div className="w-full mx-auto mt-4 overflow-hidden h-[calc(100vh-80px)]">
+      <div className="w-full mx-auto recommendations-container mt-4 overflow-hidden h-[calc(100vh-80px)]">
         <div className="space-y-4 sm:space-y-5 overflow-y-auto h-[calc(100vh-94px)] px-2 pb-4">
-          {renderSection('Avante Top Choice', 'avanteTopChoice', avanteTopChoice)}
-          {renderSection('Suggested for you', 'suggestedForYou', suggestedForYou)}
-          {renderSection('Recommended for you', 'recommendedForYou', recommendedForYou)}
+
+          {/* Reusable Carousel Section */}
+          {[
+            { title: 'Avante Top Choice', id: 'avanteTopChoice', data: avanteTopChoice },
+            { title: 'Suggested for you', id: 'suggestedForYou', data: suggestedForYou },
+            { title: 'Recommended for you', id: 'recommendedForYou', data: recommendedForYou },
+          ].map(({ title, id, data }) => (
+            <section
+              key={id}
+              className="relative"
+              onMouseEnter={() => handleMouseEnter(id)}
+              onMouseLeave={handleMouseLeave}
+              onTouchStart={() => handleMouseEnter(id)}
+            >
+              <h2 className="text-xl font-semibold mb-2 flex items-center">
+                <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
+                {title}
+              </h2>
+              <Carousel className="w-full">
+                {(activeSection === id || isMobile) && (
+                  <>
+                    <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-1" />
+                    <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
+                  </>
+                )}
+                <CarouselContent className={getCarouselContentClass()}>
+                  {data.map((place) => (
+                    <CarouselItem key={place.id} className={getWidthClass()}>
+                      <PlaceCard
+                        place={place}
+                        onPlaceClick={handlePlaceClick}
+                        className="w-full"
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
+            </section>
+          ))}
+          
         </div>
       </div>
     </AppLayout>
