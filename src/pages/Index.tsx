@@ -1,3 +1,4 @@
+
 // pages/index.tsx
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
@@ -14,6 +15,15 @@ const Index = () => {
     setSelectedPlace(placeId);
   };
 
+  // Convert the places data format to match what MapComponent expects
+  const formatPlacesForMap = (placesData: any[]) => {
+    return placesData.map(place => ({
+      id: place.id,
+      name: place.name,
+      position: place.position || place.location || { lat: 0, lng: 0 }
+    }));
+  };
+
   return (
     <AppLayout
       title="Avante Maps"
@@ -23,7 +33,7 @@ const Index = () => {
       hideSidebar={false}
     >
       <MapComponent
-        places={filteredPlaces.length > 0 ? filteredPlaces : places}
+        places={formatPlacesForMap(filteredPlaces.length > 0 ? filteredPlaces : places)}
         selectedPlace={selectedPlace}
         onMarkerClick={handlePlaceClick}
       />

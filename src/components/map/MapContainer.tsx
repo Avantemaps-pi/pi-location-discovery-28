@@ -9,7 +9,6 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
 // Fix for default icon issues in Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
   iconUrl: markerIcon,
@@ -19,7 +18,7 @@ L.Icon.Default.mergeOptions({
 interface Place {
   id: string;
   name: string;
-  location: {
+  position: {
     lat: number;
     lng: number;
   };
@@ -41,7 +40,7 @@ const MapComponent: React.FC<MapProps> = ({ places, selectedPlace, onMarkerClick
       {places.map((place) => (
         <Marker
           key={place.id}
-          position={[place.location.lat, place.location.lng]}
+          position={[place.position.lat, place.position.lng]}
           eventHandlers={{
             click: () => onMarkerClick(place.id),
           }}
