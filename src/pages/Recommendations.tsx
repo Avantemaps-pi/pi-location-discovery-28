@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -17,7 +16,7 @@ const Recommendations = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  
+
   const handlePlaceClick = (placeId: string) => {
     navigate('/', { state: { selectedPlaceId: placeId } });
   };
@@ -31,13 +30,17 @@ const Recommendations = () => {
   };
 
   const getItemClass = () => {
-    return isMobile 
-      ? 'w-full flex-shrink-0 pl-0' 
-      : 'basis-[45%] md:basis-[35%] lg:basis-1/4 flex-shrink-0';
+    return isMobile
+      ? 'min-w-full scroll-snap-align-start px-2'
+      : 'basis-[45%] md:basis-[35%] lg:basis-1/4 px-2';
   };
 
-  const renderSection = (title: string, sectionKey: string, data: typeof recommendedForYou) => (
-    <section 
+  const renderSection = (
+    title: string,
+    sectionKey: string,
+    data: typeof recommendedForYou
+  ) => (
+    <section
       className="relative"
       onMouseEnter={() => handleMouseEnter(sectionKey)}
       onMouseLeave={handleMouseLeave}
@@ -47,25 +50,50 @@ const Recommendations = () => {
         <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
         {title}
       </h2>
-      <Carousel className="w-full">
+
+      <div className="relative">
         {!isMobile && activeSection === sectionKey && (
           <>
             <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-1" />
             <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
           </>
         )}
-        <CarouselContent className="ml-0 gap-x-2">
-          {data.map((place) => (
-            <CarouselItem key={place.id} className={getItemClass()}>
-              <PlaceCard 
-                place={place} 
-                onPlaceClick={handlePlaceClick}
-                className="w-full"
-              />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
+
+        <Carousel className="w-full">
+          <CarouselContent
+            className={`flex ${isMobile
+              ? 'overflow-x-auto scroll-snap-x mandatory -mx-2'
+              : 'overflow-hidden'
+            }`}
+            style={
+              isMobile
+                ? {
+                    scrollSnapType: 'x mandatory',
+                    WebkitOverflowScrolling: 'touch',
+                  }
+                : {}
+            }
+          >
+            {data.map((place) => (
+              <CarouselItem
+                key={place.id}
+                className={`${getItemClass()} scroll-snap-align-start`}
+                style={
+                  isMobile
+                    ? { scrollSnapAlign: 'start' }
+                    : {}
+                }
+              >
+                <PlaceCard
+                  place={place}
+                  onPlaceClick={handlePlaceClick}
+                  className="w-full"
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </div>
     </section>
   );
 
