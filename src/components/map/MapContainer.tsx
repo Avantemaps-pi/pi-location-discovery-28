@@ -39,7 +39,12 @@ interface MapProps {
 const MapComponent: React.FC<MapProps> = ({ places, selectedPlace, onMarkerClick }) => {
   return (
     <div className="absolute inset-0">
-    <MapContainer center={[-29.8587, 31.0218]} zoom={13} style={{ height: '100vh', width: '100%' }}>
+    <MapContainer 
+      center={[-29.8587, 31.0218]} 
+      zoom={13} 
+      style={{ height: '100vh', width: '100%' }}
+      zoomControl={false} // 🔥 disables the zoom buttons
+      >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
