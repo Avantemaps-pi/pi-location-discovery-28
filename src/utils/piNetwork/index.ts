@@ -4,7 +4,7 @@
  */
 
 // Export core SDK functionality
-export { initializePiNetwork, isSdkInitialized, requestUserPermissions, forceSdkReinitialization } from './core';
+export { initializePiNetwork, isSdkInitialized, requestUserPermissions, forceSdkReinitialization, determineSandboxMode } from './core';
 
 // Export helpers
 export { isPiNetworkAvailable, isSessionExpired } from './helpers';

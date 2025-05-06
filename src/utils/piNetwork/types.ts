@@ -3,29 +3,7 @@
  * Type definitions for the Pi Network SDK
  */
 
-// Define the Pi Network SDK types to extend the global Window interface
-declare global {
-  interface Window {
-    Pi?: {
-      init: (options: { version: string; sandbox?: boolean }) => Promise<void>;
-      authenticate: (
-        scopes: Array<Scope>, 
-        onIncompletePaymentFound?: (payment: PaymentDTO) => void
-      ) => Promise<AuthResult>;
-      createPayment: (
-        paymentData: PaymentData,
-        callbacks: PaymentCallbacks
-      ) => void;
-      currentUser?: {
-        uid: string;
-        username: string;
-        roles?: string[];
-      };
-    };
-  }
-}
-
-// Type definitions from SDK reference
+// Define the Pi Network SDK types
 export type Scope = "username" | "payments" | "wallet_address";
 
 export type AuthResult = {
@@ -84,3 +62,5 @@ export enum SubscriptionTier {
   SMALL_BUSINESS = 'small-business',
   ORGANIZATION = 'organization',
 }
+
+// Note: We're removing the global interface declaration as it's already defined in global.d.ts
