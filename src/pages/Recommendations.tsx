@@ -16,134 +16,121 @@ import { useIsMobile } from '@/hooks/use-mobile';
 const Recommendations = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [showControls, setShowControls] = useState({
-    avanteTopChoice: false,
-    suggestedForYou: false,
-    recommendedForYou: false
-  });
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   
   const handlePlaceClick = (placeId: string) => {
     navigate('/', { state: { selectedPlaceId: placeId } });
   };
 
-  const handleMouseEnter = (section: keyof typeof showControls) => {
-    setShowControls(prev => ({ ...prev, [section]: true }));
+  const handleMouseEnter = (section: string) => {
+    setActiveSection(section);
   };
 
-  const handleMouseLeave = (section: keyof typeof showControls) => {
-    setShowControls(prev => ({ ...prev, [section]: false }));
-  };
-
-  const handleTouchStart = (section: keyof typeof showControls) => {
-    setShowControls(prev => ({ ...prev, [section]: true }));
+  const handleMouseLeave = () => {
+    setActiveSection(null);
   };
 
   const getWidthClass = () => {
     if (isMobile) {
-      return 'basis-[90%] sm:basis-[90%]';
+      return 'basis-full pl-0';
     }
-    return 'basis-[90%] sm:basis-[45%] md:basis-[35%] lg:basis-1/4';
+    return 'basis-[45%] md:basis-[35%] lg:basis-1/4 pl-0';
   };
 
   return (
-    <AppLayout>
-      <div className="w-full mx-auto recommendations-container mt-8 overflow-hidden h-[calc(100vh-64px)]">
-        <div className="space-y-1 mb-3 sm:mb-4 px-2 sm:px-4">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Recommendations</h1>
-          <p className="text-sm text-muted-foreground">Discover top-rated places that accept Pi cryptocurrency.</p>
-        </div>
-
-        <div className="space-y-4 sm:space-y-5 overflow-y-auto h-[calc(100vh-140px)]">
+    <AppLayout title="Recommendations">
+      <div className="w-full mx-auto recommendations-container mt-4 overflow-hidden h-[calc(100vh-80px)]">
+        <div className="space-y-4 sm:space-y-5 overflow-y-auto h-[calc(100vh-94px)] px-2 pb-4">
           <section 
             className="relative"
             onMouseEnter={() => handleMouseEnter('avanteTopChoice')}
-            onMouseLeave={() => handleMouseLeave('avanteTopChoice')}
-            onTouchStart={() => handleTouchStart('avanteTopChoice')}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={() => handleMouseEnter('avanteTopChoice')}
           >
-            <h2 className="text-xl sm:text-xl font-semibold mb-2 flex items-center px-2 sm:px-4">
+            <h2 className="text-xl font-semibold mb-2 flex items-center">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Avante Top Choice
             </h2>
             <Carousel className="w-full">
-              {showControls.avanteTopChoice && (
-                <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
+              {(activeSection === 'avanteTopChoice' || isMobile) && (
+                <>
+                  <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-1" />
+                  <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
+                </>
               )}
               <CarouselContent className="ml-0">
                 {avanteTopChoice.map((place) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                  <CarouselItem key={place.id} className={getWidthClass()}>
                     <PlaceCard 
                       place={place} 
                       onPlaceClick={handlePlaceClick}
-                      className="w-full"
+                      className="mr-2 w-full"
                     />
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              {showControls.avanteTopChoice && (
-                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
-              )}
             </Carousel>
           </section>
           
           <section 
             className="relative"
             onMouseEnter={() => handleMouseEnter('suggestedForYou')}
-            onMouseLeave={() => handleMouseLeave('suggestedForYou')}
-            onTouchStart={() => handleTouchStart('suggestedForYou')}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={() => handleMouseEnter('suggestedForYou')}
           >
-            <h2 className="text-xl sm:text-xl font-semibold mb-2 flex items-center px-2 sm:px-4">
+            <h2 className="text-xl font-semibold mb-2 flex items-center">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Suggested for you
             </h2>
             <Carousel className="w-full">
-              {showControls.suggestedForYou && (
-                <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
+              {(activeSection === 'suggestedForYou' || isMobile) && (
+                <>
+                  <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-1" />
+                  <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
+                </>
               )}
               <CarouselContent className="ml-0">
                 {suggestedForYou.map((place) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                  <CarouselItem key={place.id} className={getWidthClass()}>
                     <PlaceCard 
                       place={place} 
                       onPlaceClick={handlePlaceClick}
-                      className="w-full"
+                      className="mr-2 w-full"
                     />
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              {showControls.suggestedForYou && (
-                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
-              )}
             </Carousel>
           </section>
           
           <section 
             className="relative"
             onMouseEnter={() => handleMouseEnter('recommendedForYou')}
-            onMouseLeave={() => handleMouseLeave('recommendedForYou')}
-            onTouchStart={() => handleTouchStart('recommendedForYou')}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={() => handleMouseEnter('recommendedForYou')}
           >
-            <h2 className="text-xl sm:text-xl font-semibold mb-2 flex items-center px-2 sm:px-4">
+            <h2 className="text-xl font-semibold mb-2 flex items-center">
               <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
               Recommended for you
             </h2>
             <Carousel className="w-full">
-              {showControls.recommendedForYou && (
-                <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-2" />
+              {(activeSection === 'recommendedForYou' || isMobile) && (
+                <>
+                  <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-1" />
+                  <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
+                </>
               )}
               <CarouselContent className="ml-0">
                 {recommendedForYou.map((place) => (
-                  <CarouselItem key={place.id} className={`pl-0 ${getWidthClass()} carousel-item-recommendations`}>
+                  <CarouselItem key={place.id} className={getWidthClass()}>
                     <PlaceCard 
                       place={place} 
                       onPlaceClick={handlePlaceClick}
-                      className="w-full"
+                      className="mr-2 w-full"
                     />
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              {showControls.recommendedForYou && (
-                <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-2" />
-              )}
             </Carousel>
           </section>
         </div>

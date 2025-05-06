@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Menu } from 'lucide-react';
@@ -22,9 +23,42 @@ const PageHeader = ({
   const isAnalyticsPage = location.pathname === '/analytics';
   const isRegistrationPage = location.pathname === '/registration';
   const isIndexPage = location.pathname === '/';
+  const isUpdateRegistrationPage = location.pathname.includes('/update-registration');
+  const isVerificationInfoPage = location.pathname === '/verification-info';
+  
+  // Get page title based on current route
+  const getPageTitle = () => {
+    if (isIndexPage) return null; // No title for homepage
+    if (isAnalyticsPage) return "Business Analytics";
+    if (isRegistrationPage) return "Register Business";
+    if (isUpdateRegistrationPage) return "Update Business";
+    if (isVerificationInfoPage) return "Verification & Certification";
+    
+    // Default titles for other routes
+    switch (location.pathname) {
+      case '/recommendations': return "Recommendations";
+      case '/bookmarks': return "Bookmarks";
+      case '/communicon': return "Communicon";
+      case '/notifications': return "Notifications";
+      case '/registered-business': return "Your Businesses";
+      case '/review': return "Write a Review";
+      case '/contact': return "Contact Us";
+      case '/about': return "About";
+      case '/settings': return "Settings";
+      case '/terms': return "Terms of Service";
+      case '/privacy': return "Privacy Policy";
+      case '/cookies': return "Cookie Policy";
+      case '/pricing': return "Pricing Plans";
+      default: return title;
+    }
+  };
+  
+  const pageTitle = getPageTitle();
+  
   const handleMenuClick = () => {
     setOpenMobile(true);
   };
+  
   return <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-full items-center px-4">
         <div className="flex items-center">
@@ -42,12 +76,20 @@ const PageHeader = ({
           {isRegistrationPage && <Button variant="ghost" size="icon" onClick={() => navigate('/')} className="mr-2">
               <ArrowLeft className="h-5 w-5" />
             </Button>}
+          
+          {isVerificationInfoPage && <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="mr-2">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>}
         </div>
         
         <div className="flex-1 flex justify-center">
-          <Link to="/" className="flex items-center gap-2 mx-auto">
-            
-          </Link>
+          {pageTitle ? (
+            <h1 className="text-xl font-semibold">{pageTitle}</h1>
+          ) : (
+            <Link to="/" className="flex items-center gap-2 mx-auto">
+              
+            </Link>
+          )}
         </div>
         
         <div className="flex items-center space-x-4">

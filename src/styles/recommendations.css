@@ -4,8 +4,7 @@
   .place-card-container {
     width: 100% !important;
     max-width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    padding-right: 0.5rem !important;
   }
 }
 
@@ -14,9 +13,22 @@
   padding-right: 1rem;
 }
 
-.carousel-item-recommendations .place-card-container {
-  width: 90% !important; /* Increased from 80% to 90% */
-  margin: 0 auto;
+@media (max-width: 640px) {
+  .carousel-item-recommendations {
+    padding-right: 0.5rem !important;
+  }
+  
+  .carousel-item-recommendations .place-card-container {
+    width: 100% !important; 
+    margin: 0;
+  }
+}
+
+@media (min-width: 641px) {
+  .carousel-item-recommendations .place-card-container {
+    width: 95% !important; 
+    margin: 0 auto;
+  }
 }
 
 /* Prevent horizontal scrolling on recommendations page */
@@ -45,5 +57,17 @@
 
 /* Adjust carousel position */
 .embla__container {
-  margin-left: -0.5rem !important;
+  margin-left: 0 !important;
+}
+
+/* Fix carousel navigation on mobile */
+@media (max-width: 640px) {
+  .embla__button {
+    width: 24px !important;
+    height: 24px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 }

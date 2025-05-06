@@ -15,25 +15,12 @@ const VerificationInfo = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="h-16 border-b flex items-center px-4 bg-white">
-        <Button variant="ghost" size="icon" className="mr-2" onClick={() => navigate(-1)}>
-          <ArrowLeft className="h-5 w-5" />
-          <span className="sr-only">Go back</span>
-        </Button>
-        <div className="flex-1 flex justify-center">
-          <h1 className="text-xl font-bold">Verification & Certification</h1>
-        </div>
-        <div className="w-10">
-          {/* Empty div to balance the header */}
-        </div>
-      </header>
-
+    <AppLayout title="Verification & Certification">
       <div className="flex-1 p-4">
         <div className="max-w-4xl mx-auto">
           <div className="mb-6">
             <p className="text-muted-foreground mt-1">
-              Understanding the processes for verifying /n and certifying your Pi business
+              Understanding the processes for verifying and certifying your Pi business
             </p>
           </div>
 
@@ -162,7 +149,7 @@ const VerificationInfo = () => {
           </div>
         </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 

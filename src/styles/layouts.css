@@ -18,7 +18,13 @@
   }
   
   .form-card {
-    padding: 1rem;
+    padding: 0.75rem;
+  }
+  
+  .form-container input,
+  .form-container select,
+  .form-container textarea {
+    font-size: 16px; /* Prevents iOS zoom on focus */
   }
 }
 
@@ -43,6 +49,19 @@
 
 /* Registration form container consistency */
 .form-container {
-  min-height: 700px;
+  min-height: auto;
+  padding-bottom: 2rem;
 }
 
+/* Recommendations page carousel fixes */
+@media (max-width: 640px) {
+  .recommendations-container .embla__slide {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+  }
+  
+  .carousel-item-recommendations {
+    padding-right: 0.5rem !important;
+    padding-left: 0.5rem !important;
+  }
+}

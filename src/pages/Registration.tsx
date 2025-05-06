@@ -37,9 +37,13 @@ const Registration = () => {
   };
   
   return (
-    <AppLayout title="Avante Maps" fullHeight hideSidebar={true}>
+    <AppLayout 
+      title="Register Business"
+      fullHeight={false} 
+      hideSidebar={true}
+    >
       <motion.div 
-        className="w-full max-w-5xl mx-auto px-4 py-4 md:py-6 overflow-y-auto prevent-overflow form-container"
+        className="w-full max-w-5xl mx-auto px-2 py-2 md:py-6 overflow-visible form-container"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
