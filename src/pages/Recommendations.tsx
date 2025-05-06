@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -31,9 +32,9 @@ const Recommendations = () => {
 
   const getWidthClass = () => {
     if (isMobile) {
-      return 'basis-[85%] pl-0'; // Slimmed for mobile
+      return 'basis-[80%] pl-0'; // Slimmed for mobile (reduced from 85% to 80%)
     }
-    return 'basis-[30%] md:basis-[25%] lg:basis-[20%] pl-0'; // Slimmed for desktop
+    return 'basis-[28%] md:basis-[23%] lg:basis-[18%] pl-0'; // Slimmed for desktop (reduced percentages)
   };
 
   return (
@@ -47,7 +48,7 @@ const Recommendations = () => {
           ].map(({ title, data, key }) => (
             <section
               key={key}
-              className="relative"
+              className="relative max-w-[95%] mx-auto"
               onMouseEnter={() => handleMouseEnter(key)}
               onMouseLeave={handleMouseLeave}
               onTouchStart={() => handleMouseEnter(key)}

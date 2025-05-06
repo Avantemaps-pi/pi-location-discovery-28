@@ -1,3 +1,4 @@
+
 /* Fix for PlaceCard on mobile */
 @media (max-width: 768px) {
   .place-card-container {
@@ -20,6 +21,12 @@
   .carousel-item-recommendations .place-card-container {
     width: 100% !important; 
     margin: 0;
+  }
+
+  /* Make sections slimmer */
+  section.relative {
+    max-width: 94% !important;
+    margin: 0 auto;
   }
 }
 
