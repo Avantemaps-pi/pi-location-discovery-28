@@ -60,11 +60,11 @@ const Recommendations = () => {
               )}
               <CarouselContent className="ml-0">
                 {avanteTopChoice.map((place) => (
-                  <CarouselItem key={place.id} className={getWidthClass()}>
+                  <CarouselItem key={place.id} className={`${getWidthClass()} mr-2`}>
                     <PlaceCard 
                       place={place} 
                       onPlaceClick={handlePlaceClick}
-                      className="mr-2 w-full"
+                      className="w-full"
                     />
                   </CarouselItem>
                 ))}
@@ -91,11 +91,11 @@ const Recommendations = () => {
               )}
               <CarouselContent className="ml-0">
                 {suggestedForYou.map((place) => (
-                  <CarouselItem key={place.id} className={getWidthClass()}>
+                  <CarouselItem key={place.id} className={`${getWidthClass()} mr-2`}>
                     <PlaceCard 
                       place={place} 
                       onPlaceClick={handlePlaceClick}
-                      className="mr-2 w-full"
+                      className="w-full"
                     />
                   </CarouselItem>
                 ))}
@@ -122,11 +122,11 @@ const Recommendations = () => {
               )}
               <CarouselContent className="ml-0">
                 {recommendedForYou.map((place) => (
-                  <CarouselItem key={place.id} className={getWidthClass()}>
+                  <CarouselItem key={place.id} className={`${getWidthClass()} mr-2`}>
                     <PlaceCard 
                       place={place} 
                       onPlaceClick={handlePlaceClick}
-                      className="mr-2 w-full"
+                      className="w-full"
                     />
                   </CarouselItem>
                 ))}
