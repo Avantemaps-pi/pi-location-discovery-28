@@ -10,8 +10,11 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import iconRetina from 'leaflet/dist/images/marker-icon-2x.png';
 
-// Fix for Leaflet's missing marker icons
-delete L.Icon.Default.prototype._getIconUrl;
+// Fix for Leaflet's missing marker icons in TypeScript-friendly way
+// The _getIconUrl property is not recognized in TypeScript types but exists at runtime
+// Use type assertion to avoid TypeScript errors
+(L.Icon.Default as any).prototype._getIconUrl = null;
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: iconRetina,
   iconUrl: icon,
