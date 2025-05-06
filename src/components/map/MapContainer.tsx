@@ -1,36 +1,52 @@
-
+// components/map/MapContainer.tsx
 import React from 'react';
-import LeafletMap from './LeafletMap';
-import { Place } from '@/data/mockPlaces';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
-interface MapContainerProps {
-  places: Place[];
-  filteredPlaces: Place[];
-  selectedPlace: string | null;
-  detailCardRef: React.RefObject<HTMLDivElement>;
-  isLoading: boolean;
-  onMarkerClick: (placeId: string) => void;
+// Fix for default icon issues in Leaflet
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
+
+interface Place {
+  id: string;
+  name: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
 }
 
-const MapContainer: React.FC<MapContainerProps> = ({
-  places,
-  filteredPlaces,
-  selectedPlace,
-  detailCardRef,
-  isLoading,
-  onMarkerClick,
-}) => {
+interface MapProps {
+  places: Place[];
+  selectedPlace: string | null;
+  onMarkerClick: (id: string) => void;
+}
+
+const MapComponent: React.FC<MapProps> = ({ places, selectedPlace, onMarkerClick }) => {
   return (
-    <div className="absolute inset-0 top-16 w-full">
-      <LeafletMap 
-        places={filteredPlaces} 
-        selectedPlaceId={selectedPlace} 
-        onMarkerClick={onMarkerClick}
-        detailCardRef={detailCardRef}
-        isLoading={isLoading}
+    <MapContainer center={[-29.8587, 31.0218]} zoom={13} style={{ height: '100vh', width: '100%' }}>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-    </div>
+      {places.map((place) => (
+        <Marker
+          key={place.id}
+          position={[place.location.lat, place.location.lng]}
+          eventHandlers={{
+            click: () => onMarkerClick(place.id),
+          }}
+        >
+          <Popup>{place.name}</Popup>
+        </Marker>
+      ))}
+    </MapContainer>
   );
 };
 
-export default MapContainer;
+export default MapComponent;
