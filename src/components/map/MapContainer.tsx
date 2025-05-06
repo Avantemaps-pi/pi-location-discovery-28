@@ -1,24 +1,21 @@
-
-// components/map/MapContainer.tsx
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Popup, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 
-// Fix for default icon issues in Leaflet
+// Fix for Leaflet's missing marker icons
+delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
 interface Place {
   id: string;
   name: string;
-  position: {
+  location: {
     lat: number;
     lng: number;
   };
@@ -37,17 +34,20 @@ const MapComponent: React.FC<MapProps> = ({ places, selectedPlace, onMarkerClick
         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {places.map((place) => (
-        <Marker
-          key={place.id}
-          position={[place.position.lat, place.position.lng]}
-          eventHandlers={{
-            click: () => onMarkerClick(place.id),
-          }}
-        >
-          <Popup>{place.name}</Popup>
-        </Marker>
-      ))}
+
+      <MarkerClusterGroup>
+        {places.map((place) => (
+          <Marker
+            key={place.id}
+            position={[place.location.lat, place.location.lng]}
+            eventHandlers={{
+              click: () => onMarkerClick(place.id),
+            }}
+          >
+            <Popup>{place.name}</Popup>
+          </Marker>
+        ))}
+      </MarkerClusterGroup>
     </MapContainer>
   );
 };
