@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AppLayout from '@/components/layout/AppLayout';
@@ -12,16 +11,27 @@ const Index = () => {
   const location = useLocation();
   const mapRef = useRef<HTMLDivElement>(null);
   const detailCardRef = useRef<HTMLDivElement>(null);
-  const { places, filteredPlaces, isLoading, handleSearch } = useBusinessData();
-  
+  const {
+    places = [],              // default to empty array
+    filteredPlaces = [],      // default to empty array
+    isLoading = false,        // default to false
+    handleSearch
+  } = useBusinessData();
+
   useEffect(() => {
-    if (location.state && location.state.selectedPlaceId) {
+    if (location.state?.selectedPlaceId) {
       setSelectedPlace(location.state.selectedPlaceId);
     }
   }, [location.state]);
 
+  useEffect(() => {
+    // Debug logs to help confirm data is loading
+    console.log('All Places:', places);
+    console.log('Filtered Places:', filteredPlaces);
+  }, [places, filteredPlaces]);
+
   const handlePlaceClick = (placeId: string) => {
-    setSelectedPlace(placeId === "" ? null : placeId);
+    setSelectedPlace(placeId || null);
   };
 
   return (
@@ -33,8 +43,7 @@ const Index = () => {
       hideSidebar={false}
     >
       <MapContainer 
-        places={places}
-        filteredPlaces={filteredPlaces}
+        places={filteredPlaces.length > 0 ? filteredPlaces : places}
         selectedPlace={selectedPlace}
         detailCardRef={detailCardRef}
         isLoading={isLoading}
