@@ -29,7 +29,7 @@ const AppLayout = ({
       {withHeader && <PageHeader title={title} hideSidebar={hideSidebar} />}
       <div className="flex flex-1 overflow-hidden">
         <AppSidebar className={hideSidebar ? 'lg:hidden' : ''} />
-        <main className={`flex-1 ${!hideSidebar && 'md:ml-64'} ${className} ${fullHeight ? 'h-[calc(100vh-4rem)]' : ''} ${withHeader ? 'overflow-y-auto overflow-x-hidden' : 'h-screen overflow-y-auto overflow-x-hidden'}`}>
+        <main className="">
           <div className="">
             {backButton && onBackClick && <Button variant="ghost" size="sm" className="mb-4" onClick={onBackClick}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
