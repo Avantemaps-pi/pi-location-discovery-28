@@ -25,7 +25,7 @@
 
   /* Make sections slimmer */
   section.relative {
-    max-width: 94% !important;
+    max-width: 92% !important; /* Reduced from 94% to 92% for even slimmer appearance */
     margin: 0 auto;
   }
 }

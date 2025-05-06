@@ -14,7 +14,7 @@ const POLLING_INTERVAL = 2000; // Poll every 2 seconds
 
 /**
  * Executes a payment transaction for subscription upgrades
- * This implementation follows the Pi Network SDK reference
+ * This implementation follows the Pi Network SDK reference and payments.md documentation
  */
 export const executeSubscriptionPayment = async (
   amount: number,
@@ -22,7 +22,7 @@ export const executeSubscriptionPayment = async (
   frequency: SubscriptionFrequency
 ): Promise<PaymentResult> => {
   try {
-    // Prevent multiple payments from being processed simultaneously
+    // Phase I - Payment creation - First step: prevent multiple simultaneous payments
     if (paymentInProgress) {
       console.warn("Payment already in progress");
       return {
@@ -33,7 +33,7 @@ export const executeSubscriptionPayment = async (
     
     paymentInProgress = true;
     
-    // Ensure Pi SDK is available
+    // Ensure Pi SDK is available before attempting to create a payment
     if (!isPiNetworkAvailable()) {
       throw new Error("Pi Network SDK is not available");
     }
@@ -44,7 +44,7 @@ export const executeSubscriptionPayment = async (
     // Create a promise that will be resolved when the payment is processed
     return new Promise((resolve, reject) => {
       try {
-        // Create the payment data
+        // Create the payment data according to SDK requirements
         const paymentData: PaymentData = {
           amount: amount,
           memo: `Avante Maps ${tier} subscription (${frequency})`,
@@ -61,8 +61,9 @@ export const executeSubscriptionPayment = async (
         let approvalTimeoutId: number | undefined;
         let completionTimeoutId: number | undefined;
         
-        // Define the callbacks for payment events according to SDK reference
+        // Phase I - Payment creation - Second step: Define callbacks for payment flow
         const callbacks: PaymentCallbacks = {
+          // Phase I - Payment creation and Server-Side Approval
           onReadyForServerApproval: async (paymentId: string) => {
             console.log("Payment ready for server approval:", paymentId);
             
@@ -89,7 +90,7 @@ export const executeSubscriptionPayment = async (
               return;
             }
             
-            // Call our server-side approval endpoint with retries
+            // Server-Side Approval: Call our server-side approval endpoint with retries
             let retries = 3;
             let success = false;
             
@@ -134,6 +135,7 @@ export const executeSubscriptionPayment = async (
             }
           },
           
+          // Phase III - Server-Side Completion
           onReadyForServerCompletion: async (paymentId: string, txid: string) => {
             console.log("Payment ready for server completion:", paymentId, txid);
             
@@ -160,7 +162,7 @@ export const executeSubscriptionPayment = async (
               return;
             }
             
-            // Call our server-side completion endpoint with retries
+            // Server-Side Completion: Call our server-side completion endpoint with retries
             let retries = 3;
             let success = false;
             
@@ -217,6 +219,7 @@ export const executeSubscriptionPayment = async (
             }
           },
           
+          // Error handling for user cancellation
           onCancel: (paymentId: string) => {
             console.log("Payment cancelled:", paymentId);
             // Clean up timeouts
@@ -231,6 +234,7 @@ export const executeSubscriptionPayment = async (
             });
           },
           
+          // Error handling for payment errors
           onError: (error: Error, payment?: PaymentDTO) => {
             console.error("Payment error:", error, payment);
             // Clean up timeouts
@@ -243,7 +247,7 @@ export const executeSubscriptionPayment = async (
           }
         };
         
-        // Execute the payment with all required callbacks
+        // Phase I - Initiate payment flow with the Pi SDK
         window.Pi?.createPayment(paymentData, callbacks);
       } catch (error) {
         console.error("Error creating payment:", error);

@@ -4,6 +4,8 @@
  * 
  * This endpoint handles the approval of Pi payments by calling
  * a Supabase Edge Function that securely communicates with the Pi Network API
+ * 
+ * This follows Phase I of the Pi Network payment flow as described in payments.md
  */
 import { supabase } from '@/integrations/supabase/client';
 import { PaymentRequest, PaymentResponse } from './types';
