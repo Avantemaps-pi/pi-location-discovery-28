@@ -20,7 +20,7 @@ const Index = () => {
     return placesData.map(place => ({
       id: place.id,
       name: place.name,
-      position: place.position || place.location || { lat: 0, lng: 0 }
+      location: place.location || place.position || { lat: 0, lng: 0 }
     }));
   };
 
