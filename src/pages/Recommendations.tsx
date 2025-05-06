@@ -39,7 +39,7 @@ const Recommendations = () => {
   return (
     <AppLayout title="Recommendations">
       <div className="w-full mx-auto recommendations-container mt-4 overflow-hidden h-[calc(100vh-80px)]">
-        <div className="space-y-4 sm:space-y-5 overflow-y-auto h-[calc(100vh-94px)] px-2 pb-4">
+        <div className="space-y-4 sm:space-y-5 overflow-hidden h-[calc(100vh-94px)] px-2 pb-4 scrollbar-none">
           {[
             { title: 'Avante Top Choice', data: avanteTopChoice, key: 'avanteTopChoice' },
             { title: 'Suggested for you', data: suggestedForYou, key: 'suggestedForYou' },
