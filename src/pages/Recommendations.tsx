@@ -47,7 +47,7 @@ const Recommendations = () => {
           title,
           data,
           key
-        }) => <section key={key} onMouseEnter={() => handleMouseEnter(key)} onMouseLeave={handleMouseLeave} onTouchStart={() => handleMouseEnter(key)} className="relative max-w-[92%] mx-auto">
+        }) => <section key={key} onMouseEnter={() => handleMouseEnter(key)} onMouseLeave={handleMouseLeave} onTouchStart={() => handleMouseEnter(key)} className="relative max-w-[85%] mx-auto">
               <h2 className="text-xl font-semibold mb-2 flex items-center">
                 <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
                 {title}
@@ -57,16 +57,10 @@ const Recommendations = () => {
                     <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-1" />
                     <CarouselNext className="absolute right-20 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
                   </>}
-                <CarouselContent className="w-full overflow-hidden">
-                  {data.map((place, index) => (
-                    <CarouselItem key={place.id} className="w-full">
-                      <PlaceCard
-                        place={place}
-                        onPlaceClick={handlePlaceClick}
-                        className="w-full"
-                      />
-                    </CarouselItem>
-                  ))}
+                <CarouselContent className="ml-0">
+                  {data.map(place => <CarouselItem key={place.id} className={`${getWidthClass()} pr-2`}>
+                      <PlaceCard place={place} onPlaceClick={handlePlaceClick} className="w-full" />
+                    </CarouselItem>)}
                 </CarouselContent>
               </Carousel>
             </section>)}
