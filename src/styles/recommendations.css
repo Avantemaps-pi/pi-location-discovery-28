@@ -56,6 +56,8 @@ section.relative {
 .carousel-item {
   flex-shrink: 0;
   scroll-snap-align: start;
+  padding-right: 0.5rem !important;
+  padding-left: 0rem !important;
 }
 
 .carousel-content {
