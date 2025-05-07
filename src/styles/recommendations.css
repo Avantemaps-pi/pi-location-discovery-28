@@ -32,7 +32,7 @@
 
 /* Make section more constrained on all screen sizes */
 section.relative {
-  max-width: 80% !important; /* Make section narrower */
+  max-width: 70% !important; /* Make section narrower */
   margin: 0 auto;
 }
 
