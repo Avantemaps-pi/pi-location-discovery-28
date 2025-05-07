@@ -30,19 +30,19 @@
     margin: 0;
   }
 
-  /* Make sections slimmer */
+ /* Make section more constrained on all screen sizes */
+section.relative {
+  max-width: 80% !important; /* Make section narrower */
+  margin: 0 auto;
+}
+
+/* For smaller screens */
+@media (max-width: 640px) {
   section.relative {
-    max-width: 92% !important;
-    margin: 0 auto;
+    max-width: 90% !important; /* Increase width slightly on smaller screens */
   }
 }
 
-@media (min-width: 641px) {
-  .carousel-item-recommendations .place-card-container {
-    width: 95% !important; 
-    margin: 0 auto;
-  }
-}
 
 .carousel {
   display: flex;
