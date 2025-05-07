@@ -44,18 +44,21 @@
   }
 }
 
-/* Adjust carousel position with scroll snap */
 .carousel {
   display: flex;
   overflow-x: hidden; /* prevents horizontal scroll */
-  gap: 16px;
+  gap: 16px; /* small gap between items */
   padding: 16px;
   width: 100%;
 }
 
 .carousel-item {
   flex-shrink: 0;
-  width: 100%;
+  scroll-snap-align: start;
+}
+
+.carousel-content {
+  display: flex;
 }
 
 /* Adjust carousel navigation on mobile */
