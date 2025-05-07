@@ -46,17 +46,19 @@
 /* Adjust carousel position with scroll snap */
 .carousel {
   display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  gap: 16px;
-  padding: 16px;
+  overflow-x: hidden; /* disables horizontal scroll */
+  scroll-snap-type: none; /* optional: removes scroll snapping */
+  gap: 0; /* no spacing needed if overflow is cut */
+  padding: 0; /* remove extra spacing */
+  width: 100%;
 }
 
 .carousel-item {
   flex-shrink: 0;
-  width: 80%;
-  scroll-snap-align: center;
+  width: 100%; /* each item takes full width */
+  scroll-snap-align: none;
 }
+
 
 /* Adjust carousel position */
 .embla__container {
