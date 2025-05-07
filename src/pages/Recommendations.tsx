@@ -53,12 +53,13 @@ const Recommendations = () => {
               key: 'recommendedForYou'
             }
           ].map(({ title, data, key }) => (
+            
             <section
               key={key}
               onMouseEnter={() => handleMouseEnter(key)}
               onMouseLeave={handleMouseLeave}
               onTouchStart={() => handleMouseEnter(key)}
-              className="relative w-full max-w-[80%] mx-auto" // 80% max-width for more narrow content
+              className="relative w-full max-w-[90%] sm:max-w-[85%] md:max-w-[80%] mx-auto"
             >
               <h2 className="text-xl font-semibold mb-2 flex items-center">
                 <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
