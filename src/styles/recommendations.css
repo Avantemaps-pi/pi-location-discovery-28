@@ -30,18 +30,21 @@
   }
 }
 
-/* Make section more constrained on all screen sizes */
+/* Keep slim width */
 section.relative {
-  max-width: 70% !important; /* Make section narrower */
+  max-width: 80% !important;
   margin: 0 auto;
 }
 
-/* For smaller screens */
+/* For smaller screens, add horizontal padding to prevent floating look */
 @media (max-width: 640px) {
   section.relative {
-    max-width: 80% !important; /* Make it smaller on very small screens */
+    max-width: 70% !important;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
+
 
 .carousel {
   display: flex;
