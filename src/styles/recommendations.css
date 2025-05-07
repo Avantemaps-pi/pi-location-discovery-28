@@ -1,4 +1,5 @@
 
+
 /* Fix for PlaceCard on mobile */
 @media (max-width: 768px) {
   .place-card-container {
@@ -31,7 +32,7 @@
 
   /* Make sections slimmer */
   section.relative {
-    max-width: 92% !important; /* Reduced from 94% to 92% for even slimmer appearance */
+    max-width: 92% !important;
     margin: 0 auto;
   }
 }
@@ -46,26 +47,18 @@
 /* Adjust carousel position with scroll snap */
 .carousel {
   display: flex;
-  overflow-x: hidden; /* disables horizontal scroll */
-  scroll-snap-type: x mandatory; /* optional: removes scroll snapping */
-  gap: 16px; /* no spacing needed if overflow is cut */
-  padding: 16px; /* remove extra spacing */
+  overflow-x: hidden; /* prevents horizontal scroll */
+  gap: 16px;
+  padding: 16px;
   width: 100%;
 }
 
 .carousel-item {
   flex-shrink: 0;
-  width: 100%; /* each item takes full width */
-  scroll-snap-align: none;
+  width: 100%;
 }
 
-
-/* Adjust carousel position */
-.embla__container {
-  margin-left: 0 !important;
-}
-
-/* Fix carousel navigation on mobile */
+/* Adjust carousel navigation on mobile */
 @media (max-width: 640px) {
   .embla__button {
     width: 24px !important;
@@ -77,10 +70,15 @@
   }
 }
 
-/* REMOVED problematic styles that were preventing scrolling */
-/* Adding styles that specifically enable scrolling on content pages */
+/* Fixing overflow issues */
 .content-page {
   height: auto;
   overflow-y: auto;
   padding-bottom: 2rem;
+}
+
+/* Ensure recommendations container doesn't overflow */
+.recommendations-container {
+  max-width: 100%;
+  overflow-x: hidden;
 }
