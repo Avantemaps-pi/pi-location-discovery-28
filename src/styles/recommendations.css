@@ -1,5 +1,4 @@
 
-
 /* Fix for PlaceCard on mobile */
 @media (max-width: 768px) {
   .place-card-container {
@@ -29,8 +28,9 @@
     width: 100% !important; 
     margin: 0;
   }
+}
 
- /* Make section more constrained on all screen sizes */
+/* Make section more constrained on all screen sizes */
 section.relative {
   max-width: 80% !important; /* Make section narrower */
   margin: 0 auto;
@@ -42,7 +42,6 @@ section.relative {
     max-width: 85% !important; /* Make it smaller on very small screens */
   }
 }
-
 
 .carousel {
   display: flex;
