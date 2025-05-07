@@ -13,6 +13,12 @@
   padding-right: 1rem;
 }
 
+/* Remove padding for recommendations page */
+.recommendations-page {
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
+}
+
 @media (max-width: 640px) {
   .carousel-item-recommendations {
     padding-right: 0.5rem !important;

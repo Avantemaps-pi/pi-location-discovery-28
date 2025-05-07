@@ -36,17 +36,24 @@ const AppLayout = ({
     title.includes("Cookie") || 
     title === "Recommendations";
   
-  const mainClass = isContentPage 
-    ? "flex-1 overflow-y-auto content-page" 
-    : "flex-1";
+  // Get specific classes for the main element based on the page
+  const getMainClass = () => {
+    if (isContentPage) {
+      if (title === "Recommendations") {
+        return "flex-1 overflow-y-auto content-page recommendations-page";
+      }
+      return "flex-1 overflow-y-auto content-page";
+    }
+    return "flex-1";
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {withHeader && <PageHeader title={title} hideSidebar={hideSidebar} />}
       <div className="flex flex-1 overflow-hidden">
         <AppSidebar className={hideSidebar ? 'lg:hidden' : ''} />
-        <main className={mainClass}>
-          <div className={isContentPage ? "h-auto pb-4" : ""}>
+        <main className={getMainClass()}>
+          <div className={title === "Recommendations" ? "h-auto" : (isContentPage ? "h-auto pb-4" : "")}>
             {backButton && onBackClick && (
               <Button variant="ghost" size="sm" className="mb-4" onClick={onBackClick}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
