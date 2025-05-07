@@ -39,7 +39,7 @@ section.relative {
 /* For smaller screens */
 @media (max-width: 640px) {
   section.relative {
-    max-width: 90% !important; /* Increase width slightly on smaller screens */
+    max-width: 85% !important; /* Make it smaller on very small screens */
   }
 }
 
