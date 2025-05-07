@@ -47,9 +47,9 @@
 .carousel {
   display: flex;
   overflow-x: hidden; /* disables horizontal scroll */
-  scroll-snap-type: none; /* optional: removes scroll snapping */
-  gap: 0; /* no spacing needed if overflow is cut */
-  padding: 0; /* remove extra spacing */
+  scroll-snap-type: x mandatory; /* optional: removes scroll snapping */
+  gap: 16px; /* no spacing needed if overflow is cut */
+  padding: 16px; /* remove extra spacing */
   width: 100%;
 }
 
