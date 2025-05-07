@@ -9,8 +9,16 @@
 }
 
 /* Recommendations page specific styles */
+.recommendations-container {
+  max-width: 1000px !important; /* Control overall width */
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
 .carousel-item-recommendations {
   padding-right: 1rem;
+  width: 100%;
+  max-width: 280px; /* Control card width */
 }
 
 /* Remove padding for recommendations page */
@@ -22,6 +30,7 @@
 @media (max-width: 640px) {
   .carousel-item-recommendations {
     padding-right: 0.5rem !important;
+    max-width: 85%; /* Smaller cards on mobile */
   }
   
   .carousel-item-recommendations .place-card-container {
@@ -30,27 +39,12 @@
   }
 }
 
-/* Keep slim width */
-section.relative {
-  max-width: 80% !important;
-  margin: 0 auto;
-}
-
-/* For smaller screens, add horizontal padding to prevent floating look */
-@media (max-width: 640px) {
-  section.relative {
-    max-width: 70% !important;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-}
-
-
+/* Carousel styles */
 .carousel {
   display: flex;
-  overflow-x: hidden; /* prevents horizontal scroll */
-  gap: 16px; /* small gap between items */
-  padding: 16px;
+  overflow-x: hidden;
+  gap: 16px;
+  padding: 16px 0;
   width: 100%;
 }
 
@@ -80,10 +74,4 @@ section.relative {
   height: auto;
   overflow-y: auto;
   padding-bottom: 2rem;
-}
-
-/* Ensure recommendations container doesn't overflow */
-.recommendations-container {
-  max-width: 100%;
-  overflow-x: hidden;
 }
