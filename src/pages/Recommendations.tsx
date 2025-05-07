@@ -27,9 +27,9 @@ const Recommendations = () => {
     setActiveSection(null);
   };
 
-  // Adjust width to 90% with 5% margin on both sides for centered layout
+  // Adjust width to make the section narrower (80% max-width with auto margins)
   const getWidthClass = () => {
-    return 'w-[90%] mx-[5%]'; // 90% width with 5% margin on each side
+    return 'w-[80%] mx-auto'; // 80% width with auto margins to center
   };
 
   return (
@@ -58,7 +58,7 @@ const Recommendations = () => {
               onMouseEnter={() => handleMouseEnter(key)}
               onMouseLeave={handleMouseLeave}
               onTouchStart={() => handleMouseEnter(key)}
-              className="relative w-full max-w-[85%] sm:max-w-[80%] md:max-w-[75%] mx-auto"
+              className="relative w-full max-w-[80%] mx-auto" // 80% max-width for more narrow content
             >
               <h2 className="text-xl font-semibold mb-2 flex items-center">
                 <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
