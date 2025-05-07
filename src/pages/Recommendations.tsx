@@ -27,9 +27,9 @@ const Recommendations = () => {
     setActiveSection(null);
   };
 
-  // Adjust width to 90% to show ~10% of next card
+  // Adjust width to 90% with 5% margin on both sides for centered layout
   const getWidthClass = () => {
-    return 'w-[90%] ml-2'; // Applies to both mobile and desktop
+    return 'w-[90%] mx-[5%]'; // 90% width with 5% margin on each side
   };
 
   return (
