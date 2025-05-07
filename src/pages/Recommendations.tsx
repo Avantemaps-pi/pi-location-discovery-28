@@ -47,7 +47,7 @@ const Recommendations = () => {
           title,
           data,
           key
-        }) => <section key={key} onMouseEnter={() => handleMouseEnter(key)} onMouseLeave={handleMouseLeave} onTouchStart={() => handleMouseEnter(key)} className="relative max-w-[90%] mx-auto">
+        }) => <section key={key} onMouseEnter={() => handleMouseEnter(key)} onMouseLeave={handleMouseLeave} onTouchStart={() => handleMouseEnter(key)} className="relative max-w-[70%] mx-auto">
               <h2 className="text-xl font-semibold mb-2 flex items-center">
                 <span className="bg-primary h-4 w-1 rounded-full mr-2"></span>
                 {title}
