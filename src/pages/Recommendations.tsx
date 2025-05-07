@@ -58,9 +58,30 @@ const Recommendations = () => {
                     <CarouselNext className="absolute right-20 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
                   </>}
                 <CarouselContent className="ml-0">
-                  {data.map(place => <CarouselItem key={place.id} className={`${getWidthClass()} pr-2`}>
-                      <PlaceCard place={place} onPlaceClick={handlePlaceClick} className="w-full" />
-                    </CarouselItem>)}
+                  {data.map((place, index) => {
+                    const isFirst = index === 0;
+                    const isLast = index === data.length - 1;
+                
+                    let itemClass = getWidthClass();
+                
+                    if (!isFirst && !isLast) {
+                      itemClass += ' mx-auto px-2'; // Centered with equal padding
+                    } else if (isFirst) {
+                      itemClass += ' pr-1 sm:pr-2'; // First item: right padding only
+                    } else if (isLast) {
+                      itemClass += ' pl-1 sm:pl-2'; // Last item: left padding only
+                    }
+                
+                    return (
+                      <CarouselItem key={place.id} className={itemClass}>
+                        <PlaceCard
+                          place={place}
+                          onPlaceClick={handlePlaceClick}
+                          className="w-full"
+                        />
+                      </CarouselItem>
+                    );
+                  })}
                 </CarouselContent>
               </Carousel>
             </section>)}
