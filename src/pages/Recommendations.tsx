@@ -29,7 +29,7 @@ const Recommendations = () => {
     return 'w-[80%] mx-auto'; // 80% width with auto margins to center
   };
   return <AppLayout title="Recommendations">
-      <div className="w-full mx-auto mt-4 pb-6 overflow-y-auto overflow-x-hidden">
+      <div className="w-full mx-auto mt-4 pb-6 overflow-y-auto overflow-x-hidden px-0 !px-0">
         <div className="space-y-4 sm:space-y-5 pb-1 px-0">
           {[{
           title: 'Avante Top Choice',
