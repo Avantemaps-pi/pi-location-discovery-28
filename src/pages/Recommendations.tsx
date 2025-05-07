@@ -55,7 +55,7 @@ const Recommendations = () => {
               <Carousel className="w-full">
                 {(activeSection === key || isMobile) && <>
                     <CarouselPrevious className="absolute left-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -ml-1" />
-                    <CarouselNext className="absolute right-0 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
+                    <CarouselNext className="absolute right-20 z-10 bg-white/80 backdrop-blur-sm shadow-md border-0 transition-opacity duration-300 h-7 w-7 -mr-1" />
                   </>}
                 <CarouselContent className="ml-0">
                   {data.map(place => <CarouselItem key={place.id} className={`${getWidthClass()} pr-2`}>
