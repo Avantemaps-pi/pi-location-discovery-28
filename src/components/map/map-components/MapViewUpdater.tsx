@@ -1,17 +1,18 @@
 
-import React from 'react';
 import { useMap } from 'react-leaflet';
-import { LatLngExpression } from 'leaflet';
+import { LatLngTuple } from 'leaflet';
 
 interface MapViewUpdaterProps {
-  center: LatLngExpression;
+  center: LatLngTuple;
   zoom: number;
 }
 
-// Component to update the map center when selectedPlace changes
 const MapViewUpdater: React.FC<MapViewUpdaterProps> = ({ center, zoom }) => {
   const map = useMap();
+  
+  // Update the map view when center or zoom changes
   map.setView(center, zoom);
+  
   return null;
 };
 

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LeafletMap from '@/components/map/LeafletMap';
 import AppLayout from '@/components/layout/AppLayout';
 import SearchContainer from '@/components/map/Search/SearchContainer';
@@ -15,7 +15,15 @@ const Index = () => {
     setSelectedPlace(placeId);
   };
 
-  console.log('Index rendering with places:', places.length, 'filtered:', filteredPlaces.length);
+  useEffect(() => {
+    // Add this effect to help with rendering the map
+    const timer = setTimeout(() => {
+      // Force a re-render after a short delay to ensure the map loads properly
+      window.dispatchEvent(new Event('resize'));
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <AppLayout

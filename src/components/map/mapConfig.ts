@@ -5,9 +5,13 @@ export const defaultZoom = 12;
 export const minZoom = 3;
 export const maxZoom = 18;
 
+// Google Maps API Key (replace with your own or use environment variables)
+export const GOOGLE_MAPS_API_KEY = 'YOUR_API_KEY'; // This should ideally come from environment variables
+
 // Tile layer configurations
 export const OSM_TILE_LAYER = {
-  url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+  url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 };
 
 // Default marker colors for different business types

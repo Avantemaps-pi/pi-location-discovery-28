@@ -10,6 +10,8 @@
   width: 100% !important;
   z-index: 1;
   min-height: 400px;
+  position: relative !important;
+  border-radius: 0.5rem;
 }
 
 .leaflet-div-icon {
@@ -25,8 +27,38 @@
   transform: scale(1.1);
 }
 
-/* Original map styles */
-.map-container {
-  height: 100vh;
-  width: 100%;
+.leaflet-control-container {
+  position: absolute;
+  z-index: 1000;
+}
+
+/* Map overlay and popups */
+.place-popup {
+  max-width: 90%;
+  width: 350px;
+  z-index: 1000;
+  min-height: 200px;
+  display: block;
+}
+
+.map-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(3px);
+}
+
+@media (max-width: 640px) {
+  .place-popup {
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
 }

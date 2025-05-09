@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
@@ -89,6 +88,8 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       <MapContainer 
         style={{ height: '100%', width: '100%', zIndex: 1 }}
         className="leaflet-container"
+        center={mapCenter}
+        zoom={zoom}
       >
         <TileLayer
           url={OSM_TILE_LAYER.url}
