@@ -40,7 +40,7 @@ const MapComponent: React.FC<MapProps> = ({ places, selectedPlace, onMarkerClick
   return (
     <div className="absolute inset-0">
     <MapContainer 
-      center={[-29.8587, 31.0218]} 
+      center={[37.7749, -122.4194]}  // San Francisco coordinates
       zoom={13} 
       style={{ height: '100vh', width: '100%' }}
       zoomControl={false} // 🔥 disables the zoom buttons
