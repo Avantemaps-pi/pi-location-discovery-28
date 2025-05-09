@@ -1,5 +1,5 @@
 
-import MapComponent from "./components/MapComponent";
+import MapComponent from "./components/map/MapContainer";
 import { defaultLocations } from "./components/map/defaultLocations";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
