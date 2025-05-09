@@ -2,7 +2,7 @@
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Heart, Mail, Github, MapPin } from 'lucide-react';
+import { Heart, Mail, Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,9 +19,13 @@ const About = () => {
 
         <Card className="material-card">
           <CardHeader>
-            <CardTitle className="text-xl font-semibold flex items-center gap-2">
+           <CardTitle className="text-xl font-semibold flex items-center gap-2">
               <div className="bg-gradient-to-r from-primary to-secondary p-2 rounded-md">
-                <MapPin className="h-5 w-5 text-white" />
+                <img
+                  src="/lovable-uploads/Avante maps icon.svg"
+                  alt="Avante Maps Icon"
+                  className="h-5 w-5"
+                />
               </div>
               Our Mission
             </CardTitle>
