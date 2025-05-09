@@ -22,7 +22,7 @@ const About = () => {
            <CardTitle className="text-xl font-semibold flex items-center gap-2">
               <div className="bg-gradient-to-r from-primary to-secondary p-2 rounded-md">
                 <img
-                  src="/lovable-uploads/Avante maps icon.svg"
+                  src="/lovable-uploads/Avante Maps icon.svg"
                   alt="Avante Maps Icon"
                   className="h-5 w-5"
                 />
