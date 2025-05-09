@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import DesktopSidebar from './sidebar/DesktopSidebar';
-import MobileSidebar from './sidebar/MobileSidebar';
+import { Sidebar } from '@/components/ui/sidebar';
 import { navItems, legalItems } from './sidebar/sidebarConfig';
 import { getUnreadNotificationsCount } from '@/utils/notificationUtils';
 
@@ -52,14 +52,18 @@ const AppSidebar = ({ className }: AppSidebarProps = {}) => {
           onLinkClick={handleLinkClick}
         />
       ) : (
-        <MobileSidebar
-          isOpen={openMobile}
-          navItems={updatedNavItems}
-          legalItems={legalItems}
-          currentPath={location.pathname}
-          onClose={() => setOpenMobile(false)}
-          onLinkClick={handleLinkClick}
-        />
+        <Sidebar
+          className={className}
+          collapsible="offcanvas"
+          side="left"
+        >
+          <DesktopSidebar
+            navItems={updatedNavItems}
+            legalItems={legalItems}
+            currentPath={location.pathname}
+            onLinkClick={handleLinkClick}
+          />
+        </Sidebar>
       )}
     </>
   );
