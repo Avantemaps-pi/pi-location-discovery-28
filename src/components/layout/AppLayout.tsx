@@ -14,6 +14,9 @@ interface AppLayoutProps {
   hideSidebar?: boolean;
   onSearch?: (searchTerm: string) => void;
   showSearch?: boolean;
+  className?: string;
+  backButton?: boolean;
+  onBackClick?: () => void;
 }
 
 const AppLayout: React.FC<AppLayoutProps> = ({ 
@@ -24,9 +27,12 @@ const AppLayout: React.FC<AppLayoutProps> = ({
   fullWidth = false,
   hideSidebar = false,
   onSearch,
-  showSearch = false
+  showSearch = false,
+  className = '',
+  backButton = false,
+  onBackClick
 }) => {
-  const contentClasses = `flex flex-col ${fullHeight ? 'h-screen' : 'min-h-screen'} ${fullWidth ? 'w-full' : 'max-w-7xl mx-auto'}`;
+  const contentClasses = `flex flex-col ${fullHeight ? 'h-screen' : 'min-h-screen'} ${fullWidth ? 'w-full' : 'max-w-7xl mx-auto'} ${className}`;
   
   return (
     <SidebarProvider>
@@ -40,6 +46,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({
               hideSidebar={hideSidebar} 
               onSearch={onSearch}
               showSearch={showSearch}
+              backButton={backButton}
+              onBackClick={onBackClick}
             />
           )}
           

@@ -14,13 +14,17 @@ interface PageHeaderProps {
   hideSidebar?: boolean;
   onSearch?: (searchTerm: string) => void;
   showSearch?: boolean;
+  backButton?: boolean;
+  onBackClick?: () => void;
 }
 
 const PageHeader = ({
   title = "Avante Maps",
   hideSidebar = false,
   onSearch,
-  showSearch = false
+  showSearch = false,
+  backButton = false,
+  onBackClick
 }: PageHeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -78,6 +82,14 @@ const PageHeader = ({
   const handleMenuClick = () => {
     setOpenMobile(true);
   };
+
+  const handleBackClick = () => {
+    if (onBackClick) {
+      onBackClick();
+    } else {
+      navigate(-1);
+    }
+  };
   
   return (
     <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -90,7 +102,7 @@ const PageHeader = ({
               <Menu className="h-5 w-5" />
             </Button>}
           
-          {isAnalyticsPage && <Button variant="ghost" size="icon" onClick={() => navigate('/registered-business')} className="mr-2">
+          {(isAnalyticsPage || backButton) && <Button variant="ghost" size="icon" onClick={handleBackClick} className="mr-2">
               <ArrowLeft className="h-5 w-5" />
             </Button>}
           
