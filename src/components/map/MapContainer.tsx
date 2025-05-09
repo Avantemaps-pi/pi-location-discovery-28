@@ -2,24 +2,9 @@
 import React from 'react';
 import { MapContainer, TileLayer, Popup, Marker } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import '@/lib/fix-leaflet-icons';
 import L from 'leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-
-// Import marker icons using ES modules
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import iconRetina from 'leaflet/dist/images/marker-icon-2x.png';
-
-// Fix for Leaflet's missing marker icons in TypeScript-friendly way
-// The _getIconUrl property is not recognized in TypeScript types but exists at runtime
-// Use type assertion to avoid TypeScript errors
-(L.Icon.Default as any).prototype._getIconUrl = null;
-
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: iconRetina,
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-});
 
 interface Place {
   id: string;
