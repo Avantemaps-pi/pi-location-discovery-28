@@ -4,23 +4,33 @@ import { Link } from 'react-router-dom';
 
 interface AvanteMapLogoProps {
   size?: 'small' | 'medium' | 'large';
+  showText?: boolean;
 }
 
-const AvanteMapLogo: React.FC<AvanteMapLogoProps> = ({ size = 'medium' }) => {
+const AvanteMapLogo: React.FC<AvanteMapLogoProps> = ({ 
+  size = 'medium',
+  showText = true
+}) => {
   const sizeClasses = {
-    small: 'h-6 w-6',
+    small: 'h-8 w-8',
     medium: 'h-8 w-8',
     large: 'h-10 w-10'
   };
 
   return (
     <Link to="/" className="flex items-center gap-2">
-      <img 
-        src="/lovable-uploads/Avante Maps icon.svg" 
-        alt="Avante Maps Logo" 
-        className={`${sizeClasses[size]}`}
-      />
-      <span className="font-semibold text-lg">Avante Maps</span>
+      <div className="bg-white/90 rounded-full p-1 shadow-sm">
+        <img 
+          src="/lovable-uploads/Avante Maps icon.svg" 
+          alt="Avante Maps Logo" 
+          className={`${sizeClasses[size]}`}
+        />
+      </div>
+      {showText && (
+        <span className="font-semibold text-lg text-gray-800 bg-white/80 px-2 py-1 rounded shadow-sm hidden md:block">
+          Avante Maps
+        </span>
+      )}
     </Link>
   );
 };
