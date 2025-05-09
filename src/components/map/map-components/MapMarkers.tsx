@@ -2,7 +2,6 @@
 import React from 'react';
 import { Marker } from 'react-leaflet';
 import { Place } from '@/data/mockPlaces';
-import { createMarkerIcon } from '../markerUtils';
 import { LatLngTuple } from 'leaflet';
 
 interface MapMarkersProps {
@@ -22,13 +21,11 @@ const MapMarkers: React.FC<MapMarkersProps> = ({ places, activeMarkerId, onMarke
         // Only create marker if coordinates are valid numbers
         if (lat !== undefined && lng !== undefined && !isNaN(lat) && !isNaN(lng)) {
           const position: LatLngTuple = [lat, lng];
-          const icon = createMarkerIcon(place.id === activeMarkerId, place.isUserBusiness);
           
           return (
             <Marker
               key={place.id}
               position={position}
-              icon={icon}
               eventHandlers={{
                 click: () => onMarkerClick(place.id)
               }}

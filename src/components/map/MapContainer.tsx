@@ -33,14 +33,12 @@ const MapComponent: React.FC<MapProps> = ({ places, selectedPlace, onMarkerClick
     <div className="absolute inset-0">
       <LeafletMapContainer 
         style={{ height: '100vh', width: '100%' }}
-        zoomControl={false} // 🔥 disables the zoom buttons
         className="leaflet-container"
       >
         <MapViewUpdater center={[37.7749, -122.4194]} zoom={13} />
         
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         />
 
         <MarkerClusterGroup>

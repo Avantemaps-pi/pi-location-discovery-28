@@ -43,7 +43,6 @@ const MapComponent: React.FC<MapProps> = ({ places, onMarkerClick }) => {
         
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         />
 
         {places.map((place) => (

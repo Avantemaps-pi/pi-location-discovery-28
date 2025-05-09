@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import { Icon } from 'leaflet';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { MARKER_COLORS, defaultCenter, defaultZoom, OSM_TILE_LAYER } from './mapConfig';
@@ -112,63 +111,32 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
     }
   }, [selectedPlaceId, allPlaces]);
 
-  // Create marker icon based on marker state
-  const createMarkerIcon = (isActive: boolean, isUserBusiness?: boolean) => {
-    const fillColor = isActive 
-      ? MARKER_COLORS.active  
-      : isUserBusiness 
-        ? MARKER_COLORS.user  
-        : MARKER_COLORS.default;
-        
-    const iconUrl = `data:image/svg+xml,
-      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="${fillColor}" stroke="%23FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="10" r="3"/>
-        <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/>
-      </svg>`;
-
-    return new Icon({
-      iconUrl,
-      iconSize: [36, 36],
-      iconAnchor: [18, 36],
-      popupAnchor: [0, -36]
-    });
-  };
-
   return (
     <div className="w-full h-full relative">
       <MapContainer 
         style={{ height: '100%', width: '100%', zIndex: 1 }}
-        zoomControl={true}
-        minZoom={3}
-        maxZoom={18}
         className="leaflet-container"
       >
         <MapViewUpdater center={[center.lat, center.lng]} zoom={zoom} />
         
         <TileLayer
           url={OSM_TILE_LAYER.url}
-          attribution={OSM_TILE_LAYER.attribution}
         />
         
-        {allPlaces.map((place) => {
-          const icon = createMarkerIcon(place.id === selectedPlaceId, place.isUserBusiness);
-          return (
-            <Marker
-              key={place.id}
-              position={[place.position.lat, place.position.lng]}
-              icon={icon}
-              eventHandlers={{
-                click: () => onMarkerClick(place.id)
-              }}
-            />
-          );
-        })}
+        {allPlaces.map((place) => (
+          <Marker
+            key={place.id}
+            position={[place.position.lat, place.position.lng]}
+            eventHandlers={{
+              click: () => onMarkerClick(place.id)
+            }}
+          />
+        ))}
         
         {/* If there's a new business being added, show it with a special marker */}
         {newBusinessData && newBusinessData.position && (
           <Marker
             position={[newBusinessData.position.lat, newBusinessData.position.lng]}
-            icon={createMarkerIcon(true, true)}
             eventHandlers={{
               click: () => {
                 if (newBusinessData.id) {

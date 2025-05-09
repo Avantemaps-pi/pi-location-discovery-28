@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Place } from '@/data/mockPlaces';
@@ -88,14 +88,9 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       
       <MapContainer 
         style={{ height: '100%', width: '100%', zIndex: 1 }}
-        zoomControl={false} 
-        minZoom={3}
-        maxZoom={18}
         className="leaflet-container"
-        // Removed center and zoom props as they are managed through MapViewUpdater
       >
         <TileLayer
-          attribution={OSM_TILE_LAYER.attribution}
           url={OSM_TILE_LAYER.url}
         />
         
