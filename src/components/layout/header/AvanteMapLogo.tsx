@@ -17,9 +17,7 @@ const AvanteMapLogo: React.FC<AvanteMapLogoProps> = ({
       <div className="bg-white/90 rounded-full p-1 shadow-sm">
         
       </div>
-      {showText && <span className="font-semibold text-lg text-gray-800 bg-white/80 px-2 py-1 rounded shadow-sm hidden md:block">
-          Avante Maps
-        </span>}
+      {showText}
     </Link>;
 };
 export default AvanteMapLogo;
