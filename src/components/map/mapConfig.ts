@@ -1,20 +1,24 @@
 
-// Default map configuration for Leaflet
+// Map configuration constants
 export const defaultCenter = { lat: 37.7749, lng: -122.4194 }; // San Francisco
-export const defaultZoom = 13;
+export const defaultZoom = 12;
+export const minZoom = 3;
+export const maxZoom = 18;
 
-// Map layers
+// Tile layer configurations
 export const OSM_TILE_LAYER = {
-  url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 };
 
-// Map marker configuration
+// Default marker colors for different business types
 export const MARKER_COLORS = {
-  active: '#047857',     // Green for active markers
-  user: '#EF4444',       // Red for user businesses
-  default: '#8B5CF6'     // Default purple for other markers
+  DEFAULT: 'blue',
+  RESTAURANT: 'red',
+  RETAIL: 'green',
+  SERVICES: 'orange',
+  TECH: 'purple',
+  HEALTH: 'pink',
+  ENTERTAINMENT: 'yellow',
+  EDUCATION: 'teal',
+  USER_BUSINESS: 'gold'
 };
-
-// Google Maps API key (for backward compatibility with components still using Google Maps)
-export const GOOGLE_MAPS_API_KEY = ''; // Empty key since we're migrating to Leaflet

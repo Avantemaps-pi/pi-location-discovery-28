@@ -5,6 +5,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import SearchContainer from '@/components/map/Search/SearchContainer';
 import AddBusinessButton from '@/components/map/buttons/AddBusinessButton';
 import { useBusinessData } from '@/hooks/useBusinessData';
+import '../styles/map.css';
 
 const Index = () => {
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null);
@@ -24,7 +25,7 @@ const Index = () => {
       fullWidth={true}
       hideSidebar={false}
     >
-      <div className="w-full h-full">
+      <div className="w-full h-full relative">
         <LeafletMap
           places={filteredPlaces.length > 0 ? filteredPlaces : places}
           selectedPlaceId={selectedPlace}
