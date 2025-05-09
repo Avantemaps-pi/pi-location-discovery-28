@@ -10,12 +10,13 @@ interface Place {
   rating: number;
   category: string;
   address: string;
-  position: {
+  location: {   // Use 'location' instead of 'position'
     lat: number;
     lng: number;
   };
   image: string;
 }
+
 
 interface MapProps {
   places: Place[];
