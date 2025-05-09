@@ -89,7 +89,10 @@ const App = () => {
       localStorage.setItem('colorScheme', 'light');
     }
   }, []);
-
+const handleMarkerClick = (id: string) => {
+  console.log(`Marker with ID ${id} clicked`);
+};
+  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -100,6 +103,7 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <Routes>
+                <Route path="/map" element={<MapComponent places={defaultLocations} selectedPlace={null} onMarkerClick={handleMarkerClick} />}/>
                 <Route path="/" element={<Index />} />
                 <Route path="/recommendations" element={<Recommendations />} />
                 <Route path="/recommendations/:placeId" element={<Recommendations />} />
