@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { Place } from '@/data/mockPlaces';
@@ -13,11 +12,11 @@ import LoadingOverlay from './map-components/LoadingOverlay';
 import { LatLngTuple } from 'leaflet';
 
 interface LeafletMapProps {
-  places?: Place[];
-  selectedPlaceId?: string | null;
-  onMarkerClick?: (placeId: string) => void;
-  detailCardRef?: React.RefObject<HTMLDivElement>;
-  isLoading?: boolean;
+  places?: Place[]; 
+  selectedPlaceId?: string | null; 
+  onMarkerClick?: (placeId: string) => void; 
+  detailCardRef?: React.RefObject<HTMLDivElement>; 
+  isLoading?: boolean; 
 }
 
 const LeafletMap: React.FC<LeafletMapProps> = ({ 
@@ -29,22 +28,22 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
 }) => {
   const [activeMarker, setActiveMarker] = useState<string | null>(null);
   const [showPopover, setShowPopover] = useState(false);
-  const [mapCenter, setMapCenter] = useState<LatLngTuple>([defaultCenter.lat, defaultCenter.lng]);
+  const [mapCenter, setMapCenter] = useState<LatLngTuple>([defaultCenter.lat, defaultCenter.lng]); // San Francisco by default
   const [zoom, setZoom] = useState(defaultZoom);
 
   // Use provided places or default locations
   const displayPlaces = isLoading ? [] : places.length > 0 ? places : defaultLocations;
 
-  // Find the selected place to center the map if needed
+  // Ensure map centers on San Francisco or a selected place, and handle zoom accordingly
   useEffect(() => {
     if (selectedPlaceId) {
       const selectedPlace = displayPlaces.find(place => place.id === selectedPlaceId);
       if (selectedPlace && selectedPlace.position) {
-        setMapCenter([selectedPlace.position.lat, selectedPlace.position.lng]);
-        setZoom(15); // Zoom in when a place is selected
+        setMapCenter([selectedPlace.position.lat, selectedPlace.position.lng]);  // Set to selected place
+        setZoom(15);  // Zoom in when a place is selected
         setActiveMarker(selectedPlaceId);
         setShowPopover(true);
-        
+
         // Show a toast notification
         toast.info(`Viewing: ${selectedPlace.name}`, {
           description: selectedPlace.category,
@@ -52,7 +51,8 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         });
       }
     } else {
-      // Clear the active marker when selectedPlaceId is null
+      // Default to San Francisco if no place is selected
+      setMapCenter([defaultCenter.lat, defaultCenter.lng]);  // Ensure default center is San Francisco
       setActiveMarker(null);
       setShowPopover(false);
     }
