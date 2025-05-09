@@ -1,4 +1,6 @@
 
+import 'leaflet/dist/leaflet.css';
+import '@/lib/fix-leaflet-icons'; // '@' if using path aliases in tsconfig.json
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';  // Required for creating custom icons
