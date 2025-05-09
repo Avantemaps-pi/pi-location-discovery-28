@@ -2,7 +2,7 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';  // Required for creating custom icons
-import 'leaflet/dist/leaflet.css';
+import 'src/lib/leaflet.css';
 
 interface Place {
   id: string;
