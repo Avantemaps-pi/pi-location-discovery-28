@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';  // Required for creating custom icons
@@ -10,7 +11,7 @@ interface Place {
   rating: number;
   category: string;
   address: string;
-  location: {   // Use 'location' instead of 'position'
+  location: {   // This is correctly defined as 'location'
     lat: number;
     lng: number;
   };
@@ -39,7 +40,7 @@ const MapComponent: React.FC<MapProps> = ({ places, onMarkerClick }) => {
         {places.map((place) => (
           <Marker 
             key={place.id} 
-            position={[place.position.lat, place.position.lng]} 
+            position={[place.location.lat, place.location.lng]} 
             eventHandlers={{
               click: () => onMarkerClick(place.id),  // Call the handler on click
             }}
@@ -53,7 +54,7 @@ const MapComponent: React.FC<MapProps> = ({ places, onMarkerClick }) => {
                 <p><strong>Address:</strong> {place.address}</p>
                 <img src={place.image} alt={place.name} style={{ width: '100%', height: 'auto' }} />
               </div>
-            </Popup>  {/* Popup with place details */}
+            </Popup>
           </Marker>
         ))}
       </MapContainer>
