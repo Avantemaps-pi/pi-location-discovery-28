@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
