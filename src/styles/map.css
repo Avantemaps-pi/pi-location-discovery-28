@@ -6,12 +6,15 @@
 
 /* Leaflet specific styles */
 .leaflet-container {
-  height: 100% !important;
+  height: 100vh !important;
   width: 100% !important;
   z-index: 1;
-  min-height: 400px;
-  position: relative !important;
-  border-radius: 0.5rem;
+  position: absolute !important;
+  border-radius: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .leaflet-div-icon {
@@ -30,6 +33,11 @@
 .leaflet-control-container {
   position: absolute;
   z-index: 1000;
+}
+
+/* Hide zoom controls */
+.leaflet-control-zoom {
+  display: none !important;
 }
 
 /* Map overlay and popups */

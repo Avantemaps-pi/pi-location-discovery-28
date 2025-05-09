@@ -86,10 +86,9 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       <MapContainer 
         style={{ height: '100%', width: '100%', zIndex: 1 }}
         className="leaflet-container"
+        zoomControl={false} // Disable zoom controls
       >
-        <TileLayer
-          url={OSM_TILE_LAYER.url}
-        />
+        <TileLayer url={OSM_TILE_LAYER.url} />
         
         <MapViewUpdater center={mapCenter} zoom={zoom} />
         

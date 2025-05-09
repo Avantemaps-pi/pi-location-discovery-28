@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import LeafletMap from '@/components/map/LeafletMap';
 import AppLayout from '@/components/layout/AppLayout';
-import SearchContainer from '@/components/map/Search/SearchContainer';
-import AddBusinessButton from '@/components/map/buttons/AddBusinessButton';
 import { useBusinessData } from '@/hooks/useBusinessData';
+import AddBusinessButton from '@/components/map/buttons/AddBusinessButton';
 import '../styles/map.css';
 
 const Index = () => {
@@ -32,6 +31,8 @@ const Index = () => {
       fullHeight={true}
       fullWidth={true}
       hideSidebar={false}
+      onSearch={handleSearch}
+      showSearch={true}
     >
       <div className="w-full h-full relative">
         <LeafletMap
@@ -40,7 +41,6 @@ const Index = () => {
           onMarkerClick={handlePlaceClick}
           isLoading={isLoading}
         />
-        <SearchContainer onSearch={handleSearch} />
         <AddBusinessButton selectedPlace={selectedPlace} />
       </div>
     </AppLayout>

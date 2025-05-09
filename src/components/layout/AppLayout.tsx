@@ -1,70 +1,56 @@
 
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
+import { Toaster } from '@/components/ui/sonner';
+import PageHeader from '@/components/layout/PageHeader';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import AppSidebar from './AppSidebar';
-import PageHeader from './PageHeader';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
 
 interface AppLayoutProps {
   children: ReactNode;
+  title?: string;
+  withHeader?: boolean;
   fullHeight?: boolean;
   fullWidth?: boolean;
-  withHeader?: boolean;
-  title?: string;
-  backButton?: boolean;
-  onBackClick?: () => void;
-  className?: string;
   hideSidebar?: boolean;
+  onSearch?: (searchTerm: string) => void;
+  showSearch?: boolean;
 }
 
-const AppLayout = ({
-  children,
+const AppLayout: React.FC<AppLayoutProps> = ({ 
+  children, 
+  title,
+  withHeader = true, 
   fullHeight = false,
   fullWidth = false,
-  withHeader = true,
-  title = "Avante Maps",
-  backButton = false,
-  onBackClick,
-  className = '',
-  hideSidebar = false
-}: AppLayoutProps) => {
-  // Check if we're on a content-heavy page that should have scrolling enabled
-  const isContentPage = 
-    title === "Privacy Policy" || 
-    title === "Contact Us" || 
-    title === "About Us" || 
-    title.includes("Cookie") || 
-    title === "Recommendations";
+  hideSidebar = false,
+  onSearch,
+  showSearch = false
+}) => {
+  const contentClasses = `flex flex-col ${fullHeight ? 'h-screen' : 'min-h-screen'} ${fullWidth ? 'w-full' : 'max-w-7xl mx-auto'}`;
   
-  // Get specific classes for the main element based on the page
-  const getMainClass = () => {
-    if (isContentPage) {
-      if (title === "Recommendations") {
-        return "flex-1 overflow-y-auto content-page recommendations-page";
-      }
-      return "flex-1 overflow-y-auto content-page";
-    }
-    return "flex-1";
-  };
-
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      {withHeader && <PageHeader title={title} hideSidebar={hideSidebar} />}
-      <div className="flex flex-1 overflow-hidden">
-        <AppSidebar className={hideSidebar ? 'lg:hidden' : ''} />
-        <main className={getMainClass()}>
-          <div className={title === "Recommendations" ? "h-auto" : (isContentPage ? "h-auto pb-4" : "")}>
-            {backButton && onBackClick && (
-              <Button variant="ghost" size="sm" className="mb-4" onClick={onBackClick}>
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back
-              </Button>
-            )}
+    <SidebarProvider>
+      <div className="flex min-h-screen w-full">
+        {!hideSidebar && <AppSidebar />}
+        
+        <div className={contentClasses}>
+          {withHeader && (
+            <PageHeader 
+              title={title} 
+              hideSidebar={hideSidebar} 
+              onSearch={onSearch}
+              showSearch={showSearch}
+            />
+          )}
+          
+          <main className="flex-1 w-full overflow-auto">
             {children}
-          </div>
-        </main>
+          </main>
+          
+          <Toaster />
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 

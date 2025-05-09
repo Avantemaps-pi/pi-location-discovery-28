@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Menu } from 'lucide-react';
@@ -6,19 +7,25 @@ import DesktopMenuButton from './header/DesktopMenuButton';
 import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/components/ui/sidebar';
 import AuthStatus from '@/components/auth/AuthStatus';
+import SearchBar from '@/components/map/SearchBar';
+
 interface PageHeaderProps {
   title?: string;
   hideSidebar?: boolean;
+  onSearch?: (searchTerm: string) => void;
+  showSearch?: boolean;
 }
+
 const PageHeader = ({
   title = "Avante Maps",
-  hideSidebar = false
+  hideSidebar = false,
+  onSearch,
+  showSearch = false
 }: PageHeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {
-    setOpenMobile
-  } = useSidebar();
+  const { setOpenMobile } = useSidebar();
+  
   const isAnalyticsPage = location.pathname === '/analytics';
   const isRegistrationPage = location.pathname === '/registration';
   const isIndexPage = location.pathname === '/';
@@ -65,11 +72,15 @@ const PageHeader = ({
         return title;
     }
   };
+  
   const pageTitle = getPageTitle();
+  
   const handleMenuClick = () => {
     setOpenMobile(true);
   };
-  return <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+  
+  return (
+    <header className="sticky top-0 z-10 h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-full items-center px-[14px] bg-transparent">
         <div className="flex items-center">
           {!isAnalyticsPage && !hideSidebar && !isRegistrationPage && !isIndexPage && <MobileMenuButton />}
@@ -92,16 +103,37 @@ const PageHeader = ({
             </Button>}
         </div>
         
-        <div className="flex-1 flex justify-center">
-          {pageTitle ? <h1 className="text-xl font-semibold">{pageTitle}</h1> : <Link to="/" className="flex items-center gap-2 mx-auto">
-              
-            </Link>}
+        <div className={`flex-1 flex ${showSearch && isIndexPage ? 'items-center justify-between' : 'justify-center'}`}>
+          {pageTitle ? 
+            <h1 className="text-xl font-semibold">{pageTitle}</h1> 
+            : 
+            <Link to="/" className="flex items-center gap-2">
+              {/* Logo would go here */}
+            </Link>
+          }
+          
+          {showSearch && isIndexPage && onSearch && (
+            <div className="max-w-md w-full mx-4">
+              <SearchBar 
+                onSearch={onSearch} 
+                placeholders={[
+                  "Search for Address", 
+                  "Search for Business name", 
+                  "Search for Business Type", 
+                  "Search for Keywords"
+                ]} 
+                cycleInterval={3000} 
+              />
+            </div>
+          )}
         </div>
         
         <div className="flex items-center space-x-4">
           <AuthStatus />
         </div>
       </div>
-    </header>;
+    </header>
+  );
 };
+
 export default PageHeader;
