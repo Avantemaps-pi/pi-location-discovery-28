@@ -1,17 +1,19 @@
+
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';  // Required for custom icons (if used)
-import 'leaflet/dist/leaflet.css';  // Required for Leaflet to work properly
+import { MapContainer, TileLayer } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
 import { defaultCenter, defaultZoom, OSM_TILE_LAYER } from './mapConfig';
-import 'leaflet/dist/leaflet.css';
 import MapMarkers from './map-components/MapMarkers';
 import MapViewUpdater from './map-components/MapViewUpdater';
 import PlaceOverlay from './map-components/PlaceOverlay';
 import LoadingOverlay from './map-components/LoadingOverlay';
 import { LatLngTuple } from 'leaflet';
+import '@/lib/fix-leaflet-icons';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 
 interface LeafletMapProps {
   places?: Place[]; 
@@ -41,20 +43,18 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
     if (selectedPlaceId) {
       const selectedPlace = displayPlaces.find(place => place.id === selectedPlaceId);
       if (selectedPlace && selectedPlace.position) {
-        setMapCenter([selectedPlace.position.lat, selectedPlace.position.lng]);  // Set to selected place
-        setZoom(15);  // Zoom in when a place is selected
+        setMapCenter([selectedPlace.position.lat, selectedPlace.position.lng]);
+        setZoom(15);
         setActiveMarker(selectedPlaceId);
         setShowPopover(true);
 
-        // Show a toast notification
         toast.info(`Viewing: ${selectedPlace.name}`, {
           description: selectedPlace.category,
           duration: 2000,
         });
       }
     } else {
-      // Default to San Francisco if no place is selected
-      setMapCenter([defaultCenter.lat, defaultCenter.lng]);  // Ensure default center is San Francisco
+      setMapCenter([defaultCenter.lat, defaultCenter.lng]);
       setActiveMarker(null);
       setShowPopover(false);
     }
@@ -64,7 +64,6 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
     setActiveMarker(id);
     setShowPopover(true);
     
-    // Call the parent component's onMarkerClick if provided
     if (onMarkerClick) {
       onMarkerClick(id);
     }
@@ -74,14 +73,14 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
     setActiveMarker(null);
     setShowPopover(false);
     
-    // Call the parent component's onMarkerClick with null if provided
     if (onMarkerClick) {
       onMarkerClick("");
     }
   };
 
-  // Get the selected place data
   const selectedPlace = activeMarker ? displayPlaces.find(place => place.id === activeMarker) : null;
+
+  console.log('LeafletMap rendering with places:', displayPlaces.length);
 
   return (
     <div className="w-full h-full relative">
@@ -94,6 +93,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         zoomControl={false} 
         minZoom={3}
         maxZoom={18}
+        className="leaflet-container"
       >
         <TileLayer
           attribution={OSM_TILE_LAYER.attribution}
@@ -101,7 +101,10 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
         />
         
         <MapViewUpdater center={mapCenter} zoom={zoom} />
-        <MapMarkers places={displayPlaces} activeMarkerId={activeMarker} onMarkerClick={handleMarkerClick} />
+        
+        <MarkerClusterGroup>
+          <MapMarkers places={displayPlaces} activeMarkerId={activeMarker} onMarkerClick={handleMarkerClick} />
+        </MarkerClusterGroup>
       </MapContainer>
       
       <PlaceOverlay 

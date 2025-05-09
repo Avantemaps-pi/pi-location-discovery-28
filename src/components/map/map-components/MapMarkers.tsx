@@ -15,12 +15,12 @@ const MapMarkers: React.FC<MapMarkersProps> = ({ places, activeMarkerId, onMarke
   return (
     <>
       {places.map(place => {
-        // Ensure coordinates are valid numbers
-        const lat = parseFloat(String(place.position.lat));
-        const lng = parseFloat(String(place.position.lng));
+        // Check for both position and location properties to handle different place formats
+        const lat = place.position ? place.position.lat : place.location?.lat;
+        const lng = place.position ? place.position.lng : place.location?.lng;
         
         // Only create marker if coordinates are valid numbers
-        if (!isNaN(lat) && !isNaN(lng)) {
+        if (lat !== undefined && lng !== undefined && !isNaN(lat) && !isNaN(lng)) {
           const position: LatLngTuple = [lat, lng];
           return (
             <Marker

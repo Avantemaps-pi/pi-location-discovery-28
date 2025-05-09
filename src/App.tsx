@@ -1,5 +1,4 @@
-import MapComponent from "./components/map/MapContainer";
-import { defaultLocations } from "./components/map/defaultLocations";
+import React from 'react';
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -88,23 +87,7 @@ const App = () => {
       localStorage.setItem('colorScheme', 'light');
     }
   }, []);
-
-  const handleMarkerClick = (id: string) => {
-    console.log(`Marker with ID ${id} clicked`);
-  };
   
-  // Transform defaultLocations to the format expected by MapComponent
-  const formattedLocations = defaultLocations.map(place => ({
-    id: place.id,
-    name: place.name,
-    description: place.description,
-    rating: place.rating,
-    category: place.category,
-    address: place.address,
-    location: place.position,  // Use 'position' from defaultLocations as 'location'
-    image: place.image,
-  }));
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -115,7 +98,6 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <Routes>
-                <Route path="/map" element={<MapComponent places={formattedLocations} selectedPlace={null} onMarkerClick={handleMarkerClick} />}/>
                 <Route path="/" element={<Index />} />
                 <Route path="/recommendations" element={<Recommendations />} />
                 <Route path="/recommendations/:placeId" element={<Recommendations />} />

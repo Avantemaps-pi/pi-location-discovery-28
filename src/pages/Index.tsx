@@ -1,4 +1,4 @@
-// pages/index.tsx
+
 import React, { useState } from 'react';
 import LeafletMap from '@/components/map/LeafletMap';
 import AppLayout from '@/components/layout/AppLayout';
@@ -13,6 +13,8 @@ const Index = () => {
   const handlePlaceClick = (placeId: string) => {
     setSelectedPlace(placeId);
   };
+
+  console.log('Index rendering with places:', places.length, 'filtered:', filteredPlaces.length);
 
   return (
     <AppLayout
