@@ -89,9 +89,17 @@ const App = () => {
       localStorage.setItem('colorScheme', 'light');
     }
   }, []);
-const handleMarkerClick = (id: string) => {
-  console.log(`Marker with ID ${id} clicked`);
-};
+
+  const handleMarkerClick = (id: string) => {
+    console.log(`Marker with ID ${id} clicked`);
+  };
+  
+  // Transform defaultLocations to the format expected by MapComponent
+  const formattedLocations = defaultLocations.map(place => ({
+    id: place.id,
+    name: place.name,
+    location: place.position // Map position to location
+  }));
   
   return (
     <QueryClientProvider client={queryClient}>
@@ -103,7 +111,7 @@ const handleMarkerClick = (id: string) => {
             <Sonner />
             <BrowserRouter>
               <Routes>
-                <Route path="/map" element={<MapComponent places={defaultLocations} selectedPlace={null} onMarkerClick={handleMarkerClick} />}/>
+                <Route path="/map" element={<MapComponent places={formattedLocations} selectedPlace={null} onMarkerClick={handleMarkerClick} />}/>
                 <Route path="/" element={<Index />} />
                 <Route path="/recommendations" element={<Recommendations />} />
                 <Route path="/recommendations/:placeId" element={<Recommendations />} />
