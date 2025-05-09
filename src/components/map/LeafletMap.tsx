@@ -79,8 +79,6 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
 
   const selectedPlace = activeMarker ? displayPlaces.find(place => place.id === activeMarker) : null;
 
-  console.log('LeafletMap rendering with places:', displayPlaces.length);
-
   return (
     <div className="w-full h-full relative">
       {isLoading && <LoadingOverlay />}
@@ -88,11 +86,10 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       <MapContainer 
         style={{ height: '100%', width: '100%', zIndex: 1 }}
         className="leaflet-container"
-        center={mapCenter}
-        zoom={zoom}
       >
         <TileLayer
           url={OSM_TILE_LAYER.url}
+          attribution={OSM_TILE_LAYER.attribution}
         />
         
         <MapViewUpdater center={mapCenter} zoom={zoom} />
