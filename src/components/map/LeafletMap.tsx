@@ -89,7 +89,6 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
       >
         <TileLayer
           url={OSM_TILE_LAYER.url}
-          attribution={OSM_TILE_LAYER.attribution}
         />
         
         <MapViewUpdater center={mapCenter} zoom={zoom} />
