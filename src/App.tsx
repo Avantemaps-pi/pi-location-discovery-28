@@ -95,11 +95,17 @@ const App = () => {
   };
   
   // Transform defaultLocations to the format expected by MapComponent
-  const formattedLocations = defaultLocations.map(place => ({
-    id: place.id,
-    name: place.name,
-    location: place.position // Map position to location
-  }));
+ const formattedLocations = defaultLocations.map(place => ({
+  id: place.id,
+  name: place.name,
+  description: place.description,
+  rating: place.rating,
+  category: place.category,
+  address: place.address,
+  location: place.position,  // Use 'position' from defaultLocations as 'location'
+  image: place.image,
+}));
+
   
   return (
     <QueryClientProvider client={queryClient}>
