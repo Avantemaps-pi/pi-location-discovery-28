@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';  // Required for custom icons (if used)
+import 'leaflet/dist/leaflet.css';  // Required for Leaflet to work properly
 import { Place } from '@/data/mockPlaces';
 import { toast } from 'sonner';
 import { defaultLocations } from './defaultLocations';
