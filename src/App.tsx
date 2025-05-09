@@ -1,4 +1,6 @@
 
+import MapComponent from "./components/MapComponent";
+import { defaultLocations } from "./data/defaultLocations";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
