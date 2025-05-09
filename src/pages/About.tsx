@@ -1,10 +1,10 @@
-
 import React from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { PiSquare, Heart, Mail, Github } from 'lucide-react';
+import { Heart, Mail, Github } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { ReactComponent as AvanteIcon } from '@/assets/avante-icon.svg'; // Import your custom SVG here
 
 const About = () => {
   const navigate = useNavigate();
@@ -21,7 +21,8 @@ const About = () => {
           <CardHeader>
             <CardTitle className="text-xl font-semibold flex items-center gap-2">
               <div className="bg-gradient-to-r from-primary to-secondary p-2 rounded-md">
-                <PiSquare className="h-5 w-5 text-white" />
+                {/* Replace PiSquare with your custom Avante Maps icon */}
+                <AvanteIcon className="h-5 w-5 text-white" />
               </div>
               Our Mission
             </CardTitle>
