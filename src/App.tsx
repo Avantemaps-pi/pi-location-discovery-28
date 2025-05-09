@@ -1,4 +1,5 @@
 
+import MapComponent from "./components/map/map-components/MapComponent"; // Ensure this path is correct
 import MapComponent from "./components/map/MapContainer";
 import { defaultLocations } from "./components/map/defaultLocations";
 import { useEffect, useState } from "react";
