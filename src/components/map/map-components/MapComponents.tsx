@@ -2,7 +2,7 @@
 import 'leaflet/dist/leaflet.css';
 import '@/lib/fix-leaflet-icons'; // '@' if using path aliases in tsconfig.json
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';  // Required for creating custom icons
 import 'src/lib/leaflet.css';
 
@@ -20,23 +20,30 @@ interface Place {
   image: string;
 }
 
-
 interface MapProps {
   places: Place[];
   onMarkerClick: (id: string) => void;
 }
 
+// Simple MapViewUpdater component
+const MapViewUpdater = ({ center, zoom }: { center: [number, number]; zoom: number }) => {
+  const map = useMap();
+  map.setView(center, zoom);
+  return null;
+};
+
 const MapComponent: React.FC<MapProps> = ({ places, onMarkerClick }) => {
   return (
     <div className="absolute inset-0">
       <MapContainer 
-        center={[37.7749, -122.4194]}  // San Francisco coordinates
-        zoom={13} 
         style={{ height: '100vh', width: '100%' }}
+        className="leaflet-container"
       >
+        <MapViewUpdater center={[37.7749, -122.4194]} zoom={13} />
+        
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         />
 
         {places.map((place) => (

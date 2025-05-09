@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { MARKER_COLORS, defaultCenter, defaultZoom, OSM_TILE_LAYER } from './mapConfig';  // <- added OSM_TILE_LAYER import
+import { MARKER_COLORS, defaultCenter, defaultZoom, OSM_TILE_LAYER } from './mapConfig';
 import 'leaflet/dist/leaflet.css';
 import { Place } from '@/data/mockPlaces';
 
@@ -15,6 +15,13 @@ interface RecommendationsMapProps {
   detailCardRef?: React.RefObject<HTMLDivElement>;
   newBusinessData?: any;
 }
+
+// Simple MapViewUpdater component
+const MapViewUpdater = ({ center, zoom }: { center: [number, number]; zoom: number }) => {
+  const map = useMap();
+  map.setView(center, zoom);
+  return null;
+};
 
 const RecommendationsMap: React.FC<RecommendationsMapProps> = ({ 
   places, 
@@ -130,28 +137,32 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
   return (
     <div className="w-full h-full relative">
       <MapContainer 
-        center={[center.lat, center.lng]} 
-        zoom={zoom} 
         style={{ height: '100%', width: '100%', zIndex: 1 }}
         zoomControl={true}
         minZoom={3}
         maxZoom={18}
+        className="leaflet-container"
       >
+        <MapViewUpdater center={[center.lat, center.lng]} zoom={zoom} />
+        
         <TileLayer
-          attribution={OSM_TILE_LAYER.attribution}
           url={OSM_TILE_LAYER.url}
+          attribution={OSM_TILE_LAYER.attribution}
         />
         
-        {allPlaces.map((place) => (
-          <Marker
-            key={place.id}
-            position={[place.position.lat, place.position.lng]}
-            icon={createMarkerIcon(place.id === selectedPlaceId, place.isUserBusiness)}
-            eventHandlers={{
-              click: () => onMarkerClick(place.id)
-            }}
-          />
-        ))}
+        {allPlaces.map((place) => {
+          const icon = createMarkerIcon(place.id === selectedPlaceId, place.isUserBusiness);
+          return (
+            <Marker
+              key={place.id}
+              position={[place.position.lat, place.position.lng]}
+              icon={icon}
+              eventHandlers={{
+                click: () => onMarkerClick(place.id)
+              }}
+            />
+          );
+        })}
         
         {/* If there's a new business being added, show it with a special marker */}
         {newBusinessData && newBusinessData.position && (
@@ -173,4 +184,3 @@ const RecommendationsMap: React.FC<RecommendationsMapProps> = ({
 };
 
 export default RecommendationsMap;
-

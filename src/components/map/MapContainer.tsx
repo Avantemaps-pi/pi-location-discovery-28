@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MapContainer, TileLayer, Popup, Marker } from 'react-leaflet';
+import { MapContainer as LeafletMapContainer, TileLayer, Popup, Marker, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@/lib/fix-leaflet-icons';
 import L from 'leaflet';
@@ -21,34 +21,42 @@ interface MapProps {
   onMarkerClick: (id: string) => void;
 }
 
+// Simple MapViewUpdater component
+const MapViewUpdater = ({ center, zoom }: { center: [number, number]; zoom: number }) => {
+  const map = useMap();
+  map.setView(center, zoom);
+  return null;
+};
+
 const MapComponent: React.FC<MapProps> = ({ places, selectedPlace, onMarkerClick }) => {
   return (
     <div className="absolute inset-0">
-    <MapContainer 
-      center={[37.7749, -122.4194]}  // San Francisco coordinates
-      zoom={13} 
-      style={{ height: '100vh', width: '100%' }}
-      zoomControl={false} // 🔥 disables the zoom buttons
+      <LeafletMapContainer 
+        style={{ height: '100vh', width: '100%' }}
+        zoomControl={false} // 🔥 disables the zoom buttons
+        className="leaflet-container"
       >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+        <MapViewUpdater center={[37.7749, -122.4194]} zoom={13} />
+        
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        />
 
-      <MarkerClusterGroup>
-        {places.map((place) => (
-          <Marker
-            key={place.id}
-            position={[place.location.lat, place.location.lng]}
-            eventHandlers={{
-              click: () => onMarkerClick(place.id),
-            }}
-          >
-            <Popup>{place.name}</Popup>
-          </Marker>
-        ))}
-      </MarkerClusterGroup>
-    </MapContainer>
+        <MarkerClusterGroup>
+          {places.map((place) => (
+            <Marker
+              key={place.id}
+              position={[place.location.lat, place.location.lng]}
+              eventHandlers={{
+                click: () => onMarkerClick(place.id),
+              }}
+            >
+              <Popup>{place.name}</Popup>
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
+      </LeafletMapContainer>
     </div>
   );
 };
