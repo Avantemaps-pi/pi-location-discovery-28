@@ -9,10 +9,10 @@ interface MobileMenuButtonProps {
 }
 
 const MobileMenuButton = ({ onClick }: MobileMenuButtonProps) => {
-  const { setOpenMobile } = useSidebar();
+  const { setOpenMobile, openMobile } = useSidebar();
   
   const handleClick = () => {
-    setOpenMobile(true);
+    setOpenMobile(!openMobile);
     if (onClick) onClick();
   };
   
