@@ -1,8 +1,7 @@
-
 // pages/index.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import LeafletMap from '@/components/map/LeafletMap';
 import AppLayout from '@/components/layout/AppLayout';
-import MapComponent from '@/components/map/MapContainer';
 import SearchContainer from '@/components/map/Search/SearchContainer';
 import AddBusinessButton from '@/components/map/buttons/AddBusinessButton';
 import { useBusinessData } from '@/hooks/useBusinessData';
@@ -15,15 +14,6 @@ const Index = () => {
     setSelectedPlace(placeId);
   };
 
-  // Convert the places data format to match what MapComponent expects
-  const formatPlacesForMap = (placesData: any[]) => {
-    return placesData.map(place => ({
-      id: place.id,
-      name: place.name,
-      location: place.location || place.position || { lat: 0, lng: 0 }
-    }));
-  };
-
   return (
     <AppLayout
       title="Avante Maps"
@@ -32,13 +22,16 @@ const Index = () => {
       fullWidth={true}
       hideSidebar={false}
     >
-      <MapComponent
-        places={formatPlacesForMap(filteredPlaces.length > 0 ? filteredPlaces : places)}
-        selectedPlace={selectedPlace}
-        onMarkerClick={handlePlaceClick}
-      />
-      <SearchContainer onSearch={handleSearch} />
-      <AddBusinessButton selectedPlace={selectedPlace} />
+      <div className="w-full h-full">
+        <LeafletMap
+          places={filteredPlaces.length > 0 ? filteredPlaces : places}
+          selectedPlaceId={selectedPlace}
+          onMarkerClick={handlePlaceClick}
+          isLoading={isLoading}
+        />
+        <SearchContainer onSearch={handleSearch} />
+        <AddBusinessButton selectedPlace={selectedPlace} />
+      </div>
     </AppLayout>
   );
 };
