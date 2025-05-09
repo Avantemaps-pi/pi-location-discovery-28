@@ -1,5 +1,3 @@
-
-import MapComponent from "./components/map/map-components/MapComponent"; // Ensure this path is correct
 import MapComponent from "./components/map/MapContainer";
 import { defaultLocations } from "./components/map/defaultLocations";
 import { useEffect, useState } from "react";
@@ -96,18 +94,17 @@ const App = () => {
   };
   
   // Transform defaultLocations to the format expected by MapComponent
- const formattedLocations = defaultLocations.map(place => ({
-  id: place.id,
-  name: place.name,
-  description: place.description,
-  rating: place.rating,
-  category: place.category,
-  address: place.address,
-  location: place.position,  // Use 'position' from defaultLocations as 'location'
-  image: place.image,
-}));
+  const formattedLocations = defaultLocations.map(place => ({
+    id: place.id,
+    name: place.name,
+    description: place.description,
+    rating: place.rating,
+    category: place.category,
+    address: place.address,
+    location: place.position,  // Use 'position' from defaultLocations as 'location'
+    image: place.image,
+  }));
 
-  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
