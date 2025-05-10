@@ -100,7 +100,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onOpenChange }) => {
               </div>
               <div className="ml-4 text-left">
                 <p className="font-medium text-lg">Pi Network User</p>
-                <p className="text-sm text-muted-foreground">Connect with Pi Network</p>
+                <p className="text-sm text-muted-foreground">Connect with the Pi Network</p>
               </div>
             </div>
           </div>
