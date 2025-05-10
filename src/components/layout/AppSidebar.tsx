@@ -1,43 +1,61 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import DesktopSidebar from './sidebar/DesktopSidebar';
 import MobileSidebar from './sidebar/MobileSidebar';
+import { navItems, legalItems } from './sidebar/sidebarConfig';
+import { getUnreadNotificationsCount } from '@/utils/notificationUtils';
 
-const fallbackNavItems = [
-  { label: 'Home', to: '/', icon: 'home' },
-  { label: 'Notifications', to: '/notifications', icon: 'bell' },
-];
+interface AppSidebarProps {
+  className?: string;
+}
 
-const fallbackLegalItems = [
-  { label: 'Terms', to: '/terms' },
-  { label: 'Privacy', to: '/privacy' },
-];
-
-const AppSidebar = () => {
+const AppSidebar = ({ className }: AppSidebarProps = {}) => {
   const location = useLocation();
   const { openMobile, setOpenMobile } = useSidebar();
   const isMobile = useIsMobile();
-
+  const [notificationCount, setNotificationCount] = useState(getUnreadNotificationsCount());
+  
+  useEffect(() => {
+    const handleNotificationUpdate = () => {
+      setNotificationCount(getUnreadNotificationsCount());
+    };
+    
+    window.addEventListener('notificationUpdate', handleNotificationUpdate);
+    
+    return () => {
+      window.removeEventListener('notificationUpdate', handleNotificationUpdate);
+    };
+  }, []);
+  
   const handleLinkClick = () => {
     setOpenMobile(false);
   };
+
+  // Update notification badge in navItems
+  const updatedNavItems = navItems.map(item => 
+    item.to === '/notifications' 
+      ? { ...item, badge: notificationCount }
+      : item
+  );
 
   return (
     <>
       {!isMobile ? (
         <DesktopSidebar
-          navItems={fallbackNavItems}
-          legalItems={fallbackLegalItems}
+          className={className}
+          navItems={updatedNavItems}
+          legalItems={legalItems}
           currentPath={location.pathname}
           onLinkClick={handleLinkClick}
         />
       ) : (
         <MobileSidebar
           isOpen={openMobile}
-          navItems={fallbackNavItems}
-          legalItems={fallbackLegalItems}
+          navItems={updatedNavItems}
+          legalItems={legalItems}
           currentPath={location.pathname}
           onClose={() => setOpenMobile(false)}
           onLinkClick={handleLinkClick}
