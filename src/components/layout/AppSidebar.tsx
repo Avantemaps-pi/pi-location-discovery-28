@@ -11,8 +11,8 @@ const fallbackNavItems = [
 ];
 
 const fallbackLegalItems = [
-  { label: 'Terms of Service', to: '/terms' },
-  { label: 'Privacy Policy', to: '/privacy' },
+  { label: 'Terms', to: '/terms' },
+  { label: 'Privacy', to: '/privacy' },
 ];
 
 const AppSidebar = () => {
