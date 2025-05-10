@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import LeafletMap from '@/components/map/LeafletMap';
 import { useBusinessData } from '@/hooks/useBusinessData';
@@ -8,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import SearchBar from '@/components/map/SearchBar';
 import { useSidebar } from '@/components/ui/sidebar';
 import AvanteMapLogo from '@/components/layout/header/AvanteMapLogo';
+import AppSidebar from '@/components/layout/AppSidebar'; // ✅ Import the sidebar
 import '../styles/map.css';
 
 const Index = () => {
@@ -24,18 +24,17 @@ const Index = () => {
   };
 
   useEffect(() => {
-    // Add this effect to help with rendering the map
     const timer = setTimeout(() => {
-      // Force a re-render after a short delay to ensure the map loads properly
       window.dispatchEvent(new Event('resize'));
     }, 300);
-    
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div className="w-full h-screen relative">
-      {/* Map takes the full screen */}
+    <div className="w-full h-screen relative overflow-hidden">
+      {/* ✅ Add the AppSidebar */}
+      <AppSidebar />
+
       <LeafletMap
         places={filteredPlaces.length > 0 ? filteredPlaces : places}
         selectedPlaceId={selectedPlace}
@@ -43,9 +42,14 @@ const Index = () => {
         isLoading={isLoading}
       />
       
-      {/* Floating UI elements that overlay the map */}
+      {/* Floating UI */}
       <div className="absolute top-0 left-0 right-0 z-20 px-4 py-4 flex items-center">
-        <Button variant="ghost" size="icon" onClick={handleMenuClick} className="mr-2 bg-white/80 shadow-sm">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleMenuClick}
+          className="mr-2 bg-white/80 shadow-sm"
+        >
           <Menu className="h-5 w-5" />
         </Button>
         
